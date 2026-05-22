@@ -2,6 +2,22 @@ import { DocPage, DemoSection } from '../components/DocPage'
 
 const entries = [
   {
+    version: '0.5.2',
+    date: '2026-05-22',
+    items: [
+      'DialogTitle e Modal: título em branco no modo escuro (dark:text-white), alinhado ao ChangelogModal do Suprimentos.',
+    ],
+  },
+  {
+    version: '0.5.1',
+    date: '2026-05-22',
+    items: [
+      'Composite Modal + ModalFooter (Radix Dialog): padrão ChangelogModal do Suprimentos — X top-5/right-5, rodapé surface-muted, botão primary «Entendi, continuar».',
+      'Nova página /docs/components/modal-radix com demo interativa e anatomia do padrão.',
+      'Tutorial contextual: faixa superior azul (#004B9B → #93BDE4), dots de progresso laranja (#F6921E), overlay azul e hover do fechar em azul (sem vermelho legado).',
+    ],
+  },
+  {
     version: '0.5.0',
     date: '2026-05-22',
     items: [

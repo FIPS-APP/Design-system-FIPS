@@ -45,6 +45,7 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './dialog'
+export { Modal, ModalFooter, type ModalProps, type ModalFooterProps } from './Modal'
 export {
   Drawer,
   DrawerClose,

@@ -1,9 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useId, useLayoutEffect } from "react";
 import { X, ChevronRight, ChevronLeft, GraduationCap } from "lucide-react";
 import { cn } from "../../lib/cn";
 import { PAGE_TUTORIALS } from "../../data/pageTutorials";
 
 const TUTORIAL_GRAIN_BG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")`;
+
+const FIPS_BLUE = "#004B9B";
+const FIPS_ORANGE = "#F6921E";
 
 interface TutorialOverlayProps {
   open: boolean;
@@ -113,9 +116,11 @@ function calcModalPosition(targetRect: DOMRect | null, modalW: number, modalH: n
 
 /* ─── TutorialOverlay ─── */
 export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProps) {
+  const maskId = useId().replace(/:/g, "");
   const [step, setStep] = useState(0);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [scrolling, setScrolling] = useState(false);
+  const [modalH, setModalH] = useState(280);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const steps = PAGE_TUTORIALS[pageName] || [];
@@ -168,10 +173,15 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
     return () => window.removeEventListener("keydown", handler);
   }, [open, next, prev, onClose]);
 
+  useLayoutEffect(() => {
+    if (!open || !modalRef.current) return;
+    const h = modalRef.current.offsetHeight;
+    if (h > 0) setModalH(h);
+  }, [open, step, currentStep?.title, currentStep?.description]);
+
   if (!open || steps.length === 0) return null;
 
   const modalW = 420;
-  const modalH = 300;
   const pos = calcModalPosition(scrolling ? null : targetRect, modalW, modalH);
   const spotPad = 8;
   const showSpot = targetRect && !scrolling;
@@ -181,7 +191,7 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
       {/* Overlay com spotlight */}
       <svg className="pointer-events-none absolute inset-0 z-0 h-full w-full" aria-hidden>
         <defs>
-          <mask id="tutorial-mask">
+          <mask id={`tutorial-mask-${maskId}`}>
             <rect width="100%" height="100%" fill="white" />
             {showSpot && (
               <rect
@@ -195,7 +205,7 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
             )}
           </mask>
         </defs>
-        <rect width="100%" height="100%" fill="rgba(0,0,0,0.65)" mask="url(#tutorial-mask)" />
+        <rect width="100%" height="100%" fill="rgba(0,42,104,0.55)" mask={`url(#tutorial-mask-${maskId})`} />
       </svg>
 
       {/* Glow no spotlight */}
@@ -207,7 +217,7 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
             left: targetRect.left - spotPad,
             width: targetRect.width + spotPad * 2,
             height: targetRect.height + spotPad * 2,
-            border: "2px solid #004B9B",
+            border: `2px solid ${FIPS_BLUE}`,
             boxShadow: "0 0 20px rgba(0,75,155,0.4), 0 0 60px rgba(0,75,155,0.15)",
             transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
           }}
@@ -257,10 +267,10 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
             className="pointer-events-none absolute inset-0 rounded-[20px] opacity-[0.025] mix-blend-multiply dark:opacity-[0.03] dark:mix-blend-overlay"
             style={{ backgroundImage: TUTORIAL_GRAIN_BG }}
           />
-          {/* Barra laranja FIPS */}
+          {/* Faixa azul institucional */}
           <div
             aria-hidden
-            className="pointer-events-none absolute left-0 right-0 top-0 h-[3px] rounded-t-[20px] bg-gradient-to-r from-[#F6921E] via-[#FDC24E] to-transparent"
+            className="pointer-events-none absolute left-0 right-0 top-0 h-[3px] rounded-t-[20px] bg-gradient-to-r from-[#004B9B] via-[#93BDE4] to-transparent"
           />
 
           {/* Header */}
@@ -287,8 +297,8 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
               className={cn(
                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all",
                 "border border-black/[0.08] bg-black/[0.04] text-zinc-500",
-                "hover:border-[rgba(246,146,30,0.4)] hover:bg-[rgba(246,146,30,0.15)] hover:text-[#F6921E]",
-                "dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400",
+                "hover:border-[rgba(0,75,155,0.25)] hover:bg-[rgba(0,75,155,0.08)] hover:text-[#004B9B]",
+                "dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:text-[#93BDE4]",
               )}
               aria-label="Fechar tutorial"
             >
@@ -311,7 +321,6 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
                 key={i}
                 className={cn(
                   "rounded-full transition-all duration-300",
-                  i === step && "shadow-[0_0_10px_rgba(246,146,30,0.35)]",
                   i > step && "bg-black/10 dark:bg-white/15",
                 )}
                 style={{
@@ -320,10 +329,11 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
                   borderRadius: 3,
                   background:
                     i === step
-                      ? "linear-gradient(90deg, #F6921E, #FDC24E)"
+                      ? `linear-gradient(90deg, ${FIPS_ORANGE}, #cf730d)`
                       : i < step
                         ? "rgba(0,75,155,0.45)"
                         : undefined,
+                  boxShadow: i === step ? "0 0 10px rgba(246,146,30,0.35)" : undefined,
                 }}
               />
             ))}
