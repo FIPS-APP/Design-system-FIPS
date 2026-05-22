@@ -1,3 +1,5 @@
+import './styles/globals.css'
+
 export * from './tokens'
 export { cn } from './lib/cn'
 export * from './components/ui'
