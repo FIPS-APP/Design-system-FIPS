@@ -12,7 +12,7 @@ export interface FieldTriggerProps extends React.ButtonHTMLAttributes<HTMLButton
 
 const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
   (
-    { className, leftIcon, rightIcon, density = 'compact', placeholder, value, type = 'button', children, ...props },
+    { className, leftIcon, rightIcon, density = 'default', placeholder, value, type = 'button', children, ...props },
     ref,
   ) => {
     const content = children ?? value ?? placeholder

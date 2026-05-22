@@ -1,7 +1,9 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
+import { Bell, Database, HardDrive } from "lucide-react";
 import { InlineCodeCopy } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
+import { FipsTabBar } from '../../../components/composites/FipsTabBar';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
@@ -443,6 +445,13 @@ export default function TabsDoc(){
   const [sc1,setSc1]=useState(0);const [sc2,setSc2]=useState(0);const [sc3,setSc3]=useState(0);const [sc4,setSc4]=useState(0);
   const [vert,setVert]=useState(0);
   const [cfgTab,setCfgTab]=useState(0);
+  const [fipsSegTab,setFipsSegTab]=useState("notificacoes");
+
+  const fipsConfigTabs=[
+    {id:"notificacoes",label:"Notificações",icon:<Bell size={14} strokeWidth={1.9}/>},
+    {id:"backup",label:"Backup",icon:<Database size={14} strokeWidth={1.9}/>},
+    {id:"sistema",label:"Sistema",icon:<HardDrive size={14} strokeWidth={1.9}/>},
+  ];
 
   const mainTabs=[
     {label:"Home",icon:(c)=>Ic.home(14,c)},
@@ -633,7 +642,7 @@ export default function TabsDoc(){
             </div>
             <div style={{background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 20px",padding:mob?12:18}}>
               <h3 style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title}}>Configurações do Usuário</h3>
-              <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px"}}>Bordered com navegação lateral</p>
+              <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px"}}>Bordered com navegação lateral (legado). Para Suprimentos use FipsTabBar — seção 05.</p>
               <div style={{background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,padding:12}}>
                 <TabsBordered tabs={[{label:"Perfil",icon:(c)=>Ic.pessoa(12,c)},{label:"Segurança",icon:(c)=>Ic.shield(12,c)},{label:"Notificações",icon:(c)=>Ic.bell(12,c),count:3}]} active={sc4} onChange={setSc4} size="sm"/>
                 {sc4===0&&<TabContent k="env0">Nome, departamento, cargo e foto. Edite suas informações de cadastro.</TabContent>}
@@ -685,8 +694,23 @@ export default function TabsDoc(){
           </div>
         </Section>
 
-        {/* 05 — TOKENS */}
-        <Section n="05" title="Tokens de referência" desc="Valores de design do componente Tabs.">
+        {/* 05 — SEGMENTED (FipsTabBar) */}
+        <Section n="05" title="Segmented — FipsTabBar" desc="Abas em pílulas dentro de um card com radius assimétrico FIPS. Padrão oficial de Configurações no módulo FIPS Suprimentos (notificações, backup, sistema).">
+          <DSCard mob={mob}>
+            <FipsTabBar tabs={fipsConfigTabs} activeId={fipsSegTab} onChange={setFipsSegTab}/>
+            <div style={{marginTop:16}}>
+              {fipsSegTab==="notificacoes"&&<TabContent k="fips-n">Preferências de notificação do escopo — switches por tipo de alerta.</TabContent>}
+              {fipsSegTab==="backup"&&<TabContent k="fips-b">Exportação e importação de backup (admin).</TabContent>}
+              {fipsSegTab==="sistema"&&<TabContent k="fips-s">Metadados do ambiente e versão do app.</TabContent>}
+            </div>
+          </DSCard>
+          <p style={{fontSize:12,color:C.cinzaChumbo,marginTop:12,fontFamily:Fn.body}}>
+            Ver também: <a href="/docs/patterns/configuracoes" style={{color:C.azulProfundo,fontWeight:600}}>Padrão Configurações</a> · componente em <code style={gk}>src/components/composites/FipsTabBar.tsx</code> · export em <code style={gk}>exports/fips-tab-bar/</code>
+          </p>
+        </Section>
+
+        {/* 06 — TOKENS */}
+        <Section n="06" title="Tokens de referência" desc="Valores de design do componente Tabs.">
           <DSCard mob={mob} s={{display:"flex",gap:mob?24:48,flexWrap:"wrap"}}>
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
               <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Cores</span>
@@ -726,8 +750,8 @@ export default function TabsDoc(){
           </DSCard>
         </Section>
 
-        {/* 06 — MODO DARK */}
-        <Section n="06" title="Modo Dark" desc="Tokens e comportamento do componente no tema escuro. Consistência visual garantida em ambos os modos.">
+        {/* 07 — MODO DARK */}
+        <Section n="07" title="Modo Dark" desc="Tokens e comportamento do componente no tema escuro. Consistência visual garantida em ambos os modos.">
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?16:24}}>
             <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
               {[

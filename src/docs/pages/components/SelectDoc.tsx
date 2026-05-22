@@ -1499,7 +1499,7 @@ export function Toggle${label.replace(/\s+/g, '')}() {
 }`;
 }
 
-function chipSelectCode(label: string, opts: string, extra = ''): string {
+function chipSelectCode(label: string, opts: string, _extra = ''): string {
   return `// DS-FIPS — ChipSelect "${label}" — Copy-paste ready
 import { useState } from "react";
 
@@ -1526,7 +1526,7 @@ export function ChipSelect${label.replace(/\s+/g, '')}() {
 }`;
 }
 
-function segmentedCode(label: string, opts: string, extra = ''): string {
+function segmentedCode(label: string, opts: string, _extra = ''): string {
   return `// DS-FIPS — Segmented "${label}" — Copy-paste ready
 import { useState } from "react";
 

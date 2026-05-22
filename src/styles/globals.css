@@ -140,6 +140,16 @@
     --color-gov-verde-escuro: #00904C;
     --color-gov-gradient-from: #004B9B;
     --color-gov-gradient-to: #002A68;
+    --color-semantic-info-bg: var(--color-fips-blue-200);
+    --color-semantic-info-fg: var(--color-fips-blue-950);
+    --color-semantic-info-border: var(--color-fips-blue-400);
+    --color-semantic-sucesso-bg: #ecfdf5;
+    --color-semantic-sucesso-fg: #00904c;
+    --color-semantic-sucesso-border: #a7f3d0;
+    --color-semantic-critico-bg: #fef2f2;
+    --color-semantic-critico-fg: #b91c1c;
+    --color-semantic-critico-border: #fecaca;
+    --shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
   }
 
   /* ─── Dark mode (extraído do Tecnopano 3.0 DashboardAdmin) ─── */
@@ -175,6 +185,62 @@
     --color-gov-verde-escuro: #8BE5AD;
     --color-gov-gradient-from: #333B41;
     --color-gov-gradient-to: #2a2f35;
+    --color-semantic-info-bg: rgba(147, 189, 228, 0.14);
+    --color-semantic-info-fg: #93bde4;
+    --color-semantic-info-border: rgba(147, 189, 228, 0.28);
+    --color-semantic-sucesso-bg: rgba(0, 198, 76, 0.14);
+    --color-semantic-sucesso-fg: #8be5ad;
+    --color-semantic-sucesso-border: rgba(0, 198, 76, 0.28);
+    --color-semantic-critico-bg: rgba(239, 68, 68, 0.14);
+    --color-semantic-critico-fg: #fca5a5;
+    --color-semantic-critico-border: rgba(239, 68, 68, 0.28);
+  }
+
+  /* Banners — PatternPanelHero / Suprimentos */
+  :root {
+    --fips-banner-page-bg: linear-gradient(
+      135deg,
+      var(--color-gov-gradient-from) 0%,
+      var(--color-gov-gradient-to) 100%
+    );
+    --fips-banner-content-bg: linear-gradient(
+      135deg,
+      var(--color-gov-gradient-from) 0%,
+      var(--color-gov-gradient-to) 60%,
+      #001a4a 100%
+    );
+    --fips-banner-content-shadow: 0 4px 20px rgba(0, 42, 104, 0.12);
+    --fips-banner-content-border-color: transparent;
+    --fips-banner-junction-opacity: 0.12;
+  }
+
+  .dark {
+    --fips-banner-content-bg: linear-gradient(135deg, #1e2a3a 0%, #162030 50%, #1a2840 100%);
+    --fips-banner-content-shadow: 0 4px 20px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    --fips-banner-content-border-color: rgba(147, 189, 228, 0.08);
+    --fips-banner-junction-opacity: 0.04;
+  }
+
+  .fips-banner-shell--page {
+    background: var(--fips-banner-page-bg);
+  }
+
+  .fips-banner-shell--content {
+    background: var(--fips-banner-content-bg);
+    box-shadow: var(--fips-banner-content-shadow);
+    border: 1px solid var(--fips-banner-content-border-color);
+    border-radius: 12px 12px 12px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fips-banner-shell--content.fips-banner-shell--compact {
+    border-radius: 10px 10px 10px 18px;
+  }
+
+  .fips-banner-junction {
+    opacity: var(--fips-banner-junction-opacity);
   }
 
   /* ─── Dark mode: hero banner das doc pages ─── */

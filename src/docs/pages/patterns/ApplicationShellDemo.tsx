@@ -796,12 +796,6 @@ function ShellCanvas({
 
 /* ── Helper: código copy-paste-ready para o Playground ── */
 function shellCode(variant: 'desktop' | 'tablet' | 'mobile') {
-  const labels: Record<string, string> = {
-    desktop: 'Desktop — sidebar persistente + hero + content',
-    tablet: 'Tablet — sidebar rail (solo icones) + hero',
-    mobile: 'Mobile — drawer overlay + hero compacto',
-  }
-
   if (variant === 'mobile') return `// DS-FIPS — Application Shell Mobile — Copy-paste ready
 import { useState } from 'react'
 

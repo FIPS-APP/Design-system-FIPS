@@ -1124,7 +1124,19 @@ function SidebarDarkPlayground({ mob }: { mob: boolean }) {
           code={sidebarCode('dark')}
           preview={
             <div style={{ height: 300, overflow: 'hidden', borderRadius: 10, border: '1px solid #3f3f46' }}>
-              <SidebarDemo location="/" onNavigate={() => {}} themeOverride={TN_DARKMODE} />
+              <SidebarDemo
+                location="/"
+                onNavigate={() => {}}
+                themeOverride={TN_DARKMODE}
+                autoCollapse={false}
+                collapseSeconds={5}
+                onAutoCollapseChange={() => {}}
+                onCollapseSecondsChange={() => {}}
+                menuBehaviorOpen={false}
+                onMenuBehaviorOpenChange={() => {}}
+                onSidebarPointerEnter={() => {}}
+                onSidebarPointerLeave={() => {}}
+              />
             </div>
           }
         >
@@ -1394,7 +1406,18 @@ export default function SidebarDoc() {
               code={sidebarCode('light')}
               preview={
                 <div style={{ height: 300, overflow: 'hidden', borderRadius: 10, border: `1px solid ${C.cardBorder}` }}>
-                  <SidebarDemo location="/" onNavigate={() => {}} />
+                  <SidebarDemo
+                    location="/"
+                    onNavigate={() => {}}
+                    autoCollapse={false}
+                    collapseSeconds={5}
+                    onAutoCollapseChange={() => {}}
+                    onCollapseSecondsChange={() => {}}
+                    menuBehaviorOpen={false}
+                    onMenuBehaviorOpenChange={() => {}}
+                    onSidebarPointerEnter={() => {}}
+                    onSidebarPointerLeave={() => {}}
+                  />
                 </div>
               }
             >

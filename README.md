@@ -2,7 +2,7 @@
 
 Biblioteca oficial de componentes para construir interfaces do sistema FIPS (Ferrovia Interna do Porto de Santos).
 
-## Versão atual: `v0.5.0`
+## Versão atual: `v0.4.3`
 
 ## Versionamento
 
@@ -24,7 +24,6 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.5.0 | 2026-05-22 | Density padrão de Field/Input/Select/Textarea/FieldTrigger agora é `compact` (altura 36px, label legível em case normal) — alinha o DS ao padrão usado em formulários de produção (Workspace, EscopoNovo) |
 | 0.4.3 | 2026-04-28 | Ajustes de iconografia, playground interativo e padronização visual dos headers/previews |
 | 0.4.2 | 2026-04-28 | Ampliação da documentação (componentes/patterns), playground de código e ajustes no login Tecnopano |
 | 0.4.1 | 2026-04-27 | Documentação de versionamento e changelog |

@@ -2,6 +2,16 @@ import { DocPage, DemoSection } from '../components/DocPage'
 
 const entries = [
   {
+    version: '0.5.0',
+    date: '2026-05-22',
+    items: [
+      'Sync visual FIPS Suprimentos: FipsTabBar (abas segmentadas de Configurações), Switch, SettingsPreferenceRow e PatternPanelHero.',
+      'Novos padrões documentados: Configurações, Relatórios operacionais e Export modal.',
+      'Página Switch + seção 05 Segmented na documentação de Tabs; tokens semânticos e banners em globals.css.',
+      'Pacote exports: fips-tab-bar, switch, settings-preference-row, pattern-panel-hero.',
+    ],
+  },
+  {
     version: '0.4.0',
     date: '2026-04-07',
     items: [

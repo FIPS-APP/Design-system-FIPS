@@ -261,7 +261,25 @@ export const PAGE_TUTORIALS: Record<string, PageTutorialStep[]> = {
 
   "hero-banner": [
     { title: "Padrão: Banner", description: "3 variantes de banner padronizado." },
-    { title: "Variantes de Banner", description: "3 tipos:\n1) Banner de Página — hero completo com título grande, badges e arte decorativa (landing pages)\n2) Banner de Conteúdo — faixa compacta com ícone + título + botão (cabeçalhos de módulo)\n3) Banner de Fluxo — badges de status + cadeia de etapas (Solicitação → Aprovação → Entrega)\n\nDegradê azul institucional obrigatório como fundo.", target: s(1) },
+    { title: "Variantes de Banner", description: "3 tipos:\n1) Banner de Página — hero completo com título grande, badges e arte decorativa (landing pages)\n2) Banner de Conteúdo — faixa compacta com ícone + título + botão (cabeçalhos de módulo)\n3) Banner de Fluxo — badges de status + cadeia de etapas (Solicitação → Aprovação → Entrega)\n\nDegradê azul institucional obrigatório como fundo. PatternPanelHero cobre Banner de Conteúdo 2 com chips de KPI.", target: s(1) },
+  ],
+
+  switch: [
+    { title: "Switch DS-FIPS", description: "Toggle 42×24px com Radix. Estados on/off e disabled." },
+    { title: "SettingsPreferenceRow", description: "Linha de preferência com label, descrição opcional e switch — padrão usado em Configurações do FIPS Suprimentos. Variante info para destaque de e-mail.", target: s(2) },
+  ],
+
+  configuracoes: [
+    { title: "Padrão: Configurações", description: "Referência do módulo FIPS Suprimentos — FipsTabBar + cards + preference rows." },
+    { title: "FipsTabBar", description: "Abas segmentadas Notificações · Backup · Sistema. Radius assimétrico 10px 10px 10px 18px no container.", target: "section" },
+  ],
+
+  "relatorios-operacionais": [
+    { title: "Relatórios operacionais", description: "PatternPanelHero + filtros + tabela + export CSV — escopos de Suprimentos." },
+  ],
+
+  "export-modal": [
+    { title: "Export Modal", description: "Preview de exportação com colunas arrastáveis, filtros em chips e ações XLSX/PDF/Impressão." },
   ],
 
   login: [
