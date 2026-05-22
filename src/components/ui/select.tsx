@@ -37,7 +37,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       onChange,
       placeholder = 'Selecione',
       leftIcon,
-      density = 'default',
+      density = 'compact',
       disabled,
       className,
       children,

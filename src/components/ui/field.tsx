@@ -10,7 +10,7 @@ type FieldContextValue = {
 }
 
 const FieldContext = React.createContext<FieldContextValue>({
-  density: 'default',
+  density: 'compact',
   inset: 'control',
 })
 
@@ -38,7 +38,7 @@ export interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Field = React.forwardRef<HTMLDivElement, FieldProps>(
-  ({ className, density = 'default', inset = 'control', ...props }, ref) => (
+  ({ className, density = 'compact', inset = 'control', ...props }, ref) => (
     <FieldContext.Provider value={{ density, inset }}>
       <div ref={ref} className={cn('flex min-w-0 flex-col', fieldGapClasses[density], className)} {...props} />
     </FieldContext.Provider>
