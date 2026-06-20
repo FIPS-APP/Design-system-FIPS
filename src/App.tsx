@@ -42,7 +42,6 @@ const HeroBannerDoc = lazy(() => import('./docs/pages/patterns/HeroBannerDoc'))
 const ConfiguracoesDemo = lazy(() => import('./docs/pages/patterns/ConfiguracoesDemo'))
 const RelatoriosOperacionaisDemo = lazy(() => import('./docs/pages/patterns/RelatoriosOperacionaisDemo'))
 const ExportModalDemo = lazy(() => import('./docs/pages/patterns/ExportModalDemo'))
-const LoginDesktopTest = lazy(() => import('./docs/pages/LoginDesktopTest'))
 const LoginClaudeLab = lazy(() => import('./docs/pages/LoginClaudeLab'))
 function RouteFallback() {
   return (
@@ -60,7 +59,6 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/docs/home" replace />} />
-      <Route path="/login-desktop-test" element={renderLazyRoute(<LoginDesktopTest />)} />
       <Route path="/login-claude-lab" element={renderLazyRoute(<LoginClaudeLab />)} />
       <Route path="/docs" element={<DocLayout />}>
         <Route index element={renderLazyRoute(<OverviewPage />)} />
