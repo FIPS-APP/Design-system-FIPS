@@ -21,7 +21,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.lib.json --emitDeclarationOnly --declaration --outDir dist",
+    "build": "vite build --config vite.config.lib.ts && tsc -p tsconfig.lib.json --emitDeclarationOnly --declaration --outDir dist",
+    "build:site": "tsc -b && vite build",
     "build:downloads": "bash scripts/build-ai-downloads.sh",
     "lint": "eslint .",
     "preview": "vite preview"
