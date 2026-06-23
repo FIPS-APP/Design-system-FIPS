@@ -484,6 +484,7 @@ function SidebarItem({
 
   useEffect(() => {
     if (hasChildren) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intencional: espelhar URL nos accordions
       setOpen(item.children!.some((c) => c.href === location))
     }
   }, [location, hasChildren, item.children])
@@ -492,6 +493,108 @@ function SidebarItem({
   const isActive = item.href === location || (!!hasChildren && item.children!.some((c) => c.href === location))
 
   const Icon = item.icon
+
+  // ── Cabeçalho de categoria (grupo de nível 0) — padrão unificado FIPS ──
+  // Tipografia do Governança BI (10.5 / 600 / 0.08em / uppercase) + colapso do
+  // Suprimentos (separador, chevron e animação). No rail vira ícones soltos.
+  if (hasChildren && depth === 0) {
+    if (collapsed) {
+      return (
+        <div>
+          <div aria-hidden style={{ borderTop: `1px solid ${theme.border}`, margin: '8px 14px 4px' }} />
+          {item.children!.map((child) => (
+            <SidebarItem
+              key={child.href ?? child.label}
+              item={child}
+              badges={badges}
+              collapsed
+              depth={0}
+              location={location}
+              onNavigate={onNavigate}
+              theme={theme}
+            />
+          ))}
+        </div>
+      )
+    }
+    return (
+      <div style={{ marginTop: 6 }}>
+        <div aria-hidden style={{ borderTop: `1px solid ${theme.border}`, margin: '0 14px 2px' }} />
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          aria-expanded={open}
+          className="group flex cursor-pointer items-center"
+          style={{
+            width: 'calc(100% - 16px)',
+            margin: '0 8px',
+            padding: '6px 12px',
+            gap: 8,
+            borderRadius: 8,
+            border: 'none',
+            background: hovered ? 'rgba(255,255,255,0.04)' : 'transparent',
+            transition: 'background 0.15s ease',
+          }}
+        >
+          <Icon
+            size={14}
+            strokeWidth={2}
+            aria-hidden
+            style={{
+              flexShrink: 0,
+              color: isActive ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.5)',
+              transition: 'color 0.15s ease',
+            }}
+          />
+          <span
+            style={{
+              flex: 1,
+              textAlign: 'left',
+              fontFamily: F.body,
+              fontSize: 10.5,
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: isActive ? 'rgba(255,255,255,0.62)' : hovered ? 'rgba(255,255,255,0.58)' : 'rgba(255,255,255,0.45)',
+              transition: 'color 0.15s ease',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minWidth: 0,
+            }}
+          >
+            {item.label}
+          </span>
+          <span style={{ display: 'flex', transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'rotate(0)' }}>
+            {open ? <ChevronDown size={14} color={theme.chevron} aria-hidden /> : <ChevronRight size={14} color={theme.chevron} aria-hidden />}
+          </span>
+        </button>
+        <div
+          style={{
+            maxHeight: open ? 2000 : 0,
+            opacity: open ? 1 : 0,
+            overflow: 'hidden',
+            transition: 'max-height 0.22s ease, opacity 0.18s ease',
+          }}
+        >
+          {item.children!.map((child) => (
+            <SidebarItem
+              key={child.href ?? child.label}
+              item={child}
+              badges={badges}
+              collapsed={false}
+              depth={depth + 1}
+              location={location}
+              onNavigate={onNavigate}
+              theme={theme}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   const row = (
     <div
