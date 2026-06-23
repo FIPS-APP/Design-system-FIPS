@@ -55,7 +55,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Stacks', to: '/docs/stacks', icon: Cpu },
       { label: 'Visão geral', to: '/docs', icon: Sparkles },
       { label: 'Governança', to: '/docs/governance', icon: ShieldCheck },
-      { label: 'Changelog', to: '/docs/changelog', icon: BookOpen },
+      { label: 'Histórico de versões', to: '/docs/changelog', icon: BookOpen },
     ],
   },
   {

@@ -28,7 +28,7 @@ export const PAGE_TUTORIALS: Record<string, PageTutorialStep[]> = {
     { title: "07 · Regras de negócio", description: "5 regras inegociáveis:\n1) Use exclusivamente componentes e tokens do DS\n2) Override CSS proibido — use variantes e props\n3) Novos componentes passam por revisão\n4) Paleta segue o Brandbook FIPS\n5) Acessibilidade WCAG AA obrigatória", target: s(7) },
     { title: "08 · Procedimentos operacionais", description: "Para consumir: clone, importe de src/components/ui/, use variáveis CSS e siga os padrões.\n\nPara contribuir: crie branch, siga Governança, documente com exemplo interativo e abra PR.", target: s(8) },
     { title: "09 · Indicadores", description: "Métricas de adoção do DS:\n• 14+ componentes\n• 7 padrões de tela\n• 50+ tokens\n• 6 fundamentos documentados", target: s(9) },
-    { title: "10 · Navegação rápida", description: "Links diretos para as principais seções: Visão geral, Fundamentos, Componentes, Padrões, Governança e Changelog.\n\nUse para saltar rapidamente para qualquer área da documentação.", target: s(10) },
+    { title: "10 · Navegação rápida", description: "Links diretos para as principais seções: Visão geral, Fundamentos, Componentes, Padrões, Governança e Histórico de versões.\n\nUse para saltar rapidamente para qualquer área da documentação.", target: s(10) },
   ],
 
   overview: [
@@ -288,6 +288,6 @@ export const PAGE_TUTORIALS: Record<string, PageTutorialStep[]> = {
   ],
 
   changelog: [
-    { title: "Changelog do DS-FIPS", description: "Histórico de evolução do Design System.\n\n• v0.4.2 (2026-04-07) — Catálogo expandido, 14+ componentes, Dashboard, distribuição para IA\n• v0.3.0 (2026-04-01) — Shell consolidado, PageHero, Field, governança\n\nConsulte antes de atualizar dependências." },
+    { title: "Histórico de versões do DS-FIPS", description: "Histórico de evolução do Design System.\n\n• v0.4.2 (2026-04-07) — Catálogo expandido, 14+ componentes, Dashboard, distribuição para IA\n• v0.3.0 (2026-04-01) — Shell consolidado, PageHero, Field, governança\n\nConsulte antes de atualizar dependências." },
   ],
 };

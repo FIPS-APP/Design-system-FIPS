@@ -27,7 +27,7 @@ const quickLinks = [
   { label: "Componentes", desc: "14+ componentes React prontos para uso", to: "/docs/components/button", icon: Component, color: C.verdeFloresta },
   { label: "Padrões de tela", desc: "Login, Dashboard, Data Listing, Form e mais", to: "/docs/patterns/application-shell", icon: LayoutDashboard, color: C.azulCeu },
   { label: "Governança", desc: "Regras de uso, versionamento e contribuição", to: "/docs/governance", icon: ShieldCheck, color: C.amareloEscuro },
-  { label: "Changelog", desc: "Histórico de versões e mudanças recentes", to: "/docs/changelog", icon: BookOpen, color: C.cinzaClaro },
+  { label: "Histórico de versões", desc: "Notas de cada release e mudanças recentes", to: "/docs/changelog", icon: BookOpen, color: C.cinzaClaro },
 ];
 
 const rules = [
