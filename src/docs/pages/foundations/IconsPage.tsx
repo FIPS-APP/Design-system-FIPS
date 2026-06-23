@@ -1,6 +1,5 @@
 import { useState, useEffect, type ReactNode } from "react";
 import type { IconType } from "react-icons";
-import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import {
   LuHouse, LuLayoutGrid, LuList, LuChartColumnIncreasing, LuFilter, LuSettings, LuSearch,
@@ -338,50 +337,6 @@ export default function DSFIPSIconography(){
         </Section>
 
         <CodePlayground />
-
-        <CodeExportSection items={[
-          {
-            label: 'Icon Set FIPS (Lucide/react-icons)',
-            description: 'Catalogo de icones oficiais, tamanhos e regras de uso.',
-            code: `/* ═══════════════════════════════════════════
-   Icon Set — DS-FIPS
-   Familia: Lucide (react-icons/lu)
-   Estilo: stroke, sem fill
-   ═══════════════════════════════════════════ */
-
-/* Instalacao */
-// npm install react-icons
-// import { LuHouse, LuLayoutGrid, ... } from 'react-icons/lu'
-
-/* ── Escala de tamanhos ── */
-const iconSizes = {
-  xs: 12,   // Dentro de tabs sm, badges, elementos compactos
-  sm: 14,   // Inputs, selects, labels, tabs padrao
-  md: 16,   // Botoes, drawers, formularios, acoes de tabela
-  lg: 20,   // Headers de secao, destaque visual, modal icons
-  xl: 24,   // Hero, empty states, icones isolados grandes
-}
-
-/* ── Categorias ── */
-const navigation = ['LuHouse', 'LuLayoutGrid', 'LuList', 'LuChartColumnIncreasing', 'LuFilter', 'LuSettings', 'LuSearch']
-const actions    = ['LuX', 'LuCheck', 'LuPencil', 'LuTrash2', 'LuEye', 'LuPaperclip']
-const status     = ['LuTriangleAlert', 'LuShield', 'LuLock', 'LuCircleCheck', 'LuInfo']
-const objects    = ['LuFileText', 'LuFolder', 'LuBell', 'LuTag', 'LuClock', 'LuCalendar']
-const entities   = ['LuUser', 'LuBuilding2', 'LuMail']
-
-/* ── Regras ──
-   - Stroke cap: round | Stroke join: round
-   - Cor: herda do texto (currentColor)
-   - Gap icone-texto: 4-8px
-   - Container modal: 48x48 radius 14px
-   - Tree-shake: cada icone importado individualmente
-
-   Dark mode:
-   fg: #E2E2E8 | muted: #A1A1AA
-   primary: #93BDE4 | success: #8BE5AD | accent: #FDC24E
-*/`,
-          },
-        ]} />
 
         <div style={{textAlign:"center",padding:"20px 0 0",borderTop:`1px solid ${C.cardBorder}`,marginTop:20}}>
           <span style={{fontSize:12,color:C.cinzaChumbo,letterSpacing:".5px",fontFamily:Fn.title,fontWeight:400}}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>

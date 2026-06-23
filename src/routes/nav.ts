@@ -55,6 +55,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Stacks', to: '/docs/stacks', icon: Cpu },
       { label: 'Visão geral', to: '/docs', icon: Sparkles },
       { label: 'Governança', to: '/docs/governance', icon: ShieldCheck },
+      { label: 'Changelog', to: '/docs/changelog', icon: BookOpen },
     ],
   },
   {
@@ -114,7 +115,4 @@ export const navGroups: NavGroup[] = [
   },
 ]
 
-/** Itens da faixa inferior do sidebar (grupo “Projeto” no header): ordem fixa — Login, depois Changelog. */
-export const bottomNavItems: NavItem[] = [
-  { label: 'Changelog', to: '/docs/changelog', icon: BookOpen },
-]
+export const bottomNavItems: NavItem[] = []

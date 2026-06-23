@@ -130,6 +130,8 @@ Composição recomendada:
 </Field>
 ```
 
+Cuidado — o dropdown do `Select` é `absolute` (sem portal). Ancestral com `overflow-hidden` corta a lista "pra dentro". Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. Nunca corrija no `Select` do DS (é sincronizado); corrija no consumidor.
+
 ## Tabs, Table, Dialog, Drawer, Tooltip, Progress
 
 Fontes:
@@ -149,6 +151,28 @@ Direção de uso:
 - `Drawer`: detalhes e fluxos laterais, principalmente em tablet/mobile
 - `Tooltip`: dica curta; requer `TooltipProvider`
 - `Progress`: status numérico e andamento visual
+
+## ExportButtons (par de exportação)
+
+Fonte: `src/docs/pages/patterns/DataListingDemo.tsx` (canônico) · port: `src/components/ExportButtons.tsx`
+
+Par de ações no fim da toolbar de listagem: dois botões **34×34 só-ícone** (`Button variant="secondary" size="icon"`), cada um tintado pela cor da extensão (hover na mesma cor, suave):
+
+- **Excel** — ícone verde Office `#1D6F42`; `aria-label="Exportar para Excel"`
+- **PDF** — ícone vermelho (`text-destructive`); `aria-label="Exportar para PDF"`
+
+API:
+
+```tsx
+<ExportButtons onExcel={() => exportXlsx(rows)} onPdf={() => exportPdf(rows)} />
+```
+
+Regras:
+
+- sempre o par, sempre à direita da toolbar
+- só-ícone com `title` + `aria-label` (sem rótulo de texto)
+- não trocar as cores: verde = Excel, vermelho = PDF — é convenção de extensão, não decoração
+- ícones de arquivo vêm de `src/components/icons/FileIcons.tsx` (`ExcelIcon`, `PdfIcon`), não do `lucide-react`
 
 ## PageHero
 

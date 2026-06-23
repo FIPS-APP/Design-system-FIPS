@@ -37,25 +37,52 @@ Regras:
 ## Data Listing
 
 Fonte: `src/docs/pages/patterns/DataListingDemo.tsx`
+Implementação de referência (port fiel): `src/pages/CatalogPage.tsx` + `src/components/ExportButtons.tsx` (Governança BI).
 
 Regras:
 
 - barra de busca e filtros acima da tabela
 - KPIs resumidos antes da listagem
 - tabela dentro de card
-- filtros avançados em `Dialog` no desktop e `Drawer` em cenários mais estreitos
 - detalhes da linha em painel lateral ou modal, não em navegação improvisada
 
-Snippet de referência:
+### Toolbar canônica
+
+Uma única faixa-card (`rounded-[10px_10px_10px_18px] border border-border bg-card shadow-[var(--shadow-card)]`, padding `p-3 sm:p-4`), em coluna no mobile e linha no `sm+`. Três zonas, nesta ordem:
+
+1. **Filtros** (esquerda, `shrink-0`) — `Button variant="outline" size="sm"` que abre um popover `absolute` com os `Select density="compact"`. Com filtro ativo, o botão ganha `border-primary text-primary` + badge-contador (`rounded-full bg-primary text-primary-foreground`). Fecha em clique-fora.
+2. **Busca** (centro, `flex-1`) — `Input density="compact"` com `leftIcon={<Search />}`.
+3. **Exportar** (direita, `shrink-0`) — `ExportButtons` (par Excel + PDF). O `Limpar` (`Button variant="ghost" size="sm"` com `<X />`) entra à esquerda do par só quando há filtro/busca ativos.
+
+Snippet:
 
 ```tsx
-<Field density="compact" inset="icon">
-  <FieldLabel>Status</FieldLabel>
-  <Select density="compact" aria-label="Status">
-    <option value="">Selecione</option>
-  </Select>
-</Field>
+<div className="flex flex-col gap-3 rounded-[10px_10px_10px_18px] border border-border bg-card p-3 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:p-4">
+  <FiltersPopover /> {/* Button outline + popover absolute com Selects compact */}
+  <div className="flex-1">
+    <Input density="compact" leftIcon={<Search />} placeholder="Buscar…" />
+  </div>
+  {hasFilters && (
+    <Button variant="ghost" size="sm" onClick={clear}><X />Limpar</Button>
+  )}
+  <ExportButtons onExcel={exportXlsx} onPdf={exportPdf} />
+</div>
 ```
+
+### Cuidado — clipping do dropdown do Select
+
+O `Select` do DS abre a lista como `absolute top-full` (**sem portal**). Qualquer ancestral com `overflow-hidden`/`overflow-auto` (popover de filtros, `PageHero`/`PageHeader`, card de cantos arredondados) **corta a lista "pra dentro"** — bug já visto em 3 telas (Minha Área, Catálogo, Conformidade).
+
+- não envolva um `Select` em container `overflow-hidden`
+- o popover de filtros usa `z-50` e **não** `overflow-hidden` (os cantos arredondados sobrevivem: nenhum filho preenche o canto)
+- se o `Select` precisa morar dentro do `PageHero`/`PageHeader` (que é `overflow-hidden` pelo gradiente), mova-o para uma toolbar-card abaixo do hero
+- nunca corrija no `Select` do DS (é sincronizado) — corrija no consumidor
+
+Não faça:
+
+- filtros como tabs planas coloridas soltas
+- export como botão genérico de texto em vez do par de ícones Excel/PDF
+- faixa-stripe lateral colorida em cards (padrão proibido)
 
 ## Form Workspace
 

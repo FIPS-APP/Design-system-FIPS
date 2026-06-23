@@ -23,3 +23,8 @@ vps/
 *.njsproj
 *.sln
 *.sw?
+
+# Nook Canvas (dev only)
+__canvas.html
+src/__canvas_mount.tsx
+src/__canvas_providers.tsx

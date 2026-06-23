@@ -1,0 +1,10 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [
+      "/home/diogo/dev/nook/public/index.html",
+      "/home/diogo/dev/nook/server.js"
+    ],
+    "ignoreValues": []
+  }
+}

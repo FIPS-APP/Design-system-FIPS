@@ -14,8 +14,11 @@ import { Button } from '../components/ui/button'
 import { Toaster } from 'sonner'
 import { docHeaderBarTabs, docHeaderBarTop, docHeaderShellBorder } from '../lib/docHeaderChrome'
 import { useFipsTheme } from '../hooks/useFipsTheme'
+import { GuidedTour } from '../components/domain/GuidedTour'
+import { useTour } from '../hooks/useTour'
+import { DS_TOUR_STEPS, DS_TOUR_STORAGE_KEY } from '../data/tourSteps'
 
-const DOC_VERSION = 'v0.4.2'
+const DOC_VERSION = 'v0.5.3'
 
 export function DocLayout() {
   const { dark, toggle } = useFipsTheme()
@@ -27,6 +30,7 @@ export function DocLayout() {
     typeof window !== 'undefined' ? window.matchMedia('(min-width: 1024px)').matches : false,
   )
   const location = useLocation()
+  const tour = useTour({ steps: DS_TOUR_STEPS, storageKey: DS_TOUR_STORAGE_KEY })
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)')
@@ -35,6 +39,21 @@ export function DocLayout() {
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
+
+  // Tour em viewport estreita: passos que destacam o sidebar (nav-lateral,
+  // menu-auto) precisam dele aberto, senão o alvo fica `translate-x-full` fora
+  // da tela e o spotlight aponta pro vazio. Derivado no render (sem setState):
+  // ao sair do passo ou encerrar o tour, o sidebar volta sozinho ao estado manual.
+  const sidebarOpenForTour = tour.isActive && !isLg && !!tour.currentStep?.requiresSidebar
+  const effectiveMobileOpen = mobileOpen || sidebarOpenForTour
+
+  // Após a animação de abertura (transform 300ms), re-mede o alvo agora visível —
+  // useTour escuta 'resize'. Só emite evento externo, sem setState no effect.
+  useEffect(() => {
+    if (!sidebarOpenForTour) return
+    const t = window.setTimeout(() => window.dispatchEvent(new Event('resize')), 360)
+    return () => window.clearTimeout(t)
+  }, [sidebarOpenForTour])
 
   const activeItem = [
     ...navGroups.flatMap((group) =>
@@ -74,11 +93,12 @@ export function DocLayout() {
     <div className="flex min-h-svh bg-[var(--color-surface-muted)]">
       <aside
         id="docs-app-sidebar"
+        data-tour-step="nav-lateral"
         className={cn(
           'fixed inset-y-0 left-0 z-40 overflow-hidden shadow-[4px_0_32px_rgba(0,26,64,0.36)] transition-[width,transform] duration-300 ease-in-out lg:relative lg:inset-auto',
           dark ? 'bg-[var(--color-surface-muted)] shadow-none' : 'bg-[#002a68]',
           collapsed ? 'w-[68px]' : 'w-64',
-          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          effectiveMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
         aria-label="Menu lateral"
       >
@@ -89,6 +109,7 @@ export function DocLayout() {
             onNavigate={() => setMobileOpen(false)}
             docVersion={DOC_VERSION}
             onAutoCollapseChange={handleSidebarAutoCollapseChange}
+            onReplayTour={tour.start}
           />
         </div>
       </aside>
@@ -165,7 +186,7 @@ export function DocLayout() {
                 </DocHeaderNeuIconButton>
                 <DocHeaderPageTrail groupLabel={currentGroupLabel} pageTitle={title} dark={dark} />
               </div>
-              <div className="hidden w-full max-w-xs md:block">
+              <div className="hidden w-full max-w-xs md:block" data-tour-step="busca">
                 <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
               </div>
               <div className="hidden shrink-0 items-center gap-2 sm:flex">
@@ -211,6 +232,16 @@ export function DocLayout() {
 
       <Toaster richColors position="top-right" closeButton />
       <TutorialOverlay open={tutorialOpen} onClose={() => setTutorialOpen(false)} pageName={routeToPageName(location.pathname)} />
+      <GuidedTour
+        isActive={tour.isActive}
+        currentStepIndex={tour.currentStepIndex}
+        currentStep={tour.currentStep}
+        targetRect={tour.targetRect}
+        totalSteps={tour.totalSteps}
+        next={tour.next}
+        back={tour.back}
+        skip={tour.skip}
+      />
     </div>
   )
 }

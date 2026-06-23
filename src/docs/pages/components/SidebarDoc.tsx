@@ -851,7 +851,7 @@ function SidebarDemo({
                 transition: 'color 0.15s ease',
               }}
             >
-              Menu automático
+              Modo menu
             </span>
           ) : null}
         </button>
@@ -1398,7 +1398,7 @@ export default function SidebarDoc() {
         <Section
           n="01"
           title="Playground interativo"
-          desc="Navegue pelos itens: rota ativa simulada, submenus, badges, tooltip no colapsado e Menu automático. Clique em qualquer sidebar para copiar o código."
+          desc="Navegue pelos itens: rota ativa simulada, submenus, badges, tooltip no colapsado e Modo menu. Clique em qualquer sidebar para copiar o código."
         >
           <Card mob={mob}>
             <Copyable
@@ -1489,7 +1489,7 @@ export default function SidebarDoc() {
                 <div style={gl}>Camada 2 — Motor de estado</div>
                 <p style={gt}>Controla collapsed/expanded, submenus abertos, item ativo e regras de auto-fechamento sem depender da camada visual.</p>
                 <div style={gl}>Camada 3 — SidebarNeuIcon36</div>
-                <p style={gt}>Componente visual reutilizado por todos os itens e pelo trigger do Menu automático. Gerencia gradiente 3D, specular highlight e shimmer via props (isActive, hovered, shimmerLoop).</p>
+                <p style={gt}>Componente visual reutilizado por todos os itens e pelo trigger do Modo menu. Gerencia gradiente 3D, specular highlight e shimmer via props (isActive, hovered, shimmerLoop).</p>
                 <div style={gl}>Camada 4 — Integração app</div>
                 <p style={gt}>
                   Conecta roteador, permissões e telemetria (analytics/eventos) sem acoplar regra de negócio ao JSX do item. O header da
@@ -1510,7 +1510,7 @@ export default function SidebarDoc() {
                 <p style={gt}>Fundo muda para gradiente laranja 3D (accentTo {'→'} accentFrom). Specular highlight no topo. Shimmer branco sweep 0.5s. Elevação -1px. Borda accentBorderStrong. Ícone muda para azul escuro (iconActive).</p>
                 <div style={gl}>Ativo (por rota)</div>
                 <p style={gt}>Mesmo visual do hover, mas sem elevação. Estado permanente enquanto rota estiver ativa. Shimmer dispara uma vez.</p>
-                <div style={gl}>Menu automático aberto</div>
+                <div style={gl}>Modo menu aberto</div>
                 <p style={gt}>isActive + shimmerLoop (2.8s infinito). Ícone azul escuro. Label ativo. Shimmer branco em loop contínuo.</p>
               </div>
             </div>
@@ -1525,7 +1525,7 @@ export default function SidebarDoc() {
                 },
                 {
                   t: 'Modal padrão DS',
-                  d: 'Menu automático usa Dialog do DS-FIPS (max-w-lg, rounded-2xl, overlay com blur, botão X, gap-5, p-6/sm:p-8).',
+                  d: 'Modo menu usa Dialog do DS-FIPS (max-w-lg, rounded-2xl, overlay com blur, botão X, gap-5, p-6/sm:p-8).',
                 },
                 {
                   t: 'Acessibilidade',
@@ -1608,8 +1608,8 @@ export default function SidebarDoc() {
               <div>
                 <span style={{ ...gl, marginTop: 0 }}>QA visual e operacional</span>
                 <p style={gt}>- Contraste dos estados cumpre AA no modo expandido e colapsado.</p>
-                <p style={gt}>- Tile 36×36 com gradiente 3D, specular e shimmer branco idêntico em todos os itens e no Menu automático.</p>
-                <p style={gt}>- Dialog de Menu automático usa max-w-lg, rounded-2xl, overlay, botão X (padrão DS).</p>
+                <p style={gt}>- Tile 36×36 com gradiente 3D, specular e shimmer branco idêntico em todos os itens e no Modo menu.</p>
+                <p style={gt}>- Dialog de Modo menu usa max-w-lg, rounded-2xl, overlay, botão X (padrão DS).</p>
                 <p style={gt}>- Sem overflow horizontal no container principal e no nav rolável.</p>
                 <p style={gt}>
                   - Marca no header: wordmark legível expandido (altura ~52px, largura proporcional); ícone compacto colapsado (36×36),

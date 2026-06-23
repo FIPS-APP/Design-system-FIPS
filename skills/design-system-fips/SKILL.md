@@ -33,5 +33,6 @@ Use these searches when the repository is available:
 - `rg -n "buttonVariants|badgeVariants" src/components/ui`
 - `rg -n -- "--color-primary|--color-accent|--shadow-card|--font-heading" src/styles/globals.css`
 - `rg -n "DocPage|PatternGuidelines" src/docs`
+- `rg -n "ExportButtons|ExcelIcon|PdfIcon" src` (toolbar de listagem: par Excel/PDF)
 
 If the repository is not available, treat the portable references bundled with this skill as the source of truth until the codebase is synced.

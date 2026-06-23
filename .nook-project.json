@@ -1,0 +1,23 @@
+{
+  "name": "DS-FIPS",
+  "kind": "design-system",
+  "description": "Design System da FIPS",
+  "stack": [],
+  "bmad": true,
+  "createdAt": "2026-04-30",
+  "hubNote": null,
+  "syncPaths": [
+    "src/components/ui",
+    "src/composites",
+    "src/tokens",
+    "src/lib",
+    "src/styles",
+    "src/index.ts",
+    "tailwind.config.js",
+    "tailwind.config.ts",
+    "postcss.config.js",
+    "components.json",
+    "src/themes"
+  ],
+  "githubAccount": "DiogoPaiva91"
+}

@@ -387,7 +387,7 @@ function ShellMenuAutoButton({ collapsed }: { collapsed: boolean }) {
             whiteSpace: 'nowrap',
           }}
         >
-          Menu automático
+          Modo menu
         </span>
       ) : null}
     </button>

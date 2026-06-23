@@ -330,7 +330,7 @@
   }
 }
 
-/* Docs app sidebar (neumorphic tiles + Menu automático range) */
+/* Docs app sidebar (neumorphic tiles + Modo menu range) */
 @keyframes docsSidebarNeuShimmer {
   0% {
     transform: translateX(-100%);

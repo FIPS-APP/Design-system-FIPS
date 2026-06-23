@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, createContext, type ReactNode } from 'react'
-import { BookOpen, ChevronDown, ChevronRight, LogOut, Sparkles, Timer, type LucideIcon } from 'lucide-react'
+import { BookOpen, ChevronDown, ChevronRight, Compass, LogOut, MousePointer2, Sparkles, Timer, Zap, type LucideIcon } from 'lucide-react'
 import { matchPath, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useFipsTheme } from '../../hooks/useFipsTheme'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog'
-import { bottomNavItems, navGroups, type NavGroup, type NavItem } from '../../routes/nav'
+import { navGroups, type NavGroup } from '../../routes/nav'
 
 const C = {
   azulProfundo: '#004B9B',
@@ -88,7 +81,7 @@ function buildMenuTree(groups: NavGroup[]): TreeItem[] {
       }
     } else {
       items.push({
-        label: g.label.toUpperCase(),
+        label: g.label,
         icon: g.icon ?? BookOpen,
         children: g.items.map((it) => ({
           label: it.label,
@@ -363,93 +356,6 @@ function DocNavItem({
   )
 }
 
-function BottomNavLink({
-  item,
-  collapsed,
-  pathname,
-  onItemNavigate,
-  theme,
-}: {
-  item: NavItem
-  collapsed: boolean
-  pathname: string
-  onItemNavigate?: () => void
-  theme: SidebarTheme
-}) {
-  const [hovered, setHovered] = useState(false)
-  const Icon = item.icon ?? BookOpen
-  const isActive = pathIsActive(pathname, item.to)
-  return (
-    <NavLink
-      to={item.to}
-      end={item.to === '/docs'}
-      onClick={() => onItemNavigate?.()}
-      className="group relative flex cursor-pointer items-center text-left no-underline [color:inherit]"
-      style={{
-        padding: collapsed ? '6px 0' : '6px 12px',
-        margin: collapsed ? '1px auto' : '1px 8px',
-        borderRadius: 8,
-        justifyContent: collapsed ? 'center' : 'flex-start',
-        gap: collapsed ? 0 : 12,
-        width: collapsed ? 52 : undefined,
-        maxWidth: collapsed ? 52 : '100%',
-        minWidth: 0,
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <SidebarNeuIcon36 theme={theme} isActive={isActive} hovered={hovered}>
-        <Icon
-          size={17}
-          strokeWidth={1.9}
-          style={{ color: isActive || hovered ? theme.iconActive : theme.textMuted, transition: 'color 0.2s ease' }}
-          aria-hidden
-        />
-      </SidebarNeuIcon36>
-      {!collapsed ? (
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: isActive ? 500 : 400,
-            letterSpacing: '0.01em',
-            flex: 1,
-            color: isActive ? theme.textActive : hovered ? theme.textHover : theme.textMuted,
-            fontFamily: F.body,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            minWidth: 0,
-          }}
-        >
-          {item.label}
-        </span>
-      ) : null}
-      {collapsed && hovered ? (
-        <div
-          style={{
-            position: 'absolute',
-            left: 'calc(100% + 8px)',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: theme.tooltipBg,
-            color: theme.tooltipText,
-            padding: '4px 10px',
-            borderRadius: 6,
-            fontSize: 12,
-            whiteSpace: 'nowrap',
-            zIndex: 50,
-            border: `1px solid ${theme.iconBorderIdle}`,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-            pointerEvents: 'none',
-          }}
-        >
-          {item.label}
-        </div>
-      ) : null}
-    </NavLink>
-  )
-}
-
 export type DocsNeuSidebarProps = {
   collapsed: boolean
   onCollapsedChange: (collapsed: boolean) => void
@@ -457,6 +363,8 @@ export type DocsNeuSidebarProps = {
   docVersion?: string
   /** Quando “Fechar automaticamente” (menu automático) é ligado ou desligado no diálogo do rodapé. */
   onAutoCollapseChange?: (enabled: boolean) => void
+  /** Reinicia o tour de primeiro acesso (item “Primeiro acesso” do rodapé). */
+  onReplayTour?: () => void
 }
 
 export function DocsNeuSidebar({
@@ -465,6 +373,7 @@ export function DocsNeuSidebar({
   onNavigate,
   docVersion = 'v0.3.0',
   onAutoCollapseChange,
+  onReplayTour,
 }: DocsNeuSidebarProps) {
   const theme = TN
   const { pathname } = useLocation()
@@ -475,6 +384,7 @@ export function DocsNeuSidebar({
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sidebarPointerInsideRef = useRef(false)
   const menuBehaviorOpenRef = useRef(false)
+  const menuModePopoverRef = useRef<HTMLDivElement | null>(null)
   const skipSettingsEffect = useRef(true)
 
   const clearTimer = useCallback(() => {
@@ -519,6 +429,20 @@ export function DocsNeuSidebar({
   )
 
   const rangePct = ((collapseSeconds - 1) / 29) * 100
+  const MENU_MODE_QUICK_PICKS = [3, 5, 10, 15] as const
+
+  /** Fecha o popover de comportamento ao clicar fora dele. */
+  useEffect(() => {
+    if (!menuBehaviorOpen) return
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (menuModePopoverRef.current && !menuModePopoverRef.current.contains(target)) {
+        onMenuBehaviorOpenChange(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [menuBehaviorOpen, onMenuBehaviorOpenChange])
 
   useEffect(() => {
     if (skipSettingsEffect.current) {
@@ -636,163 +560,224 @@ export function DocsNeuSidebar({
               theme={theme}
             />
           ))}
-          <div style={{ borderTop: `1px solid ${theme.border}`, margin: '8px 0 0', padding: '8px 0 0' }}>
-            {bottomNavItems.map((item) => (
-              <BottomNavLink key={item.to} item={item} collapsed={collapsed} pathname={pathname} onItemNavigate={onNavigate} theme={theme} />
-            ))}
+        </nav>
+
+        <div style={{ borderTop: `1px solid ${theme.border}`, padding: '8px 0 10px', flexShrink: 0 }}>
+            <div className="relative" ref={menuModePopoverRef}>
+              <button
+                type="button"
+                onClick={() => onMenuBehaviorOpenChange(!menuBehaviorOpen)}
+                onMouseEnter={(e) => {
+                  if (menuBehaviorOpen) return
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+                }}
+                onMouseLeave={(e) => {
+                  if (menuBehaviorOpen) return
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = theme.chevron
+                }}
+                aria-expanded={menuBehaviorOpen}
+                aria-haspopup="dialog"
+                id="docs-sidebar-menu-behavior-trigger"
+                data-tour-step="menu-auto"
+                className="flex cursor-pointer items-center gap-2 rounded-md text-[11px] transition"
+                style={{
+                  color: menuBehaviorOpen ? 'rgba(255,255,255,0.85)' : theme.chevron,
+                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  padding: collapsed ? '6px 0' : '6px 8px',
+                  width: collapsed ? 52 : 'calc(100% - 16px)',
+                  margin: collapsed ? '1px auto' : '1px 8px',
+                  border: 'none',
+                  background: menuBehaviorOpen ? 'rgba(255,255,255,0.06)' : 'transparent',
+                }}
+              >
+                <Timer className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                {!collapsed ? (
+                  <>
+                    <span className="flex-1 truncate text-left font-medium" style={{ fontFamily: F.body }}>
+                      Modo menu
+                    </span>
+                    <span className="font-mono text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                      {autoCollapse ? `Auto · ${collapseSeconds}s` : 'Manual'}
+                    </span>
+                  </>
+                ) : null}
+              </button>
+
+              {menuBehaviorOpen && !collapsed ? (
+                <div
+                  role="dialog"
+                  aria-label="Comportamento do menu"
+                  className="absolute bottom-full left-2 right-2 z-40 mb-2 rounded-lg border p-3"
+                  style={{
+                    borderColor: 'rgba(255,255,255,0.10)',
+                    background: C.azulEscuro,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                  }}
+                >
+                  <div className="mb-2.5 flex rounded-md p-0.5" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        clearTimer()
+                        setAutoCollapse(false)
+                      }}
+                      className="flex flex-1 items-center justify-center gap-1 rounded px-2 py-1 text-[11px] font-medium transition"
+                      style={{
+                        background: !autoCollapse ? 'rgba(255,255,255,0.10)' : 'transparent',
+                        color: !autoCollapse ? '#fff' : 'rgba(255,255,255,0.55)',
+                      }}
+                    >
+                      <MousePointer2 className="h-3 w-3" strokeWidth={2} aria-hidden />
+                      Manual
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAutoCollapse(true)}
+                      className="flex flex-1 items-center justify-center gap-1 rounded px-2 py-1 text-[11px] font-medium transition"
+                      style={{
+                        background: autoCollapse ? 'rgba(255,255,255,0.10)' : 'transparent',
+                        color: autoCollapse ? '#fff' : 'rgba(255,255,255,0.55)',
+                      }}
+                    >
+                      <Zap className="h-3 w-3" strokeWidth={2} aria-hidden />
+                      Automático
+                    </button>
+                  </div>
+
+                  {autoCollapse ? (
+                    <>
+                      <div className="mb-1.5 flex items-center gap-1.5 text-[10px] uppercase tracking-wide" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                        <Timer className="h-3 w-3" strokeWidth={2} aria-hidden />
+                        <span>Recolher após</span>
+                        <span className="ml-auto font-mono text-[11px] normal-case tracking-normal" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                          {collapseSeconds}s
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        className="docs-sidebar-behavior-range block w-full"
+                        min={1}
+                        max={30}
+                        step={1}
+                        value={collapseSeconds}
+                        onChange={(e) => setCollapseSeconds(Number(e.target.value))}
+                        aria-label="Tempo para recolher (segundos)"
+                        style={{
+                          background: `linear-gradient(to right, ${C.amareloEscuro} 0%, ${C.amareloEscuro} ${rangePct}%, rgba(255,255,255,0.10) ${rangePct}%, rgba(255,255,255,0.10) 100%)`,
+                        }}
+                      />
+                      <div className="mt-2 flex gap-1">
+                        {MENU_MODE_QUICK_PICKS.map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => setCollapseSeconds(s)}
+                            className="flex-1 rounded px-1 py-0.5 font-mono text-[10px] transition"
+                            style={{
+                              background: collapseSeconds === s ? 'rgba(246,146,30,0.20)' : 'rgba(255,255,255,0.04)',
+                              color: collapseSeconds === s ? C.amareloEscuro : 'rgba(255,255,255,0.55)',
+                            }}
+                          >
+                            {s}s
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-[10px] leading-snug" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                      Use o botão do cabeçalho para recolher e expandir o menu.
+                    </p>
+                  )}
+                </div>
+              ) : null}
+            </div>
+
             <button
               type="button"
-              onClick={() => onMenuBehaviorOpenChange(true)}
-              onMouseEnter={(e) => { e.currentTarget.style.color = theme.accentFrom }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = theme.chevron }}
-              aria-expanded={menuBehaviorOpen}
-              aria-haspopup="dialog"
-              id="docs-sidebar-menu-behavior-trigger"
-              className="flex cursor-pointer items-center rounded-lg transition-colors"
+              onClick={() => onReplayTour?.()}
+              className="flex cursor-pointer items-center gap-2 rounded-md text-[11px] transition"
               style={{
                 color: theme.chevron,
                 justifyContent: collapsed ? 'center' : 'flex-start',
-                gap: collapsed ? 0 : 12,
-                padding: collapsed ? '6px 0' : '6px 12px',
-                width: collapsed ? 52 : undefined,
-                maxWidth: collapsed ? 52 : '100%',
+                padding: collapsed ? '6px 0' : '6px 8px',
+                width: collapsed ? 52 : 'calc(100% - 16px)',
                 margin: collapsed ? '1px auto' : '1px 8px',
                 border: 'none',
                 background: 'transparent',
               }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = theme.chevron
+              }}
+              title="Refazer o tour de boas-vindas"
             >
-              <span className="flex shrink-0 items-center justify-center" style={{ width: 36, height: 36 }}>
-                <Timer size={17} aria-hidden />
-              </span>
+              <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden />
               {!collapsed ? (
-                <span className="text-[13px] font-normal" style={{ fontFamily: F.body }}>
-                  Menu automático
+                <span className="flex-1 truncate text-left font-medium" style={{ fontFamily: F.body }}>
+                  Primeiro acesso
                 </span>
               ) : null}
             </button>
-
-            <Dialog open={menuBehaviorOpen} onOpenChange={onMenuBehaviorOpenChange}>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Comportamento do menu</DialogTitle>
-                  <DialogDescription className="sr-only">Ajustes de fechamento automático do menu lateral da documentação.</DialogDescription>
-                </DialogHeader>
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-sm " style={{ fontFamily: F.body, color: 'var(--color-fg)' }}>
-                    Fechar automaticamente
-                  </span>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={autoCollapse}
-                    onClick={() => {
-                      setAutoCollapse((prev) => {
-                        if (prev) clearTimer()
-                        return !prev
-                      })
-                    }}
-                    className="shrink-0 cursor-pointer p-0.5"
-                    style={{
-                      width: 44,
-                      height: 24,
-                      borderRadius: 12,
-                      border: `1px solid ${autoCollapse ? C.azulProfundo : 'var(--color-border)'}`,
-                      background: autoCollapse ? C.azulProfundo : 'var(--color-surface-muted)',
-                    }}
-                  >
-                    <span
-                      className="block rounded-full bg-white"
-                      style={{
-                        width: 18,
-                        height: 18,
-                        transform: autoCollapse ? 'translateX(22px)' : 'translateX(0)',
-                        transition: 'transform 0.2s ease',
-                        boxShadow: '0 1px 3px rgba(0,42,104,0.2)',
-                      }}
-                    />
-                  </button>
-                </div>
-                <div style={{ opacity: autoCollapse ? 1 : 0.55 }}>
-                  <div className="mb-2.5 flex items-center justify-between">
-                    <span className="text-[13px]" style={{ fontFamily: F.body, color: 'var(--color-fg-muted)' }}>
-                      Tempo para fechar
-                    </span>
-                    <span className="text-sm font-bold" style={{ fontFamily: F.body, color: 'var(--color-fg)' }}>
-                      {collapseSeconds}s
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    className="docs-sidebar-behavior-range block w-full"
-                    min={1}
-                    max={30}
-                    step={1}
-                    value={collapseSeconds}
-                    disabled={!autoCollapse}
-                    onChange={(e) => setCollapseSeconds(Number(e.target.value))}
-                    style={{
-                      background: `linear-gradient(to right, ${C.azulProfundo} 0%, ${C.azulProfundo} ${rangePct}%, ${C.azulCeuClaro} ${rangePct}%, ${C.azulCeuClaro} 100%)`,
-                    }}
-                  />
-                  <div className="mt-2 flex justify-between text-[11px]" style={{ fontFamily: F.body, color: 'var(--color-fg-muted)' }}>
-                    <span>1s</span>
-                    <span>30s</span>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
 
             <a
               href="https://github.com/LuizM2/Design-system-FIPS"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex cursor-pointer items-center rounded-lg transition-colors no-underline [color:inherit]"
+              className="flex cursor-pointer items-center gap-2 rounded-md text-[11px] transition no-underline [color:inherit]"
               style={{
                 color: theme.chevron,
                 justifyContent: collapsed ? 'center' : 'flex-start',
-                gap: collapsed ? 0 : 12,
-                padding: collapsed ? '6px 0' : '6px 12px',
-                width: collapsed ? 52 : undefined,
-                maxWidth: collapsed ? 52 : '100%',
+                padding: collapsed ? '6px 0' : '6px 8px',
+                width: collapsed ? 52 : 'calc(100% - 16px)',
                 margin: collapsed ? '1px auto' : '1px 8px',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = theme.accentFrom
+                e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
               }}
               onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
                 e.currentTarget.style.color = theme.chevron
               }}
             >
-              <span className="flex shrink-0 items-center justify-center" style={{ width: 36, height: 36 }}>
-                <LogOut size={17} aria-hidden />
-              </span>
+              <LogOut className="h-3.5 w-3.5 shrink-0" aria-hidden />
               {!collapsed ? (
-                <span className="text-[13px] font-normal" style={{ fontFamily: F.body }}>
+                <span className="flex-1 truncate text-left font-medium" style={{ fontFamily: F.body }}>
                   Repositório
                 </span>
               ) : null}
             </a>
 
             <div
-              className="flex items-center rounded-lg transition-colors"
+              className="flex items-center gap-2 rounded-md text-[11px]"
               style={{
-                color: 'rgba(255,255,255,0.5)',
+                color: theme.chevron,
                 justifyContent: collapsed ? 'center' : 'flex-start',
-                gap: collapsed ? 0 : 12,
-                padding: collapsed ? '6px 0' : '6px 12px',
-                width: collapsed ? 52 : undefined,
-                maxWidth: collapsed ? 52 : '100%',
+                padding: collapsed ? '6px 0' : '6px 8px',
+                width: collapsed ? 52 : 'calc(100% - 16px)',
                 margin: collapsed ? '1px auto' : '1px 8px',
               }}
               title="Versão da documentação"
             >
-              <span className="flex shrink-0 items-center justify-center" style={{ width: 36, height: 36 }}>
-                <Sparkles className="h-3.5 w-3.5" aria-hidden />
-              </span>
-              {!collapsed ? <span className="text-xs">{docVersion}</span> : null}
+              <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              {!collapsed ? (
+                <>
+                  <span className="flex-1 truncate text-left font-medium" style={{ fontFamily: F.body }}>
+                    Versão
+                  </span>
+                  <span className="font-mono text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    {docVersion}
+                  </span>
+                </>
+              ) : null}
             </div>
-          </div>
-        </nav>
+        </div>
       </aside>
     </SidebarCtx.Provider>
   )

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
@@ -340,49 +339,6 @@ export default function DSFIPSSpacing(){
         </Section>
 
         <CodePlayground />
-
-        <CodeExportSection items={[
-          {
-            label: 'Escala de Espacamento FIPS',
-            description: 'Tokens de spacing baseados em multiplos de 4px.',
-            code: `/* ═══════════════════════════════════════════
-   Spacing Scale — DS-FIPS
-   Base unit: 4px | Formula: n x 4px
-   ═══════════════════════════════════════════ */
-
-:root {
-  --space-xs:  4px;   /* Gap icone-badge, margin minimo */
-  --space-sm:  8px;   /* Gap entre badges, padding badge */
-  --space-md:  12px;  /* Padding input, gap tab-conteudo */
-  --space-lg:  16px;  /* Padding card mobile, gap entre cards */
-  --space-xl:  20px;  /* Padding card desktop, gap secoes internas */
-  --space-2xl: 24px;  /* Padding modal/drawer, gap entre secoes */
-  --space-3xl: 32px;  /* Padding header hero, margem entre blocos */
-  --space-4xl: 48px;  /* Margem entre secoes do catalogo */
-}
-
-/* ── Breakpoints ── */
-/* Mobile:  < 640px  — espacamentos reduzem 1 nivel */
-/* Tablet:  < 900px  */
-/* Desktop: >= 900px */
-
-/* ── Referencia por componente ──
-   Badge:          2px 6px
-   Button sm:      6px 12px
-   Button padrao:  8px 16px
-   Input/Select:   8px 12px
-   Card mobile:    16px
-   Card desktop:   28px
-   Modal body:     20px 24px
-   Header hero:    48px 40px (desktop) / 32px 20px (mobile)
-*/
-
-/* ── Inputs ── */
-/* Height desktop: 35px */
-/* Height mobile:  42px */
-/* Height compacto: 30px */`,
-          },
-        ]} />
 
         <div style={{textAlign:"center",padding:"20px 0 0",borderTop:`1px solid ${C.cardBorder}`,marginTop:20}}>
           <span style={{fontSize:12,color:C.cinzaChumbo,letterSpacing:".5px",fontFamily:Fn.title,fontWeight:400}}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
