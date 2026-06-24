@@ -10,12 +10,13 @@ export const badgeVariants = cva(
         secondary:
           'border-transparent bg-[var(--color-surface-muted)] text-[var(--color-fg)]',
         success:
-          'border-transparent bg-[var(--color-success)]/14 text-[var(--color-success-strong)] dark:bg-[rgba(0,198,76,0.14)] dark:text-[#8BE5AD]',
+          'border-[var(--color-semantic-sucesso-border)] bg-[var(--color-semantic-sucesso-bg)] text-[var(--color-semantic-sucesso-fg)]',
         warning:
-          'border-transparent bg-[var(--color-badge-warning-bg)] text-[var(--color-accent-strong)] dark:text-[#FDC24E]',
-        danger: 'border-transparent bg-[var(--color-badge-danger-bg)] text-[var(--color-danger)] dark:text-[#FCA5A5]',
+          'border-[var(--color-fips-yellow-400)] bg-[var(--color-badge-warning-bg)] text-[var(--color-accent-strong)] dark:text-[#FDC24E]',
+        danger:
+          'border-[var(--color-semantic-critico-border)] bg-[var(--color-semantic-critico-bg)] text-[var(--color-semantic-critico-fg)]',
         outline: 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg)]',
-        info: 'border-transparent bg-[var(--color-fips-blue-200)]/65 text-[var(--color-primary)] dark:bg-[rgba(147,189,228,0.14)] dark:text-[#93BDE4]',
+        info: 'border-[var(--color-semantic-info-border)] bg-[var(--color-semantic-info-bg)] text-[var(--color-semantic-info-fg)]',
       },
     },
     defaultVariants: {
