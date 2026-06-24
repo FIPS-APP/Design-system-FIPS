@@ -50,7 +50,7 @@ function InfoCard({label,value}){return(<div style={{borderRadius:8,border:`1px 
 /* ═══════════════════════════════════════════
    MODAL — REFINED v2
    ═══════════════════════════════════════════ */
-function Modal({open,onClose,title,subtitle,eyebrow,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
+function Modal({open,onClose,title,subtitle,eyebrow,eyebrowColor,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
   const [vis,setVis]=useState(false);
   const [animIn,setAnimIn]=useState(false);
   useEffect(()=>{
@@ -74,8 +74,8 @@ function Modal({open,onClose,title,subtitle,eyebrow,children,footer,footerBg,wid
           <div style={{display:"flex",gap:14,alignItems:"center",minWidth:0,position:"relative"}}>
             {icon&&<div style={{width:44,height:44,borderRadius:10,background:iconBg||"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${iconBorder||"rgba(255,255,255,0.16)"}`,boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
             <div style={{minWidth:0}}>
-              {eyebrow&&<span style={{display:"block",fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:C.amareloEscuro,fontFamily:Fn.title,lineHeight:1.2,marginBottom:1}}>{eyebrow}</span>}
-              <h2 id="modal-title" style={{fontSize:isHero?21:17,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:isHero?"-0.2px":undefined}}>{title}</h2>
+              {eyebrow&&<span style={{display:"block",fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:eyebrowColor||C.amareloEscuro,fontFamily:Fn.title,lineHeight:1.2,marginBottom:1}}>{eyebrow}</span>}
+              <h2 id="modal-title" style={{fontSize:21,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:"-0.2px"}}>{title}</h2>
               {subtitle&&<p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
             </div>
           </div>
@@ -1012,7 +1012,7 @@ export default function DialogDoc(){
           ══════════════════════════════════════════════ */}
 
       {/* 1. CONFIRMAÇÃO */}
-      <Modal open={m==="confirm"} onClose={close} title="Aprovar requisição?" subtitle="Encaminhará REQ-4025 para o departamento de compras." icon={Ic.check(24,"#fff")} width={440} headerBg="#00904C"
+      <Modal open={m==="confirm"} onClose={close} eyebrow="Confirmação" eyebrowColor="rgba(255,255,255,0.9)" title="Aprovar requisição?" subtitle="Encaminhará REQ-4025 para o departamento de compras." icon={Ic.check(24,"#fff")} width={440} headerBg="#00904C"
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Aprovar" color={C.verdeFloresta} onClick={close}/></>}>
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           <div style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",background:C.bg,borderRadius:8}}><span style={{fontSize:12,color:C.cinzaChumbo}}>Solicitante</span><span style={{fontSize:13,fontWeight:600}}>Carlos Santos</span></div>
@@ -1022,7 +1022,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 2. DESTRUTIVO */}
-      <Modal open={m==="delete"} onClose={close} title="Excluir fornecedor?" subtitle="Esta ação é irreversível e afetará contratos ativos." icon={Ic.trash(24,"#fff")} width={420} headerBg="#B91C1C" footerBg="#FEF8F8"
+      <Modal open={m==="delete"} onClose={close} eyebrow="Ação irreversível" eyebrowColor="rgba(255,255,255,0.9)" title="Excluir fornecedor?" subtitle="Esta ação é irreversível e afetará contratos ativos." icon={Ic.trash(24,"#fff")} width={420} headerBg="#B91C1C" footerBg="#FEF8F8"
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Excluir permanentemente" danger onClick={close}/></>}>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <div style={{padding:"12px 16px",background:C.bg,borderRadius:8}}>
@@ -1040,7 +1040,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 3. ALERTA */}
-      <Modal open={m==="alert"} onClose={close} title="Sessão expirando" subtitle="Sessões inativas são encerradas por segurança." icon={Ic.alertTri(24,"#fff")} width={400} headerBg="#C2410C"
+      <Modal open={m==="alert"} onClose={close} eyebrow="Atenção" eyebrowColor="rgba(255,255,255,0.9)" title="Sessão expirando" subtitle="Sessões inativas são encerradas por segurança." icon={Ic.alertTri(24,"#fff")} width={400} headerBg="#C2410C"
         footer={<><Btn label="Sair agora" outline onClick={close}/><Btn label="Renovar sessão" color={C.azulProfundo} onClick={close}/></>}>
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           <div style={{padding:"16px",background:"#FFF7ED",border:"1px solid #FDBA74",borderRadius:8,textAlign:"center"}}>
@@ -1096,7 +1096,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 5. FORMULÁRIO — body #fafafa */}
-      <Modal open={m==="form"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,"#fff")} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
+      <Modal open={m==="form"} onClose={close} eyebrow="Atribuição" title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
           <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
@@ -1111,7 +1111,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 6. LISTA — body #f5f6f8 */}
-      <Modal open={m==="list"} onClose={close} title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,"#fff")} bodyBg="#f5f6f8" headerBg={GOV_GRAD} width={520} noPadBody
+      <Modal open={m==="list"} onClose={close} eyebrow="Requisição" title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#f5f6f8" headerBg={GOV_GRAD} width={520} noPadBody
         footer={<><span style={{fontSize:11,color:C.textMuted,marginRight:"auto",fontWeight:600}}>Total: <span style={{color:C.azulProfundo,fontSize:13}}>R$ 2.450,00</span></span><Btn label="Fechar" outline onClick={close}/><Btn label="Aprovar tudo" color={C.verdeFloresta} onClick={close}/></>}>
         <div>
           {[
