@@ -44,23 +44,55 @@ Não faça:
 - renderizar a categoria com o mesmo tile 36px do item (confunde categoria com item — era o estado antigo, removido)
 - combinar sentence case com `letter-spacing 0.08em` (o tracking foi desenhado para caixa-alta; o section-label do sidebar é **uppercase**)
 
-### Sidebar — footer "Modo menu" (auto-colapso)
+### Sidebar — rodapé completo (Modo menu + utilitários)
 
-Fonte: `src/components/layout/DocsNeuSidebar.tsx` (rodapé). Controla se a sidebar recolhe sozinha.
+Fonte: `src/components/layout/DocsNeuSidebar.tsx` (rodapé). Bloco fixo no fim da sidebar com 4 itens, **nesta ordem**: **Modo menu** → **Primeiro acesso** → **Repositório** → **Versão**.
 
-Vive no rodapé fixo (`flex-shrink:0`, `border-top`), **fora** do `<nav>` (que tem `flex-1`), como sibling.
+Vive no rodapé fixo (`flex-shrink:0`, `borderTop 1px` na cor de borda, `padding 8px 0 10px`), **fora** do `<nav>` (que tem `flex-1`), como sibling.
 
-- **Pílula** (trigger): ícone `Timer` 14px + label "Modo menu" (Open Sans medium) + badge de estado em fonte mono 10px — `Auto · {n}s` ou `Manual`. `text-[11px]`, `gap-2`, padding `6px 8px`.
-- **Popover**: `absolute bottom-full left-2 right-2 z-40 mb-2 rounded-lg border p-3`, ancorado sobre a pílula. Fundo `#002A68`, borda `rgba(255,255,255,0.10)`, shadow `0 8px 24px rgba(0,0,0,0.35)`. Fecha em clique-fora (ref no container).
+#### Linha-base compartilhada (vale para os 4 itens)
+
+`flex items-center gap-2 rounded-md text-[11px] transition`, label em Open Sans (`F.body`) `font-medium truncate`, ícone 14px (`h-3.5 w-3.5 shrink-0`). Geometria reativa ao colapso:
+
+| | Expandido | Rail (colapsado) |
+| --- | --- | --- |
+| `justifyContent` | `flex-start` | `center` |
+| `padding` | `6px 8px` | `6px 0` |
+| `width` | `calc(100% - 16px)` | `52` |
+| `margin` | `1px 8px` | `1px auto` |
+
+- **Cor idle** `rgba(255,255,255,0.55)` (`theme.chevron`). **Hover** (todos menos Versão): `background rgba(255,255,255,0.04)` + `color rgba(255,255,255,0.8)`.
+- **No rail**: só o ícone centralizado; o label some (`{!collapsed ? … : null}`).
+
+#### 1. Modo menu (pílula + popover de auto-colapso)
+
+Controla se a sidebar recolhe sozinha. É o único item interativo com popover.
+
+- **Pílula** (`<button aria-haspopup="dialog" aria-expanded>`): ícone `Timer` + label "Modo menu" + badge de estado em fonte mono 10px (`rgba(255,255,255,0.4)`) — `Auto · {n}s` ou `Manual`. Aberta: `background rgba(255,255,255,0.06)` + `color rgba(255,255,255,0.85)`. Tem `data-tour-step="menu-auto"`.
+- **Popover** (`role="dialog"`): `absolute bottom-full left-2 right-2 z-40 mb-2 rounded-lg border p-3`, ancorado **sobre** a pílula. Fundo `#002A68`, borda `rgba(255,255,255,0.10)`, shadow `0 8px 24px rgba(0,0,0,0.35)`. Fecha em clique-fora (ref no container `menuModePopoverRef`).
 - **Segmented** Manual (`MousePointer2`) / Automático (`Zap`): trilho `rgba(255,255,255,0.05)`; item ativo `rgba(255,255,255,0.10)` + texto `#fff`.
-- **Automático**: label "Recolher após {n}s" + **slider laranja** (`#F6921E` preenchido, `min 1 / max 30`) + **quick-picks** `[3, 5, 10, 15]s` (ativo `rgba(246,146,30,0.20)` + texto `#F6921E`).
-- **Manual**: texto auxiliar curto, sem slider.
-- **No rail**: apenas o ícone `Timer` centralizado; o popover não abre.
+- **Automático**: label "Recolher após {n}s" + **slider laranja** (`#F6921E` preenchido, `min 1 / max 30`) + **quick-picks** `[3, 5, 10, 15]s` (`MENU_MODE_QUICK_PICKS`; ativo `rgba(246,146,30,0.20)` + texto `#F6921E`).
+- **Manual**: texto auxiliar curto ("Use o botão do cabeçalho para recolher e expandir o menu."), sem slider.
+- **No rail**: apenas o ícone `Timer`; o popover não abre.
+
+#### 2. Primeiro acesso (refaz o tour)
+
+`<button onClick={onReplayTour}>`, ícone `Compass`, `title="Refazer o tour de boas-vindas"`. Replay do overlay de boas-vindas. Sem badge.
+
+#### 3. Repositório (link externo)
+
+`<a href target="_blank" rel="noopener noreferrer">` para o GitHub do DS (`no-underline [color:inherit]`), ícone `LogOut`. Sem badge.
+
+#### 4. Versão (estático)
+
+`<div>` **não clicável** (sem hover, sem `cursor-pointer`), ícone `Sparkles`, `title="Versão da documentação"` + badge mono 10px (`rgba(255,255,255,0.4)`) com `docVersion` (ex.: `v0.5.4`). Espelha a constante `DOC_VERSION`.
 
 Não faça:
 
-- usar `Dialog` central do Radix para isso (é popover ancorado na pílula, padrão vindo do Suprimentos)
+- usar `Dialog` central do Radix para o Modo menu (é popover ancorado na pílula, padrão vindo do Suprimentos)
 - esconder o estado atual (a pílula sempre exibe `Auto · {n}s` ou `Manual`)
+- dar hover/clique ao item **Versão** (é rótulo informativo, não ação)
+- reordenar os 4 itens ou trocar o ícone de cada um (`Timer` / `Compass` / `LogOut` / `Sparkles`)
 
 ## Dashboard
 
