@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors',
+  'inline-flex items-center rounded-md border font-semibold transition-colors',
   {
     variants: {
       variant: {
@@ -18,9 +18,14 @@ export const badgeVariants = cva(
         outline: 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg)]',
         info: 'border-[var(--color-semantic-info-border)] bg-[var(--color-semantic-info-bg)] text-[var(--color-semantic-info-fg)]',
       },
+      size: {
+        sm: 'gap-1 px-2 py-0.5 text-[10px]',
+        md: 'gap-1.5 px-2.5 py-1 text-xs',
+      },
     },
     defaultVariants: {
       variant: 'default',
+      size: 'md',
     },
   },
 )

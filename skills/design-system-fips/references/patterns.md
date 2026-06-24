@@ -94,6 +94,17 @@ Não faça:
 - dar hover/clique ao item **Versão** (é rótulo informativo, não ação)
 - reordenar os 4 itens ou trocar o ícone de cada um (`Timer` / `Compass` / `LogOut` / `Sparkles`)
 
+#### Governança — ao criar um novo projeto FIPS
+
+Todo shell novo (Governança BI, Suprimentos, Tecnopano, etc.) **deve** incluir no rodapé da sidebar, no mínimo, estes 2 itens — eles convergem os projetos:
+
+- **Modo menu** — obrigatório. É o controle de auto-colapso (pílula `Timer` + popover). Sem ele a sidebar não tem como recolher/expandir de forma padronizada.
+- **Versão** — obrigatório. `<div>` estático com `Sparkles` + badge mono espelhando a constante de versão do projeto (`DOC_VERSION` / `APP_VERSION`). É a assinatura institucional de rastreabilidade.
+
+Os outros 2 são **contextuais** (inclua só quando fizer sentido): **Primeiro acesso** apenas se o projeto tem tour de boas-vindas; **Repositório** apenas se há repo público a linkar.
+
+Ao adicionar os itens obrigatórios, mantenha a **linha-base compartilhada** (geometria expandido/rail, cor idle `rgba(255,255,255,0.55)`, ícone 14px) e a ordem relativa (**Modo menu** primeiro, **Versão** por último).
+
 ## Dashboard
 
 Fonte: `src/docs/pages/patterns/DashboardDemo.tsx`
