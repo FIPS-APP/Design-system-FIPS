@@ -19,5 +19,13 @@
     "components.json",
     "src/themes"
   ],
-  "githubAccount": "DiogoPaiva91"
+  "githubAccount": "DiogoPaiva91",
+  "activeSkills": [
+    "impeccable",
+    "code-review",
+    "taste-skill",
+    "NookUItest",
+    "doc-coauthoring",
+    "readme-generator"
+  ]
 }

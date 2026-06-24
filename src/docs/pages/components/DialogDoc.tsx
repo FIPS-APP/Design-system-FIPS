@@ -35,6 +35,7 @@ const Ic={
   clipboard:(s=16,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><rect x="5" y="3" width="10" height="2" rx="1" stroke={c} strokeWidth="1.4"/><rect x="3" y="5" width="14" height="13" rx="2" stroke={c} strokeWidth="1.4"/><path d="M7 10h6M7 13h4" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
   codeBraces:(s=16,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><path d="M7 3C5 3 4 4.5 4 6v2c0 1-1 2-2 2 1 0 2 1 2 2v2c0 1.5 1 3 3 3M13 3c2 0 3 1.5 3 3v2c0 1 1 2 2 2-1 0-2 1-2 2v2c0 1.5-1 3-3 3" stroke={c} strokeWidth="1.4" strokeLinecap="round"/></svg>,
   chevDown:(s=12,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  lock:(s=14,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="2" stroke={c} strokeWidth="1.5"/><path d="M7 9V6.5a3 3 0 016 0V9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
 };
 
 function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
@@ -43,10 +44,13 @@ function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" st
 const BV={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu}};
 function Badge({variant="info",children,dot}){const v=BV[variant]||BV.info;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:"2px 8px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
 
+/* Info card — cartão da ficha de detalhe (modelo: BiDetailDialog/Governança BI): fundo suave, label uppercase discreta, valor em destaque. */
+function InfoCard({label,value}){return(<div style={{borderRadius:8,border:`1px solid ${C.cardBorder}`,background:C.bg,padding:"9px 12px",minWidth:0}}><dt style={{fontSize:10,fontWeight:600,letterSpacing:".04em",textTransform:"uppercase",color:C.textMuted,fontFamily:Fn.body}}>{label}</dt><dd style={{margin:"2px 0 0",fontSize:13,fontWeight:500,color:C.cinzaEscuro,fontFamily:Fn.body,wordBreak:"break-word"}}>{value||"—"}</dd></div>)}
+
 /* ═══════════════════════════════════════════
    MODAL — REFINED v2
    ═══════════════════════════════════════════ */
-function Modal({open,onClose,title,subtitle,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
+function Modal({open,onClose,title,subtitle,eyebrow,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
   const [vis,setVis]=useState(false);
   const [animIn,setAnimIn]=useState(false);
   useEffect(()=>{
@@ -70,6 +74,7 @@ function Modal({open,onClose,title,subtitle,children,footer,footerBg,width=480,i
           <div style={{display:"flex",gap:14,alignItems:"center",minWidth:0,position:"relative"}}>
             {icon&&<div style={{width:44,height:44,borderRadius:10,background:iconBg||"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${iconBorder||"rgba(255,255,255,0.16)"}`,boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
             <div style={{minWidth:0}}>
+              {eyebrow&&<span style={{display:"block",fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:C.amareloEscuro,fontFamily:Fn.title,lineHeight:1.2,marginBottom:1}}>{eyebrow}</span>}
               <h2 id="modal-title" style={{fontSize:isHero?21:17,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:isHero?"-0.2px":undefined}}>{title}</h2>
               {subtitle&&<p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
             </div>
@@ -1046,18 +1051,46 @@ export default function DialogDoc(){
         </div>
       </Modal>
 
-      {/* 4. INFORMATIVO */}
-      <Modal open={m==="info"} onClose={close} title="Sobre os Fipcoins" subtitle="Sistema de gamificação FIPS" icon={Ic.infoI(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} headerBg={GOV_GRAD} width={440}
+      {/* 4. INFORMATIVO — detalhe de artefato read-only (modelo oficial: "Movimentação de Pátio" / Governança BI) */}
+      <Modal open={m==="info"} onClose={close} eyebrow="Dashboard" title="Movimentação de Pátio" icon={Ic.grid(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} headerBg={GOV_GRAD} width={680}
         footer={<Btn label="Entendi" color={C.azulProfundo} onClick={close}/>}>
-        <div style={{display:"flex",flexDirection:"column",gap:14}}>
-          <p style={{fontSize:13,color:C.cinzaChumbo,margin:0,lineHeight:1.6}}>Fipcoins são moedas virtuais que você ganha ao submeter ideias aprovadas, completar treinamentos e participar de boas práticas. Acumule pontos e troque por benefícios.</p>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            {[{v:"+50",l:"Ideia aprovada",c:C.verdeFloresta,d:C.verdeEscuro},{v:"+20",l:"Treinamento",c:C.azulProfundo,d:C.azulEscuro},{v:"+10",l:"Boa prática",c:C.amareloEscuro,d:"#C2410C"}].map(i=>(
-              <div key={i.l} style={{flex:1,minWidth:100,padding:"12px",background:`${i.c}08`,borderRadius:8,textAlign:"center"}}>
-                <span style={{fontSize:18,fontWeight:700,color:i.c,fontFamily:Fn.mono,display:"block"}}>{i.v}</span>
-                <span style={{fontSize:10,color:i.d}}>{i.l}</span>
-              </div>
-            ))}
+        <div style={{display:"flex",flexDirection:"column",gap:18}}>
+          {/* Descrição read-only */}
+          <p style={{fontSize:13,color:C.cinzaEscuro,margin:0,lineHeight:1.6}}>Movimentação diária de contêineres por terminal, turno e tipo de operação. Consolida entradas e saídas do pátio para acompanhamento operacional.</p>
+          {/* Classificação */}
+          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            <Badge variant="info" dot>Operacional</Badge>
+            <Badge variant="critico" dot>Crítico</Badge>
+            <Badge variant="sucesso" dot>Publicado</Badge>
+            <Badge variant="info">RLS ativo</Badge>
+          </div>
+          {/* Metadados — ficha em cartões */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+            {[
+              {l:"Área Processo",v:"Operações Portuárias"},
+              {l:"Workspace",v:"Pátio & Terminais"},
+              {l:"Abrangência",v:"Corporativo"},
+              {l:"Responsável",v:"Ana Ribeiro"},
+              {l:"Publicação",v:"12 mar 2025"},
+              {l:"Atualização",v:"Diária"},
+            ].map(f=><InfoCard key={f.l} label={f.l} value={f.v}/>)}
+          </div>
+          {/* Auditoria — read-only, condicional por papel */}
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            <div style={{display:"flex",alignItems:"center",gap:7}}>
+              {Ic.lock(14,C.textMuted)}
+              <span style={{fontSize:11,fontWeight:600,letterSpacing:".04em",textTransform:"uppercase",color:C.textMuted,fontFamily:Fn.body}}>Auditoria · visível para Responsável BI e TI</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+              {[
+                {l:"Fonte de Dados",v:"SAP TM · Oracle WMS"},
+                {l:"Método",v:"Pipeline incremental"},
+                {l:"Frequência",v:"A cada 4h"},
+                {l:"Última Revisão",v:"28 mai 2026"},
+                {l:"Público-Alvo",v:"Coordenação operacional"},
+              ].map(f=><InfoCard key={f.l} label={f.l} value={f.v}/>)}
+              <InfoCard label="Risco de Fonte" value={<Badge variant="sucesso">Baixo</Badge>}/>
+            </div>
           </div>
         </div>
       </Modal>
@@ -1156,7 +1189,7 @@ export default function DialogDoc(){
               <Copyable label="Modal Alerta" code={modalCode("alert","Sessão expirando","Sessões inativas são encerradas por segurança.",400)} preview={<Btn label="⚠ Alerta" color={C.amareloEscuro} onClick={()=>open("alert")}/>}>
                 <Btn label="⚠ Alerta" color={C.amareloEscuro} onClick={()=>open("alert")}/>
               </Copyable>
-              <Copyable label="Modal Informativo" code={modalCode("info","Sobre os Fipcoins","Sistema de gamificação FIPS",440)} preview={<Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>}>
+              <Copyable label="Modal Informativo" code={modalCode("info","Movimentação de Pátio","Detalhe de artefato BI — somente leitura",680)} preview={<Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>}>
                 <Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>
               </Copyable>
               <Copyable label="Modal Formulário" code={modalCode("form","Atribuir responsável","Selecione o colaborador e tipo de atribuição.",480)} preview={<Btn label="📝 Formulário" color={C.azulCeu} onClick={()=>open("form")}/>}>
@@ -1183,7 +1216,7 @@ export default function DialogDoc(){
               {name:"Confirmação",c:C.verdeFloresta,desc:"Pedir confirmação antes de ação positiva. Dados em cards bg cinza.",cta:"Cancelar (outline) + Ação verde (aprovar/salvar).",ex:"'Aprovar requisição?' no Suprimentos; 'Salvar alterações?'"},
               {name:"Destrutivo",c:C.danger,desc:"Ação irreversível. Footer com tint vermelho. Alerta de impacto visível.",cta:"Cancelar (outline) + Excluir (vermelho). NUNCA verde para excluir.",ex:"'Excluir fornecedor?' no App Cadastros; 'Revogar acesso?'"},
               {name:"Alerta",c:C.amareloEscuro,desc:"Aviso com timer ou countdown. Card laranja com número grande.",cta:"Ação secundária + Ação principal (azul).",ex:"'Sessão expirando'; 'Prazo vencendo'; aviso de sistema."},
-              {name:"Informativo",c:C.azulProfundo,desc:"Informação sem decisão. Cards de valor com cores contextuais.",cta:"Apenas 'Entendi' (azul). Sem cancelar.",ex:"'Sobre Fipcoins'; 'Como funciona SLA'; onboarding."},
+              {name:"Informativo",c:C.azulProfundo,desc:"Detalhe read-only de um artefato: descrição + classificação + ficha de metadados (auditoria por papel).",cta:"Apenas 'Entendi' (azul). Sem cancelar.",ex:"'Movimentação de Pátio'; 'Detalhe de indicador'; ficha de dashboard."},
               {name:"Formulário",c:C.azulCeu,desc:"Modal com inputs. Body #fafafa para contraste. Focus ring nos campos.",cta:"Cancelar + Salvar (verde). Validação visual nos campos.",ex:"'Atribuir responsável'; 'Adicionar nota'; criação rápida."},
               {name:"Lista de itens",c:C.cinzaChumbo,desc:"Itens em rows com hover. Body #f5f6f8. Total no footer à esquerda.",cta:"Total + Fechar + Ação contextual.",ex:"'Itens da requisição'; 'Pendências'; checklist de aprovação."},
             ].map(t=>(
