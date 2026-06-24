@@ -1096,7 +1096,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 5. FORMULÁRIO — body #fafafa */}
-      <Modal open={m==="form"} onClose={close} eyebrow="Atribuição" title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
+      <Modal open={m==="form"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
           <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
@@ -1111,7 +1111,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 6. LISTA — body #f5f6f8 */}
-      <Modal open={m==="list"} onClose={close} eyebrow="Requisição" title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#f5f6f8" headerBg={GOV_GRAD} width={520} noPadBody
+      <Modal open={m==="list"} onClose={close} title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#f5f6f8" headerBg={GOV_GRAD} width={520} noPadBody
         footer={<><span style={{fontSize:11,color:C.textMuted,marginRight:"auto",fontWeight:600}}>Total: <span style={{color:C.azulProfundo,fontSize:13}}>R$ 2.450,00</span></span><Btn label="Fechar" outline onClick={close}/><Btn label="Aprovar tudo" color={C.verdeFloresta} onClick={close}/></>}>
         <div>
           {[
