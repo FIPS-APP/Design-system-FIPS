@@ -63,17 +63,67 @@ Botão com loading:
 
 ## Badge
 
-Fonte: `src/components/ui/badge-variants.ts`
+Fontes:
 
-Variantes exatas:
+- `src/components/ui/badge-variants.ts` + `badge.tsx` — componente **governado** da library (o que se importa em produção).
+- `src/docs/pages/components/BadgeDoc.tsx` — catálogo visual completo (playground da doc, o "Storybook" do Badge).
 
-- `default`
-- `secondary`
-- `success`
-- `warning`
-- `danger`
-- `outline`
-- `info`
+> **Divergência conhecida:** library e playground usam APIs e paletas distintas. Em produção, importe o componente governado. O catálogo de semântica, composições e cenários abaixo vem do `BadgeDoc` (referência visual do design). Diferenças principais: o governado pinta com token translúcido (`bg-primary/10`, `bg-success/14`…) e é sempre pill; o catálogo da doc usa fundos pastel sólidos, radius `4px` (ou `999px` com `pill`) e inclui a variante `ouro`/Destaque, que **não** existe no governado.
+
+### API governada (library)
+
+```tsx
+import { Badge } from '@/components/ui/badge'
+
+<Badge variant="success" dot>Ativo</Badge>
+```
+
+Base (cva): `inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold`.
+
+Props: `variant` + `dot?: boolean` (bolinha `bg-current` antes do texto). Variantes exatas: `default`, `secondary`, `success`, `warning`, `danger`, `outline`, `info`.
+
+### Catálogo de variantes (semântica + rótulo pt-BR)
+
+| variant (library) | rótulo na doc | significado | quando usar |
+| --- | --- | --- | --- |
+| `default` | Padrão | azul institucional | identificador genérico, versão, categoria padrão |
+| `secondary` | Secundário | cinza neutro | metadados, contadores discretos, info de suporte |
+| `success` | Sucesso | verde positivo | ativo, aprovado, concluído, online (sempre com `dot`) |
+| `warning` | Atenção | laranja, alerta moderado | pendente, aguardando, prazo próximo, em revisão |
+| `danger` | Crítico | vermelho negativo | inativo, rejeitado, vencido, erro, offline |
+| `outline` | Contorno | só borda, mínimo impacto | tag de baixa prioridade, filtro, categoria discreta |
+| `info` | Informativo | azul claro neutro | "novo", "em análise", nota, tipo |
+| `ouro` *(só doc)* | Destaque | dourado | Fipcoins, conquistas, gamificação, item premium |
+
+No playground os nomes pt-BR são internos (`sucesso`/`atencao`/`critico`/`ouro`); ao consumir a library use os nomes técnicos (`success`/`warning`/`danger`).
+
+### Composições (Badge do playground)
+
+Props extras do Badge da doc: `dot`, `icon`, `count`, `onRemove`, `pill`, `size` (`sm`/`md`/`lg`).
+
+Regras:
+
+- **dot** — exclusivo para status que mudam dinamicamente; não usar em categoria fixa.
+- **icon** — máx. 1 por badge; não combinar `dot` + `icon` no mesmo badge.
+- **count** — fica à esquerda do texto, cor invertida (fundo = cor do texto); acima de 99 vira `99+`.
+- **onRemove** — X à direita com hover opacity; combina com `pill` para visual de tag/filtro.
+
+### Tokens (catálogo da doc)
+
+Tamanhos: `sm` 10px · `md` 11px ★ (default) · `lg` 12px. Padding: `sm` 1×6 · `md` 2×8 · `lg` 3×10. Radius: `4px` padrão ou `999px` com `pill`. Texto Open Sans 600; contador Fira Code 700; line-height 1.3; `nowrap`. Dot: 5/6/7px (sm/md/lg).
+
+Cores por variante (claro → escuro):
+
+| variant | bg claro | text claro | bg escuro | text escuro |
+| --- | --- | --- | --- | --- |
+| `default` | `#004B9B` | `#FFFFFF` | `#1A6FC4` | `#FFFFFF` |
+| `secondary` | `#F2F4F8` | fg | — | — |
+| `success` | `#ECFDF5` | `#00904C` | `rgba(0,168,62,.15)` | `#4ADE80` |
+| `warning` | `#FFF7ED` | `#C2410C` | `rgba(251,191,36,.15)` | `#FBBF24` |
+| `danger` | `#FEF2F2` | `#B91C1C` | `rgba(248,113,113,.15)` | `#F87171` |
+| `outline` | transparent | fg | — | — |
+| `info` | `#D3E3F4` | `#002A68` | `rgba(147,189,228,.15)` | `#93BDE4` |
+| `ouro` | `#FEF9E7` | `#92400E` | `rgba(253,194,78,.15)` | `#FDC24E` |
 
 ## Card
 
