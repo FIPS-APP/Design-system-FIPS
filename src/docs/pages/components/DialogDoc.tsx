@@ -5,6 +5,8 @@ import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/C
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
+/* Gradiente gov 3-stops — mesma linguagem do PageHeader/hero (idêntico ao BiDetailDialog do Governança BI) */
+const GOV_GRAD="linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)";
 
 /* ═══════════════════════════════════════════ ICONS ═══════════════════════════════════════════ */
 const Ic={
@@ -44,7 +46,7 @@ function Badge({variant="info",children,dot}){const v=BV[variant]||BV.info;retur
 /* ═══════════════════════════════════════════
    MODAL — REFINED v2
    ═══════════════════════════════════════════ */
-function Modal({open,onClose,title,subtitle,children,footer,footerBg,width=480,icon,iconBg,bodyBg,noPadBody,headerBg="#002A68"}){
+function Modal({open,onClose,title,subtitle,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
   const [vis,setVis]=useState(false);
   const [animIn,setAnimIn]=useState(false);
   useEffect(()=>{
@@ -53,6 +55,7 @@ function Modal({open,onClose,title,subtitle,children,footer,footerBg,width=480,i
   },[open]);
   useEffect(()=>{if(!open)return;const h=e=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
   if(!vis)return null;
+  const isHero=headerBg===GOV_GRAD;
   return(
     <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
       <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.45)",backdropFilter:"blur(2px)",WebkitBackdropFilter:"blur(2px)",opacity:animIn?1:0,transition:"opacity .28s",cursor:"pointer"}}/>
@@ -60,12 +63,14 @@ function Modal({open,onClose,title,subtitle,children,footer,footerBg,width=480,i
         {/* Botão fechar — canto superior direito */}
         <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar modal" style={{position:"absolute",top:14,right:14,zIndex:2,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"all .15s",background:"rgba(255,255,255,0.08)"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.18)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)"}} onKeyDown={e=>{if(e.key==="Enter")onClose()}}>{Ic.x(16,"rgba(255,255,255,0.75)")}</div>
         <div style={{padding:"20px 24px",paddingRight:56,background:headerBg,display:"flex",alignItems:"center",gap:16,flexShrink:0,position:"relative",overflow:"hidden"}}>
-          {/* Shimmer sweep */}
-          <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)",pointerEvents:"none"}}/>
+          {/* Decoração do header: JunctionLines no gradiente gov (= Pic 2); shimmer liso nos headers sólidos */}
+          {isHero
+            ? <JunctionLines style={{position:"absolute",top:-10,right:-20,width:360,height:200,opacity:.06}}/>
+            : <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)",pointerEvents:"none"}}/>}
           <div style={{display:"flex",gap:14,alignItems:"center",minWidth:0,position:"relative"}}>
-            {icon&&<div style={{width:44,height:44,borderRadius:10,background:"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid rgba(255,255,255,0.16)",boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
+            {icon&&<div style={{width:44,height:44,borderRadius:10,background:iconBg||"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${iconBorder||"rgba(255,255,255,0.16)"}`,boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
             <div style={{minWidth:0}}>
-              <h2 id="modal-title" style={{fontSize:17,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.3}}>{title}</h2>
+              <h2 id="modal-title" style={{fontSize:isHero?21:17,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:isHero?"-0.2px":undefined}}>{title}</h2>
               {subtitle&&<p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
             </div>
           </div>
@@ -1042,7 +1047,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 4. INFORMATIVO */}
-      <Modal open={m==="info"} onClose={close} title="Sobre os Fipcoins" subtitle="Sistema de gamificação FIPS" icon={Ic.infoI(24,"#93BDE4")} width={440}
+      <Modal open={m==="info"} onClose={close} title="Sobre os Fipcoins" subtitle="Sistema de gamificação FIPS" icon={Ic.infoI(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} headerBg={GOV_GRAD} width={440}
         footer={<Btn label="Entendi" color={C.azulProfundo} onClick={close}/>}>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <p style={{fontSize:13,color:C.cinzaChumbo,margin:0,lineHeight:1.6}}>Fipcoins são moedas virtuais que você ganha ao submeter ideias aprovadas, completar treinamentos e participar de boas práticas. Acumule pontos e troque por benefícios.</p>
@@ -1058,7 +1063,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 5. FORMULÁRIO — body #fafafa */}
-      <Modal open={m==="form"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,"#fff")} bodyBg="#fafafa" width={480}
+      <Modal open={m==="form"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,"#fff")} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
           <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
@@ -1073,7 +1078,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 6. LISTA — body #f5f6f8 */}
-      <Modal open={m==="list"} onClose={close} title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,"#fff")} bodyBg="#f5f6f8" width={520} noPadBody
+      <Modal open={m==="list"} onClose={close} title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,"#fff")} bodyBg="#f5f6f8" headerBg={GOV_GRAD} width={520} noPadBody
         footer={<><span style={{fontSize:11,color:C.textMuted,marginRight:"auto",fontWeight:600}}>Total: <span style={{color:C.azulProfundo,fontSize:13}}>R$ 2.450,00</span></span><Btn label="Fechar" outline onClick={close}/><Btn label="Aprovar tudo" color={C.verdeFloresta} onClick={close}/></>}>
         <div>
           {[

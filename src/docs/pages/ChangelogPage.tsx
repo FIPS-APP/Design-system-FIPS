@@ -6,6 +6,23 @@ type Entry = { version: string; date: string; items: string[] }
 
 const entries: Entry[] = [
   {
+    version: '0.5.4',
+    date: '2026-06-23',
+    items: [
+      'Sidebar: categorias colapsáveis com cabeçalho tipográfico (uppercase, tracking 0.08em) e colapso animado — padrão de navegação unificado entre DS-FIPS, Suprimentos e Governança BI.',
+      'Página "Histórico de versões" (antiga "Changelog") reescrita como timeline, com o tipo de versão (major/minor/patch) derivado automaticamente.',
+      'Rodapé do sidebar: ação "Menu automático" renomeada para "Modo menu".',
+    ],
+  },
+  {
+    version: '0.5.3',
+    date: '2026-06-22',
+    items: [
+      'Remoção completa da função "Ver código" (CodeExportSection) das páginas de documentação.',
+      'Correção do build quebrado por imports órfãos.',
+    ],
+  },
+  {
     version: '0.5.2',
     date: '2026-05-22',
     items: [
