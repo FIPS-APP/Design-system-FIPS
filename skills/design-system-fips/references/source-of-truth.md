@@ -20,7 +20,9 @@ Se houver conflito:
 
 - `docs/Brandbook PPT.pdf`
 - `public/brand/`
-- `src/components/brand/FipsLogo.tsx`
+- `src/components/brand/FipsLogo.tsx` — chip branco p/ fundo claro; **não** é a marca da sidebar
+- `public/appfips-logo.png` (menu aberto) · `public/appfips-mark-collapsed.png` (colapsado) — marca da sidebar
+- `src/components/layout/DocsNeuSidebar.tsx` (~l.595–649) — header real do menu (marca + nome). Ver `components.md` → "FipsLogo e marca do menu"
 
 ### Tokens e CSS globais
 

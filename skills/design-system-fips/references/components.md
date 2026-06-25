@@ -252,8 +252,52 @@ Comportamento:
 - foto/trilho sutil à direita por padrão
 - fallback opcional para `showTrainSilhouette`
 
-## FipsLogo
+## FipsLogo e marca do menu (sidebar header)
 
-Fonte: `src/components/brand/FipsLogo.tsx`
+> **Atenção — são duas coisas diferentes com o mesmo "logo".** O componente `FipsLogo` e a marca que aparece no cabeçalho da sidebar **não são o mesmo elemento**. A sidebar real usa um `<img>` inline, **não** o componente `FipsLogo`. Confundir os dois põe um chip branco numa superfície azul-escura — fora do padrão. (Foi a causa de uma rodada longa de retrabalho no Governança BI.)
 
-Use em sidebar, shell de aplicação e cabeçalhos institucionais. Não aplique distorção, sombra, transparência arbitrária ou recoloração fora das versões aprovadas.
+### Marca do menu — padrão canônico (use ESTE na sidebar)
+
+Fonte real: `src/components/layout/DocsNeuSidebar.tsx` (cabeçalho, ~l.595–649). A marca é um `<img>` inline **branco, transparente, direto sobre o azul-escuro da sidebar (`#002a68`) — sem tile/chip branco, sem fundo, sem sombra.** Dois assets, trocados por estado:
+
+| Estado | Asset | Geometria |
+| --- | --- | --- |
+| Aberto (expandido) | `/appfips-logo.png` — lockup "App ◫ FIPS", **quadrado 1024×1024 com respiro interno** | `height:52`, `width:auto`, `maxWidth:100`, `minWidth:60`, `objectFit:contain`, `objectPosition:left center` |
+| Colapsado (rail) | `/appfips-mark-collapsed.png` — só o símbolo caixa | `36×36`, `objectFit:contain` |
+
+`alt="App FIPS"` nos dois; `backgroundColor:transparent` / `background:none` sempre.
+
+Ao lado da marca (só no aberto) vem o **nome do módulo** — não faz parte do lockup, é um `<span>` irmão:
+
+- wrapper: `flex items-center`, `gap: 2` (aberto) / `0` (colapsado), `width:100%` (aberto) / `auto`, `justifyContent: flex-start` (aberto) / `center`.
+- texto: `fontFamily: F.title` (**Saira Expanded** / `var(--font-heading)`), `fontWeight:700`, `fontSize:16`, `lineHeight:1.2`, `letterSpacing:0.03em`, cor `theme.textActive`, `whiteSpace:nowrap` + `ellipsis`.
+
+```tsx
+<div className="flex items-center" style={{ gap: collapsed ? 0 : 2, width: collapsed ? 'auto' : '100%', justifyContent: collapsed ? 'center' : 'flex-start' }}>
+  <img
+    src={collapsed ? '/appfips-mark-collapsed.png' : '/appfips-logo.png'}
+    alt="App FIPS"
+    style={collapsed
+      ? { width: 36, height: 36, objectFit: 'contain', flexShrink: 0, background: 'none' }
+      : { height: 52, width: 'auto', maxWidth: 100, minWidth: 60, objectFit: 'contain', objectPosition: 'left center', flexShrink: 0, background: 'none' }}
+  />
+  {!collapsed && (
+    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 16, lineHeight: 1.2, letterSpacing: '0.03em', whiteSpace: 'nowrap' }}>
+      {nomeDoModulo}
+    </span>
+  )}
+</div>
+```
+
+> Cada app troca só `nomeDoModulo` (DS-FIPS = "Design System"; Governança BI = "Governança BI"). Marca, assets e geometria ficam idênticos.
+
+### Componente `FipsLogo` — divergência conhecida (NÃO usar na sidebar)
+
+`src/components/brand/FipsLogo.tsx` é um **chip branco**: `flex h-8 w-8 rounded-lg bg-white p-0.5` com `/fips-logo.png` (lockup **horizontal**). É a versão para **fundo claro** (cabeçalho institucional sobre superfície branca). **Não usar no cabeçalho da sidebar escura** — o chip branco + lockup horizontal espremido fogem do padrão. Para sidebar, use o `<img>` inline acima.
+
+### Gotchas (erros reais já cometidos)
+
+- **Não espremer lockup horizontal em slot quadrado.** `/fips-logo.png` é ~1.93:1; num chip 36×36 vira borrão ilegível. O asset de menu aberto é o `/appfips-logo.png` **quadrado** (1024×1024) com respiro interno — é o respiro do próprio PNG que dá o espaçamento ao nome. Cortar o lockup "tight" mata esse respiro e ele cola no texto.
+- **Sidebar escura = marca branca transparente, nunca chip branco.** As sidebars FIPS são `#002a68`; `bg-white`/tile ali quebra o padrão.
+- **Aberto = lockup + nome; colapsado = só símbolo.** Não trocar por símbolo no aberto, nem deixar "FIPS" duplicado.
+- Não aplicar distorção, sombra, recoloração ou transparência arbitrária fora das versões aprovadas.

@@ -74,6 +74,8 @@ Controla se a sidebar recolhe sozinha. É o único item interativo com popover.
 - **Automático**: label "Recolher após {n}s" + **slider laranja** (`#F6921E` preenchido, `min 1 / max 30`) + **quick-picks** `[3, 5, 10, 15]s` (`MENU_MODE_QUICK_PICKS`; ativo `rgba(246,146,30,0.20)` + texto `#F6921E`).
 - **Manual**: texto auxiliar curto ("Use o botão do cabeçalho para recolher e expandir o menu."), sem slider.
 - **No rail**: apenas o ícone `Timer`; o popover não abre.
+- **Timer (mecânica)**: entrar na sidebar **expande na hora** e cancela o timer; sair **agenda** `setTimeout(n * 1000)` para recolher; trocar `{n}` enquanto o ponteiro está fora **reagenda**. Ligar o Automático com o mouse já dentro mantém expandido — recolhe só ao sair. Sair do Automático pelo botão do header limpa o timer.
+- **Persistência** (opcional, recomendada): o estado (modo + segundos) persiste entre sessões via `localStorage` — chaves `<app>:menuAuto` (`1`/`0`) e `<app>:menuSeconds` (valida `1–30` na leitura; fallback `3`). Lazy-init no mount; `localStorage` envolto em `try/catch` (modo privado cai só em memória). Com Automático persistido, a barra **inicia recolhida** (ponteiro fora no load). Implementação de referência: Governança BI (`src/components/AppShell.tsx`). O `DocsNeuSidebar` do DS **não** persiste por padrão.
 
 #### 2. Primeiro acesso (refaz o tour)
 
