@@ -568,7 +568,7 @@ export default function DSFIPSDashboard(){
 
         {/* ═══ BARRA DE FILTROS ═══ */}
         <Copyable label="Barra de Filtros" code={dashCode('filters')} preview={<DashPreviewFilters />}>
-        <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?"12px":"14px 20px",marginBottom:mob?16:20,boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
+        <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?"12px":"14px 20px",marginBottom:mob?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
             <div style={{display:"flex",alignItems:"center",gap:8}}>
               <LuLayoutGrid size={16} color={dark?"#93BDE4":C.azulProfundo}/>
@@ -576,7 +576,7 @@ export default function DSFIPSDashboard(){
               {hasFilter&&<span style={{fontSize:10,color:C.textMuted,fontFamily:Fn.body}}>· {filtered.length} de {allData.length}</span>}
             </div>
             <div style={{display:"flex",alignItems:"center",gap:6}}>
-              <button onClick={()=>exportPDF(filtered,filter,{valor:filtered.reduce((a,r)=>a+r.valor,0).toLocaleString("pt-BR")})} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.danger,background:`${C.danger}08`,border:`1px solid ${C.danger}20`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}} title="Gerar relatório PDF"><LuFileDown size={12} color={C.danger}/> Relatório</button>
+              <button onClick={()=>exportPDF(filtered,filter,{valor:filtered.reduce((a,r)=>a+r.valor,0).toLocaleString("pt-BR")})} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.danger,background:`${C.danger}12`,border:`1px solid ${C.danger}30`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}} title="Gerar relatório PDF"><LuFileDown size={12} color={C.danger}/> Relatório</button>
               {hasFilter&&<button onClick={clearAll} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.cinzaChumbo,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}><LuX size={10} color={C.cinzaChumbo}/> Limpar</button>}
             </div>
           </div>
@@ -664,7 +664,7 @@ export default function DSFIPSDashboard(){
                   <div style={{width:30,height:30,borderRadius:8,background:dark?"rgba(147,189,228,0.04)":`${C.azulProfundo}0A`,display:"flex",alignItems:"center",justifyContent:"center"}}><LuChartColumnIncreasing size={14} color={dark?"#93BDE4":C.azulProfundo}/></div>
                 </div>
                 <div style={{display:"flex",justifyContent:"center"}}>
-                  <svg width={chartW} height={chartH+40} viewBox={`0 -20 ${chartW} ${chartH+40}`}>
+                  <svg width={chartW} height={chartH+48} viewBox={`0 -28 ${chartW} ${chartH+48}`}>
                     {byMonth.map((d,i)=>{
                       const bh=max?Math.max(4,(d.v/max)*chartH):4;const x=i*(bw+gp);
                       const isActive=filter.month===d.l;const isDimmed=filter.month&&!isActive;
