@@ -567,7 +567,7 @@ export default function DSFIPSDashboard(){
       <div style={{padding:mob?"16px 12px 32px":"24px 40px 48px",maxWidth:1200,margin:"0 auto"}}>
 
         {/* ═══ BARRA DE FILTROS ═══ */}
-        <Copyable label="Barra de Filtros" code={dashCode('filters')} preview={<DashPreviewFilters />}>
+        <Copyable label="Barra de Filtros" code={dashCode('filters')} preview={<DashPreviewFilters />} fullWidth>
         <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?"12px":"14px 20px",marginBottom:mob?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
             <div style={{display:"flex",alignItems:"center",gap:8}}>
@@ -604,7 +604,7 @@ export default function DSFIPSDashboard(){
         )}
 
         {/* ═══ KPIs ═══ */}
-        <Copyable label="KPI Cards" code={dashCode('kpi')} preview={<DashPreviewKPI />}>
+        <Copyable label="KPI Cards" code={dashCode('kpi')} preview={<DashPreviewKPI />} fullWidth>
         <div style={{display:"grid",gridTemplateColumns:mob?"repeat(2,1fr)":"repeat(4,1fr)",gap:mob?10:16,marginBottom:mob?16:24}}>
           {kpis.map((k,i)=>{
             const dc=k.up&&k.color!==C.danger?C.verdeFloresta:C.danger;
