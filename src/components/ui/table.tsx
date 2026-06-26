@@ -1,15 +1,61 @@
 import * as React from 'react'
 import { cn } from '../../lib/cn'
 
-interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
-  framed?: boolean
-  density?: 'default' | 'dense'
+export type TableDensity = 'compact' | 'normal' | 'comfortable'
+
+export interface TableAppearance {
+  zebra: boolean
+  verticalBorders: boolean
+  stickyHeader: boolean
+  wrapText: boolean
 }
 
-const TableDensityContext = React.createContext<'default' | 'dense'>('default')
+interface TableConfig extends TableAppearance {
+  density: TableDensity
+}
+
+const DEFAULT_TABLE_CONFIG: TableConfig = {
+  density: 'comfortable',
+  zebra: true,
+  verticalBorders: false,
+  stickyHeader: false,
+  wrapText: false,
+}
+
+const TableConfigContext = React.createContext<TableConfig>(DEFAULT_TABLE_CONFIG)
+
+// Densidade exposta para descendentes (ex.: Badge ajusta o tamanho). null = fora de uma Table.
+const TableDensityContext = React.createContext<TableDensity | null>(null)
+export const useTableDensity = () => React.useContext(TableDensityContext)
+
+interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  framed?: boolean
+  density?: TableDensity
+  zebra?: boolean
+  verticalBorders?: boolean
+  stickyHeader?: boolean
+  wrapText?: boolean
+}
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
-  ({ className, framed = true, density = 'default', ...props }, ref) => {
+  (
+    {
+      className,
+      framed = true,
+      density = 'comfortable',
+      zebra = true,
+      verticalBorders = false,
+      stickyHeader = false,
+      wrapText = false,
+      ...props
+    },
+    ref,
+  ) => {
+    const config = React.useMemo<TableConfig>(
+      () => ({ density, zebra, verticalBorders, stickyHeader, wrapText }),
+      [density, zebra, verticalBorders, stickyHeader, wrapText],
+    )
+
     const table = (
       <table
         ref={ref}
@@ -19,20 +65,18 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
       />
     )
 
-    if (!framed) {
-      return (
-        <TableDensityContext.Provider value={density}>
-          <div className="relative w-full overflow-auto">{table}</div>
-        </TableDensityContext.Provider>
-      )
-    }
-
     return (
-      <TableDensityContext.Provider value={density}>
-        <div className="relative w-full overflow-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]">
-          {table}
-        </div>
-      </TableDensityContext.Provider>
+      <TableConfigContext.Provider value={config}>
+        <TableDensityContext.Provider value={density}>
+          {framed ? (
+            <div className="relative w-full overflow-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]">
+              {table}
+            </div>
+          ) : (
+            <div className="relative w-full overflow-auto">{table}</div>
+          )}
+        </TableDensityContext.Provider>
+      </TableConfigContext.Provider>
     )
   },
 )
@@ -41,13 +85,21 @@ Table.displayName = 'Table'
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead
-    ref={ref}
-    className={cn('border-b border-[var(--color-border)] bg-[var(--color-surface)]', className)}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const { stickyHeader } = React.useContext(TableConfigContext)
+
+  return (
+    <thead
+      ref={ref}
+      className={cn(
+        'border-b-2 border-[var(--color-border)] bg-[var(--color-surface-muted)]',
+        stickyHeader && 'sticky top-0 z-10',
+        className,
+      )}
+      {...props}
+    />
+  )
+})
 TableHeader.displayName = 'TableHeader'
 
 const TableBody = React.forwardRef<
@@ -59,16 +111,21 @@ const TableBody = React.forwardRef<
 TableBody.displayName = 'TableBody'
 
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
-  ({ className, ...props }, ref) => (
-    <tr
-      ref={ref}
-      className={cn(
-        'border-b border-[var(--color-border)] transition-colors hover:bg-[var(--color-surface-soft)] data-[state=selected]:bg-[var(--color-surface-muted)]',
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ({ className, ...props }, ref) => {
+    const { zebra } = React.useContext(TableConfigContext)
+
+    return (
+      <tr
+        ref={ref}
+        className={cn(
+          'border-b border-[var(--color-border)] transition-colors hover:bg-[var(--color-surface-soft)] data-[state=selected]:bg-[var(--color-surface-muted)]',
+          zebra && 'even:bg-[var(--color-table-zebra)]',
+          className,
+        )}
+        {...props}
+      />
+    )
+  },
 )
 TableRow.displayName = 'TableRow'
 
@@ -76,15 +133,18 @@ const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => {
-  const density = React.useContext(TableDensityContext)
+  const { density } = React.useContext(TableConfigContext)
+  const dense = density !== 'comfortable'
 
   return (
     <th
       ref={ref}
       className={cn(
-        density === 'dense'
-          ? 'h-10 px-2 text-left align-middle text-[13px] font-medium text-[var(--color-fg-muted)]'
-          : 'h-14 px-4 text-left align-middle text-sm font-semibold text-[var(--color-fg-muted)]',
+        'px-4 text-left align-middle text-[var(--color-fg-muted)]',
+        density === 'compact' ? 'py-2' : density === 'normal' ? 'py-2.5' : 'h-14',
+        dense
+          ? 'text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]'
+          : 'text-sm font-semibold',
         className,
       )}
       {...props}
@@ -97,15 +157,20 @@ const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => {
-  const density = React.useContext(TableDensityContext)
+  const { density, wrapText, verticalBorders } = React.useContext(TableConfigContext)
 
   return (
     <td
       ref={ref}
       className={cn(
-        density === 'dense'
-          ? 'px-2 py-2.5 align-middle text-[13.5px] text-[var(--color-fg)]'
-          : 'px-4 py-5 align-middle text-[15px] text-[var(--color-fg)]',
+        'px-4 align-middle text-[var(--color-fg)]',
+        density === 'compact'
+          ? 'py-1.5 text-[11px]'
+          : density === 'normal'
+            ? 'py-3 text-[12px]'
+            : 'py-5 text-[15px]',
+        density !== 'comfortable' && (wrapText ? 'whitespace-normal' : 'whitespace-nowrap'),
+        verticalBorders && 'border-r border-[var(--color-border)] last:border-r-0',
         className,
       )}
       {...props}

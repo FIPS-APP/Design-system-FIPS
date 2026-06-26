@@ -124,6 +124,7 @@
     --color-surface: #ffffff;
     --color-surface-soft: var(--color-fips-neutral-25);
     --color-surface-muted: var(--color-fips-neutral-50);
+    --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
     --color-border: #d7e0ea;
     --color-border-strong: var(--color-fips-gray-400);
     --color-fg: var(--color-fips-gray-900);
@@ -168,6 +169,7 @@
     --color-surface: #222222;
     --color-surface-soft: #252525;
     --color-surface-muted: #1A1A1A;
+    --color-table-zebra: rgba(255, 255, 255, 0.03);
     --color-border: #2E2E2E;
     --color-border-strong: #3a3a3a;
     --color-fg: #E2E2E8;

@@ -162,6 +162,70 @@ O `Select` do DS abre a lista como `absolute top-full` (**sem portal**). Qualque
 - se o `Select` precisa morar dentro do `PageHero`/`PageHeader` (que é `overflow-hidden` pelo gradiente), mova-o para uma toolbar-card abaixo do hero
 - nunca corrija no `Select` do DS (é sincronizado) — corrija no consumidor
 
+### Tabela canônica
+
+Fontes: `src/components/ui/table.tsx` + `src/components/ui/admin-listing.tsx`. Implementação de referência: `src/pages/InventoryPage.tsx` (Governança BI).
+
+#### Componente `<Table>`
+
+Três densidades (`compact | normal | comfortable`, default `comfortable`) + quatro toggles de aparência, todos passados como props e propagados via context para `TableHead`, `TableCell`, `TableRow`:
+
+| prop | default | efeito |
+|---|---|---|
+| `density` | `comfortable` | tamanho de fonte e padding das células |
+| `zebra` | `true` | linha par = `var(--color-table-zebra)` |
+| `verticalBorders` | `false` | `border-r` entre colunas |
+| `stickyHeader` | `false` | header `sticky top-0 z-10` |
+| `wrapText` | `false` | células `whitespace-nowrap` vs `whitespace-normal` |
+
+**`TableHeader`** — `bg-[var(--color-surface-muted)] border-b-2 border-[var(--color-border)]`.
+
+**`TableHead`** — `px-4 text-[var(--color-fg-muted)]`; por densidade:
+- `compact` e `normal` → `text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]`; py-2 (compact) / py-2.5 (normal)
+- `comfortable` → `text-sm font-semibold`; `h-14`
+
+**`TableCell`** — `px-4 text-[var(--color-fg)]`; por densidade:
+- `compact` → `py-1.5 text-[11px]`
+- `normal` → `py-3 text-[12px]`
+- `comfortable` → `py-5 text-[15px]`
+
+**`TableRow`** — `hover:bg-[var(--color-surface-soft)]`; com `zebra=true` → `even:bg-[var(--color-table-zebra)]` (hover sobrescreve).
+
+**Token zebra** — `--color-table-zebra`: light = `#D3E3F440` (blue-200 @ 25%); dark = `rgba(255,255,255,0.03)`. Declarar em `globals.css` e no bloco `.dark`.
+
+**`useTableDensity`** — hook exportado; retorna `TableDensity | null` (`null` = fora de `<Table>`). Descendentes como `Badge` usam para ajustar size automaticamente: `compact|normal → sm`, `comfortable → md`, fora de tabela → `sm`.
+
+**Telas de inventário nascem compactas** — passar `density="compact"` como default; usuário pode mudar via `AdminTableColumnMenu`.
+
+#### `AdminTableColumnMenu` — popover "Configurar"
+
+Botão `<Settings2>` `variant="secondary"` (ativo: `variant="primary"`), abre popover `absolute top-full right-0 z-30 w-[300px] rounded-2xl border shadow-float` em `surface`.
+
+Três abas (`Colunas / Densidade / Aparência`), tabs só aparecem se as props respectivas forem passadas:
+
+1. **Colunas** — lista `grip + checkbox + label`; coluna fixa tem badge `fixa` mono 9px e drag desabilitado; colunas ocultas por padrão vêm com `visibleColumns[id] = false`; draggable (HTML5 DnD) reordena via `onReorderColumn(sourceId, targetId)`.
+2. **Densidade** — 3 radio-cards (`compact / normal / comfortable`); cada um com indicador de barrinhas à direita (alturas proporcionais).
+3. **Aparência** — 4 toggles (`ConfigToggle`): zebra / bordas verticais / cabeçalho fixo / quebra de linha. Toggle pill 30×18px, ativo = `primary`, inativo = `border-strong`.
+
+Footer: `Restaurar padrão` (texto 10px fg-muted, hover=fg) + `Aplicar` (`variant="primary" size="sm"`).
+
+**Persistência em `localStorage`** — chave `<app>-inventory-prefs`; salva `colOrder`, `hiddenCols`, `density`, `appearance`. Lazy-init no `useState`, `useEffect` grava em cada mudança. `try/catch` (modo privado não quebra). `Restaurar padrão` limpa a chave e reseta os estados.
+
+#### `AdminTablePagination`
+
+Footer da listagem (fora do `<Table>`, abaixo do card):
+
+- Esquerda: `"Mostrando X–Y de Z registros"` — 11px fg-muted, range em `<strong>` fg semibold. Sem `totalItems` → `"Página N de T"`.
+- Direita: botões `‹ 1 2 3 ›` (`size="iconSm"`); ativo = `variant="primary"`, resto = `variant="secondary"`. Com >7 páginas: ellipsis `…` mono fg-muted entre páginas vizinhas e extremos.
+
+#### `AdminTableSortHeader`
+
+`<button>` inline-flex com ícone de caret: ativo = `ArrowUp / ArrowDown` 12px `secondary`; inativo = `ArrowUpDown` 12px `border-strong`.
+
+#### Row clicável → Dialog de detalhe
+
+Ao converter tela sem coluna de ações: `<TableRow onClick={() => setSelected(row)} className="cursor-pointer">`. Células que ainda têm ação própria (ex.: dropdown) usam `e.stopPropagation()` no onClick para não abrir o dialog junto.
+
 Não faça:
 
 - filtros como tabs planas coloridas soltas

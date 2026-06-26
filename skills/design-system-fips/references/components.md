@@ -107,6 +107,7 @@ Regras:
 - **icon** — máx. 1 por badge; não combinar `dot` + `icon` no mesmo badge.
 - **count** — fica à esquerda do texto, cor invertida (fundo = cor do texto); acima de 99 vira `99+`.
 - **onRemove** — X à direita com hover opacity; combina com `pill` para visual de tag/filtro.
+- **size dentro de tabela** — Badge em célula **acompanha a densidade** da `<Table>` via `useTableDensity()`: `comfortable → md`, `compact|normal → sm`, fora de tabela → `sm`. Não fixar `size` hardcoded em badge de célula; deixar o hook decidir. Ver wrapper `useBadgeSize()` em `src/components/BiBadges.tsx` (Governança BI) e **Data Listing → Tabela canônica** em `patterns.md`.
 
 ### Tokens (catálogo da doc)
 
@@ -196,7 +197,7 @@ Fontes:
 Direção de uso:
 
 - `Tabs`: navegação secundária e troca de contexto dentro da tela
-- `Table`: listagem operacional densa, com wrapper card e hover de linha
+- `Table`: listagem operacional densa, com wrapper card e hover de linha. Sistema de densidade (`compact|normal|comfortable`) + toggles de aparência (`zebra`, `verticalBorders`, `stickyHeader`, `wrapText`) e `framed`, todos via props propagadas por context. Hook `useTableDensity()` deixa descendentes (Badge) auto-ajustarem. API completa, métricas por densidade, `AdminTableColumnMenu`/`Pagination`/`SortHeader` e persistência em `localStorage`: ver **Data Listing → Tabela canônica** em `patterns.md`
 - `Dialog`: ações focadas, filtros avançados em desktop, confirmação
 - `Drawer`: detalhes e fluxos laterais, principalmente em tablet/mobile
 - `Tooltip`: dica curta; requer `TooltipProvider`
