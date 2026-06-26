@@ -49,11 +49,13 @@ export function Copyable({
   code,
   preview,
   children,
+  fullWidth = false,
 }: {
   label: string
   code: string
   preview: ReactNode
   children: ReactNode
+  fullWidth?: boolean
 }) {
   const { send, copiedLabel } = usePlayground()
   const isCopied = copiedLabel === label
@@ -67,7 +69,8 @@ export function Copyable({
       title={`Clique para copiar código: ${label}`}
       style={{
         position: 'relative',
-        display: 'inline-flex',
+        display: fullWidth ? 'block' : 'inline-flex',
+        width: fullWidth ? '100%' : undefined,
         cursor: 'pointer',
         transition: 'all .15s',
         borderRadius: 8,

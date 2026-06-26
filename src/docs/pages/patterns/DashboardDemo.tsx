@@ -650,7 +650,7 @@ export default function DSFIPSDashboard(){
         </Copyable>
 
         {/* ═══ CHARTS ROW 1 (2 colunas) ═══ */}
-        <Copyable label="Graficos Dashboard" code={dashCode('chart')} preview={<DashPreviewChart />}>
+        <Copyable label="Graficos Dashboard" code={dashCode('chart')} preview={<DashPreviewChart />} fullWidth>
         <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:mob?12:16,marginBottom:mob?16:24}}>
 
           {/* Bar — por mês */}
