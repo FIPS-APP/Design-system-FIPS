@@ -109,14 +109,16 @@ Ao adicionar os itens obrigatórios, mantenha a **linha-base compartilhada** (ge
 
 ## Dashboard
 
-Fonte: `src/docs/pages/patterns/DashboardDemo.tsx`
+Fonte: `src/docs/pages/patterns/DashboardDemo.tsx`. **Gráficos: ver `references/charts.md`** (padrão obrigatório).
+Implementação de referência (cross-filter completo em todos os charts): `Governanca_BI/src/pages/KpiDashboardPage.tsx`.
 
 Regras:
 
-- cards KPI com borda lateral ou acento cromático controlado
+- cards KPI com borda lateral ou acento cromático controlado (Card Relatório: borda esquerda colorida + número no accent + ícone circular)
 - títulos fortes e métricas legíveis
 - hero com contexto do módulo
 - ações primárias agrupadas no topo
+- **todo gráfico em `recharts`** (sem SVG à mão) e **todo gráfico é cross-filter** — clicar alterna o filtro e os demais charts/cards re-escopam (faceta: cada chart ignora a própria dimensão). Tooltip único `TooltipBox` (header no accent + breakdown). Detalhes e receitas em `references/charts.md`.
 
 ## Data Listing
 
