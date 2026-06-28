@@ -3,11 +3,12 @@
 Regra de ouro (não-negociável):
 
 1. **Todo gráfico usa `recharts`.** Não desenhar SVG à mão (`<rect>`/`<circle>`/`<polyline>`), não usar outra lib de chart. Exceção: listas/rankings horizontais simples podem ser HTML+CSS (barra com `width: %`) — mas seguem as mesmas regras de cross-filter e tooltip.
-2. **Todo gráfico é cross-filter.** Clicar num elemento (fatia, barra, linha do ranking) **alterna** um filtro; os **demais** charts e cards re-escopam. Clicar de novo desliga.
+2. **Todo gráfico é cross-filter.** Clicar num elemento (fatia, barra, linha do ranking) **alterna** um filtro; os **demais** charts e cards re-escopam. Clicar de novo desliga. _Exceção:_ charts de **relatório estático / impressão** (ex.: PDF pra diretoria) pulam o cross-filter, mas mantêm recharts + tooltip de dados + ℹ explicativo.
 3. **Cores só por token** `var(--color-*)`. Nunca `hsl(var(--chart-*))` nem hex solto. Cards de chart com raio assimétrico `rounded-[10px_10px_10px_18px]`, títulos `font-heading` (Saira Expanded).
 4. **Todo gráfico tem tooltip de breakdown.** No hover, o `TooltipBox` mostra o total + a quebra detalhada (top ~6, mini-barras, sem bolinha; **"+ N outros"** agrega o resto pra a soma fechar). Nada de tooltip com só um número. **As linhas sempre somam o total do header.**
    - **Charts de uso** (acessos): quebram por **BI/usuário, ponderado pelo nº de acessos** (header = total de acessos).
    - **Charts de inventário** (composição/contagem): quebram nos **BIs do grupo, cada BI contando 1** (header = nº de BIs; linhas somam o total), em ordem **alfabética**. ⚠️ **Inventário conta BIs, não acessos** — não ordenar/valorar por acesso aqui.
+5. **Todo gráfico tem um ℹ explicativo no título.** Um botão `ℹ` (lucide `Info`, `h-3.5 w-3.5`) ao lado do título abre, no hover, um tooltip de **uma frase** dizendo *o que o gráfico analisa* — pro diretor bater o olho e entender sem interpretar o eixo. Use `Tooltip`/`TooltipTrigger`/`TooltipContent` de `@/components/ui/tooltip` (Radix; exige um `TooltipProvider` ancestral). É **diferente** do tooltip de dados (regra 4): o ℹ é didático e fica no **título**; o de dados é sobre os **valores**, no hover do elemento. Implementação de referência: prop `info` em `ChartCard` (em `CompliancePage.tsx` e `KpiDashboardPage.tsx`).
 
 Implementação de referência (port fiel, copiar daqui): `Governanca_BI/src/pages/KpiDashboardPage.tsx` — componentes `VBars` (BarChart), `DistDonut` (PieChart), `BarList`, `Ranking`, `TooltipBox`/`ChartTooltip`/`RechartsTip`, e o helper `withBiRows` (anexa o breakdown a cada `Dim`).
 
