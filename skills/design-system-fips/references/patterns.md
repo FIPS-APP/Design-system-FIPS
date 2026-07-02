@@ -85,15 +85,16 @@ Controla se a sidebar recolhe sozinha. É o único item interativo com popover.
 
 `<a href target="_blank" rel="noopener noreferrer">` para o GitHub do DS (`no-underline [color:inherit]`), ícone `LogOut`. Sem badge.
 
-#### 4. Versão (estático)
+#### 4. Versão (abre o modal "Novidades do Sistema")
 
-`<div>` **não clicável** (sem hover, sem `cursor-pointer`), ícone `Sparkles`, `title="Versão da documentação"` + badge mono 10px (`rgba(255,255,255,0.4)`) com `docVersion` (ex.: `v0.5.4`). Espelha a constante `DOC_VERSION`.
+`<button onClick={onOpenChangelog}>`, mesma geometria/hover dos outros 3 itens do rodapé (era um `<div>` estático até v0.5.5 — **revertido**: agora é clicável), ícone `Sparkles`, `title="Ver novidades desta versão"` + badge mono 10px (`rgba(255,255,255,0.4)`) com `docVersion` (ex.: `v0.5.5`). Espelha a constante `DOC_VERSION`. Ao clicar, abre o modal de changelog — anatomia completa em `components.md` → **Dialog/Modal → Modal "Novidades do Sistema" (Changelog)**.
+
+Fonte de referência: `src/components/layout/DocsNeuSidebar.tsx` (prop `onOpenChangelog`) + `src/components/layout/ChangelogModal.tsx` + `src/app/DocLayout.tsx` (state `changelogOpen`, monta `<ChangelogModal>` junto do `<TutorialOverlay>`).
 
 Não faça:
 
 - usar `Dialog` central do Radix para o Modo menu (é popover ancorado na pílula, padrão vindo do Suprimentos)
 - esconder o estado atual (a pílula sempre exibe `Auto · {n}s` ou `Manual`)
-- dar hover/clique ao item **Versão** (é rótulo informativo, não ação)
 - reordenar os 4 itens ou trocar o ícone de cada um (`Timer` / `Compass` / `LogOut` / `Sparkles`)
 
 #### Governança — ao criar um novo projeto FIPS
@@ -101,7 +102,7 @@ Não faça:
 Todo shell novo (Governança BI, Suprimentos, Tecnopano, etc.) **deve** incluir no rodapé da sidebar, no mínimo, estes 2 itens — eles convergem os projetos:
 
 - **Modo menu** — obrigatório. É o controle de auto-colapso (pílula `Timer` + popover). Sem ele a sidebar não tem como recolher/expandir de forma padronizada.
-- **Versão** — obrigatório. `<div>` estático com `Sparkles` + badge mono espelhando a constante de versão do projeto (`DOC_VERSION` / `APP_VERSION`). É a assinatura institucional de rastreabilidade.
+- **Versão** — obrigatório. Botão com `Sparkles` + badge mono espelhando a constante de versão do projeto (`DOC_VERSION` / `APP_VERSION`). É a assinatura institucional de rastreabilidade; recomendado (não obrigatório) ligar a um modal "Novidades do Sistema" como no DS-FIPS — ver `components.md`.
 
 Os outros 2 são **contextuais** (inclua só quando fizer sentido): **Primeiro acesso** apenas se o projeto tem tour de boas-vindas; **Repositório** apenas se há repo público a linkar.
 

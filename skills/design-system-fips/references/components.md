@@ -203,6 +203,56 @@ Direção de uso:
 - `Tooltip`: dica curta; requer `TooltipProvider`
 - `Progress`: status numérico e andamento visual
 
+### Dialog/Modal — anatomia canônica de header
+
+Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal`, playground de todas as variantes). Todo modal "cartão" do DS-FIPS (não confundir com o painel utilitário neumórfico do `ExportModal`, que é outra família visual) usa este header:
+
+- **Faixa colorida** (`headerBg`) ocupando a largura toda, `padding: 20px 24px` (`24px` à direita reservado pro botão fechar).
+- **Decoração**: se `headerBg` é o gradiente institucional (`GOV_GRAD` / `--fips-banner-content-bg`, 135°, azul→`#001A4A`), sobrepõe **JunctionLines** (SVG de trilhos ferroviários, `opacity 0.06`, `top:-10 right:-20`). Em faixas de cor sólida, usa um shimmer diagonal leve (`linear-gradient(135deg, transparent, rgba(255,255,255,.04), transparent)`) no lugar.
+- **Ícone-tile**: `44×44px`, `border-radius 10px`, fundo translúcido na cor do acento (`{cor}1A` ≈ 10% opacidade) + borda `{cor}30` ≈ 19%, `box-shadow: 0 1px 2px rgba(0,42,104,.3), inset 0 1px 0 rgba(255,255,255,.08)`.
+- **Eyebrow** (opcional): `11px / 600 / letter-spacing 0.14em / uppercase`, Saira Expanded. **Regra:** eyebrow nunca repete palavra do título (ex.: "Atribuição" + "Atribuir responsável" é redundante — remover o eyebrow nesse caso; "Dashboard" + "Movimentação de Pátio" é válido porque não repete).
+- **Título**: sempre **21px / 700**, Saira Expanded, `line-height 1.2`, `letter-spacing -0.2px`, cor branca.
+- **Subtítulo** (opcional): `12px`, `rgba(255,255,255,.65)`, Open Sans.
+- **Botão fechar**: `32×32px`, `border-radius 8px`, `top:14 right:14`, fundo `rgba(255,255,255,.08)` → hover `rgba(255,255,255,.18)`.
+- **Radius do modal**: assimétrico `12px 12px 12px 24px` (assinatura FIPS), não `rounded-2xl` uniforme.
+
+**Regra de cor do acento** (ícone-tile + eyebrow, quando colorido):
+
+| Fundo da faixa | Acento (ícone/eyebrow) |
+|---|---|
+| Gov gradient (`GOV_GRAD`) | **âmbar** (`C.amareloOuro` / `--color-accent`) |
+| Cor semântica sólida (verde/vermelho/laranja) | **branco** (`rgba(255,255,255,.9)`) |
+
+8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-9`/`rounded-xl`/`text-sm`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
+
+### Modal "Novidades do Sistema" (Changelog)
+
+Modal real de produto (não é exemplo de playground) — acionado pelo item **Versão** do rodapé do sidebar (ver `patterns.md` → Application Shell → Sidebar → rodapé, item 4).
+
+Fontes: `src/components/layout/ChangelogModal.tsx` (componente) + `src/docs/data/changelog.ts` (fonte única de dados, tipo `ChangelogVersion[]` com `entries: {type, description}[]`) + `src/docs/pages/ChangelogPage.tsx` (timeline em `/docs/changelog`, consome a **mesma** fonte).
+
+Anatomia:
+
+- **Header**: canônico (acima) — eyebrow `"Versão {CURRENT_VERSION}"`, título fixo "Novidades do Sistema", ícone `Sparkles` âmbar sobre `GOV_GRAD`.
+- **Corpo** (rolável, `max-h-[85vh]` no modal): por versão, título + `v{versão} • {data pt-BR}`; lista de mudanças em cards `p-2.5`, `rounded-lg`, cor por `type`:
+
+  | `type` | Ícone | Rótulo | Cor (tokens semânticos, `/10` bg + `/25` border) |
+  |---|---|---|---|
+  | `feature` | `Sparkles` | Novidade | `--color-success` |
+  | `improvement` | `Wrench` | Melhoria | `--color-secondary` / `--color-primary` |
+  | `fix` | `Bug` | Correção | `--color-danger` |
+  | `breaking` | `Rocket` | Importante | `--color-accent-strong` |
+
+- Só a versão mais recente aparece por padrão; botão texto "Ver versões anteriores" expande o histórico completo.
+- **Footer**: `Button variant="primary" size="lg" className="w-full"` — "Entendi, vamos lá!" (fecha o modal).
+- **Largura**: `max-w-xl` (576px) — mais larga que o modal padrão (`max-w-lg`/512px) por ter listas de texto mais longas.
+
+Não faça:
+
+- duplicar os dados do changelog — sempre importar de `src/docs/data/changelog.ts`, nunca criar array local (aconteceu em `ChangelogPage.tsx` antes de v0.5.5, ficou defasado)
+- usar cores Tailwind cruas nos cards por tipo (`bg-green-100`, `text-red-700` etc. — isso vem do modelo de referência do Governança TI/Suprimentos, mas no DS-FIPS é sempre token semântico + variante `dark:`)
+- auto-abrir por `localStorage` a cada versão nova — neste DS o gatilho é **só** o clique no botão Versão, sem popup intrusivo automático
+
 ## ExportButtons (par de exportação)
 
 Fonte: `src/docs/pages/patterns/DataListingDemo.tsx` (canônico) · port: `src/components/ExportButtons.tsx`
