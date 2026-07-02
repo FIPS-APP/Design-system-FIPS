@@ -126,7 +126,7 @@ export function UserAccountMenu({
 
               {/* Badge de perfil */}
               <div className="flex items-center gap-1 px-3.5 pb-2.5">
-                <Badge size="sm" variant={FIPS_ROLE_BADGE_VARIANT[activeUser.role]}>
+                <Badge size="sm" variant={FIPS_ROLE_BADGE_VARIANT[activeUser.role]} dot>
                   {FIPS_ROLE_LABEL[activeUser.role]}
                 </Badge>
               </div>
