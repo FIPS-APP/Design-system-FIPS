@@ -458,6 +458,12 @@ const INPUT_VARIANTS: InputVariant[] = [
   { label: "CPF / CNPJ", placeholder: "000.000.000-00", iconName: "documento", type: "text", inputMode: "numeric", pattern: "[0-9./-]*" },
   { label: "Placa do veículo", placeholder: "ABC-1D23", iconName: "placa", type: "text", inputMode: "text", maxLength: 8 },
   { label: "Valor estimado", placeholder: "R$ 0,00", iconName: "moeda", type: "text", inputMode: "decimal" },
+  { label: "Senha de acesso", placeholder: "Mínimo 8 caracteres", iconName: "cadeado", type: "password", required: true, showToggle: true, helper: "Toggle de visibilidade (olho) à direita." },
+  { label: "Matrícula", placeholder: "000000", iconName: "pessoa", type: "text", inputMode: "numeric", pattern: "[0-9]*", maxLength: 6 },
+  { label: "Hora prevista", placeholder: "14:30", iconName: "calendario", type: "text", inputMode: "numeric", pattern: "[0-9:]*", maxLength: 5 },
+  { label: "Protocolo", placeholder: "—", iconName: "documento", type: "text", readOnly: true, value: "FIPS-2026-00482", helper: "Gerado pelo sistema — somente leitura." },
+  { label: "E-mail corporativo", placeholder: "email@fips.app.br", iconName: "email", type: "email", inputMode: "email", error: true, errorMsg: "Formato de e-mail inválido.", value: "joao@" },
+  { label: "Ramal interno", placeholder: "4210", iconName: "telefone", type: "text", inputMode: "numeric", maxLength: 4, disabled: true, helper: "Definido pelo RH — não editável." },
 ];
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
@@ -525,12 +531,13 @@ export default function InputDoc() {
                     key={i}
                     label={v.label}
                     code={inputVariantCode(v)}
-                    preview={<DSInput label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as any} icon={iconFn()} required={v.required} helper={v.helper} maxLength={v.maxLength} pattern={v.pattern} onClear={isSearch ? () => {} : undefined} iconRight={v.iconName === "calendario" ? icons.calendario(16, C.azulClaro) : undefined} />}
+                    preview={<DSInput label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as DSInputProps["inputMode"]} icon={iconFn()} required={v.required} helper={v.helper} maxLength={v.maxLength} pattern={v.pattern} showToggle={v.showToggle} error={v.error} errorMsg={v.errorMsg} readOnly={v.readOnly} disabled={v.disabled} value={v.value} onClear={isSearch ? () => {} : undefined} iconRight={v.iconName === "calendario" ? icons.calendario(16, C.azulClaro) : undefined} />}
                   >
                     <DSInput
-                      label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as any}
+                      label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as DSInputProps["inputMode"]}
                       icon={iconFn()} required={v.required} helper={v.helper} maxLength={v.maxLength} pattern={v.pattern}
-                      {...(isSearch ? { value: searchVal, onChange: setSearchVal, onClear: () => setSearchVal("") } : {})}
+                      showToggle={v.showToggle} error={v.error} errorMsg={v.errorMsg} readOnly={v.readOnly} disabled={v.disabled}
+                      {...(isSearch ? { value: searchVal, onChange: setSearchVal, onClear: () => setSearchVal("") } : v.value !== undefined ? { value: v.value } : {})}
                       iconRight={v.iconName === "calendario" ? icons.calendario(16, C.azulClaro) : undefined}
                     />
                   </Copyable>
