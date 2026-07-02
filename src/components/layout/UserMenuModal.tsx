@@ -104,7 +104,6 @@ export function UserMenuModal({ open, onOpenChange, activeUserId, onActiveUserCh
               <UserAvatar user={activeUser} size={44} />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] font-semibold text-[var(--color-fg)] dark:text-white">{activeUser.email}</p>
-                <p className="truncate text-[11px] text-[var(--color-fg-muted)]">{activeUser.cargo}</p>
                 <div className="mt-1.5">
                   <Badge size="sm" variant={FIPS_ROLE_BADGE_VARIANT[activeUser.role]}>
                     {FIPS_ROLE_LABEL[activeUser.role]}
