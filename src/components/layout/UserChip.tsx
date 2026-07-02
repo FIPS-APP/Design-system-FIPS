@@ -4,6 +4,7 @@ import { cn } from '../../lib/cn'
 import {
   docHeaderNeuAccentBgHover,
   docHeaderNeuAccentBorderHover,
+  docHeaderNeuAccentIcon,
   docHeaderNeuAccentShadowHover,
   docHeaderNeuDarkBgIdle,
   docHeaderNeuDarkBorderIdle,
@@ -153,14 +154,15 @@ export function UserChip({
               <span
                 className={cn(
                   'truncate font-sans text-[12px] leading-[1.2] font-semibold',
-                  hovered ? 'text-[var(--color-gov-azul-escuro)]' : dark ? 'text-[#E2E2E8]' : 'text-[var(--color-fg)]',
+                  !hovered && (dark ? 'text-[#E2E2E8]' : 'text-[var(--color-fg)]'),
                 )}
+                style={hovered ? { color: docHeaderNeuAccentIcon } : undefined}
               >
                 {activeUser.name}
               </span>
               <span
                 className="truncate text-[9px] leading-[1.2] font-semibold tracking-[0.04em] uppercase"
-                style={{ color: hovered ? 'var(--color-gov-azul-escuro)' : FIPS_ROLE_COLOR[activeUser.role] }}
+                style={{ color: hovered ? docHeaderNeuAccentIcon : FIPS_ROLE_COLOR[activeUser.role] }}
               >
                 {FIPS_ROLE_LABEL[activeUser.role]}
               </span>
@@ -168,9 +170,10 @@ export function UserChip({
             <ChevronDown
               className={cn(
                 'relative z-[1] h-3.5 w-3.5 shrink-0 transition-transform duration-200',
-                hovered ? 'text-[var(--color-gov-azul-escuro)]' : dark ? 'text-[#A1A1AA]' : 'text-[var(--color-fg-muted)]',
+                !hovered && (dark ? 'text-[#A1A1AA]' : 'text-[var(--color-fg-muted)]'),
                 menuOpen && 'rotate-180',
               )}
+              style={hovered ? { color: docHeaderNeuAccentIcon } : undefined}
               strokeWidth={1.5}
               aria-hidden
             />
