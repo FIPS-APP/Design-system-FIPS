@@ -13,9 +13,7 @@ import {
   ListTree,
   MapPin,
   Phone,
-  Save,
   Send,
-  Eye,
   Tag,
   UserRound,
   AlertTriangle,
@@ -793,20 +791,15 @@ export default function FormWorkspaceDemo() {
           <Copyable label="Footer de Acoes" code={wsCode('footer')} preview={wsPreview('footer')}>
           <div className="ws-footer rounded-2xl p-6 shadow-[var(--shadow-card)]">
             <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="font-heading text-sm font-semibold text-white">Ações do workspace</p>
-                <p className="mt-1 text-sm text-white/55">
-                  Rodapé persistente para ações principais e secundárias.
+              <div className="min-w-0">
+                <p className="font-heading text-sm font-semibold text-white">6/8 obrigatórios preenchidos</p>
+                <p className="mt-1 text-sm text-white/60">
+                  Falta concluir: Centro de custo, Categoria.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex shrink-0 flex-wrap gap-3">
                 <Button variant="inverseOutline" size="md">
-                  <Eye className="h-4 w-4" />
-                  Gerar prévia
-                </Button>
-                <Button variant="inverseOutline" size="md">
-                  <Save className="h-4 w-4" />
-                  Salvar rascunho
+                  Cancelar
                 </Button>
                 <Button variant="ouro" size="md">
                   <Send className="h-4 w-4" />
