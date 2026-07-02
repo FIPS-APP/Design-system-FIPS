@@ -190,7 +190,7 @@ const POPUP_SIZES={
 };
 const POPUP_ORDER=["normal","grande","tela-cheia"];
 
-function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg}){
+function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg,iconBorder,headerBg=GOV_GRAD}){
   const [vis,setVis]=useState(false);
   const [animIn,setAnimIn]=useState(false);
   const [size,setSize]=useState("normal");
@@ -206,13 +206,15 @@ function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg}){
     <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:isFullscreen?8:16}}>
       <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.45)",backdropFilter:"blur(2px)",WebkitBackdropFilter:"blur(2px)",opacity:animIn?1:0,transition:"opacity .28s",cursor:"pointer"}}/>
       <div role="dialog" aria-modal="true" style={{position:"relative",zIndex:1,width:typeof sz.width==="number"?sz.width:undefined,maxWidth:typeof sz.width==="string"?sz.width:"95vw",minWidth:typeof sz.width==="string"?sz.width:undefined,maxHeight:sz.maxH,background:C.cardBg,borderRadius:isFullscreen?"8px":"12px 12px 12px 24px",boxShadow:"0 12px 48px rgba(0,42,104,.2), 0 2px 8px rgba(0,42,104,.08)",display:"flex",flexDirection:"column",transform:animIn?"scale(1) translateY(0)":"scale(.96) translateY(10px)",opacity:animIn?1:0,transition:"all .28s cubic-bezier(.32,.72,.37,1.1), width .25s ease, max-width .25s ease",overflow:"hidden"}}>
-        {/* Header — azul escuro com ícone neumorphic */}
-        <div style={{padding:"20px 24px",paddingRight:100,background:"#002A68",display:"flex",alignItems:"center",gap:16,flexShrink:0,position:"relative",overflow:"hidden"}}>
-          <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)",pointerEvents:"none"}}/>
+        {/* Header — padrão canônico DS-FIPS: faixa gov + trilhos + ícone-tile âmbar + título 21px */}
+        <div style={{padding:"20px 24px",paddingRight:100,background:headerBg,display:"flex",alignItems:"center",gap:16,flexShrink:0,position:"relative",overflow:"hidden"}}>
+          {headerBg===GOV_GRAD
+            ? <JunctionLines style={{position:"absolute",top:-10,right:-20,width:360,height:200,opacity:.06}}/>
+            : <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)",pointerEvents:"none"}}/>}
           <div style={{display:"flex",gap:14,alignItems:"center",minWidth:0,flex:1,position:"relative"}}>
-            {icon&&<div style={{width:44,height:44,borderRadius:10,background:"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid rgba(255,255,255,0.16)",boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
+            {icon&&<div style={{width:44,height:44,borderRadius:10,background:iconBg||"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${iconBorder||"rgba(255,255,255,0.16)"}`,boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
             <div style={{minWidth:0}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.3}}>{title}</h2>
+              <h2 style={{fontSize:21,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:"-0.2px"}}>{title}</h2>
               {subtitle&&<p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
             </div>
           </div>
@@ -1136,7 +1138,7 @@ export default function DialogDoc(){
       </Modal>
 
       {/* 7. POPUP — Resizable */}
-      <PopupModal open={m==="popup"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição para a tarefa." icon={Ic.popup(24,"#fff")}
+      <PopupModal open={m==="popup"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição para a tarefa." icon={Ic.popup(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
         {({size,isWide,isFullscreen})=>(
           <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:isFullscreen?20:14}}>
