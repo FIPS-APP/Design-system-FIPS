@@ -7,6 +7,7 @@ import { DocHeaderHeroBackground, DocHeaderDarkBackground, DocHeaderNeuIconButto
 import { DocHeaderPageTrail } from '../components/layout/DocHeaderPageTrail'
 import { DocHeaderSectionNav } from '../components/layout/DocHeaderSectionNav'
 import { DocsNeuSidebar } from '../components/layout/DocsNeuSidebar'
+import { ChangelogModal } from '../components/layout/ChangelogModal'
 import { SearchPill } from '../components/layout/SearchPill'
 import { TutorialOverlay, routeToPageName } from '../components/domain/TutorialContextual'
 import { UserChip } from '../components/layout/UserChip'
@@ -26,6 +27,7 @@ export function DocLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [_sidebarAutoMenu, setSidebarAutoMenu] = useState(false)
   const [tutorialOpen, setTutorialOpen] = useState(false)
+  const [changelogOpen, setChangelogOpen] = useState(false)
   const [isLg, setIsLg] = useState(() =>
     typeof window !== 'undefined' ? window.matchMedia('(min-width: 1024px)').matches : false,
   )
@@ -110,6 +112,7 @@ export function DocLayout() {
             docVersion={DOC_VERSION}
             onAutoCollapseChange={handleSidebarAutoCollapseChange}
             onReplayTour={tour.start}
+            onOpenChangelog={() => setChangelogOpen(true)}
           />
         </div>
       </aside>
@@ -232,6 +235,7 @@ export function DocLayout() {
 
       <Toaster richColors position="top-right" closeButton />
       <TutorialOverlay open={tutorialOpen} onClose={() => setTutorialOpen(false)} pageName={routeToPageName(location.pathname)} />
+      <ChangelogModal open={changelogOpen} onOpenChange={setChangelogOpen} />
       <GuidedTour
         isActive={tour.isActive}
         currentStepIndex={tour.currentStepIndex}

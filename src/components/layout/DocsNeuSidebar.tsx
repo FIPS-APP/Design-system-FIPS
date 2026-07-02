@@ -466,6 +466,8 @@ export type DocsNeuSidebarProps = {
   onAutoCollapseChange?: (enabled: boolean) => void
   /** Reinicia o tour de primeiro acesso (item “Primeiro acesso” do rodapé). */
   onReplayTour?: () => void
+  /** Abre o modal "Novidades do Sistema" (item “Versão” do rodapé). */
+  onOpenChangelog?: () => void
 }
 
 export function DocsNeuSidebar({
@@ -475,6 +477,7 @@ export function DocsNeuSidebar({
   docVersion = 'v0.3.0',
   onAutoCollapseChange,
   onReplayTour,
+  onOpenChangelog,
 }: DocsNeuSidebarProps) {
   const theme = TN
   const { pathname } = useLocation()
@@ -855,16 +858,28 @@ export function DocsNeuSidebar({
               ) : null}
             </a>
 
-            <div
-              className="flex items-center gap-2 rounded-md text-[11px]"
+            <button
+              type="button"
+              onClick={() => onOpenChangelog?.()}
+              className="flex cursor-pointer items-center gap-2 rounded-md text-[11px] transition"
               style={{
                 color: theme.chevron,
                 justifyContent: collapsed ? 'center' : 'flex-start',
                 padding: collapsed ? '6px 0' : '6px 8px',
                 width: collapsed ? 52 : 'calc(100% - 16px)',
                 margin: collapsed ? '1px auto' : '1px 8px',
+                border: 'none',
+                background: 'transparent',
               }}
-              title="Versão da documentação"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = theme.chevron
+              }}
+              title="Ver novidades desta versão"
             >
               <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
               {!collapsed ? (
@@ -877,7 +892,7 @@ export function DocsNeuSidebar({
                   </span>
                 </>
               ) : null}
-            </div>
+            </button>
         </div>
       </aside>
     </SidebarCtx.Provider>
