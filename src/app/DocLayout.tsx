@@ -197,7 +197,7 @@ export function DocLayout() {
                 <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                <div className="hidden shrink-0 items-center gap-2 sm:flex">
+                <div className="flex shrink-0 items-center gap-2">
                   <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
                     <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
                   </DocHeaderNeuIconButton>
