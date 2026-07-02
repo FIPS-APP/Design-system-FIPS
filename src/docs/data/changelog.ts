@@ -29,8 +29,8 @@ export const CHANGELOG: ChangelogVersion[] = [
     date: '2026-07-02',
     title: 'Minha Conta: chip do header vira interativo',
     entries: [
-      { type: 'feature', description: 'Novo modal "Minha Conta" (`UserMenuModal`), padrão canônico DS-FIPS (header gov + ícone-tile âmbar): perfil ativo, badge de perfil e ações Meu perfil / Preferências / Sair.' },
-      { type: 'feature', description: 'Seletor "Trocar de perfil (demo)" com 4 perfis (Colaborador, Gestor, Diretoria, Administrador), cor por perfil replicada no avatar e no rótulo.' },
+      { type: 'feature', description: 'Novo menu "Minha Conta" (`UserAccountMenu`): painel ancorado embaixo do chip do header (não é modal), com perfil ativo, badge de perfil e ações Meu perfil / Preferências / Sair.' },
+      { type: 'feature', description: 'Seletor "Trocar de perfil (demo)" com 4 perfis (Colaborador, Gestor, Diretoria, Administrador), cargo e cor por perfil no avatar e no rótulo.' },
       { type: 'improvement', description: 'Chip de usuário do header (`UserChip`, variante `docHeader`) passa a ser clicável, com nome + cargo em duas linhas coloridas por perfil, no claro e no escuro.' },
     ],
   },
