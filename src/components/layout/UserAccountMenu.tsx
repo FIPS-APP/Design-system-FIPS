@@ -180,18 +180,24 @@ export function UserAccountMenu({
                   type="button"
                   role="menuitem"
                   onClick={() => toast('Meu perfil em breve')}
-                  className="flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-surface-muted)] dark:text-white/85"
+                  className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-surface-muted)] dark:text-white/85"
                 >
-                  <UserRound className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" aria-hidden />
+                  <UserRound
+                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-fg)] dark:group-hover:text-white"
+                    aria-hidden
+                  />
                   Meu perfil
                 </button>
                 <button
                   type="button"
                   role="menuitem"
                   onClick={() => toast('Preferências em breve')}
-                  className="flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-surface-muted)] dark:text-white/85"
+                  className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-surface-muted)] dark:text-white/85"
                 >
-                  <Settings className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" aria-hidden />
+                  <Settings
+                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-fg)] dark:group-hover:text-white"
+                    aria-hidden
+                  />
                   Preferências
                 </button>
                 <button
