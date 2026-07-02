@@ -74,7 +74,7 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
     <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-[3px] data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:animate-in data-[state=open]:fade-in" />
-        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 flex max-h-[85vh] w-[calc(100%-1.5rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[12px_12px_12px_24px] bg-[var(--color-surface)] shadow-[var(--shadow-elevated)] data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95 data-[state=open]:duration-200">
+        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 flex max-h-[85vh] w-[calc(100%-1.5rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[12px_12px_12px_24px] bg-[var(--color-surface)] shadow-[var(--shadow-elevated)] data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95 data-[state=open]:duration-200">
           {/* Header canônico DS-FIPS: faixa gov + trilhos + ícone-tile âmbar + eyebrow + título 21px */}
           <div
             className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14 text-white"
@@ -119,34 +119,34 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
             </div>
           </div>
 
-          {/* Corpo rolável */}
-          <div className="min-h-0 flex-1 overflow-y-auto p-6">
+          {/* Corpo rolável — compacto */}
+          <div className="min-h-0 flex-1 overflow-y-auto p-5">
             {versionsToShow.map((version, vIndex) => (
-              <div key={version.version} className={vIndex > 0 ? 'mt-6 border-t border-[var(--color-border)] pt-6' : ''}>
-                <div className="mb-4">
-                  <h3 className="font-heading font-semibold text-[var(--color-fg)] dark:text-white">{version.title}</h3>
-                  <p className="text-sm text-[var(--color-fg-muted)]">
+              <div key={version.version} className={vIndex > 0 ? 'mt-4 border-t border-[var(--color-border)] pt-4' : ''}>
+                <div className="mb-2.5">
+                  <h3 className="font-heading text-[15px] leading-snug font-semibold text-[var(--color-fg)] dark:text-white">{version.title}</h3>
+                  <p className="text-xs text-[var(--color-fg-muted)]">
                     v{version.version} • {formatDateBR(version.date)}
                   </p>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {version.entries.map((entry, index) => {
                     const config = TYPE_CONFIG[entry.type]
                     const Icon = config.icon
                     return (
                       <div
                         key={index}
-                        className={cn('flex items-start gap-3 rounded-lg border p-3', config.card)}
+                        className={cn('flex items-start gap-2.5 rounded-lg border p-2.5', config.card)}
                       >
-                        <div className={cn('mt-0.5 shrink-0 rounded-md p-1.5', config.accent)}>
-                          <Icon className="h-4 w-4" />
+                        <div className={cn('mt-0.5 shrink-0 rounded-md p-1', config.accent)}>
+                          <Icon className="h-3.5 w-3.5" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <span className={cn('text-xs font-semibold tracking-wide uppercase', config.accent)}>
+                          <span className={cn('text-[11px] font-semibold tracking-wide uppercase', config.accent)}>
                             {config.label}
                           </span>
-                          <p className="mt-0.5 text-sm text-[var(--color-fg)] dark:text-white/80">{entry.description}</p>
+                          <p className="mt-0.5 text-[13px] leading-snug text-[var(--color-fg)] dark:text-white/80">{entry.description}</p>
                         </div>
                       </div>
                     )
@@ -159,7 +159,7 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
               <button
                 type="button"
                 onClick={() => setShowAll(true)}
-                className="mt-4 text-sm font-medium text-[var(--color-primary)] hover:underline dark:text-[#93BDE4]"
+                className="mt-3 text-sm font-medium text-[var(--color-primary)] hover:underline dark:text-[#93BDE4]"
               >
                 Ver versões anteriores
               </button>
