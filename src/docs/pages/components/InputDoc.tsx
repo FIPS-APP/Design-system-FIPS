@@ -108,7 +108,7 @@ function DSInput({ label, placeholder, icon, iconRight, type="text", inputMode, 
     fontFamily: F.body, marginBottom: 1, marginLeft: 7, display: "flex", alignItems: "center", gap: 3,
   };
 
-  const displayVal = controlledVal !== undefined ? controlledVal : val;
+  const displayVal = val;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
@@ -248,7 +248,7 @@ export function Input({
       ? \`0 0 0 3px \${isDark ? "rgba(248,113,113,0.15)" : C.dangerBg}\`
       : "none";
 
-  const displayVal = controlledVal !== undefined ? controlledVal : val;
+  const displayVal = val;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
