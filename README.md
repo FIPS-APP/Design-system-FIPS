@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.6.0`
+## Versão atual: `v0.6.1`
 
 ## Consumindo a biblioteca
 
@@ -75,6 +75,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.6.1 | 2026-07-02 | No mobile (abaixo de `sm`), o trilho "grupo / página" do header (`DocHeaderPageTrail`) dá lugar à marca FIPS (ícone do sidebar colapsado) num chip azul, em vez do breadcrumb em texto |
 | 0.6.0 | 2026-07-02 | Chip de usuário do header (`UserChip`, variante `docHeader`) vira clicável: avatar+nome+cargo coloridos por perfil, abre o novo menu "Minha Conta" (`UserAccountMenu`) — painel ancorado embaixo do chip, não modal — com perfil ativo, badge de perfil, seletor "Trocar de perfil (demo)" (Colaborador/Gestor/Diretoria/Administrador) e ações Meu perfil/Preferências/Sair |
 | 0.5.5 | 2026-06-25 | Modal: header padronizado (eyebrow + título 21px + ícone-tile, acento gov→âmbar / semântico→branco) e exemplo "Informativo" trocado para "Movimentação de Pátio"; campos de modal no padrão compact (h-9 / radius 12 / text-sm); correção do sticky do rodapé do sidebar (`lg:overflow-visible`); skill bundle atualizado (Badge, rodapé do sidebar, governança de novo projeto) |
 | 0.5.4 | 2026-06-23 | Sidebar com categorias colapsáveis (cabeçalho tipográfico + colapso animado, padrão unificado DS-FIPS / Suprimentos / Governança BI); página "Histórico de versões" (ex-"Changelog") reescrita como timeline; rodapé "Menu automático" → "Modo menu" |

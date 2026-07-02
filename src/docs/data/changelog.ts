@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.6.1',
+    date: '2026-07-02',
+    title: 'Trilho do header vira logo no mobile',
+    entries: [
+      { type: 'improvement', description: 'No mobile (abaixo de `sm`), o trilho "grupo / página" do header (`DocHeaderPageTrail`) some e dá lugar à marca FIPS (mesmo ícone do sidebar colapsado), num chip azul com contraste garantido no claro e no escuro. A partir de `sm`, o breadcrumb em texto volta normalmente.' },
+    ],
+  },
+  {
     version: '0.6.0',
     date: '2026-07-02',
     title: 'Minha Conta: chip do header vira interativo',

@@ -18,17 +18,30 @@ export function DocHeaderPageTrail({
     dark ? 'text-[#fafafa]' : 'text-[var(--color-fg)]',
   )
 
+  const mobileMark = (
+    <div
+      className={cn(
+        'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border bg-[var(--color-sidebar)] p-1 sm:hidden',
+        dark ? 'border-white/10' : 'border-black/10',
+      )}
+    >
+      <img src="/appfips-mark-collapsed.png" alt="FIPS" className="h-full w-full object-contain" />
+    </div>
+  )
+
   if (groupLabel === pageTitle) {
     return (
-      <nav aria-label="Trilho da documentação" className="min-w-0 flex-1">
-        <p className={cn('m-0', titleClass)}>{pageTitle}</p>
+      <nav aria-label="Trilho da documentação" className="flex min-w-0 flex-1 items-center">
+        {mobileMark}
+        <p className={cn('m-0 hidden sm:block', titleClass)}>{pageTitle}</p>
       </nav>
     )
   }
 
   return (
-    <nav aria-label="Trilho da documentação" className="min-w-0 flex-1">
-      <ol className="m-0 flex min-w-0 list-none items-baseline gap-1 p-0 sm:gap-1.5">
+    <nav aria-label="Trilho da documentação" className="flex min-w-0 flex-1 items-center">
+      {mobileMark}
+      <ol className="m-0 hidden min-w-0 list-none items-baseline gap-1 p-0 sm:flex sm:gap-1.5">
         <li
           className={cn(
             'min-w-0 max-w-[min(11rem,42vw)] shrink truncate font-sans text-[11px] font-medium leading-snug sm:max-w-[13rem] sm:text-xs',
