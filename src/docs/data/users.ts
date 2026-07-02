@@ -12,7 +12,7 @@ export type FipsUser = {
   name: string
   /** Nome completo exibido no título do modal. */
   fullName: string
-  cargo?: string
+  cargo: string
   role: FipsUserRole
   email: string
   avatarUrl?: string
@@ -46,6 +46,7 @@ export const FIPS_USERS: FipsUser[] = [
     id: 'fipinho-santista',
     name: 'Fipinho Santista',
     fullName: 'Fipinho Baixada Santista',
+    cargo: 'Coordenador de TI',
     role: 'administrador',
     email: 'fipinho.santista@fips.app.br',
   },

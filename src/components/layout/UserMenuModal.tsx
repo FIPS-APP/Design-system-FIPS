@@ -92,8 +92,7 @@ export function UserMenuModal({ open, onOpenChange, activeUserId, onActiveUserCh
                 {activeUser.fullName}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="mt-[3px] truncate text-xs leading-snug text-white/65">
-                {FIPS_ROLE_LABEL[activeUser.role]}
-                {activeUser.cargo ? ` · ${activeUser.cargo}` : ''}
+                {activeUser.cargo}
               </DialogPrimitive.Description>
             </div>
           </div>
@@ -105,7 +104,8 @@ export function UserMenuModal({ open, onOpenChange, activeUserId, onActiveUserCh
               <UserAvatar user={activeUser} size={44} />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] font-semibold text-[var(--color-fg)] dark:text-white">{activeUser.email}</p>
-                <div className="mt-1">
+                <p className="truncate text-[11px] text-[var(--color-fg-muted)]">{activeUser.cargo}</p>
+                <div className="mt-1.5">
                   <Badge size="sm" variant={FIPS_ROLE_BADGE_VARIANT[activeUser.role]}>
                     {FIPS_ROLE_LABEL[activeUser.role]}
                   </Badge>
@@ -137,10 +137,10 @@ export function UserMenuModal({ open, onOpenChange, activeUserId, onActiveUserCh
                           {u.name}
                         </span>
                         <span
-                          className="block text-[9px] font-semibold tracking-[0.04em] uppercase"
+                          className="block truncate text-[10px] font-medium"
                           style={{ color: FIPS_ROLE_COLOR[u.role] }}
                         >
-                          {FIPS_ROLE_LABEL[u.role]}
+                          {u.cargo}
                         </span>
                       </span>
                       {isActive && <Check className="h-3.5 w-3.5 shrink-0 text-[var(--color-success-strong)]" aria-hidden />}
