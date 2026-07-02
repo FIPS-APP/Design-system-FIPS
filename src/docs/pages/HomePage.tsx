@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Progress } from "../../components/ui/progress";
-import { PageHero } from "../../composites/PageHero";
 import {
   Sparkles, Palette, Component, LayoutDashboard, ShieldCheck, BookOpen,
   ArrowRight, Users, FileInput, Cog,
   BarChart3,
 } from "lucide-react";
+
+const HOME_BACKGROUND = '/backgrounds/app-shell-home-trains.png';
 
 /* ═══════ TOKENS (mesmo padrão das doc pages) ═══════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"var(--color-gov-verde-escuro)",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)"};
@@ -49,29 +50,57 @@ export default function HomePage(){
     <div style={{minHeight:"100vh",background:C.bg,fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}`}</style>
 
-      {/* ═══════ HERO (composite PageHero — padrão FIPS, espelha Suprimentos) ═══════ */}
-      <PageHero>
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-12 text-center sm:px-6 sm:py-16">
+      {/* ═══════ HERO (padrão FIPS real — imagem full + overlay azul, igual Suprimentos/Home.tsx) ═══════ */}
+      <section className="relative isolate overflow-hidden text-white">
+        <img
+          src={HOME_BACKGROUND}
+          alt=""
+          aria-hidden
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-[#002A68]/60 via-[#002A68]/45 to-[#002A68]/60"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15"
+        />
+
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-12 text-center sm:px-6 sm:py-16">
           <Badge className="mb-5 rounded-full border-0 bg-[rgba(246,146,30,0.95)] text-white shadow-[0_12px_28px_rgba(246,146,30,0.28)]">
             Design System FIPS
           </Badge>
-          <h1 style={{fontSize:mob?32:48,fontWeight:700,color:C.branco,margin:0,fontFamily:Fn.title,lineHeight:1.1,letterSpacing:"-0.03em"}}>Design System<br/><span style={{color:C.amareloOuro}}>FIPS</span></h1>
-          <p style={{fontSize:mob?14:16,color:"rgba(255,255,255,0.78)",lineHeight:1.65,margin:0,fontFamily:Fn.body,maxWidth:750}}>
+
+          <h1 className="font-heading text-3xl font-bold leading-tight text-white sm:text-5xl">
+            Design System <span className="text-[var(--color-accent)]">FIPS</span>
+          </h1>
+
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/80 sm:text-lg">
             Biblioteca oficial de componentes, tokens e padrões da Ferrovia Interna do Porto de Santos.
             Tudo para construir interfaces consistentes, acessíveis e com identidade ferroviária.
           </p>
+
           <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>
             <Badge variant="success" dot>v0.4.2</Badge>
             <Badge variant="secondary">React 19 + Tailwind 4</Badge>
             <Badge variant="secondary">14+ componentes</Badge>
             <Badge variant="info">Dark mode</Badge>
           </div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:10,justifyContent:"center"}}>
-            <Button variant="ouro" size="sm" onClick={()=>navigate("/docs")}>Explorar componentes <ArrowRight size={14}/></Button>
-            <Button variant="inverseOutline" size="sm" onClick={()=>navigate("/docs/governance")}>Governança</Button>
+
+          <div className="flex flex-wrap justify-center gap-2 pt-1">
+            <Button variant="ouro" size="sm" onClick={()=>navigate("/docs")}>
+              <Sparkles className="h-4 w-4" aria-hidden />
+              Explorar componentes
+            </Button>
+            <Button variant="inverseOutline" size="sm" onClick={()=>navigate("/docs/governance")}>
+              <ShieldCheck className="h-4 w-4" aria-hidden />
+              Governança
+            </Button>
           </div>
         </div>
-      </PageHero>
+      </section>
 
       {/* ═══════ CONTENT ═══════ */}
       <div style={{padding:mob?"24px 16px 40px":"40px 40px 60px",maxWidth:1100,margin:"0 auto"}}>
