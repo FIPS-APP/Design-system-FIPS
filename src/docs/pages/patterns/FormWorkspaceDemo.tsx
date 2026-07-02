@@ -24,16 +24,18 @@ import {
   ShieldCheck,
   ArrowUpFromLine,
   LayoutGrid,
+  Info,
 } from 'lucide-react'
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { Button } from '../../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card'
-import { Field, FieldLabel, type FieldInset } from '../../../components/ui/field'
+import { Field, FieldLabel, FieldHint, type FieldInset } from '../../../components/ui/field'
 import { Input } from '../../../components/ui/input'
 import { Progress } from '../../../components/ui/progress'
 import { Select } from '../../../components/ui/select'
 import { Textarea } from '../../../components/ui/textarea'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '../../../components/ui/tooltip'
 
 /* ═══════════════════════════════════════════ STYLES ═══════════════════════════════════════════ */
 const workspaceStyles = `
@@ -225,19 +227,71 @@ function WorkspaceProgress({ value }: { value: number }) {
   )
 }
 
-/* ═══════════════════════════════════════════ FIELD WRAPPER ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════ SECTION HEADER (padrão Governança BI) ═══════════════════════════════════════════ */
+/* Cabeçalho de seção numerado: tile 36px com acento cromático + título + descrição. */
+function SectionHeader({ index, accent, title, description }: { index: string; accent: string; title: string; description: string }) {
+  return (
+    <CardHeader>
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+          style={{ background: `color-mix(in srgb, ${accent} 8%, transparent)` }}
+        >
+          <span className="font-heading text-sm font-bold" style={{ color: accent }}>
+            {index}
+          </span>
+        </div>
+        <div>
+          <CardTitle className="text-base">{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </div>
+      </div>
+    </CardHeader>
+  )
+}
+
+/* ═══════════════════════════════════════════ FIELD WRAPPER (padrão Governança BI) ═══════════════════════════════════════════ */
+/* Label com botão de ajuda (tooltip) opcional — ícone Info que explica o campo. */
+function FieldLabelWithInfo({ label, required, tooltip }: { label: string; required?: boolean; tooltip?: string }) {
+  if (!tooltip) return <FieldLabel required={required}>{label}</FieldLabel>
+  return (
+    <div className="flex items-center gap-1">
+      <FieldLabel required={required}>{label}</FieldLabel>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            className="flex items-center text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-primary)]"
+            aria-label={`Ajuda: ${label}`}
+          >
+            <Info className="h-3.5 w-3.5" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-[280px] text-left">
+          {tooltip}
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  )
+}
+
 type WorkspaceFieldProps = {
   label: string
   inset?: FieldInset
   required?: boolean
+  tooltip?: string
+  hint?: string
+  className?: string
   children: React.ReactNode
 }
 
-function WorkspaceField({ label, inset = 'control', required, children }: WorkspaceFieldProps) {
+/* Campo em density compact (padrão dos apps FIPS): label+ajuda, controle e hint opcional. */
+function WorkspaceField({ label, inset = 'control', required, tooltip, hint, className, children }: WorkspaceFieldProps) {
   return (
-    <Field inset={inset}>
-      <FieldLabel required={required}>{label}</FieldLabel>
+    <Field inset={inset} density="compact" className={className}>
+      <FieldLabelWithInfo label={label} required={required} tooltip={tooltip} />
       {children}
+      {hint ? <FieldHint>{hint}</FieldHint> : null}
     </Field>
   )
 }
@@ -366,6 +420,7 @@ export default function FormWorkspaceDemo() {
 
   return (
     <PlaygroundProvider>
+    <TooltipProvider>
     <div style={{ minHeight: '100vh', background: 'var(--color-surface-muted)', fontFamily: "'Open Sans', sans-serif", color: 'var(--color-fg)' }}>
       {/* HEADER HERO */}
       <header style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 100%)', padding: '48px 40px 44px', position: 'relative', overflow: 'hidden' }}>
@@ -503,99 +558,130 @@ export default function FormWorkspaceDemo() {
             <div className="space-y-6">
               {/* Section 1: Cabeçalho */}
               <Card className="ws-card ws-section-card">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-primary)]/8">
-                      <span className="font-heading text-sm font-bold text-[var(--color-primary)]">01</span>
-                    </div>
-                    <div>
-                      <CardTitle>Cabeçalho da solicitação</CardTitle>
-                      <CardDescription>Quem está abrindo a demanda e qual escopo será tratado.</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
-                  <WorkspaceField label="Data de emissão" inset="control" required>
-                    <Input
-                      inputMode="numeric"
-                      placeholder="dd/mm/aaaa"
-                      leftIcon={<CalendarDays className="h-4 w-4" aria-hidden />}
-                    />
+                <SectionHeader
+                  index="01"
+                  accent="var(--color-primary)"
+                  title="Cabeçalho da solicitação"
+                  description="Quem está abrindo a demanda e qual escopo será tratado."
+                />
+                <CardContent className="grid gap-5 sm:grid-cols-2">
+                  <WorkspaceField
+                    label="Nome do solicitante"
+                    required
+                    className="sm:col-span-2"
+                    tooltip="Nome completo de quem abre a demanda. Aparece no histórico de governança e no e-mail enviado ao aprovador."
+                  >
+                    <Input density="compact" placeholder="Nome completo" leftIcon={<UserRound className="h-4 w-4" aria-hidden />} />
                   </WorkspaceField>
-                  <WorkspaceField label="Nome do solicitante" inset="control" required>
-                    <Input placeholder="Nome completo" leftIcon={<UserRound className="h-4 w-4" aria-hidden />} />
+                  <WorkspaceField
+                    label="Data de emissão"
+                    required
+                    tooltip="Data em que a solicitação foi aberta. Preenchida automaticamente, mas editável para lançamentos retroativos."
+                  >
+                    <Input density="compact" inputMode="numeric" placeholder="dd/mm/aaaa" leftIcon={<CalendarDays className="h-4 w-4" aria-hidden />} />
                   </WorkspaceField>
-                  <WorkspaceField label="Nome do escopo" inset="control" required>
-                    <Input placeholder="Ex.: Contratação de manutenção" leftIcon={<FolderKanban className="h-4 w-4" aria-hidden />} />
+                  <WorkspaceField
+                    label="Prioridade"
+                    tooltip="Define a ordem de triagem. «Urgente» notifica o aprovador imediatamente."
+                  >
+                    <Select density="compact" aria-label="Prioridade" defaultValue="media" leftIcon={<AlertTriangle className="h-4 w-4" aria-hidden />}>
+                      <option value="baixa">Baixa</option>
+                      <option value="media">Média</option>
+                      <option value="alta">Alta</option>
+                      <option value="urgente">Urgente</option>
+                    </Select>
+                  </WorkspaceField>
+                  <WorkspaceField
+                    label="Nome do escopo"
+                    required
+                    className="sm:col-span-2"
+                    hint="Título curto e reconhecível — evite nomes técnicos de arquivo."
+                  >
+                    <Input density="compact" placeholder="Ex.: Contratação de manutenção" leftIcon={<FolderKanban className="h-4 w-4" aria-hidden />} />
                   </WorkspaceField>
                 </CardContent>
               </Card>
 
               {/* Section 2: Classificação */}
               <Card className="ws-card ws-section-card">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-secondary)]/8">
-                      <span className="font-heading text-sm font-bold text-[var(--color-secondary)]">02</span>
-                    </div>
-                    <div>
-                      <CardTitle>Classificação e contexto</CardTitle>
-                      <CardDescription>Área responsável, localização e contexto organizacional.</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
-                  <WorkspaceField label="Área processo" inset="control" required>
-                    <Select aria-label="Área processo" defaultValue="tecnologia" leftIcon={<Layers className="h-4 w-4" aria-hidden />}>
+                <SectionHeader
+                  index="02"
+                  accent="var(--color-secondary)"
+                  title="Classificação e contexto"
+                  description="Área responsável, localização e contexto organizacional."
+                />
+                <CardContent className="grid gap-5 sm:grid-cols-2">
+                  <WorkspaceField
+                    label="Área processo"
+                    required
+                    tooltip="Área organizacional dona da demanda. Determina a cadeia de aprovação aplicável."
+                  >
+                    <Select density="compact" aria-label="Área processo" defaultValue="tecnologia" leftIcon={<Layers className="h-4 w-4" aria-hidden />}>
                       <option value="tecnologia">Tecnologia</option>
                       <option value="operacoes">Operações</option>
+                      <option value="logistica">Logística</option>
                     </Select>
                   </WorkspaceField>
-                  <WorkspaceField label="Subprocesso" inset="control" required>
-                    <Select aria-label="Subprocesso" defaultValue="suporte" leftIcon={<ListTree className="h-4 w-4" aria-hidden />}>
+                  <WorkspaceField label="Subprocesso" required>
+                    <Select density="compact" aria-label="Subprocesso" defaultValue="suporte" leftIcon={<ListTree className="h-4 w-4" aria-hidden />}>
                       <option value="suporte">Suporte</option>
                       <option value="infra">Infraestrutura</option>
                     </Select>
                   </WorkspaceField>
-                  <WorkspaceField label="Local de execução" inset="control" required>
-                    <Input placeholder="Ex.: Terminal 1" leftIcon={<MapPin className="h-4 w-4" aria-hidden />} />
+                  <WorkspaceField
+                    label="Local de execução"
+                    required
+                    tooltip="Onde o serviço ou entrega acontece fisicamente. Usado para roteirizar equipes de campo."
+                  >
+                    <Input density="compact" placeholder="Ex.: Terminal 1" leftIcon={<MapPin className="h-4 w-4" aria-hidden />} />
                   </WorkspaceField>
-                  <WorkspaceField label="Sublocal" inset="control">
-                    <Input placeholder="Ex.: Casa de força" leftIcon={<MapPin className="h-4 w-4" aria-hidden />} />
+                  <WorkspaceField label="Sublocal" hint="Opcional — detalha o ponto exato dentro do local.">
+                    <Input density="compact" placeholder="Ex.: Casa de força" leftIcon={<MapPin className="h-4 w-4" aria-hidden />} />
                   </WorkspaceField>
                 </CardContent>
               </Card>
 
               {/* Section 3: Complementares */}
               <Card className="ws-card ws-section-card">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-accent-strong)]/10">
-                      <span className="font-heading text-sm font-bold text-[var(--color-accent-strong)]">03</span>
-                    </div>
-                    <div>
-                      <CardTitle>Dados complementares</CardTitle>
-                      <CardDescription>Informações auxiliares para triagem e Suprimentos.</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <WorkspaceField label="Centro de custo" inset="control" required>
-                      <Input placeholder="CC 3010" leftIcon={<BadgeDollarSign className="h-4 w-4" aria-hidden />} />
-                    </WorkspaceField>
-                    <WorkspaceField label="Contato rápido" inset="control">
-                      <Input placeholder="(11) 99999-9999" leftIcon={<Phone className="h-4 w-4" aria-hidden />} />
-                    </WorkspaceField>
-                    <WorkspaceField label="Categoria" inset="control" required>
-                      <Select aria-label="Categoria" defaultValue="servico" leftIcon={<Tag className="h-4 w-4" aria-hidden />}>
-                        <option value="servico">Serviço</option>
-                        <option value="material">Material</option>
-                      </Select>
-                    </WorkspaceField>
-                  </div>
-                  <WorkspaceField label="Observação" inset="control">
-                    <Textarea placeholder="Detalhe contexto, premissas, restrições e informações úteis para análise..." />
+                <SectionHeader
+                  index="03"
+                  accent="var(--color-accent-strong)"
+                  title="Dados complementares"
+                  description="Informações auxiliares para triagem e Suprimentos."
+                />
+                <CardContent className="grid gap-5 sm:grid-cols-2">
+                  <WorkspaceField
+                    label="Centro de custo"
+                    required
+                    tooltip="Código contábil que recebe o lançamento. Confirme com o financeiro antes de enviar."
+                  >
+                    <Input density="compact" placeholder="CC 3010" leftIcon={<BadgeDollarSign className="h-4 w-4" aria-hidden />} />
+                  </WorkspaceField>
+                  <WorkspaceField label="Contato rápido" hint="Telefone para dúvidas durante a triagem.">
+                    <Input density="compact" placeholder="(11) 99999-9999" leftIcon={<Phone className="h-4 w-4" aria-hidden />} />
+                  </WorkspaceField>
+                  <WorkspaceField
+                    label="Categoria"
+                    required
+                    tooltip="«Serviço» envolve mão de obra; «Material» é bem físico. Define o fluxo em Suprimentos."
+                  >
+                    <Select density="compact" aria-label="Categoria" defaultValue="servico" leftIcon={<Tag className="h-4 w-4" aria-hidden />}>
+                      <option value="servico">Serviço</option>
+                      <option value="material">Material</option>
+                    </Select>
+                  </WorkspaceField>
+                  <WorkspaceField
+                    label="Valor estimado"
+                    tooltip="Estimativa em R$. Acima de R$ 50.000 dispara alerta de RDE automaticamente."
+                  >
+                    <Input density="compact" inputMode="numeric" placeholder="R$ 0,00" leftIcon={<BadgeDollarSign className="h-4 w-4" aria-hidden />} />
+                  </WorkspaceField>
+                  <WorkspaceField
+                    label="Observação"
+                    className="sm:col-span-2"
+                    tooltip="Contexto livre para o analista: premissas, restrições e links úteis."
+                  >
+                    <Textarea density="compact" placeholder="Detalhe contexto, premissas, restrições e informações úteis para análise..." />
                   </WorkspaceField>
                 </CardContent>
               </Card>
@@ -829,6 +915,7 @@ function FormWorkspacePage() {
         </div>
       </div>
     </div>
+    </TooltipProvider>
     </PlaygroundProvider>
   )
 }
