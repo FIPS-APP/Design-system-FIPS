@@ -60,21 +60,24 @@ export function UserChip({
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((o) => !o)}
             className={cn(
-              'relative flex h-[35px] max-w-[220px] items-center gap-2 overflow-hidden rounded-full px-2.5 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:ring-offset-0',
+              'relative flex h-[35px] max-w-[220px] items-center gap-2 overflow-hidden rounded-full px-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:ring-offset-0 sm:px-2.5 sm:backdrop-blur-sm',
+              'sm:border sm:[border-color:var(--user-chip-border)] sm:[background:var(--user-chip-bg)] sm:[box-shadow:var(--user-chip-shadow)]',
               className,
             )}
-            style={{
-              border: `1px solid ${hovered ? docHeaderNeuAccentBorderHover : idleBorder}`,
-              background: hovered ? docHeaderNeuAccentBgHover : idleBg,
-              boxShadow: hovered ? docHeaderNeuAccentShadowHover : idleShadow,
-              transform: hovered ? 'translateY(-1px)' : 'none',
-              transition: hovered ? 'all 0.3s ease' : 'all 0.25s ease',
-            }}
+            style={
+              {
+                '--user-chip-border': hovered ? docHeaderNeuAccentBorderHover : idleBorder,
+                '--user-chip-bg': hovered ? docHeaderNeuAccentBgHover : idleBg,
+                '--user-chip-shadow': hovered ? docHeaderNeuAccentShadowHover : idleShadow,
+                transform: hovered ? 'translateY(-1px)' : 'none',
+                transition: hovered ? 'all 0.3s ease' : 'all 0.25s ease',
+              } as React.CSSProperties
+            }
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
             <div
-              className="pointer-events-none absolute inset-0 rounded-full"
+              className="pointer-events-none absolute inset-0 hidden rounded-full sm:block"
               style={{
                 background: hovered ? docHeaderNeuShimmerOnAccent : docHeaderNeuShimmerGradient,
                 transform: hovered ? 'translateX(0)' : 'translateX(-100%)',
@@ -83,7 +86,7 @@ export function UserChip({
               aria-hidden
             />
             <div
-              className="pointer-events-none absolute"
+              className="pointer-events-none absolute hidden sm:block"
               style={{
                 top: 1,
                 left: 10,
@@ -121,7 +124,7 @@ export function UserChip({
             </span>
             <ChevronDown
               className={cn(
-                'relative z-[1] h-3.5 w-3.5 shrink-0 transition-transform duration-200',
+                'relative z-[1] hidden h-3.5 w-3.5 shrink-0 transition-transform duration-200 sm:block',
                 !hovered && (dark ? 'text-[#A1A1AA]' : 'text-[var(--color-fg-muted)]'),
                 menuOpen && 'rotate-180',
               )}
