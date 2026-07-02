@@ -120,24 +120,24 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
           </div>
 
           {/* Corpo rolável — compacto */}
-          <div className="min-h-0 flex-1 overflow-y-auto p-5">
+          <div className="min-h-0 flex-1 overflow-y-auto p-4">
             {versionsToShow.map((version, vIndex) => (
-              <div key={version.version} className={vIndex > 0 ? 'mt-4 border-t border-[var(--color-border)] pt-4' : ''}>
-                <div className="mb-2.5">
+              <div key={version.version} className={vIndex > 0 ? 'mt-3 border-t border-[var(--color-border)] pt-3' : ''}>
+                <div className="mb-2">
                   <h3 className="font-heading text-[15px] leading-snug font-semibold text-[var(--color-fg)] dark:text-white">{version.title}</h3>
                   <p className="text-xs text-[var(--color-fg-muted)]">
                     v{version.version} • {formatDateBR(version.date)}
                   </p>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {version.entries.map((entry, index) => {
                     const config = TYPE_CONFIG[entry.type]
                     const Icon = config.icon
                     return (
                       <div
                         key={index}
-                        className={cn('flex items-center gap-2.5 rounded-lg border p-2.5', config.card)}
+                        className={cn('flex items-center gap-2 rounded-lg border p-2', config.card)}
                       >
                         <div className={cn('shrink-0 rounded-md p-1', config.accent)}>
                           <Icon className="h-3.5 w-3.5" />
@@ -159,7 +159,7 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
               <button
                 type="button"
                 onClick={() => setShowAll(true)}
-                className="mt-3 text-sm font-medium text-[var(--color-primary)] hover:underline dark:text-[#93BDE4]"
+                className="mt-2.5 text-sm font-medium text-[var(--color-primary)] hover:underline dark:text-[#93BDE4]"
               >
                 Ver versões anteriores
               </button>
