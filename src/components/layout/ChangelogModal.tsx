@@ -74,33 +74,49 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
     <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-[3px] data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:animate-in data-[state=open]:fade-in" />
-        <DialogPrimitive.Content
-          className="fixed top-1/2 left-1/2 z-50 flex max-h-[85vh] w-[calc(100%-1.5rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-[var(--color-surface)] shadow-[var(--shadow-elevated)] data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95 data-[state=open]:duration-200"
-          aria-describedby={undefined}
-        >
-          {/* Header gradiente institucional */}
-          <div className="relative bg-gradient-to-r from-[var(--color-fips-blue-950)] to-[var(--color-fips-sky-600)] p-6 text-white">
+        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 flex max-h-[85vh] w-[calc(100%-1.5rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[12px_12px_12px_24px] bg-[var(--color-surface)] shadow-[var(--shadow-elevated)] data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95 data-[state=open]:duration-200">
+          {/* Header canônico DS-FIPS: faixa gov + trilhos + ícone-tile âmbar + eyebrow + título 21px */}
+          <div
+            className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14 text-white"
+            style={{ background: 'var(--fips-banner-content-bg)' }}
+          >
+            {/* Decoração ferroviária (JunctionLines) */}
+            <svg
+              viewBox="0 0 320 200"
+              fill="none"
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 -right-5 h-[200px] w-[360px] opacity-[0.06]"
+            >
+              <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+            </svg>
+
             <DialogPrimitive.Close
-              className="absolute top-4 right-4 rounded-full p-2 text-white/90 transition-colors hover:bg-white/20 hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
+              className="absolute top-3.5 right-3.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
               aria-label="Fechar"
             >
-              <X className="h-5 w-5" aria-hidden />
+              <X className="h-4 w-4" aria-hidden />
             </DialogPrimitive.Close>
 
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/20">
-                <Sparkles className="h-6 w-6" aria-hidden />
-              </div>
-              <div className="min-w-0">
-                <DialogPrimitive.Title className="font-heading text-xl font-bold tracking-tight">
-                  Novidades do Sistema
-                </DialogPrimitive.Title>
-                <p className="text-sm text-white/80">Versão {CURRENT_VERSION}</p>
-              </div>
+            <div
+              className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10"
+              style={{ boxShadow: '0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)' }}
+            >
+              <Sparkles className="h-6 w-6 text-[var(--color-accent)]" aria-hidden />
             </div>
-            <p className="mt-2 text-sm text-white/70">
-              Confira as últimas atualizações e melhorias do Design System FIPS
-            </p>
+            <div className="relative min-w-0">
+              <span className="block font-heading text-[11px] leading-tight font-semibold tracking-[0.14em] text-[var(--color-accent-strong)] uppercase">
+                Versão {CURRENT_VERSION}
+              </span>
+              <DialogPrimitive.Title className="font-heading text-[21px] leading-tight font-bold tracking-[-0.2px] text-white">
+                Novidades do Sistema
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description className="mt-[3px] text-xs leading-snug text-white/65">
+                Confira as últimas atualizações e melhorias do Design System FIPS
+              </DialogPrimitive.Description>
+            </div>
           </div>
 
           {/* Corpo rolável */}
