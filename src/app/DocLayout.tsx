@@ -48,6 +48,10 @@ export function DocLayout() {
   // ao sair do passo ou encerrar o tour, o sidebar volta sozinho ao estado manual.
   const sidebarOpenForTour = tour.isActive && !isLg && !!tour.currentStep?.requiresSidebar
   const effectiveMobileOpen = mobileOpen || sidebarOpenForTour
+  // Fora do desktop (< lg) o drawer é sempre rail de ícones — a preferência
+  // `collapsed` (toggle "Recolher painel lateral") só existe no header desktop,
+  // não deve ditar se o menu mobile mostra texto.
+  const sidebarCollapsed = isLg ? collapsed : true
 
   // Após a animação de abertura (transform 300ms), re-mede o alvo agora visível —
   // useTour escuta 'resize'. Só emite evento externo, sem setState no effect.
@@ -99,14 +103,14 @@ export function DocLayout() {
         className={cn(
           'fixed inset-y-0 left-0 z-40 overflow-hidden shadow-[4px_0_32px_rgba(0,26,64,0.36)] transition-[width,transform] duration-300 ease-in-out lg:relative lg:inset-auto lg:overflow-visible',
           dark ? 'bg-[var(--color-surface-muted)] shadow-none' : 'bg-[#002a68]',
-          collapsed ? 'w-[68px]' : 'w-64',
+          sidebarCollapsed ? 'w-[68px]' : 'w-64',
           effectiveMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
         aria-label="Menu lateral"
       >
         <div className="sticky top-0 flex h-svh flex-col overflow-hidden">
           <DocsNeuSidebar
-            collapsed={collapsed}
+            collapsed={sidebarCollapsed}
             onCollapsedChange={setCollapsed}
             onNavigate={() => setMobileOpen(false)}
             docVersion={DOC_VERSION}
@@ -145,7 +149,7 @@ export function DocLayout() {
                 : docHeaderBarTop,
             )}
           >
-            <div className="flex items-center gap-3 px-4 py-3 sm:px-6">
+            <div className="flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6">
               <Button
                 type="button"
                 variant="secondary"
@@ -192,13 +196,15 @@ export function DocLayout() {
               <div className="hidden w-full max-w-xs md:block" data-tour-step="busca">
                 <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
               </div>
-              <div className="hidden shrink-0 items-center gap-2 sm:flex">
-                <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
-                  <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
-                </DocHeaderNeuIconButton>
-                <DocHeaderNeuIconButton ariaLabel="Tutorial" dark={dark} onClick={() => setTutorialOpen(true)}>
-                  <GraduationCap className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
-                </DocHeaderNeuIconButton>
+              <div className="flex shrink-0 items-center gap-2">
+                <div className="hidden shrink-0 items-center gap-2 sm:flex">
+                  <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
+                    <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
+                  </DocHeaderNeuIconButton>
+                  <DocHeaderNeuIconButton ariaLabel="Tutorial" dark={dark} onClick={() => setTutorialOpen(true)}>
+                    <GraduationCap className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
+                  </DocHeaderNeuIconButton>
+                </div>
                 <DocHeaderNeuIconButton
                   ariaLabel={dark ? 'Trocar para modo claro' : 'Trocar para modo escuro'}
                   dark={dark}

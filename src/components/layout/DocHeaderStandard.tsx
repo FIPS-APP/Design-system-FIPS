@@ -88,7 +88,7 @@ export function DocHeaderStandardPreview({
             : docHeaderBarTop,
         )}
       >
-        <div className="flex items-center gap-3 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6">
           <Button
             type="button"
             variant="secondary"
@@ -113,13 +113,15 @@ export function DocHeaderStandardPreview({
           <div className="hidden w-full max-w-xs md:block">
             <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
           </div>
-          <div className="hidden shrink-0 items-center gap-2 sm:flex">
-            <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
-              <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
-            </DocHeaderNeuIconButton>
-            <DocHeaderNeuIconButton ariaLabel="Tutorial" dark={dark}>
-              <GraduationCap className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
-            </DocHeaderNeuIconButton>
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="hidden shrink-0 items-center gap-2 sm:flex">
+              <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
+                <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
+              </DocHeaderNeuIconButton>
+              <DocHeaderNeuIconButton ariaLabel="Tutorial" dark={dark}>
+                <GraduationCap className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
+              </DocHeaderNeuIconButton>
+            </div>
             <div
               className={cn('mx-0.5 hidden h-6 w-px shrink-0 sm:block', dark ? 'bg-[#52525B]' : 'bg-neutral-300')}
             />
