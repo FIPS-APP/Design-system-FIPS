@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 
 /* ═══════════════════════════════════════════
    FIPS DESIGN SYSTEM — BRAND TOKENS
@@ -333,7 +332,6 @@ export function Input({
 // <Input label="Protocolo" readOnly value="FIPS-2026-00482" icon={<DocIcon />} />
 `;
 
-/* ── Código por variante de input (copy-paste ready) ── */
 interface InputVariant {
   label: string;
   placeholder: string;
@@ -352,101 +350,6 @@ interface InputVariant {
   value?: string;
   helper?: string;
   iconRight?: string;
-}
-
-function inputVariantCode(v: InputVariant): string {
-  const iconSvgs: Record<string, string> = {
-    pessoa: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="6" r="3.5" stroke="currentColor" strokeWidth="1.5"/><path d="M3 17.5c0-3.5 3-5.5 7-5.5s7 2 7 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>`,
-    email: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M2 6l8 5 8-5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/></svg>`,
-    busca: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5"/><path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>`,
-    calendario: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="3.5" width="15" height="14" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M2.5 8h15M7 2v3M13 2v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>`,
-    cadeado: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M7 9V6a3 3 0 016 0v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>`,
-    telefone: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 4.5A1.5 1.5 0 014.5 3h2.2a1 1 0 01.95.68l.8 2.4a1 1 0 01-.36 1.1l-1.2.9a10 10 0 004.9 4.9l.9-1.2a1 1 0 011.1-.36l2.4.8a1 1 0 01.68.95v2.2a1.5 1.5 0 01-1.5 1.5C8.5 16.9 3.1 11.5 3 4.5z" stroke="currentColor" strokeWidth="1.5"/></svg>`,
-    documento: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M6 2h6l5 5v10a1 1 0 01-1 1H6a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M12 2v5h5M8 11h4M8 14h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>`,
-    placa: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M6 5v10M14 5v10M2 10h16" stroke="currentColor" strokeWidth="1.2" opacity=".4"/></svg>`,
-    moeda: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.5"/><text x="10" y="14" textAnchor="middle" fontSize="10" fontWeight="700" fontFamily="Open Sans, sans-serif" fill="currentColor">R$</text></svg>`,
-  };
-  const iconSvg = iconSvgs[v.iconName] || iconSvgs.documento;
-  const props: string[] = [];
-  if (v.label) props.push(`label="${v.label}"`);
-  props.push(`placeholder="${v.placeholder}"`);
-  if (v.type && v.type !== "text") props.push(`type="${v.type}"`);
-  if (v.inputMode) props.push(`inputMode="${v.inputMode}"`);
-  if (v.required) props.push("required");
-  if (v.showToggle) props.push("showToggle");
-  if (v.onClear) props.push("onClear={() => setValue('')}");
-  if (v.maxLength) props.push(`maxLength={${v.maxLength}}`);
-  if (v.pattern) props.push(`pattern="${v.pattern}"`);
-  if (v.error) props.push("error");
-  if (v.errorMsg) props.push(`errorMsg="${v.errorMsg}"`);
-  if (v.disabled) props.push("disabled");
-  if (v.readOnly) props.push("readOnly");
-  if (v.value) props.push(`value="${v.value}"`);
-  if (v.helper) props.push(`helper="${v.helper}"`);
-  props.push(`icon={${iconSvg.replace(/\n/g, "")}}`);
-
-  return `// DS-FIPS — Input "${v.label || v.placeholder}" — Copy-paste ready
-import { useState, useRef } from "react";
-
-export function Input() {
-  const [focused, setFocused] = useState(false);
-  const [value, setValue] = useState("${v.value || ""}");
-  const ref = useRef<HTMLInputElement>(null);
-
-  const isDark = document.documentElement.classList.contains("dark");
-  const borderColor = ${v.error ? '"#DC3545"' : 'focused ? (isDark ? "#93BDE4" : "#004B9B") : "#E2E8F0"'};
-  const shadow = focused
-    ? \`0 0 0 3px \${isDark ? "rgba(147,189,228,0.2)" : "#D3E3F4"}\`
-    : "none";
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      ${v.label ? `<label style={{
-        fontSize: 12, fontWeight: 600, color: "#333B41",
-        fontFamily: "'Open Sans', sans-serif", marginBottom: 1, marginLeft: 7,
-        display: "flex", alignItems: "center", gap: 3,
-      }}>
-        ${v.label}${v.required ? `\n        <span style={{ color: "#DC3545", fontWeight: 700, fontSize: 14 }}>*</span>` : ""}
-      </label>` : ""}
-      <div
-        style={{
-          display: "flex", alignItems: "center", gap: 8,
-          height: 35, padding: "0 12px",
-          background: ${v.disabled ? '"#F8FAFC"' : '"#FFFFFF"'},
-          border: \`1.5px solid \${borderColor}\`,
-          borderRadius: 8, transition: "all 0.18s ease",
-          boxShadow: shadow,
-          cursor: ${v.disabled ? '"not-allowed"' : '"text"'},
-          fontFamily: "'Open Sans', sans-serif", fontSize: 13,
-        }}
-        onClick={() => ref.current?.focus()}
-      >
-        <span style={{ display: "flex", flexShrink: 0, opacity: 0.7, color: "#7B8C96" }}>
-          ${iconSvg}
-        </span>
-        <input
-          ref={ref}
-          ${props.filter(p => !p.startsWith("icon=") && !p.startsWith("label=") && !p.startsWith("helper=") && !p.startsWith("error") && !p.startsWith("onClear")).join("\n          ")}
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          style={{
-            flex: 1, border: "none", outline: "none", background: "transparent",
-            fontFamily: "'Open Sans', sans-serif", fontSize: 13,
-            color: "#333B41", minWidth: 0,
-          }}
-        />
-      </div>
-      ${v.helper ? `<span style={{ fontSize: 11, color: "#7B8C96", marginTop: 3, fontFamily: "'Open Sans', sans-serif" }}>
-        ${v.helper}
-      </span>` : ""}${v.error && v.errorMsg ? `<span style={{ fontSize: 11, color: "#DC3545", marginTop: 3, fontFamily: "'Open Sans', sans-serif" }}>
-        ${v.errorMsg}
-      </span>` : ""}
-    </div>
-  );
-}
-`;
 }
 
 const INPUT_VARIANTS: InputVariant[] = [
@@ -474,7 +377,6 @@ export default function InputDoc() {
   const [scenarioEmail, setScenarioEmail] = useState("");
 
   return (
-    <PlaygroundProvider>
     <div style={{ minHeight:"100vh", background:"var(--color-surface-muted)", fontFamily:F.body, color:C.cinzaEscuro }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
@@ -515,9 +417,9 @@ export default function InputDoc() {
       <div style={{ padding:"36px 40px 60px", maxWidth:1100, margin:"0 auto" }}>
 
         {/* 01 — FORMULÁRIO PADRÃO */}
-        <Section number="01" title="Formulário padrão" desc="Padrão oficial para formulários completos e cadastros. Clique em qualquer input para copiar o código.">
+        <Section number="01" title="Formulário padrão" desc="Padrão oficial para formulários completos e cadastros.">
           <Card>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px 24px" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px 20px" }}>
               {INPUT_VARIANTS.map((v, i) => {
                 const iconMap: Record<string, () => React.ReactNode> = {
                   pessoa: () => icons.pessoa(), email: () => icons.email(), busca: () => icons.busca(),
@@ -527,20 +429,14 @@ export default function InputDoc() {
                 const iconFn = iconMap[v.iconName] || (() => icons.documento());
                 const isSearch = v.onClear;
                 return (
-                  <Copyable
+                  <DSInput
                     key={i}
-                    label={v.label}
-                    code={inputVariantCode(v)}
-                    preview={<DSInput label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as DSInputProps["inputMode"]} icon={iconFn()} required={v.required} helper={v.helper} maxLength={v.maxLength} pattern={v.pattern} showToggle={v.showToggle} error={v.error} errorMsg={v.errorMsg} readOnly={v.readOnly} disabled={v.disabled} value={v.value} onClear={isSearch ? () => {} : undefined} iconRight={v.iconName === "calendario" ? icons.calendario(16, C.azulClaro) : undefined} />}
-                  >
-                    <DSInput
-                      label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as DSInputProps["inputMode"]}
-                      icon={iconFn()} required={v.required} helper={v.helper} maxLength={v.maxLength} pattern={v.pattern}
-                      showToggle={v.showToggle} error={v.error} errorMsg={v.errorMsg} readOnly={v.readOnly} disabled={v.disabled}
-                      {...(isSearch ? { value: searchVal, onChange: setSearchVal, onClear: () => setSearchVal("") } : v.value !== undefined ? { value: v.value } : {})}
-                      iconRight={v.iconName === "calendario" ? icons.calendario(16, C.azulClaro) : undefined}
-                    />
-                  </Copyable>
+                    label={v.label} placeholder={v.placeholder} type={v.type} inputMode={v.inputMode as DSInputProps["inputMode"]}
+                    icon={iconFn()} required={v.required} helper={v.helper} maxLength={v.maxLength} pattern={v.pattern}
+                    showToggle={v.showToggle} error={v.error} errorMsg={v.errorMsg} readOnly={v.readOnly} disabled={v.disabled}
+                    {...(isSearch ? { value: searchVal, onChange: setSearchVal, onClear: () => setSearchVal("") } : v.value !== undefined ? { value: v.value } : {})}
+                    iconRight={v.iconName === "calendario" ? icons.calendario(16, C.azulClaro) : undefined}
+                  />
                 );
               })}
             </div>
@@ -1053,8 +949,6 @@ export default function InputDoc() {
           </Card>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Input",
           description: "Input com icone contextual, estados (foco, erro, bloqueado), toggle de senha e botao limpar.",
@@ -1076,6 +970,5 @@ export default function InputDoc() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
