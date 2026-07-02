@@ -45,11 +45,11 @@ export const docHeaderNeuLightShadowIdle =
   '0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.85)'
 export const docHeaderNeuLightIconIdle = 'rgba(55,55,55,0.82)'
 
-/* ─── Neumorphic: hover/active amarelo FIPS ─── */
-export const docHeaderNeuAccentBorderHover = 'rgba(246,146,30,0.55)'
-export const docHeaderNeuAccentBgHover = 'linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#cf730d 100%)'
+/* ─── Neumorphic: hover/active amarelo FIPS — wash pastel, não bloco sólido ─── */
+export const docHeaderNeuAccentBorderHover = 'rgba(246,146,30,0.45)'
+export const docHeaderNeuAccentBgHover = 'linear-gradient(145deg, #fffaf0 0%, #ffe4b8 100%)'
 export const docHeaderNeuAccentShadowHover =
-  '0 6px 22px -4px rgba(246,146,30,0.5), 0 3px 10px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.12) inset, 0 -1px 0 rgba(0,0,0,0.35) inset'
+  '0 4px 14px rgba(246,146,30,0.22), 0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7)'
 export const docHeaderNeuAccentIcon = '#002A68'
 
 /* ─── Neumorphic: faixa escura (repouso) ─── */
