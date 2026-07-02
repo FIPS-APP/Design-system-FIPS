@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Progress } from "../../components/ui/progress";
+import { PageHero } from "../../composites/PageHero";
 import {
   Sparkles, Palette, Component, LayoutDashboard, ShieldCheck, BookOpen,
   ArrowRight, Users, FileInput, Cog,
   BarChart3,
 } from "lucide-react";
-
-const HOME_BACKGROUND = '/backgrounds/app-shell-home-trains.png';
 
 /* ═══════ TOKENS (mesmo padrão das doc pages) ═══════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"var(--color-gov-verde-escuro)",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)"};
@@ -50,33 +49,29 @@ export default function HomePage(){
     <div style={{minHeight:"100vh",background:C.bg,fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}`}</style>
 
-      {/* ═══════ HERO (padrão Home FIPS — imagem + overlay) ═══════ */}
-      <div style={{position:"relative",overflow:"hidden"}}>
-        <div style={{position:"absolute",inset:0}}>
-          <img src={HOME_BACKGROUND} alt="" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}} draggable={false}/>
-          <div style={{position:"absolute",inset:0,background:"linear-gradient(118deg,rgba(0,19,56,0.94) 0%,rgba(0,63,138,0.84) 44%,rgba(0,144,208,0.60) 100%)"}}/>
-        </div>
-        <div style={{position:"relative",zIndex:10,padding:mob?"40px 20px 36px":"60px 40px 52px",textAlign:"center"}}>
-          <Badge className="mb-4 border-0 bg-[rgba(246,146,30,0.95)] text-white shadow-[0_8px_20px_rgba(246,146,30,0.28)]">
+      {/* ═══════ HERO (composite PageHero — padrão FIPS, espelha Suprimentos) ═══════ */}
+      <PageHero>
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-12 text-center sm:px-6 sm:py-16">
+          <Badge className="mb-5 rounded-full border-0 bg-[rgba(246,146,30,0.95)] text-white shadow-[0_12px_28px_rgba(246,146,30,0.28)]">
             Design System FIPS
           </Badge>
-          <h1 style={{fontSize:mob?32:52,fontWeight:800,color:C.branco,margin:"0 0 12px",fontFamily:Fn.title,lineHeight:1.1,letterSpacing:"-0.5px"}}>Design System<br/><span style={{color:C.amareloOuro}}>FIPS</span></h1>
-          <p style={{fontSize:mob?14:16,color:"rgba(255,255,255,0.75)",lineHeight:1.65,margin:"0 auto 20px",fontFamily:Fn.body,maxWidth:750}}>
+          <h1 style={{fontSize:mob?32:48,fontWeight:700,color:C.branco,margin:0,fontFamily:Fn.title,lineHeight:1.1,letterSpacing:"-0.03em"}}>Design System<br/><span style={{color:C.amareloOuro}}>FIPS</span></h1>
+          <p style={{fontSize:mob?14:16,color:"rgba(255,255,255,0.78)",lineHeight:1.65,margin:0,fontFamily:Fn.body,maxWidth:750}}>
             Biblioteca oficial de componentes, tokens e padrões da Ferrovia Interna do Porto de Santos.
             Tudo para construir interfaces consistentes, acessíveis e com identidade ferroviária.
           </p>
-          <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",marginBottom:20}}>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>
             <Badge variant="success" dot>v0.4.2</Badge>
             <Badge variant="secondary">React 19 + Tailwind 4</Badge>
             <Badge variant="secondary">14+ componentes</Badge>
             <Badge variant="info">Dark mode</Badge>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",gap:10,justifyContent:"center"}}>
-            <Button variant="accent" size="sm" onClick={()=>navigate("/docs")}>Explorar componentes <ArrowRight size={14}/></Button>
+            <Button variant="ouro" size="sm" onClick={()=>navigate("/docs")}>Explorar componentes <ArrowRight size={14}/></Button>
             <Button variant="inverseOutline" size="sm" onClick={()=>navigate("/docs/governance")}>Governança</Button>
           </div>
         </div>
-      </div>
+      </PageHero>
 
       {/* ═══════ CONTENT ═══════ */}
       <div style={{padding:mob?"24px 16px 40px":"40px 40px 60px",maxWidth:1100,margin:"0 auto"}}>
