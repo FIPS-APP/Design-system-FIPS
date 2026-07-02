@@ -51,14 +51,6 @@ export const FIPS_USERS: FipsUser[] = [
     email: 'fipinho.santista@fips.app.br',
   },
   {
-    id: 'maria-luiza',
-    name: 'Maria Luiza',
-    fullName: 'Maria Luiza',
-    cargo: 'Estagiária',
-    role: 'colaborador',
-    email: 'maria.luiza@fips.app.br',
-  },
-  {
     id: 'amanda-sinhorini',
     name: 'Amanda Sinhorini',
     fullName: 'Amanda Sinhorini',
