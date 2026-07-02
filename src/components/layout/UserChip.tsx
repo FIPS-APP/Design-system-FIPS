@@ -40,54 +40,6 @@ export function UserChip({
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeUserId, setActiveUserId] = useState(DEFAULT_FIPS_USER_ID)
 
-  if (dark) {
-    const activeUser = fipsUserById(activeUserId)
-    return (
-      <UserAccountMenu
-        open={menuOpen}
-        onOpenChange={setMenuOpen}
-        activeUserId={activeUserId}
-        onActiveUserChange={setActiveUserId}
-        trigger={
-          <button
-            type="button"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-haspopup="menu"
-            aria-expanded={menuOpen}
-            className={cn(
-              'flex h-[35px] max-w-[220px] cursor-pointer items-center gap-2 rounded-full border border-[#3F3F46] bg-[#27272A] px-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all duration-200 hover:border-[#F6921E]/40 hover:bg-[#323236] hover:shadow-[0_4px_14px_rgba(246,146,30,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F6921E]/30 focus-visible:ring-offset-0',
-              className,
-            )}
-            aria-label={`Conta: ${activeUser.name}`}
-          >
-            <span
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
-              style={{ background: FIPS_ROLE_COLOR[activeUser.role] }}
-            >
-              {fipsUserInitials(activeUser.name)}
-            </span>
-            <span className="hidden min-w-0 flex-1 flex-col text-left sm:flex">
-              <span className="truncate font-sans text-[12px] leading-[1.2] font-semibold text-[#E2E2E8]">
-                {activeUser.name}
-              </span>
-              <span
-                className="truncate text-[9px] leading-[1.2] font-semibold tracking-[0.04em] uppercase"
-                style={{ color: FIPS_ROLE_COLOR[activeUser.role] }}
-              >
-                {FIPS_ROLE_LABEL[activeUser.role]}
-              </span>
-            </span>
-            <ChevronDown
-              className={cn('h-3.5 w-3.5 shrink-0 text-[#A1A1AA] transition-transform duration-200', menuOpen && 'rotate-180')}
-              strokeWidth={1.5}
-              aria-hidden
-            />
-          </button>
-        }
-      />
-    )
-  }
-
   if (variant === 'docHeader') {
     const idleBg = dark ? docHeaderNeuDarkBgIdle : docHeaderNeuLightBgIdle
     const idleBorder = dark ? docHeaderNeuDarkBorderIdle : docHeaderNeuLightBorderIdle
