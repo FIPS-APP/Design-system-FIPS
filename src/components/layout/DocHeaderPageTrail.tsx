@@ -19,7 +19,7 @@ export function DocHeaderPageTrail({
   )
 
   const mobileMark = (
-    <div className="flex h-8 w-auto shrink-0 items-center justify-center rounded-lg bg-white px-1.5 sm:hidden">
+    <div className="flex h-8 w-auto shrink-0 items-center justify-center sm:hidden">
       <img src="/appfips-logo-full.png" alt="App FIPS" className="h-full w-auto object-contain" />
     </div>
   )
