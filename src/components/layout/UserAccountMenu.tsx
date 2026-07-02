@@ -149,7 +149,9 @@ export function UserAccountMenu({
                       onClick={() => onActiveUserChange(u.id)}
                       className={cn(
                         'flex w-full items-center gap-2 px-3.5 py-1 text-left transition-colors',
-                        isActive ? 'bg-[var(--color-primary)]/8' : 'hover:bg-[var(--color-surface-muted)]',
+                        isActive
+                          ? 'bg-[var(--color-primary)]/8'
+                          : 'hover:bg-[var(--color-accent)]/20 dark:hover:bg-[var(--color-accent)]/12',
                       )}
                     >
                       <UserAvatar user={u} size={24} />
@@ -180,10 +182,10 @@ export function UserAccountMenu({
                   type="button"
                   role="menuitem"
                   onClick={() => toast('Meu perfil em breve')}
-                  className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-surface-muted)] dark:text-white/85"
+                  className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-accent)]/20 dark:text-white/85 dark:hover:bg-[var(--color-accent)]/12"
                 >
                   <UserRound
-                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-fg)] dark:group-hover:text-white"
+                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
                     aria-hidden
                   />
                   Meu perfil
@@ -192,10 +194,10 @@ export function UserAccountMenu({
                   type="button"
                   role="menuitem"
                   onClick={() => toast('Preferências em breve')}
-                  className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-surface-muted)] dark:text-white/85"
+                  className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-accent)]/20 dark:text-white/85 dark:hover:bg-[var(--color-accent)]/12"
                 >
                   <Settings
-                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-fg)] dark:group-hover:text-white"
+                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
                     aria-hidden
                   />
                   Preferências
