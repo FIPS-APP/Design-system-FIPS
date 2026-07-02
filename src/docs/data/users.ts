@@ -46,8 +46,8 @@ export const FIPS_USERS: FipsUser[] = [
     id: 'fipinho-santista',
     name: 'Fipinho Santista',
     fullName: 'Fipinho Baixada Santista',
-    cargo: 'Coordenador de TI',
-    role: 'administrador',
+    cargo: 'Aprendiz',
+    role: 'colaborador',
     email: 'fipinho.santista@fips.app.br',
   },
   {
