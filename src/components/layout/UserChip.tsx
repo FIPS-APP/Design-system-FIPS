@@ -100,7 +100,7 @@ export function UserChip({
               aria-hidden
             />
             <span
-              className="relative z-[1] flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
+              className="relative z-[1] flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white sm:h-7 sm:w-7 sm:text-[12px]"
               style={{ background: FIPS_ROLE_COLOR[activeUser.role] }}
             >
               {fipsUserInitials(activeUser.name)}
