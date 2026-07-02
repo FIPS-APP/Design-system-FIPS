@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.6.2',
+    date: '2026-07-02',
+    title: 'Header mobile refinado + skill sincronizada',
+    entries: [
+      { type: 'improvement', description: 'Chip de usuário no mobile mostra só o avatar (32px, clicável, sem fundo/borda/chevron); ícones de Notificações e Tutorial voltam a aparecer nesse breakpoint; marca do trilho mobile passa a usar o logo colorido oficial (`appfips-logo-full.png` — "App" cinza + "FIPS" azul), sem chip/fundo/borda.' },
+      { type: 'improvement', description: 'Padding direito do header reduzido um degrau (`pr-3`/`sm:pr-5`, antes simétrico com o esquerdo).' },
+      { type: 'improvement', description: 'Skill `design-system-fips` (`patterns.md`, `source-of-truth.md`) passa a documentar a anatomia completa do Header — ícone neumorphic 36px, trilho responsivo, `UserChip`/`UserAccountMenu` e os tokens de hover fixos que evitam o bug de contraste no dark mode.' },
+    ],
+  },
+  {
     version: '0.6.1',
     date: '2026-07-02',
     title: 'Trilho do header vira logo no mobile',

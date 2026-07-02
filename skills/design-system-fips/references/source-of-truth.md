@@ -22,6 +22,7 @@ Se houver conflito:
 - `public/brand/`
 - `src/components/brand/FipsLogo.tsx` — chip branco p/ fundo claro; **não** é a marca da sidebar
 - `public/appfips-logo.png` (menu aberto) · `public/appfips-mark-collapsed.png` (colapsado) — marca da sidebar
+- `public/appfips-logo-full.png` — logo colorida completa ("App" cinza + ícone/"FIPS" azul), usada na marca mobile do trilho do header (`DocHeaderPageTrail`) — **diferente** dos 2 assets brancos da sidebar acima
 - `src/components/layout/DocsNeuSidebar.tsx` (~l.595–649) — header real do menu (marca + nome). Ver `components.md` → "FipsLogo e marca do menu"
 
 ### Tokens e CSS globais
@@ -49,6 +50,17 @@ Se houver conflito:
 - `src/components/ui/progress.tsx`
 - `src/components/ui/tabs.tsx`
 - `src/components/ui/tooltip.tsx`
+
+### Header e navegação
+
+- `src/app/DocLayout.tsx` — shell real (monta header + sidebar + tema/busca/notificações)
+- `src/components/layout/DocHeaderStandard.tsx` — header canônico (`DocHeaderHeroBackground`, `DocHeaderDarkBackground`, `DocHeaderStandardPreview`)
+- `src/components/layout/DocHeaderPageTrail.tsx` — trilho grupo/página (breadcrumb desktop → marca FIPS no mobile)
+- `src/components/layout/DocHeaderNeuIconButton.tsx` — azulejo neumorphic 36×36 (recolher-sidebar, Notificações, Tutorial, tema)
+- `src/components/layout/DocHeaderSectionNav.tsx` — faixa de tabs de seção (desktop, `lg+`)
+- `src/components/layout/UserChip.tsx` + `UserAccountMenu.tsx` — chip de usuário do header + menu "Minha Conta"
+- `src/lib/docHeaderChrome.ts` — tokens de cromia do header (idle/hover/shimmer, claro/escuro)
+- `src/docs/data/users.ts` — usuários demo, `FIPS_ROLE_COLOR`/`FIPS_ROLE_LABEL`/`FIPS_ROLE_BADGE_VARIANT`
 
 ### Composites e padrões
 

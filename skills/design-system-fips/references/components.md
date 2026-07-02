@@ -352,3 +352,5 @@ Ao lado da marca (só no aberto) vem o **nome do módulo** — não faz parte do
 - **Sidebar escura = marca branca transparente, nunca chip branco.** As sidebars FIPS são `#002a68`; `bg-white`/tile ali quebra o padrão.
 - **Aberto = lockup + nome; colapsado = só símbolo.** Não trocar por símbolo no aberto, nem deixar "FIPS" duplicado.
 - Não aplicar distorção, sombra, recoloração ou transparência arbitrária fora das versões aprovadas.
+
+> Marca no **trilho mobile do header** (não a sidebar) é um terceiro asset e comportamento — ver `patterns.md` → Application Shell → Header → `DocHeaderPageTrail`.

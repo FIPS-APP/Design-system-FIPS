@@ -23,6 +23,65 @@ Não faça:
 - tabs genéricas destacadas por cor aleatória
 - headers sem contraste ou sem separação visual entre navegação e conteúdo
 
+### Header
+
+Fontes: `src/components/layout/DocHeaderStandard.tsx` (`DocHeaderStandardPreview`), `DocHeaderPageTrail.tsx`, `DocHeaderNeuIconButton.tsx`, `UserChip.tsx`, `UserAccountMenu.tsx`, `src/lib/docHeaderChrome.ts`. Header real: `src/app/DocLayout.tsx` (monta os mesmos módulos + tema/busca/notificações). A doc do componente (`HeaderDoc.tsx`) e a do padrão (`HeroHeaderDoc.tsx`) renderizam `DocHeaderStandardPreview` diretamente — não há cópia manual para manter em sincronia.
+
+Duas faixas empilhadas num único `<header overflow-hidden>` (o `overflow-hidden` clipa o art decorativo de fundo — mesmo motivo pelo qual o painel do `UserAccountMenu` precisa de portal, ver abaixo):
+
+1. **Faixa superior** (`docHeaderBarTop`, sempre visível) — `flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6` (padding direito um degrau menor que o esquerdo, decisão intencional). Da esquerda pra direita: botão hambúrguer (`lg:hidden`, abre a sidebar mobile) → `DocHeaderNeuIconButton` recolher/expandir sidebar (`hidden sm:inline-flex`) → `DocHeaderPageTrail` (`flex-1`) → `SearchPill` (`hidden md:block`) → cluster de ações (ícones + divisor `h-6 w-px` `hidden sm:block` + `UserChip variant="docHeader"`).
+2. **Faixa de tabs** (`docHeaderBarTabs`, `hidden lg:block`) — `DocHeaderSectionNav`; some completamente abaixo de `lg` (navegação mobile vive só na sidebar).
+
+Não faça:
+
+- padding simétrico nas duas margens do header — a direita é intencionalmente menor que a esquerda
+- esconder Notificações/Tutorial no mobile — os dois ícones aparecem ao lado do avatar em qualquer breakpoint (já regrediu uma vez)
+
+#### `DocHeaderNeuIconButton` — azulejo 36×36
+
+Mesmo sistema neumorphic dos itens de sidebar/menu: `36×36`, `border-radius 10`, gradiente idle claro/escuro, hover amarelo FIPS + shimmer diagonal (`docsSidebarNeuShimmer 0.5s`) + `translateY(-1px)`. Tokens em `docHeaderChrome.ts`:
+
+| Estado | Borda | Fundo | Ícone |
+|---|---|---|---|
+| Idle claro | `rgba(0,0,0,.10)` | `linear-gradient(145deg,#fff 0%,#ebebeb 55%,#e0e0e0 100%)` | `rgba(55,55,55,.82)` |
+| Idle escuro | `#3f3f46` | `linear-gradient(160deg,#303036 0%,#222226 55%,#1c1c20 100%)` | `#a1a1aa` |
+| Hover (claro **e** escuro) | `rgba(246,146,30,.55)` | `linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#cf730d 100%)` | `#002A68` (`docHeaderNeuAccentIcon`, fixo) |
+
+Usado por: recolher-sidebar, Notificações (`Bell`), Tutorial (`GraduationCap`), tema (`SunMoon`, só no `DocLayout` real) e como base do hover do `UserChip`.
+
+Não faça:
+
+- colorir ícone/texto em hover dourado com um token que muda no dark mode (ex. `var(--color-gov-azul-escuro)`, que vira `#658EC9` no escuro e some contra o fundo claro do hover) — usar sempre `docHeaderNeuAccentIcon`, fixo nos dois temas
+
+#### `DocHeaderPageTrail` — trilho responsivo
+
+- **`sm+`**: breadcrumb `Grupo / Página` (Open Sans 11–12px muted + `/` + título `font-heading` semibold); se `groupLabel === pageTitle`, mostra só o título.
+- **`<sm` (mobile)**: o breadcrumb some por completo; no lugar aparece a marca colorida `App FIPS` (`/appfips-logo-full.png` — "App" cinza + ícone/"FIPS" azul; **não** é o mesmo asset branco da sidebar), `h-8 w-auto object-contain`, direto sobre o header — **sem chip, sem fundo, sem borda** (decisão explícita após iteração).
+
+Não faça:
+
+- usar `/appfips-logo.png` (branco, feito pro azul-escuro da sidebar) ou `/appfips-mark-collapsed.png` no trilho mobile — ver os 3 assets em `source-of-truth.md`
+- adicionar fundo/chip atrás da marca mobile
+
+#### `UserChip` (`variant="docHeader"`) + `UserAccountMenu`
+
+- **Hover do chip** reaproveita o mesmo sistema do `DocHeaderNeuIconButton` (idle/hover/shimmer de `docHeaderChrome.ts`) — um único caminho (`docHeader`) serve claro e escuro; nome, cargo e chevron ficam `docHeaderNeuAccentIcon` no hover, igual aos ícones vizinhos. Cores de avatar/cargo por perfil vêm de `FIPS_ROLE_COLOR`/`FIPS_ROLE_LABEL` (`src/docs/data/users.ts`).
+- **Responsivo**:
+
+  | | `sm+` (desktop) | `<sm` (mobile) |
+  |---|---|---|
+  | conteúdo | avatar 28px + nome + cargo + chevron | só avatar, **32px** |
+  | fundo/borda/sombra/shimmer | sim (neumorphic completo) | não |
+  | clicável, abre `UserAccountMenu` | sim | sim |
+
+- **`UserAccountMenu`** é painel ancorado abaixo do chip (`align="end"`), **não** modal centralizado — replica o dropdown do Governança BI. Vai para `createPortal(document.body)`: os headers do DS (`DocLayout`, `DocHeaderStandard`) têm `overflow-hidden` (clip do art de fundo) que cortaria um painel `absolute` in-place. Posição recalculada por `getBoundingClientRect` do trigger em `resize`/`scroll`. Fecha em clique-fora ou `Esc`.
+- **Hover dos itens do menu**: `bg-[var(--color-accent)]/20` (claro) / `/12` (escuro) + ícone da linha para `--color-accent-strong` — não usar `surface-muted` (contraste baixo demais, hover fica imperceptível).
+
+Não faça:
+
+- separar a lógica de hover clara/escura no `UserChip` (branch `if (dark)` isolado com hover próprio) — já causou o chip ficar sem o efeito dourado no tema escuro enquanto os ícones vizinhos tinham
+- renderizar o painel do `UserAccountMenu` `absolute` in-place dentro de um header — o `overflow-hidden` do header corta o painel
+
 ### Sidebar — categorias colapsáveis
 
 Fonte: `src/components/layout/DocsNeuSidebar.tsx` (`DocNavItem`). Playground espelhado: `src/docs/pages/components/SidebarDoc.tsx` (`SidebarItem`) — os dois devem renderizar a categoria igual.
