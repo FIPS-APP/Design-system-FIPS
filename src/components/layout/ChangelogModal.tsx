@@ -137,9 +137,9 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
                     return (
                       <div
                         key={index}
-                        className={cn('flex items-start gap-2.5 rounded-lg border p-2.5', config.card)}
+                        className={cn('flex items-center gap-2.5 rounded-lg border p-2.5', config.card)}
                       >
-                        <div className={cn('mt-0.5 shrink-0 rounded-md p-1', config.accent)}>
+                        <div className={cn('shrink-0 rounded-md p-1', config.accent)}>
                           <Icon className="h-3.5 w-3.5" />
                         </div>
                         <div className="min-w-0 flex-1">
