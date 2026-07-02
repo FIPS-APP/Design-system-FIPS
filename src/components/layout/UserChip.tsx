@@ -14,6 +14,8 @@ import {
   docHeaderNeuShimmerGradient,
   docHeaderNeuShimmerOnAccent,
 } from '../../lib/docHeaderChrome'
+import { DEFAULT_FIPS_USER_ID, FIPS_ROLE_COLOR, FIPS_ROLE_LABEL, fipsUserById, fipsUserInitials } from '../../docs/data/users'
+import { UserMenuModal } from './UserMenuModal'
 
 export type UserChipProps = {
   compact?: boolean
@@ -29,30 +31,54 @@ export function UserChip({
   compact = false,
   variant = 'docs',
   dark = false,
-  name = 'Usuário',
-  initials = 'AF',
+  name = 'Fipinho Santista',
+  initials = 'FS',
   className,
 }: UserChipProps) {
   const [hovered, setHovered] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [activeUserId, setActiveUserId] = useState(DEFAULT_FIPS_USER_ID)
 
   if (dark) {
+    const activeUser = fipsUserById(activeUserId)
     return (
-      <button
-        type="button"
-        className={cn(
-          'flex h-[35px] max-w-[220px] cursor-pointer items-center gap-2 rounded-full border border-[#3F3F46] bg-[#27272A] px-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all duration-200 hover:border-[#F6921E]/40 hover:bg-[#323236] hover:shadow-[0_4px_14px_rgba(246,146,30,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F6921E]/30 focus-visible:ring-offset-0',
-          className,
-        )}
-        aria-label={`Conta: ${name}`}
-      >
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1E1E22] text-[12px] font-semibold text-[#F6921E]">
-          {initials}
-        </span>
-        <span className="hidden min-w-0 flex-1 truncate text-left font-sans text-[13px] leading-none text-[#E2E2E8] sm:block">
-          {name}
-        </span>
-        <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#A1A1AA]" strokeWidth={1.5} aria-hidden />
-      </button>
+      <>
+        <button
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-haspopup="dialog"
+          className={cn(
+            'flex h-[35px] max-w-[220px] cursor-pointer items-center gap-2 rounded-full border border-[#3F3F46] bg-[#27272A] px-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all duration-200 hover:border-[#F6921E]/40 hover:bg-[#323236] hover:shadow-[0_4px_14px_rgba(246,146,30,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F6921E]/30 focus-visible:ring-offset-0',
+            className,
+          )}
+          aria-label={`Conta: ${activeUser.name}`}
+        >
+          <span
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
+            style={{ background: FIPS_ROLE_COLOR[activeUser.role] }}
+          >
+            {fipsUserInitials(activeUser.name)}
+          </span>
+          <span className="hidden min-w-0 flex-1 flex-col text-left sm:flex">
+            <span className="truncate font-sans text-[12px] leading-[1.2] font-semibold text-[#E2E2E8]">
+              {activeUser.name}
+            </span>
+            <span
+              className="truncate text-[9px] leading-[1.2] font-semibold tracking-[0.04em] uppercase"
+              style={{ color: FIPS_ROLE_COLOR[activeUser.role] }}
+            >
+              {FIPS_ROLE_LABEL[activeUser.role]}
+            </span>
+          </span>
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#A1A1AA]" strokeWidth={1.5} aria-hidden />
+        </button>
+        <UserMenuModal
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+          activeUserId={activeUserId}
+          onActiveUserChange={setActiveUserId}
+        />
+      </>
     )
   }
 
@@ -60,71 +86,90 @@ export function UserChip({
     const idleBg = dark ? docHeaderNeuDarkBgIdle : docHeaderNeuLightBgIdle
     const idleBorder = dark ? docHeaderNeuDarkBorderIdle : docHeaderNeuLightBorderIdle
     const idleShadow = dark ? docHeaderNeuDarkShadowIdle : docHeaderNeuLightShadowIdle
+    const activeUser = fipsUserById(activeUserId)
 
     return (
-      <button
-        type="button"
-        aria-label={`Conta: ${name}`}
-        className={cn(
-          'relative flex h-[35px] max-w-[220px] items-center gap-2 overflow-hidden rounded-full px-2.5 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:ring-offset-0',
-          className,
-        )}
-        style={{
-          border: `1px solid ${hovered ? docHeaderNeuAccentBorderHover : idleBorder}`,
-          background: hovered ? docHeaderNeuAccentBgHover : idleBg,
-          boxShadow: hovered ? docHeaderNeuAccentShadowHover : idleShadow,
-          transform: hovered ? 'translateY(-1px)' : 'none',
-          transition: hovered ? 'all 0.3s ease' : 'all 0.25s ease',
-        }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <div
-          className="pointer-events-none absolute inset-0 rounded-full"
-          style={{
-            background: hovered ? docHeaderNeuShimmerOnAccent : docHeaderNeuShimmerGradient,
-            transform: hovered ? 'translateX(0)' : 'translateX(-100%)',
-            animation: hovered ? 'docsSidebarNeuShimmer 0.5s ease forwards' : 'none',
-          }}
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute"
-          style={{
-            top: 1,
-            left: 10,
-            right: 10,
-            height: '42%',
-            borderRadius: 9999,
-            background: hovered
-              ? 'linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.02))'
-              : 'none',
-          }}
-          aria-hidden
-        />
-        <span className={cn(
-          "relative z-[1] flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold",
-          dark ? "bg-[#1E1E22] text-[#F6921E]" : "bg-white text-[var(--color-gov-azul-escuro)]",
-        )}>
-          {initials}
-        </span>
-        <span
+      <>
+        <button
+          type="button"
+          aria-label={`Conta: ${activeUser.name}`}
+          aria-haspopup="dialog"
+          onClick={() => setMenuOpen(true)}
           className={cn(
-            'relative z-[1] hidden min-w-0 flex-1 truncate text-left font-sans text-[13px] leading-none sm:block',
-            hovered ? 'text-[var(--color-gov-azul-escuro)]' : dark ? 'text-[#E2E2E8]' : 'text-[var(--color-fg)]',
+            'relative flex h-[35px] max-w-[220px] items-center gap-2 overflow-hidden rounded-full px-2.5 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:ring-offset-0',
+            className,
           )}
+          style={{
+            border: `1px solid ${hovered ? docHeaderNeuAccentBorderHover : idleBorder}`,
+            background: hovered ? docHeaderNeuAccentBgHover : idleBg,
+            boxShadow: hovered ? docHeaderNeuAccentShadowHover : idleShadow,
+            transform: hovered ? 'translateY(-1px)' : 'none',
+            transition: hovered ? 'all 0.3s ease' : 'all 0.25s ease',
+          }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          {name}
-        </span>
-        <ChevronDown
-          className={cn(
-            'relative z-[1] h-3.5 w-3.5 shrink-0',
-            hovered ? 'text-[var(--color-gov-azul-escuro)]' : dark ? 'text-[#A1A1AA]' : 'text-[var(--color-fg-muted)]',
-          )}
-          strokeWidth={1.5}
-          aria-hidden
+          <div
+            className="pointer-events-none absolute inset-0 rounded-full"
+            style={{
+              background: hovered ? docHeaderNeuShimmerOnAccent : docHeaderNeuShimmerGradient,
+              transform: hovered ? 'translateX(0)' : 'translateX(-100%)',
+              animation: hovered ? 'docsSidebarNeuShimmer 0.5s ease forwards' : 'none',
+            }}
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute"
+            style={{
+              top: 1,
+              left: 10,
+              right: 10,
+              height: '42%',
+              borderRadius: 9999,
+              background: hovered
+                ? 'linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.02))'
+                : 'none',
+            }}
+            aria-hidden
+          />
+          <span
+            className="relative z-[1] flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
+            style={{ background: FIPS_ROLE_COLOR[activeUser.role] }}
+          >
+            {fipsUserInitials(activeUser.name)}
+          </span>
+          <span className="relative z-[1] hidden min-w-0 flex-1 flex-col text-left sm:flex">
+            <span
+              className={cn(
+                'truncate font-sans text-[12px] leading-[1.2] font-semibold',
+                hovered ? 'text-[var(--color-gov-azul-escuro)]' : dark ? 'text-[#E2E2E8]' : 'text-[var(--color-fg)]',
+              )}
+            >
+              {activeUser.name}
+            </span>
+            <span
+              className="truncate text-[9px] leading-[1.2] font-semibold tracking-[0.04em] uppercase"
+              style={{ color: hovered ? 'var(--color-gov-azul-escuro)' : FIPS_ROLE_COLOR[activeUser.role] }}
+            >
+              {FIPS_ROLE_LABEL[activeUser.role]}
+            </span>
+          </span>
+          <ChevronDown
+            className={cn(
+              'relative z-[1] h-3.5 w-3.5 shrink-0',
+              hovered ? 'text-[var(--color-gov-azul-escuro)]' : dark ? 'text-[#A1A1AA]' : 'text-[var(--color-fg-muted)]',
+            )}
+            strokeWidth={1.5}
+            aria-hidden
+          />
+        </button>
+        <UserMenuModal
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+          activeUserId={activeUserId}
+          onActiveUserChange={setActiveUserId}
         />
-      </button>
+      </>
     )
   }
 
