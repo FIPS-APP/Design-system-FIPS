@@ -16,6 +16,8 @@ export interface SelectProps {
   onChange?: (value: string) => void
   placeholder?: string
   leftIcon?: React.ReactNode
+  /** Rótulo curto do campo, renderizado como prefixo mudo antes do valor (ex.: "Área:"). */
+  fieldLabel?: string
   density?: FieldDensity
   disabled?: boolean
   className?: string
@@ -37,6 +39,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       onChange,
       placeholder = 'Selecione',
       leftIcon,
+      fieldLabel,
       density = 'default',
       disabled,
       className,
@@ -123,6 +126,9 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             >
               {leftIcon}
             </span>
+          ) : null}
+          {fieldLabel ? (
+            <span className="shrink-0 text-[var(--color-fg-muted)]">{fieldLabel}:</span>
           ) : null}
           <span className={cn('flex-1 truncate', !selectedLabel && 'text-[var(--color-fg-muted)]')}>
             {selectedLabel || placeholder}

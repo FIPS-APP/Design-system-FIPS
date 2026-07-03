@@ -392,19 +392,25 @@ function ShellMenuAutoButton({ collapsed }: { collapsed: boolean }) {
         />
       </ShellNeuIcon>
       {!collapsed ? (
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: 400,
-            letterSpacing: '0.01em',
-            color: hovered ? NEU.textHover : NEU.textMuted,
-            transition: 'color 0.15s ease',
-            textAlign: 'left',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Modo menu
-        </span>
+        <>
+          <span
+            style={{
+              flex: 1,
+              fontSize: 13,
+              fontWeight: 400,
+              letterSpacing: '0.01em',
+              color: hovered ? NEU.textHover : NEU.textMuted,
+              transition: 'color 0.15s ease',
+              textAlign: 'left',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Modo menu
+          </span>
+          <span style={{ fontFamily: 'monospace', fontSize: 10, color: dark ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.4)' }}>
+            Manual
+          </span>
+        </>
       ) : null}
     </button>
   )
@@ -444,7 +450,7 @@ function ShellSidebar({
           className="flex items-center"
           style={{
             justifyContent: collapsed ? 'center' : 'flex-start',
-            gap: collapsed ? 0 : 14,
+            gap: collapsed ? 0 : 2,
             minWidth: 0,
             width: collapsed ? 'auto' : '100%',
           }}
@@ -455,7 +461,7 @@ function ShellSidebar({
             style={
               collapsed
                 ? { width: 36, height: 36, objectFit: 'contain', flexShrink: 0, display: 'block' }
-                : { height: 52, width: 'auto', maxWidth: 148, minWidth: 72, objectFit: 'contain', objectPosition: 'left center', flexShrink: 0, display: 'block' }
+                : { height: 52, width: 'auto', maxWidth: 100, minWidth: 60, objectFit: 'contain', objectPosition: 'left center', flexShrink: 0, display: 'block' }
             }
           />
           {!collapsed ? (
