@@ -547,13 +547,13 @@ function HeroMetricCard({ metric }: { metric: MetricCard }) {
 
   return (
     <Card className={cn('border-l-4 backdrop-blur-sm', dark ? 'bg-[#222222] shadow-[0_16px_40px_rgba(0,0,0,0.3)]' : 'bg-white/[0.96] shadow-[0_16px_40px_rgba(6,37,74,0.14)]', metric.border)}>
-      <CardContent className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-medium text-[var(--color-fg-muted)]">{metric.label}</p>
-          <p className="mt-1 text-3xl font-semibold text-[var(--color-primary)]">{metric.value}</p>
+      <CardContent className="flex items-center justify-between gap-2.5 p-3.5">
+        <div className="min-w-0">
+          <p className="truncate text-xs font-medium text-[var(--color-fg-muted)]">{metric.label}</p>
+          <p className="mt-0.5 text-2xl font-semibold text-[var(--color-primary)]">{metric.value}</p>
         </div>
-        <div className={cn('flex h-11 w-11 items-center justify-center rounded-2xl', dark ? 'bg-white/[0.06]' : metric.iconBg, metric.iconColor)}>
-          <Icon className="h-5 w-5" aria-hidden />
+        <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', dark ? 'bg-white/[0.06]' : metric.iconBg, metric.iconColor)}>
+          <Icon className="h-3.5 w-3.5" aria-hidden />
         </div>
       </CardContent>
     </Card>

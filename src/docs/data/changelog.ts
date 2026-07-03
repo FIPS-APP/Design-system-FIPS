@@ -35,6 +35,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       { type: 'fix', description: 'Mockup do padrão Application Shell (`/docs/patterns/application-shell`) estava com o overlay do hero errado (degradê diagonal pesado). Agora replica o hero real da HomePage: imagem full-bleed (`object-center`) + overlay azul vertical `#002A68/60→45→60` + vinheta preta.' },
       { type: 'fix', description: 'Header do mesmo mockup usava botões de ícone chapados e uma busca com "Q" solto no lugar do ícone. Trocado pelos botões neumorphic canônicos (`DocHeaderNeuIconButton`, hover dourado + shimmer). Campo de busca removido e o chip "AF Usuário" (estático, sem menu) trocado pelo `UserChip` canônico (`variant="docHeader"`) — menu de conta completo, com portal, igual ao header real.' },
       { type: 'improvement', description: 'Botões "Ação Primária"/"Ação Secundária" do hero do mockup Application Shell reduzidos de `lg` para `sm`, igual ao hero real da Home.' },
+      { type: 'improvement', description: 'Cards de indicador do hero (`HeroMetricCard`) mais compactos: label truncado em uma linha (estava quebrando em duas dentro da coluna estreita ao lado do ícone), padding `p-6`→`p-3.5`, ícone `44px`→`32px`, valor `text-3xl`→`text-2xl`. Altura do card caiu de 118px para 96px.' },
     ],
   },
   {
