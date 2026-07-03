@@ -10,28 +10,28 @@ type LoginDsShellProps = {
 
 const PRINCIPLE_STATIONS = [
   {
-    name: 'Eficiencia',
-    desc: 'A busca pela eficiencia, com responsabilidade, deve estar presente em nosso dia a dia.',
+    name: 'Eficiência',
+    desc: 'A busca pela eficiência, com responsabilidade, deve estar presente em nosso dia a dia.',
     color: '#00C64C',
   },
   {
     name: 'Pessoas',
-    desc: 'Pessoas engajadas e um ambiente de trabalho saudavel sao o alicerce para bons resultados duradouros.',
+    desc: 'Pessoas engajadas e um ambiente de trabalho saudável são o alicerce para bons resultados duradouros.',
     color: '#FDC24E',
   },
   {
     name: 'Integridade',
-    desc: 'Respeitar as pessoas e cumprir os compromissos assumidos e essencial para relacionamentos duradouros.',
+    desc: 'Respeitar as pessoas e cumprir os compromissos assumidos é essencial para relacionamentos duradouros.',
     color: '#F6921E',
   },
   {
-    name: 'Colaboracao',
-    desc: 'Trabalho em conjunto, com empatia, para alcancar o melhor resultado para todos.',
+    name: 'Colaboração',
+    desc: 'Trabalho em conjunto, com empatia, para alcançar o melhor resultado para todos.',
     color: '#00C64C',
   },
   {
-    name: 'Seguranca',
-    desc: 'A seguranca das pessoas e prioridade sobre qualquer outro tema.',
+    name: 'Segurança',
+    desc: 'A segurança das pessoas é prioridade sobre qualquer outro tema.',
     color: '#FF4D4D',
   },
 ] as const
@@ -101,7 +101,7 @@ function LoginPrinciplesRoute({ mounted, signalStep }: { mounted: boolean; signa
               textTransform: 'uppercase',
             }}
           >
-            Rota dos principios
+            Rota dos princípios
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>

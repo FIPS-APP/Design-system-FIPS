@@ -4,6 +4,7 @@ import { Eye, EyeOff, ArrowRight, User, CheckCircle2 } from 'lucide-react'
 import { CodeExportSection } from '../components/CodeExport'
 import { PlaygroundProvider, Copyable, CopyableInline, CodePlayground } from '../components/CodePlayground'
 import { LoginDsShell } from '../../components/patterns/LoginDsShell'
+import '../../styles/login-ds.css'
 
 const BG = '/backgrounds/app-shell-home-trains.png'
 
@@ -600,7 +601,7 @@ export default function LoginDesktop() {
           <div className="train-runner"><img src="/brand/hero-train-silhouette.svg" alt="" /></div>
           <div style={{position:'relative',zIndex:10,maxWidth:380,animation:mounted?'slideInLeft 0.8s ease-out forwards':'none',opacity:mounted?1:0}}>
             <h1 style={{fontFamily:"'Saira Expanded',sans-serif",fontSize:28,fontWeight:800,color:'#FFFFFF',lineHeight:1.15,margin:'0 0 14px'}}>
-              Excelencia<br/><span style={{color:'#FDC24E'}}>sobre trilhos</span>
+              Excelência<br/><span style={{color:'#FDC24E'}}>sobre trilhos</span>
             </h1>
             <p style={{fontFamily:"'Open Sans',sans-serif",fontSize:15,color:'rgba(255,255,255,0.45)',lineHeight:1.7,margin:'12px 0 16px',maxWidth:320}}>
               Sistema integrado da Ferrovia Interna do Porto de Santos.
@@ -609,7 +610,7 @@ export default function LoginDesktop() {
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14,paddingLeft:4,paddingRight:4}}>
                 <div style={{display:'flex',alignItems:'center',gap:8}}>
                   <div style={{width:14,height:2.5,borderRadius:2,background:'linear-gradient(90deg,#FDC24E,#F6921E)'}}/>
-                  <span style={{fontFamily:"'Saira Expanded',sans-serif",fontSize:7,fontWeight:700,letterSpacing:'2px',color:'rgba(255,255,255,0.25)',textTransform:'uppercase'}}>Rota dos principios</span>
+                  <span style={{fontFamily:"'Saira Expanded',sans-serif",fontSize:7,fontWeight:700,letterSpacing:'2px',color:'rgba(255,255,255,0.25)',textTransform:'uppercase'}}>Rota dos princípios</span>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:4}}>
                   {[{c:'#FF4D4D',s:1},{c:'#FDC24E',s:2},{c:'#00C64C',s:3}].map((d,i)=>(
@@ -621,11 +622,11 @@ export default function LoginDesktop() {
               <div style={{position:'relative',paddingLeft:32}}>
                 <div style={{position:'absolute',left:9,top:0,bottom:0,width:2,background:'repeating-linear-gradient(180deg,#FDC24E 0px,#FDC24E 8px,transparent 8px,transparent 14px)',opacity:0.5}}/>
                 {[
-                  {name:'Eficiencia',desc:'A busca pela eficiencia com responsabilidade.',color:'#00C64C'},
-                  {name:'Pessoas',desc:'Pessoas engajadas sao o alicerce para bons resultados.',color:'#FDC24E'},
+                  {name:'Eficiência',desc:'A busca pela eficiência com responsabilidade.',color:'#00C64C'},
+                  {name:'Pessoas',desc:'Pessoas engajadas são o alicerce para bons resultados.',color:'#FDC24E'},
                   {name:'Integridade',desc:'Respeitar as pessoas e cumprir compromissos.',color:'#F6921E'},
-                  {name:'Colaboracao',desc:'Trabalho em conjunto com empatia.',color:'#00C64C'},
-                  {name:'Seguranca',desc:'Seguranca das pessoas e prioridade.',color:'#FF4D4D'},
+                  {name:'Colaboração',desc:'Trabalho em conjunto com empatia.',color:'#00C64C'},
+                  {name:'Segurança',desc:'Segurança das pessoas é prioridade.',color:'#FF4D4D'},
                 ].map((station,i)=>(
                   <div key={station.name} style={{position:'relative',marginBottom:i<4?28:0,animation:mounted?\`stationReveal 0.4s ease-out \${0.3+i*0.12}s both\`:'none'}}>
                     <div style={{position:'absolute',left:-28,top:2,width:12,height:12,borderRadius:'50%',background:\`radial-gradient(circle at 40% 35%,\${station.color},\${station.color}88 60%,transparent 100%)\`,boxShadow:\`0 0 8px \${station.color}80,0 0 16px \${station.color}30\`,animation:\`stationPulse 2.5s ease-in-out \${i*0.5}s infinite\`}}/>
@@ -713,7 +714,7 @@ export default function LoginMobile() {
         {/* TOP — Branding */}
         <div style={{position:'relative',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',background:'linear-gradient(145deg,#001430 0%,#002A68 40%,#00396B 100%)',overflow:'hidden',padding:'24px 20px',textAlign:'center'}}>
           <h1 style={{fontFamily:"'Saira Expanded',sans-serif",fontSize:22,fontWeight:800,color:'#FFFFFF',lineHeight:1.1,margin:'0 0 8px'}}>
-            Excelencia <span style={{color:'#FDC24E'}}>sobre trilhos</span>
+            Excelência <span style={{color:'#FDC24E'}}>sobre trilhos</span>
           </h1>
           <p style={{fontFamily:"'Open Sans',sans-serif",fontSize:12,color:'rgba(255,255,255,0.40)',lineHeight:1.5,margin:0,maxWidth:340}}>
             Sistema integrado da Ferrovia Interna do Porto de Santos.
@@ -1124,10 +1125,10 @@ const loginTokens = {
   validGreen: '#00C64C',
 }
 
-/* ── Animacoes ── */
+/* ── Animações ── */
 // @keyframes railShimmer — shimmer dourado no input focus (1.2s)
-// @keyframes stationReveal — entrada das estacoes dos principios
-// @keyframes stationPulse — pulse nas estacoes (2.5s)
+// @keyframes stationReveal — entrada das estações dos princípios
+// @keyframes stationPulse — pulse nas estações (2.5s)
 // @keyframes slideInLeft / slideInRight — mount animations
 // conic-gradient rotation — borda do card (6s infinite)`,
           },

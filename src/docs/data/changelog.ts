@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.6.3',
+    date: '2026-07-03',
+    title: 'Fix: preview do padrão Login',
+    entries: [
+      { type: 'fix', description: 'A doc do padrão Login (`/docs/login`) nunca importava `login-ds.css` — sem ele, `.login-v1-container` renderizava como `display:block` em vez de `flex`, colapsando a coluna direita (card de vidro sem padding/tamanho, empurrado para o rodapé do preview). Import adicionado em `LoginPage.tsx`.' },
+      { type: 'fix', description: 'Textos em pt-BR do padrão Login estavam sem acentuação ("Eficiencia", "Colaboracao", "Rota dos principios" etc.) em `LoginDsShell.tsx` e nos exemplos de código copiáveis da doc — corrigido para "Eficiência", "Colaboração", "Rota dos princípios".' },
+    ],
+  },
+  {
     version: '0.6.2',
     date: '2026-07-02',
     title: 'Header mobile refinado + skill sincronizada',
