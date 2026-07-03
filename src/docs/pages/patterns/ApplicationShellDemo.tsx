@@ -643,25 +643,18 @@ function ShellCanvas({
         ) : null}
 
         <div className="relative overflow-hidden">
-          {/* Fundo institucional — padrão PageHero: degradê azul base + trem sutil à direita */}
+          {/* Fundo institucional — padrão FIPS real (igual HomePage): imagem full-bleed + overlay azul + vinheta */}
           <div className="absolute inset-0">
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-[#031a3d] via-[var(--color-fips-blue-900)] to-[#1b6fd4] dark:bg-[#333B41] dark:bg-none"
+            <img
+              src={HOME_BACKGROUND}
+              alt=""
               aria-hidden
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              draggable={false}
             />
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-white/[0.03]" aria-hidden />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" aria-hidden />
-            <div
-              className="pointer-events-none absolute inset-y-0 right-0 w-[min(60%,520px)] opacity-[0.24] mix-blend-soft-light"
-              aria-hidden
-            >
-              <img
-                src={HOME_BACKGROUND}
-                alt=""
-                className="h-full w-full object-cover object-right"
-                draggable={false}
-              />
-            </div>
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-[#002A68]/60 via-[#002A68]/45 to-[#002A68]/60" />
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15" />
           </div>
 
           <section
