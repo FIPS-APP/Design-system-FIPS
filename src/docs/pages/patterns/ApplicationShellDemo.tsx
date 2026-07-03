@@ -152,9 +152,9 @@ const contentHighlights: Array<{
   iconBg: string
   iconColor: string
 }> = [
-  { icon: LayoutDashboard, label: 'Bloco visual 1', caption: 'Área de conteúdo do módulo', iconBg: 'bg-[#eaf1ff]', iconColor: 'text-[#2c74ff]' },
-  { icon: FileText, label: 'Bloco visual 2', caption: 'Listagens, formulários ou cards', iconBg: 'bg-[#f4eafe]', iconColor: 'text-[#9333ea]' },
-  { icon: Sparkles, label: 'Bloco visual 3', caption: 'Destaques e ações rápidas', iconBg: 'bg-[#e8fbef]', iconColor: 'text-[#00a843]' },
+  { icon: LayoutDashboard, label: 'Visual 1', caption: 'Conteúdo do módulo', iconBg: 'bg-[#eaf1ff]', iconColor: 'text-[#2c74ff]' },
+  { icon: FileText, label: 'Visual 2', caption: 'Listas ou formulários', iconBg: 'bg-[#f4eafe]', iconColor: 'text-[#9333ea]' },
+  { icon: Sparkles, label: 'Visual 3', caption: 'Destaques e ações', iconBg: 'bg-[#e8fbef]', iconColor: 'text-[#00a843]' },
 ]
 
 const complementRows = ['Linha visual 1', 'Linha visual 2', 'Linha visual 3']
@@ -727,13 +727,13 @@ function ShellCanvas({
                     return (
                       <div
                         key={block.label}
-                        className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-4 transition-colors hover:border-[var(--color-primary)]/30"
+                        className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-3.5 transition-colors hover:border-[var(--color-primary)]/30"
                       >
-                        <div className={cn('flex h-8 w-8 items-center justify-center rounded-lg', dark ? 'bg-white/[0.06]' : block.iconBg, block.iconColor)}>
-                          <BlockIcon className="h-4 w-4" aria-hidden />
+                        <div className={cn('flex h-7 w-7 items-center justify-center rounded-lg', dark ? 'bg-white/[0.06]' : block.iconBg, block.iconColor)}>
+                          <BlockIcon className="h-3.5 w-3.5" aria-hidden />
                         </div>
-                        <p className="mt-3 text-sm font-semibold text-[var(--color-fg)]">{block.label}</p>
-                        <p className="mt-0.5 text-xs leading-5 text-[var(--color-fg-muted)]">{block.caption}</p>
+                        <p className="mt-2.5 text-sm leading-snug font-semibold text-[var(--color-fg)]">{block.label}</p>
+                        <p className="mt-1 text-xs leading-5 text-[var(--color-fg-muted)]">{block.caption}</p>
                       </div>
                     )
                   })}
