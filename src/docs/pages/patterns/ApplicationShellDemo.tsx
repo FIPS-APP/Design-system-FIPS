@@ -34,6 +34,7 @@ import { Badge } from '../../../components/ui/badge'
 import { DocHeaderSectionNavDemo } from '../../../components/layout/DocHeaderSectionNav'
 import { DocHeaderNeuIconButton } from '../../../components/layout/DocHeaderNeuIconButton'
 import { UserChip } from '../../../components/layout/UserChip'
+import { DEFAULT_FIPS_USER_ID, FIPS_ROLE_COLOR, fipsUserById, fipsUserInitials } from '../../data/users'
 import { Button } from '../../../components/ui/button'
 import { Card, CardContent } from '../../../components/ui/card'
 import { cn } from '../../../lib/cn'
@@ -629,20 +630,38 @@ function ShellCanvas({
                 <PanelLeft className={cn('h-[17px] w-[17px] transition-transform duration-200', isDesktop && desktopCollapsed && 'rotate-180')} aria-hidden strokeWidth={1.9} />
               </DocHeaderNeuIconButton>
             ) : null}
-            <div className="flex items-center gap-1.5 text-sm">
-              <span className={dark ? 'text-[#A1A1AA]' : 'text-neutral-400'}>Padrões</span>
-              <span className={dark ? 'text-[#3a3a3a]' : 'text-neutral-300'}>/</span>
-              <span className={cn('font-semibold', dark ? 'text-[#E2E2E8]' : 'text-neutral-800')}>Home</span>
-            </div>
+            {isMobile ? (
+              <div className="flex h-8 w-auto shrink-0 items-center justify-center">
+                <img src="/appfips-logo-full.png" alt="App FIPS" className="h-full w-auto object-contain" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className={dark ? 'text-[#A1A1AA]' : 'text-neutral-400'}>Padrões</span>
+                <span className={dark ? 'text-[#3a3a3a]' : 'text-neutral-300'}>/</span>
+                <span className={cn('font-semibold', dark ? 'text-[#E2E2E8]' : 'text-neutral-800')}>Home</span>
+              </div>
+            )}
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            {[Bell, ...(isMobile ? [] : [GraduationCap, SunMoon])].map((Icon, i) => (
+            {[Bell, GraduationCap, SunMoon].map((Icon, i) => (
               <DocHeaderNeuIconButton key={i} ariaLabel={['Notificações', 'Tutorial', 'Tema'][i] ?? 'Ação'} dark={dark}>
                 <Icon className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
               </DocHeaderNeuIconButton>
             ))}
-            <div className={cn('mx-0.5 h-6 w-px shrink-0', dark ? 'bg-[#3a3a3a]' : 'bg-neutral-300', isMobile && 'hidden')} />
-            <UserChip variant="docHeader" dark={dark} />
+            {isMobile ? (
+              <span
+                aria-label="Conta: Fipinho Santista"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white"
+                style={{ background: FIPS_ROLE_COLOR[fipsUserById(DEFAULT_FIPS_USER_ID).role] }}
+              >
+                {fipsUserInitials(fipsUserById(DEFAULT_FIPS_USER_ID).name)}
+              </span>
+            ) : (
+              <>
+                <div className={cn('mx-0.5 h-6 w-px shrink-0', dark ? 'bg-[#3a3a3a]' : 'bg-neutral-300')} />
+                <UserChip variant="docHeader" dark={dark} />
+              </>
+            )}
           </div>
         </header>
 
