@@ -16,6 +16,7 @@ import {
   GraduationCap,
   Home,
   LayoutDashboard,
+  ListChecks,
   Menu,
   PanelLeft,
   Settings,
@@ -769,20 +770,24 @@ function ShellCanvas({
               </CardContent>
             </Card>
 
-            <Card className="border-[var(--color-border)] shadow-[0_24px_60px_rgba(6,37,74,0.08)]">
-              <CardContent className="space-y-3">
-                <p className="text-sm font-semibold text-[var(--color-fg)]">Notas visuais</p>
-                {secondaryNotes.map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-start gap-2.5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-4 py-3 text-sm leading-6 text-[var(--color-fg-muted)]"
-                  >
-                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-success)]/14 text-[var(--color-success)]">
-                      <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
-                    </span>
-                    {item}
-                  </div>
-                ))}
+            <Card className="self-start border-[var(--color-border)] shadow-[0_24px_60px_rgba(6,37,74,0.08)]">
+              <CardContent>
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--color-success)]/12 text-[var(--color-success)]">
+                    <ListChecks className="h-3.5 w-3.5" aria-hidden />
+                  </span>
+                  <p className="text-sm font-semibold text-[var(--color-fg)]">Notas visuais</p>
+                </div>
+                <div className="divide-y divide-[var(--color-border)]/60">
+                  {secondaryNotes.map((item) => (
+                    <div key={item} className="flex items-start gap-3 py-3 last:pb-0">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-success)]/14 text-[var(--color-success)]">
+                        <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
+                      </span>
+                      <p className="text-sm leading-6 text-[var(--color-fg)]">{item}</p>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </div>
