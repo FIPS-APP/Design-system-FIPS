@@ -688,10 +688,10 @@ function ShellCanvas({
               </p>
 
               <div className={cn('mt-7 flex gap-3', isMobile ? 'flex-col' : 'justify-center')}>
-                <Button variant="accent" size="lg">
+                <Button variant="accent" size="sm">
                   Ação Primária
                 </Button>
-                <Button variant="inverseOutline" size="lg">
+                <Button variant="inverseOutline" size="sm">
                   Ação Secundária
                 </Button>
               </div>
