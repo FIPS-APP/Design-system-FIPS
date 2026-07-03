@@ -178,6 +178,11 @@ export default function Login(){
       padding:60px 56px;
       overflow:hidden;
     }
+    /* Preview da doc não deve ocupar 100svh (viewport real) — o componente é full-page
+       no app consumidor, mas aqui vive dentro de um card do playground. */
+    .login-doc-preview .login-v1-container {
+      min-height: 720px;
+    }
     @media (max-width: 768px) {
       .login-v1-container {
         flex-direction: column !important;
