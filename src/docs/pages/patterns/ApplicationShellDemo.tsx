@@ -8,6 +8,7 @@ import {
   Bell,
   BookOpen,
   Briefcase,
+  Check,
   ChevronDown,
   FilePlus,
   FileText,
@@ -144,7 +145,19 @@ const heroCards: MetricCard[] = [
   },
 ]
 
-const contentHighlights = ['Bloco visual 1', 'Bloco visual 2', 'Bloco visual 3']
+const contentHighlights: Array<{
+  icon: LucideIcon
+  label: string
+  caption: string
+  iconBg: string
+  iconColor: string
+}> = [
+  { icon: LayoutDashboard, label: 'Bloco visual 1', caption: 'Área de conteúdo do módulo', iconBg: 'bg-[#eaf1ff]', iconColor: 'text-[#2c74ff]' },
+  { icon: FileText, label: 'Bloco visual 2', caption: 'Listagens, formulários ou cards', iconBg: 'bg-[#f4eafe]', iconColor: 'text-[#9333ea]' },
+  { icon: Sparkles, label: 'Bloco visual 3', caption: 'Destaques e ações rápidas', iconBg: 'bg-[#e8fbef]', iconColor: 'text-[#00a843]' },
+]
+
+const complementRows = ['Linha visual 1', 'Linha visual 2', 'Linha visual 3']
 
 const secondaryNotes = [
   'Hierarquia forte entre menu, hero e conteúdo.',
@@ -709,14 +722,21 @@ function ShellCanvas({
                 </div>
 
                 <div className={cn('grid gap-3', isMobile ? 'grid-cols-1' : 'sm:grid-cols-3')}>
-                  {contentHighlights.map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-4 text-sm font-medium text-[var(--color-fg)]"
-                    >
-                      {item}
-                    </div>
-                  ))}
+                  {contentHighlights.map((block) => {
+                    const BlockIcon = block.icon
+                    return (
+                      <div
+                        key={block.label}
+                        className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-4 transition-colors hover:border-[var(--color-primary)]/30"
+                      >
+                        <div className={cn('flex h-8 w-8 items-center justify-center rounded-lg', dark ? 'bg-white/[0.06]' : block.iconBg, block.iconColor)}>
+                          <BlockIcon className="h-4 w-4" aria-hidden />
+                        </div>
+                        <p className="mt-3 text-sm font-semibold text-[var(--color-fg)]">{block.label}</p>
+                        <p className="mt-0.5 text-xs leading-5 text-[var(--color-fg-muted)]">{block.caption}</p>
+                      </div>
+                    )
+                  })}
                 </div>
 
                 <div className={cn('grid gap-3', isMobile ? 'grid-cols-1' : 'sm:grid-cols-2')}>
@@ -735,8 +755,9 @@ function ShellCanvas({
                       Complemento
                     </p>
                     <div className="mt-3 space-y-2.5">
-                      {['Linha visual 1', 'Linha visual 2', 'Linha visual 3'].map((item) => (
-                        <div key={item} className="rounded-2xl bg-[var(--color-surface-soft)] px-4 py-3 text-sm text-[var(--color-fg-muted)]">
+                      {complementRows.map((item) => (
+                        <div key={item} className="flex items-center gap-2.5 rounded-2xl bg-[var(--color-surface-soft)] px-4 py-3 text-sm text-[var(--color-fg-muted)]">
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-strong)]" aria-hidden />
                           {item}
                         </div>
                       ))}
@@ -752,8 +773,11 @@ function ShellCanvas({
                 {secondaryNotes.map((item) => (
                   <div
                     key={item}
-                    className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-4 py-3 text-sm leading-6 text-[var(--color-fg-muted)]"
+                    className="flex items-start gap-2.5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-4 py-3 text-sm leading-6 text-[var(--color-fg-muted)]"
                   >
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-success)]/14 text-[var(--color-success)]">
+                      <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
+                    </span>
                     {item}
                   </div>
                 ))}
