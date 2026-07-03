@@ -33,7 +33,8 @@ export const CHANGELOG: ChangelogVersion[] = [
       { type: 'fix', description: 'Textos em pt-BR do padrão Login estavam sem acentuação ("Eficiencia", "Colaboracao", "Rota dos principios" etc.) em `LoginDsShell.tsx` e nos exemplos de código copiáveis da doc — corrigido para "Eficiência", "Colaboração", "Rota dos princípios".' },
       { type: 'fix', description: 'Preview do playground ficava esticado a `100svh` (herdado do `.login-v1-container` real, pensado pra tela cheia do app consumidor) — dentro do card da doc isso significava ~1000px de altura. Adicionado override escopado (`.login-doc-preview .login-v1-container`) fixando 720px só no preview, sem alterar o componente real.' },
       { type: 'fix', description: 'Mockup do padrão Application Shell (`/docs/patterns/application-shell`) estava com o overlay do hero errado (degradê diagonal pesado). Agora replica o hero real da HomePage: imagem full-bleed (`object-center`) + overlay azul vertical `#002A68/60→45→60` + vinheta preta.' },
-      { type: 'fix', description: 'Header do mesmo mockup usava botões de ícone chapados e uma busca com "Q" solto no lugar do ícone. Trocado pelos botões neumorphic canônicos (`DocHeaderNeuIconButton`, hover dourado + shimmer) e busca com ícone `Search` real.' },
+      { type: 'fix', description: 'Header do mesmo mockup usava botões de ícone chapados e uma busca com "Q" solto no lugar do ícone. Trocado pelos botões neumorphic canônicos (`DocHeaderNeuIconButton`, hover dourado + shimmer). Campo de busca removido e o chip "AF Usuário" (estático, sem menu) trocado pelo `UserChip` canônico (`variant="docHeader"`) — menu de conta completo, com portal, igual ao header real.' },
+      { type: 'improvement', description: 'Botões "Ação Primária"/"Ação Secundária" do hero do mockup Application Shell reduzidos de `lg` para `sm`, igual ao hero real da Home.' },
     ],
   },
   {

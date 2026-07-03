@@ -17,7 +17,6 @@ import {
   LayoutDashboard,
   Menu,
   PanelLeft,
-  Search,
   Settings,
   Shield,
   Sparkles,
@@ -32,6 +31,7 @@ import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { DocHeaderSectionNavDemo } from '../../../components/layout/DocHeaderSectionNav'
 import { DocHeaderNeuIconButton } from '../../../components/layout/DocHeaderNeuIconButton'
+import { UserChip } from '../../../components/layout/UserChip'
 import { Button } from '../../../components/ui/button'
 import { Card, CardContent } from '../../../components/ui/card'
 import { cn } from '../../../lib/cn'
@@ -615,12 +615,6 @@ function ShellCanvas({
               <span className={cn('font-semibold', dark ? 'text-[#E2E2E8]' : 'text-neutral-800')}>Home</span>
             </div>
           </div>
-          {!isMobile ? (
-            <div className={cn('hidden h-[35px] w-full max-w-xs items-center gap-2 rounded-lg border px-3 text-[13px] md:flex', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#A1A1AA]' : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg-muted)]')}>
-              <Search className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
-              <span>Buscar...</span>
-            </div>
-          ) : null}
           <div className="flex shrink-0 items-center gap-2">
             {[Bell, ...(isMobile ? [] : [GraduationCap, SunMoon])].map((Icon, i) => (
               <DocHeaderNeuIconButton key={i} ariaLabel={['Notificações', 'Tutorial', 'Tema'][i] ?? 'Ação'} dark={dark}>
@@ -628,11 +622,7 @@ function ShellCanvas({
               </DocHeaderNeuIconButton>
             ))}
             <div className={cn('mx-0.5 h-6 w-px shrink-0', dark ? 'bg-[#3a3a3a]' : 'bg-neutral-300', isMobile && 'hidden')} />
-            <div className={cn('flex h-8 items-center gap-2 rounded-lg border px-2 text-xs font-semibold', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#E2E2E8]' : 'border-neutral-200 bg-white text-neutral-700')}>
-              <span className={cn('flex h-5 w-5 items-center justify-center rounded text-[10px] font-bold text-white', dark ? 'bg-[#F6921E]' : 'bg-[#F6921E]')}>AF</span>
-              {!isMobile && <span>Usuário</span>}
-              {!isMobile && <ChevronDown className="h-3 w-3 opacity-40" />}
-            </div>
+            <UserChip variant="docHeader" dark={dark} />
           </div>
         </header>
 
