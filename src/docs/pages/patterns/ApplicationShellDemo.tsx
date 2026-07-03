@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   Menu,
   PanelLeft,
+  Search,
   Settings,
   Shield,
   Sparkles,
@@ -30,6 +31,7 @@ import {
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { DocHeaderSectionNavDemo } from '../../../components/layout/DocHeaderSectionNav'
+import { DocHeaderNeuIconButton } from '../../../components/layout/DocHeaderNeuIconButton'
 import { Button } from '../../../components/ui/button'
 import { Card, CardContent } from '../../../components/ui/card'
 import { cn } from '../../../lib/cn'
@@ -597,20 +599,15 @@ function ShellCanvas({
         {/* Header — bloco separado estilo Tecnopano */}
         <header className={cn('z-20 flex shrink-0 items-center gap-3 border-b px-4 py-2.5', dark ? 'border-[#2E2E2E] bg-[#252525]' : 'border-[#e5e5e5] bg-[#f5f5f5]')}>
           {isMobile ? (
-            <button
-              type="button"
-              onClick={onToggleMobileDrawer}
-              className={cn('flex h-9 w-9 items-center justify-center rounded-[10px] border', dark ? 'border-[#3a3a3a] bg-[#222222] text-[#E2E2E8]' : 'border-black/[0.10] bg-white/90 text-neutral-800')}
-              aria-label="Abrir menu"
-            >
-              <Menu className="h-[17px] w-[17px]" aria-hidden />
-            </button>
+            <DocHeaderNeuIconButton ariaLabel="Abrir menu" dark={dark} onClick={onToggleMobileDrawer}>
+              <Menu className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
+            </DocHeaderNeuIconButton>
           ) : null}
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {!isMobile ? (
-              <button type="button" onClick={isDesktop ? onToggleDesktopSidebar : undefined} className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-colors', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#A1A1AA] hover:bg-[#333]' : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50')} aria-label="Recolher menu">
+              <DocHeaderNeuIconButton ariaLabel="Recolher menu" dark={dark} onClick={isDesktop ? onToggleDesktopSidebar : undefined}>
                 <PanelLeft className={cn('h-[17px] w-[17px] transition-transform duration-200', isDesktop && desktopCollapsed && 'rotate-180')} aria-hidden strokeWidth={1.9} />
-              </button>
+              </DocHeaderNeuIconButton>
             ) : null}
             <div className="flex items-center gap-1.5 text-sm">
               <span className={dark ? 'text-[#A1A1AA]' : 'text-neutral-400'}>Padrões</span>
@@ -619,15 +616,16 @@ function ShellCanvas({
             </div>
           </div>
           {!isMobile ? (
-            <div className={cn('hidden h-8 w-full max-w-[160px] items-center gap-2 rounded-lg border px-3 text-sm md:flex', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#A1A1AA]' : 'border-neutral-200 bg-white text-neutral-400')}>
-              <span className="text-xs">Q</span> Buscar...
+            <div className={cn('hidden h-[35px] w-full max-w-xs items-center gap-2 rounded-lg border px-3 text-[13px] md:flex', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#A1A1AA]' : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg-muted)]')}>
+              <Search className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+              <span>Buscar...</span>
             </div>
           ) : null}
           <div className="flex shrink-0 items-center gap-2">
             {[Bell, ...(isMobile ? [] : [GraduationCap, SunMoon])].map((Icon, i) => (
-              <button key={i} type="button" className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-colors', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#A1A1AA] hover:bg-[#333]' : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50')}>
+              <DocHeaderNeuIconButton key={i} ariaLabel={['Notificações', 'Tutorial', 'Tema'][i] ?? 'Ação'} dark={dark}>
                 <Icon className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
-              </button>
+              </DocHeaderNeuIconButton>
             ))}
             <div className={cn('mx-0.5 h-6 w-px shrink-0', dark ? 'bg-[#3a3a3a]' : 'bg-neutral-300', isMobile && 'hidden')} />
             <div className={cn('flex h-8 items-center gap-2 rounded-lg border px-2 text-xs font-semibold', dark ? 'border-[#3a3a3a] bg-[#2a2a2a] text-[#E2E2E8]' : 'border-neutral-200 bg-white text-neutral-700')}>
@@ -645,15 +643,25 @@ function ShellCanvas({
         ) : null}
 
         <div className="relative overflow-hidden">
+          {/* Fundo institucional — padrão PageHero: degradê azul base + trem sutil à direita */}
           <div className="absolute inset-0">
-            <img
-              src={HOME_BACKGROUND}
-              alt=""
-              className="h-full w-full object-cover object-center"
-              draggable={false}
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-[#031a3d] via-[var(--color-fips-blue-900)] to-[#1b6fd4] dark:bg-[#333B41] dark:bg-none"
+              aria-hidden
             />
-            <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(0,19,56,0.92)_0%,rgba(0,63,138,0.82)_44%,rgba(0,144,208,0.58)_100%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.2),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(0,42,104,0.52),transparent_30%)]" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-white/[0.03]" aria-hidden />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" aria-hidden />
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-[min(60%,520px)] opacity-[0.24] mix-blend-soft-light"
+              aria-hidden
+            >
+              <img
+                src={HOME_BACKGROUND}
+                alt=""
+                className="h-full w-full object-cover object-right"
+                draggable={false}
+              />
+            </div>
           </div>
 
           <section

@@ -27,11 +27,13 @@ export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '0.6.3',
     date: '2026-07-03',
-    title: 'Fix: preview do padrão Login',
+    title: 'Fix: previews dos padrões Login e Application Shell',
     entries: [
       { type: 'fix', description: 'A doc do padrão Login (`/docs/login`) nunca importava `login-ds.css` — sem ele, `.login-v1-container` renderizava como `display:block` em vez de `flex`, colapsando a coluna direita (card de vidro sem padding/tamanho, empurrado para o rodapé do preview). Import adicionado em `LoginPage.tsx`.' },
       { type: 'fix', description: 'Textos em pt-BR do padrão Login estavam sem acentuação ("Eficiencia", "Colaboracao", "Rota dos principios" etc.) em `LoginDsShell.tsx` e nos exemplos de código copiáveis da doc — corrigido para "Eficiência", "Colaboração", "Rota dos princípios".' },
       { type: 'fix', description: 'Preview do playground ficava esticado a `100svh` (herdado do `.login-v1-container` real, pensado pra tela cheia do app consumidor) — dentro do card da doc isso significava ~1000px de altura. Adicionado override escopado (`.login-doc-preview .login-v1-container`) fixando 720px só no preview, sem alterar o componente real.' },
+      { type: 'fix', description: 'Mockup do padrão Application Shell (`/docs/patterns/application-shell`) estava com a imagem de fundo do hero em full-bleed com degradê pesado por cima — divergia do hero canônico `PageHero`. Agora usa o mesmo tratamento: degradê azul institucional como base + foto do trem sutil à direita (`opacity 0.24`, `mix-blend-soft-light`).' },
+      { type: 'fix', description: 'Header do mesmo mockup usava botões de ícone chapados e uma busca com "Q" solto no lugar do ícone. Trocado pelos botões neumorphic canônicos (`DocHeaderNeuIconButton`, hover dourado + shimmer) e busca com ícone `Search` real.' },
     ],
   },
   {
