@@ -1036,7 +1036,7 @@ export default function ApplicationShellDemo() {
             label="Tablet"
             hint="Mockup mais largo, com proporção de tablet real, rail compacta e conteúdo distribuído sem parecer um telefone."
           >
-            <div className="h-[620px]">
+            <div className="h-[720px]">
               <ShellCanvas
                 viewport="tablet"
                 desktopCollapsed={desktopCollapsed}

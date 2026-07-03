@@ -38,6 +38,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       { type: 'improvement', description: 'Cards de indicador do hero (`HeroMetricCard`) mais compactos: label truncado em uma linha (estava quebrando em duas dentro da coluna estreita ao lado do ícone), padding `p-6`→`p-3.5`, ícone `44px`→`32px`, valor `text-3xl`→`text-2xl`. Altura do card caiu de 118px para 96px.' },
       { type: 'improvement', description: 'Área de conteúdo do mockup: os blocos "Bloco visual 1/2/3" eram caixas cinza chapadas só com o rótulo — agora são tiles com ícone colorido + rótulo + legenda descrevendo o slot; linhas do "Complemento" ganharam dot âmbar e as "Notas visuais" um check verde em círculo, deixando a área menos placeholder e mais intencional.' },
       { type: 'fix', description: 'Os 3 tiles de bloco visual ficaram espremidos na coluna estreita (~112px cada): rótulo "Bloco visual 1" quebrava em duas linhas com o número órfão. Encurtado para "Visual 1/2/3" (cabe em uma linha) e reduzido padding (`p-4`→`p-3.5`) e ícone (`32px`→`28px`) pra dar mais respiro ao texto.' },
+      { type: 'fix', description: 'Na variante tablet do mockup Application Shell, os cards de indicador ficavam colados nos botões do hero (gap real ~2px). Causa: o frame de 620px era curto demais e o flex comprimia o wrapper `overflow-hidden` do hero, clipando-o na altura dos botões. Frame do tablet aumentado para 720px (hero cabe inteiro, sem clip) — o straddle `-mt-6` volta a funcionar e sobra ~32px entre botão e card.' },
     ],
   },
   {
