@@ -1,8 +1,9 @@
 import { Children, forwardRef, isValidElement, type ReactNode } from 'react'
-import type { LucideIcon } from 'lucide-react'
+import { X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -20,6 +21,10 @@ export interface ModalProps {
   showCloseButton?: boolean
   layer?: number
   headerIcon?: LucideIcon
+  /** Header hero — gradiente institucional FIPS (fundo azul, ícone glass, texto branco). Default: header simples atual. */
+  hero?: boolean
+  /** Rótulo dourado uppercase acima do título. Só tem efeito com `hero`. */
+  eyebrow?: ReactNode
 }
 
 const sizeVariants = {
@@ -48,6 +53,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       className,
       size = 'md',
       headerIcon: HeaderIcon,
+      hero = false,
+      eyebrow,
     },
     ref,
   ) => {
@@ -59,13 +66,46 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           ref={ref}
+          showCloseButton={!hero}
           className={cn(
             'flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-h-[90vh]',
             sizeVariants[size],
             className,
           )}
         >
-          {(title || description) && (
+          {(title || description) && (hero ? (
+            <div
+              className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14"
+              style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)' }}
+            >
+              {HeaderIcon ? (
+                <div
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.16] text-white"
+                  style={{
+                    background: 'linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)',
+                    boxShadow: '0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <HeaderIcon className="h-5 w-5" aria-hidden />
+                </div>
+              ) : null}
+              <div className="min-w-0 flex-1">
+                {eyebrow ? (
+                  <span className="block font-heading text-[11px] font-semibold uppercase leading-tight tracking-[0.14em] text-[var(--color-accent-strong)]">{eyebrow}</span>
+                ) : null}
+                {title ? (
+                  <DialogTitle className="font-heading text-[21px] font-bold leading-tight tracking-[-0.2px] text-white">{title}</DialogTitle>
+                ) : null}
+                {description ? <DialogDescription className="mt-0.5 text-xs leading-snug text-white/65">{description}</DialogDescription> : null}
+              </div>
+              <DialogClose
+                className="absolute right-3.5 top-3.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none"
+                aria-label="Fechar"
+              >
+                <X className="h-4 w-4" aria-hidden />
+              </DialogClose>
+            </div>
+          ) : (
             <DialogHeader
               className={cn(
                 'flex-row items-start gap-3 border-b border-[var(--color-border)] px-6 py-4 pr-14 text-left',
@@ -84,7 +124,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {description ? <DialogDescription>{description}</DialogDescription> : null}
               </div>
             </DialogHeader>
-          )}
+          ))}
           {body.length > 0 ? (
             <div className="flex-1 overflow-y-auto px-6 py-5">{body}</div>
           ) : null}

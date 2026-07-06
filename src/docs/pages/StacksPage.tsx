@@ -209,12 +209,12 @@ const stacks: StackItem[] = [
     color: "#22C55E",
     url: "https://echarts.apache.org",
     category: "dashboard",
-    why: "Motor de visualizacao que renderiza em Canvas ou SVG, configurado por um unico objeto option. Cobre muito mais tipos de grafico que o Recharts e aguenta grandes volumes de dados sem perder performance. Biblioteca oficial de graficos dos dashboards operacionais FIPS.",
+    why: "Ferramenta de graficos pensada para dashboards com bastante dado, sem travar ou ficar lenta. Cobre desde grafico simples ate visualizacoes mais elaboradas, como mapas e paineis de acompanhamento. E gratuita, sem custo de licenca para a empresa.",
     highlights: [
-      "Configuracao declarativa por um unico objeto option",
-      "Renderiza em Canvas ou SVG pelo motor ZRender",
-      "Dezenas de tipos: linha, barra, heatmap, sankey, gauge, mapas",
-      "Interacao nativa: zoom, tooltip e selecao por brush",
+      "Nao trava mesmo com muito dado",
+      "Cobre desde grafico simples ate mapas e paineis elaborados",
+      "Gratuita, sem custo de licenca",
+      "Adotada pelos dashboards operacionais da FIPS",
     ],
   },
 
