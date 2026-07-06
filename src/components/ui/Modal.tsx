@@ -71,7 +71,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           ref={ref}
           showCloseButton={!hero}
           className={cn(
-            'flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-h-[90vh]',
+            'flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-h-[90vh] sm:p-0',
             sizeVariants[size],
             className,
           )}

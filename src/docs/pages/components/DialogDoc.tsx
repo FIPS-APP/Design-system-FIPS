@@ -242,13 +242,13 @@ function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg,ico
 const FIELD_BASE_SHADOW="0 1px 2px rgba(0,0,0,.05)";
 const fieldFocus=el=>{el.style.borderColor=C.azulProfundo;el.style.boxShadow="0 0 0 2px rgba(0,75,155,.2)"};
 const fieldBlur=el=>{el.style.borderColor=C.inputBorder;el.style.boxShadow=FIELD_BASE_SHADOW};
-function FInput({label,placeholder,value,required,icon}){
+function FInput({label,placeholder,value,required,icon,type="text"}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:4}}>
       {label&&<label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}
       <div style={{display:"flex",alignItems:"center",gap:8,height:36,padding:"0 12px",border:`1px solid ${C.inputBorder}`,borderRadius:12,background:C.branco,boxShadow:FIELD_BASE_SHADOW,transition:"all .2s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
         {icon&&<span style={{display:"flex",flexShrink:0,color:C.textMuted}}>{icon}</span>}
-        <input placeholder={placeholder} defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}} onFocus={e=>fieldFocus(e.target.parentElement)} onBlur={e=>fieldBlur(e.target.parentElement)}/>
+        <input type={type} placeholder={placeholder} defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>fieldFocus(e.target.parentElement)} onBlur={e=>fieldBlur(e.target.parentElement)}/>
       </div>
     </div>
   );
@@ -1109,7 +1109,7 @@ export default function DialogDoc(){
           <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
           <FSelect label="Tipo" options={["Interno","Externo","Terceiro"]} value="Interno" icon={Ic.tag(14)}/>
           <FSelect label="Prioridade" options={["Baixa","Média","Alta","Urgente"]} value="Média" icon={Ic.doc(14)}/>
-          <FInput label="Prazo" placeholder="dd/mm/aaaa" icon={Ic.cal(14)}/>
+          <FInput label="Prazo" type="date" icon={Ic.cal(14)}/>
         </div>
         <div style={{marginTop:14}}>
           <label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12,display:"block",marginBottom:4}}>Observação</label>
@@ -1146,7 +1146,7 @@ export default function DialogDoc(){
             <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
             <FSelect label="Tipo" options={["Interno","Externo","Terceiro"]} icon={Ic.tag(14)}/>
             <FSelect label="Prioridade" options={["Baixa","Média","Alta","Urgente"]} icon={Ic.doc(14)}/>
-            <FInput label="Prazo" placeholder="dd/mm/aaaa" icon={Ic.cal(14)}/>
+            <FInput label="Prazo" type="date" icon={Ic.cal(14)}/>
             {isWide&&<>
               <FSelect label="Departamento" options={["Operações","Logística","Administrativo","Financeiro"]}/>
               <FInput label="Observação" placeholder="Notas sobre a atribuição..."/>
