@@ -182,6 +182,23 @@ function ChipSelect({icon,label,options=[],value,onChange}){
     </div>
   );
 }
+/* Header hero institucional — gov-gradient 3-stops + tile âmbar + eyebrow dourado + título/subtítulo
+   branco + X próprio. Padrão canônico de header de modal/drawer (skill patterns.md). `radius` só p/ o
+   bottom drawer (cantos superiores arredondados). */
+function HeroHeader({icon,eyebrow,title,subtitle,onClose,radius}){
+  return(
+    <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"18px 24px",paddingRight:56,overflow:"hidden",background:GOV_GRAD,flexShrink:0,borderRadius:radius}}>
+      <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:.06}}/>
+      <span style={{position:"relative",display:"flex",flexShrink:0,width:44,height:44,borderRadius:11,alignItems:"center",justifyContent:"center",background:`${C.amareloOuro}1A`,border:`1px solid ${C.amareloOuro}30`}}>{icon}</span>
+      <div style={{position:"relative",minWidth:0,flex:1}}>
+        {eyebrow&&<span style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title}}>{eyebrow}</span>}
+        <h2 style={{margin:0,fontSize:20,fontWeight:700,lineHeight:1.2,color:C.branco,fontFamily:Fn.title,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{title}</h2>
+        {subtitle&&<p style={{margin:"2px 0 0",fontSize:12,color:"rgba(255,255,255,.68)",fontFamily:Fn.body}}>{subtitle}</p>}
+      </div>
+      <span onClick={onClose} style={{position:"absolute",top:18,right:18,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",transition:"all .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>{Ic.x(16,"currentColor")}</span>
+    </div>
+  );
+}
 function Btn({label,color,outline,onClick,full}){
   return <button onClick={onClick} style={{padding:"7px 18px",fontSize:12,fontWeight:600,background:outline?"transparent":color||C.azulProfundo,color:outline?color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${color||C.cinzaClaro}`:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto"}}>{label}</button>;
 }
@@ -370,7 +387,8 @@ export default function DrawerDoc(){
       {/* ══════ LIVE DRAWERS ══════ */}
 
       {/* Right - Detalhe */}
-      <Drawer open={d.open&&d.id==="right"} onClose={close} title="Detalhe da requisição" subtitle="REQ-4025 · Equipamento SSMA" side="right" width={420}
+      <Drawer open={d.open&&d.id==="right"} onClose={close} side="right" width={420}
+        header={<HeroHeader icon={Ic.doc(20,C.amareloOuro)} eyebrow="Requisições" title="Detalhe da requisição" subtitle="REQ-4025 · Equipamento SSMA" onClose={close}/>}
         footer={<><Btn label="Rejeitar" outline color={C.danger} onClick={close}/><Btn label="Aprovar" color={C.verdeFloresta} onClick={close}/></>}>
         <div style={{display:"flex",flexDirection:"column",gap:16}}>
           <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:12,color:C.cinzaChumbo}}>Solicitante</span><span style={{fontSize:13,fontWeight:600,color:C.cinzaEscuro}}>Carlos Santos</span></div>
@@ -393,18 +411,7 @@ export default function DrawerDoc(){
 
       {/* Left - Filtros avançados — padrão trazido do FilterBar do Governança BI (header gov, pills de classificação + selects + datas) */}
       <Drawer open={d.open&&d.id==="left"} onClose={close} side="left" width={400}
-        header={
-          <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"18px 24px",paddingRight:56,overflow:"hidden",background:GOV_GRAD,flexShrink:0}}>
-            <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:.06}}/>
-            <span style={{position:"relative",display:"flex",flexShrink:0,width:44,height:44,borderRadius:11,alignItems:"center",justifyContent:"center",background:`${C.amareloOuro}1A`,border:`1px solid ${C.amareloOuro}30`}}>{Ic.filter(20,C.amareloOuro)}</span>
-            <div style={{position:"relative",minWidth:0,flex:1}}>
-              <span style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title}}>Requisições</span>
-              <h2 style={{margin:0,fontSize:20,fontWeight:700,lineHeight:1.2,color:C.branco,fontFamily:Fn.title}}>Filtros avançados</h2>
-              <p style={{margin:"2px 0 0",fontSize:12,color:"rgba(255,255,255,.68)",fontFamily:Fn.body}}>{filtrosAtivos>0?`${filtrosAtivos} ${filtrosAtivos===1?"filtro ativo":"filtros ativos"}`:"Refine a listagem de resultados"}</p>
-            </div>
-            <span onClick={close} style={{position:"absolute",top:18,right:18,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",transition:"all .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>{Ic.x(16,"currentColor")}</span>
-          </div>
-        }
+        header={<HeroHeader icon={Ic.filter(20,C.amareloOuro)} eyebrow="Requisições" title="Filtros avançados" subtitle={filtrosAtivos>0?`${filtrosAtivos} ${filtrosAtivos===1?"filtro ativo":"filtros ativos"}`:"Refine a listagem de resultados"} onClose={close}/>}
         footer={<><Btn label="Limpar filtros" outline onClick={limparFiltros}/><Btn label="Aplicar filtros" color={C.azulProfundo} onClick={close}/></>}>
         <div style={{display:"flex",flexDirection:"column",gap:16}}>
           <div>
@@ -426,7 +433,8 @@ export default function DrawerDoc(){
       </Drawer>
 
       {/* Bottom - Ação rápida */}
-      <Drawer open={d.open&&d.id==="bottom"} onClose={close} title="Ação rápida" subtitle="Atribuir responsável" side="bottom" width={280}
+      <Drawer open={d.open&&d.id==="bottom"} onClose={close} side="bottom" width={280}
+        header={<HeroHeader icon={Ic.pessoa(20,C.amareloOuro)} eyebrow="Atribuição" title="Ação rápida" subtitle="Atribuir responsável" onClose={close} radius="12px 12px 0 0"/>}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar" color={C.verdeFloresta} onClick={close}/></>}>
         <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
           <div style={{flex:1,minWidth:200}}><FInput icon={Ic.pessoa(14)} label="Responsável" placeholder="Selecione o colaborador" required compact/></div>
@@ -435,7 +443,8 @@ export default function DrawerDoc(){
       </Drawer>
 
       {/* Right wide - Edição */}
-      <Drawer open={d.open&&d.id==="wide"} onClose={close} title="Editar fornecedor" subtitle="MRS Logística S.A." side="right" width={560}
+      <Drawer open={d.open&&d.id==="wide"} onClose={close} side="right" width={560}
+        header={<HeroHeader icon={Ic.building(20,C.amareloOuro)} eyebrow="Cadastros" title="Editar fornecedor" subtitle="MRS Logística S.A." onClose={close}/>}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar alterações" color={C.azulProfundo} onClick={close}/></>}>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
@@ -459,7 +468,8 @@ export default function DrawerDoc(){
       </Drawer>
 
       {/* Right narrow - Ocorrência */}
-      <Drawer open={d.open&&d.id==="narrow"} onClose={close} title="Ocorrência #OC-2041" subtitle="Vazamento pátio 47-B" side="right" width={340}
+      <Drawer open={d.open&&d.id==="narrow"} onClose={close} side="right" width={340}
+        header={<HeroHeader icon={Ic.alert(20,C.amareloOuro)} eyebrow="Ocorrências" title="Ocorrência #OC-2041" subtitle="Vazamento pátio 47-B" onClose={close}/>}
         footer={<Btn label="Fechar" outline onClick={close} full/>}>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <Badge variant="critico" dot>Crítica</Badge>
@@ -499,8 +509,8 @@ export default function DrawerDoc(){
               <Copyable label="Drawer Right 420" code={drawerCode("right",420,"Detalhe da requisição","REQ-4025 · Equipamento SSMA")} preview={<Btn label="→ Detalhe (right 420px)" color={C.azulProfundo} onClick={()=>open("right")}/>}>
                 <Btn label="→ Detalhe (right 420px)" color={C.azulProfundo} onClick={()=>open("right")}/>
               </Copyable>
-              <Copyable label="Drawer Left 360" code={drawerCode("left",360,"Filtros avançados","Refine a listagem de resultados")} preview={<Btn label="← Filtros (left 360px)" color={C.azulCeu} onClick={()=>open("left")}/>}>
-                <Btn label="← Filtros (left 360px)" color={C.azulCeu} onClick={()=>open("left")}/>
+              <Copyable label="Drawer Left 400" code={drawerCode("left",400,"Filtros avançados","Refine a listagem de resultados")} preview={<Btn label="← Filtros (left 400px)" color={C.azulCeu} onClick={()=>open("left")}/>}>
+                <Btn label="← Filtros (left 400px)" color={C.azulCeu} onClick={()=>open("left")}/>
               </Copyable>
               <Copyable label="Drawer Bottom 280" code={drawerCode("bottom",280,"Ação rápida","Atribuir responsável")} preview={<Btn label="↑ Ação rápida (bottom 280px)" color={C.amareloEscuro} onClick={()=>open("bottom")}/>}>
                 <Btn label="↑ Ação rápida (bottom 280px)" color={C.amareloEscuro} onClick={()=>open("bottom")}/>
