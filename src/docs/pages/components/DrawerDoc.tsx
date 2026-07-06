@@ -392,7 +392,7 @@ export default function DrawerDoc(){
       </Drawer>
 
       {/* Left - Filtros avançados — padrão trazido do FilterBar do Governança BI (header gov, pills de classificação + selects + datas) */}
-      <Drawer open={d.open&&d.id==="left"} onClose={close} side="left" width={360}
+      <Drawer open={d.open&&d.id==="left"} onClose={close} side="left" width={400}
         header={
           <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"18px 24px",paddingRight:56,overflow:"hidden",background:GOV_GRAD,flexShrink:0}}>
             <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:.06}}/>
