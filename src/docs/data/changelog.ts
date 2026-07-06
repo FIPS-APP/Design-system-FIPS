@@ -27,7 +27,7 @@ export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '0.6.3',
     date: '2026-07-03',
-    title: 'Fix: previews dos padrões Login e Application Shell',
+    title: 'Fix: previews dos padrões Login, Application Shell e Data Listing',
     entries: [
       { type: 'fix', description: 'A doc do padrão Login (`/docs/login`) nunca importava `login-ds.css` — sem ele, `.login-v1-container` renderizava como `display:block` em vez de `flex`, colapsando a coluna direita (card de vidro sem padding/tamanho, empurrado para o rodapé do preview). Import adicionado em `LoginPage.tsx`.' },
       { type: 'fix', description: 'Textos em pt-BR do padrão Login estavam sem acentuação ("Eficiencia", "Colaboracao", "Rota dos principios" etc.) em `LoginDsShell.tsx` e nos exemplos de código copiáveis da doc — corrigido para "Eficiência", "Colaboração", "Rota dos princípios".' },
@@ -41,6 +41,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       { type: 'improvement', description: 'Card "Notas visuais" reformulado: eram 3 caixas cinza pesadas e repetitivas num card que esticava a 642px (alinhado ao card vizinho) com metade vazia embaixo. Agora é `self-start` (altura natural, sem espaço morto) com header de ícone + checklist limpa (checks verdes, divisórias hairline, texto com mais contraste).' },
       { type: 'fix', description: 'Sidebar do mockup (`ShellSidebar`) divergia do sidebar real em dois pontos, encontrados ao comparar com `DocsNeuSidebar.tsx`: gap entre logo e "Design System" era 14px (real: 2px) e o logo tinha `maxWidth:148/minWidth:72` (real: `100/60`) — corrigido para bater exato. Botão "Modo menu" do rodapé era só decorativo (hover, sem estado); adicionado o indicador de estado à direita ("Manual"), igual ao real — sem replicar o popover inteiro de configuração, que é chrome específico do site DS-FIPS.' },
       { type: 'fix', description: 'Header mobile do mockup não seguia o padrão mobile real (que depende de breakpoints CSS `sm:` — inertes dentro do frame "mobile" simulado, já que o navegador de teste continua largo): breadcrumb "Padrões / Home" agora vira a logo colorida `appfips-logo-full.png` (como `DocHeaderPageTrail` faz de verdade), `UserChip` completo (nome + cargo) vira avatar isolado (mesma regra do `UserChip` real), e os 3 ícones do header (Notificações/Tutorial/Tema) voltam a aparecer — o mockup ainda escondia Tutorial/Tema no mobile, um padrão antigo já corrigido no header real nesta mesma sessão.' },
+      { type: 'fix', description: 'Toolbar do padrão Data Listing (`/docs/patterns/data-listing`) tinha 3 campos fora do padrão de altura desktop (32.5px, referência: botão "Período"): a Busca tinha `height:35` e os botões Excel/PDF tinham `34×34` — ambos corrigidos para `32.5px`, alinhando toda a linha (Filtros/Busca/Período/Excel/PDF) na mesma altura.' },
       { type: 'fix', description: 'Na variante tablet do mockup Application Shell, os cards de indicador ficavam colados nos botões do hero (gap real ~2px). Causa: o frame de 620px era curto demais e o flex comprimia o wrapper `overflow-hidden` do hero, clipando-o na altura dos botões. Frame do tablet aumentado para 720px (hero cabe inteiro, sem clip) — o straddle `-mt-6` volta a funcionar e sobra ~32px entre botão e card.' },
     ],
   },

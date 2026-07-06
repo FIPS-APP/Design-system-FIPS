@@ -25,14 +25,17 @@ DrawerOverlay.displayName = 'DrawerOverlay'
 
 const DrawerContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { side?: 'left' | 'right' }
+>(({ className, children, side = 'right', ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-md flex-col border-l border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-elevated)] transition-transform duration-200 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0 sm:p-7',
+        'fixed inset-y-0 z-50 flex h-full w-full max-w-md flex-col bg-[var(--color-surface)] p-6 shadow-[var(--shadow-elevated)] transition-transform duration-200 data-[state=open]:translate-x-0 sm:p-7',
+        side === 'left'
+          ? 'left-0 border-r border-[var(--color-border)] data-[state=closed]:-translate-x-full'
+          : 'right-0 border-l border-[var(--color-border)] data-[state=closed]:translate-x-full',
         className,
       )}
       {...props}

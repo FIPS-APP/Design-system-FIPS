@@ -471,7 +471,7 @@ export default function DataListingDemo() {
                   </div>
                 </div>}
               </div>
-              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:35,padding:"0 12px",background:"var(--color-surface)",border:`1.5px solid ${searchFocused?C.azulProfundo:"#E2E8F0"}`,borderRadius:8,boxShadow:searchFocused?`0 0 0 3px ${accentRing}`:"none",transition:"all 0.18s ease",cursor:"text",flex:1,minWidth:200,maxWidth:320}}>
+              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:32.5,padding:"0 12px",background:"var(--color-surface)",border:`1.5px solid ${searchFocused?C.azulProfundo:"#E2E8F0"}`,borderRadius:8,boxShadow:searchFocused?`0 0 0 3px ${accentRing}`:"none",transition:"all 0.18s ease",cursor:"text",flex:1,minWidth:200,maxWidth:320}}>
                 <span style={{display:"flex",flexShrink:0,opacity:.7}}>{Ic.search(15)}</span>
                 <input value={search} onChange={e=>setSearch(e.target.value)} onFocus={()=>setSearchFocused(true)} onBlur={()=>setSearchFocused(false)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:13,color:C.cinzaEscuro,minWidth:0}}/>
                 {search&&<span onClick={e=>{e.stopPropagation();setSearch("")}} style={{display:"flex",cursor:"pointer",opacity:.5,flexShrink:0}}>{Ic.x(14,C.cinzaChumbo)}</span>}
@@ -533,9 +533,9 @@ export default function DataListingDemo() {
               <div style={{flex:1}}/>
 
               {/* Exportar Excel */}
-              <button title="Exportar para Excel" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:34,height:34,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#1D6F4208";e.currentTarget.style.borderColor="#1D6F4240"}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.excel(16)}</button>
+              <button title="Exportar para Excel" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:32.5,height:32.5,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#1D6F4208";e.currentTarget.style.borderColor="#1D6F4240"}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.excel(16)}</button>
               {/* Exportar PDF */}
-              <button title="Exportar para PDF" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:34,height:34,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background=`${C.danger}08`;e.currentTarget.style.borderColor=`${C.danger}40`}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.pdf(16)}</button>
+              <button title="Exportar para PDF" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:32.5,height:32.5,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background=`${C.danger}08`;e.currentTarget.style.borderColor=`${C.danger}40`}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.pdf(16)}</button>
             </div>
           </div>
 
