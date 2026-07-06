@@ -29,6 +29,7 @@ export const CHANGELOG: ChangelogVersion[] = [
     date: '2026-07-03',
     title: 'Fix: previews dos padrões Login, Application Shell e Data Listing',
     entries: [
+      { type: 'fix', description: 'Campos de seleção (Tipo, Prioridade etc.) nos previews de modal da doc de Dialog (`/docs/components/dialog`) usavam um `FSelect` local — um `<select>` nativo com chevron estático, fora do padrão. Agora o `FSelect` delega para o `Select` governado (dropdown customizado com chevron que rotaciona, check no item selecionado, tokens e dark mode), sem mexer nas chamadas.' },
       { type: 'fix', description: 'A doc do padrão Login (`/docs/login`) nunca importava `login-ds.css` — sem ele, `.login-v1-container` renderizava como `display:block` em vez de `flex`, colapsando a coluna direita (card de vidro sem padding/tamanho, empurrado para o rodapé do preview). Import adicionado em `LoginPage.tsx`.' },
       { type: 'fix', description: 'Textos em pt-BR do padrão Login estavam sem acentuação ("Eficiencia", "Colaboracao", "Rota dos principios" etc.) em `LoginDsShell.tsx` e nos exemplos de código copiáveis da doc — corrigido para "Eficiência", "Colaboração", "Rota dos princípios".' },
       { type: 'fix', description: 'Preview do playground ficava esticado a `100svh` (herdado do `.login-v1-container` real, pensado pra tela cheia do app consumidor) — dentro do card da doc isso significava ~1000px de altura. Adicionado override escopado (`.login-doc-preview .login-v1-container`) fixando 720px só no preview, sem alterar o componente real.' },

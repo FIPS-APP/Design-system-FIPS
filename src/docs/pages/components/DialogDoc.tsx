@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
+import { Select } from '../../../components/ui/select';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
@@ -256,13 +257,13 @@ function FSelect({label,options=[],value,icon}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:4}}>
       {label&&<label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12}}>{label}</label>}
-      <div style={{display:"flex",alignItems:"center",gap:8,height:36,padding:"0 12px",border:`1px solid ${C.inputBorder}`,borderRadius:12,background:C.branco,boxShadow:FIELD_BASE_SHADOW,transition:"all .2s"}}>
-        {icon&&<span style={{display:"flex",flexShrink:0,color:C.textMuted}}>{icon}</span>}
-        <select defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,appearance:"none",WebkitAppearance:"none",cursor:"pointer"}} onFocus={e=>fieldFocus(e.target.parentElement)} onBlur={e=>fieldBlur(e.target.parentElement)}>
-          {options.map(o=><option key={o}>{o}</option>)}
-        </select>
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style={{opacity:.45,flexShrink:0}}><path d="M6 8l4 4 4-4" stroke={C.textMuted} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-      </div>
+      <Select
+        density="compact"
+        aria-label={typeof label==="string"?label:undefined}
+        defaultValue={value??options[0]}
+        leftIcon={icon}
+        options={options.map(o=>({value:o,label:o}))}
+      />
     </div>
   );
 }

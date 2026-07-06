@@ -25,6 +25,8 @@ export interface ModalProps {
   hero?: boolean
   /** Rótulo dourado uppercase acima do título. Só tem efeito com `hero`. */
   eyebrow?: ReactNode
+  /** Remove o padding do corpo (`px-6 py-5`); o conteúdo controla o próprio espaçamento. */
+  noPadBody?: boolean
 }
 
 const sizeVariants = {
@@ -55,6 +57,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       headerIcon: HeaderIcon,
       hero = false,
       eyebrow,
+      noPadBody = false,
     },
     ref,
   ) => {
@@ -126,7 +129,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             </DialogHeader>
           ))}
           {body.length > 0 ? (
-            <div className="flex-1 overflow-y-auto px-6 py-5">{body}</div>
+            <div className={cn('flex-1 overflow-y-auto', noPadBody ? 'p-0' : 'px-6 py-5')}>{body}</div>
           ) : null}
           {footers}
         </DialogContent>
