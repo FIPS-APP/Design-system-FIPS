@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '../../lib/cn'
 
-export type FieldDensity = 'default' | 'compact'
+export type FieldDensity = 'default' | 'compact' | 'dense'
 export type FieldInset = 'none' | 'control' | 'icon'
 
 type FieldContextValue = {
@@ -17,6 +17,7 @@ const FieldContext = React.createContext<FieldContextValue>({
 const fieldGapClasses: Record<FieldDensity, string> = {
   default: 'gap-1.5',
   compact: 'gap-1',
+  dense: 'gap-1',
 }
 
 const fieldTextOffsetClasses: Record<FieldDensity, Record<FieldInset, string>> = {
@@ -26,6 +27,11 @@ const fieldTextOffsetClasses: Record<FieldDensity, Record<FieldInset, string>> =
     icon: 'ml-11',
   },
   compact: {
+    none: '',
+    control: 'ml-3',
+    icon: 'ml-9',
+  },
+  dense: {
     none: '',
     control: 'ml-3',
     icon: 'ml-9',
@@ -58,7 +64,7 @@ const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(({ classN
       ref={ref}
       className={cn(
         'block font-semibold',
-        density === 'compact'
+        density !== 'default'
           ? 'text-xs leading-4 text-[var(--color-fg)]'
           : 'text-[0.95rem] leading-5 uppercase tracking-[0.02em] text-[var(--color-fg-muted)]',
         fieldTextOffsetClasses[density][inset],

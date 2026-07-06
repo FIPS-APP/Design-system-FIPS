@@ -70,7 +70,8 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const wrapRef = useRef<HTMLDivElement>(null)
     const [hi, setHi] = useState(-1)
 
-    const isCompact = density === 'compact'
+    const isDense = density === 'dense'
+    const isCompact = density === 'compact' || isDense
     const isInvalid = props['aria-invalid'] === true || props['aria-invalid'] === 'true'
 
     // Close on outside click
@@ -111,7 +112,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           onClick={() => !disabled && setOpen(!open)}
           className={cn(
             'flex w-full items-center gap-2 rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-all duration-200 hover:border-[var(--color-border)]/80 focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:border-[#3a3a3a] dark:bg-[#252525] dark:hover:border-[#4a4a4a] dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/20',
-            isCompact ? 'h-9 px-3 text-sm shadow-sm' : 'h-12 px-4 text-[1.08rem] shadow-sm',
+            isCompact ? cn(isDense ? 'h-8' : 'h-9', 'px-3 text-sm shadow-sm') : 'h-12 px-4 text-[1.08rem] shadow-sm',
             leftIcon && (isCompact ? 'pl-9' : 'pl-11'),
             open && cn('border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20 rounded-b-none', 'dark:border-[#93BDE4] dark:ring-[#93BDE4]/20'),
             isInvalid && 'border-[var(--color-danger)]/70 focus-visible:border-[var(--color-danger)] focus-visible:ring-[var(--color-danger)]/20',

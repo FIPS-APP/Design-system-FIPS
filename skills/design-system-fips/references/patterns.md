@@ -298,6 +298,8 @@ Padrão canônico para telas com muitos filtros (dashboards, analytics). Impleme
 
 Demo viva (só o drawer, sem a barra de chips) em `src/docs/pages/components/DrawerDoc.tsx` — variante "Filtros avançados" (`side="left"`). `PillFilter` lá é `PillFilterGroup`; cores semânticas de Status/Prioridade reusam os mesmos tokens hex de `DataListingDemo.tsx` (`PRIO_COLOR`).
 
+**Divergência conhecida (Departamento/Segmento):** a implementação real (Governança BI) usa `Select` governado (`density="compact"`, 36px) para os campos "de muitas opções" dentro do drawer. Na demo do DS-FIPS, `Select` governado não tem variante de 32.5px e a regra `no-visual-overrides` proíbe forçar `h-` nele — então Departamento/Segmento usam um `ChipSelect` local (mesmo padrão do chip da toolbar: dropdown com radio) só para bater a altura com os campos de data (`FInput`, 32.5px) do mesmo drawer. Ao portar este padrão para uma app real (não a doc), prefira `Select` governado nesses campos, como no Governança BI — o `ChipSelect` aqui é uma acomodação específica do demo, não uma mudança na recomendação.
+
 ### Barra de chips
 
 Faixa-card (`flex flex-wrap items-center gap-2.5 rounded-[10px_10px_10px_18px] border border-border bg-card p-3 shadow-[var(--shadow-card)] sm:px-4`). Zonas, nesta ordem: **Filtros** (abre o drawer) → **Busca** (`flex-1`, ocupa o vão) → **chips** (Área · Abrangência · Período) → contador `N de M` → **PDF** (`ml-auto`). Todo controle tem **32.5px** de altura (`h-[32.5px]`).

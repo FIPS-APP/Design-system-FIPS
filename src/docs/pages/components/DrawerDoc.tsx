@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
@@ -98,11 +98,12 @@ function Drawer({open,onClose,title,subtitle,header,children,footer,side="right"
 }
 
 /* ═══════════════════════════════════════════ MINI COMPONENTS ═══════════════════════════════════════════ */
-function FInput({label,placeholder,value,required,compact,icon,type="text",onChange}){
+function FInput({label,placeholder,value,required,compact,icon,type="text",onChange,height}){
+  const h=height??(compact?30:35);
   return(
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:7,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}
-      <div style={{display:"flex",alignItems:"center",gap:8,height:compact?30:35,padding:"0 12px",border:`1.5px solid ${C.inputBorder}`,borderRadius:8,background:C.branco,transition:"all .18s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,height:h,padding:"0 12px",border:`1.5px solid ${C.inputBorder}`,borderRadius:8,background:C.branco,transition:"all .18s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
         {icon&&<span style={{display:"flex",flexShrink:0,opacity:.5}}>{icon}</span>}
         <input type={type} placeholder={placeholder} defaultValue={onChange?undefined:value} value={onChange?value:undefined} onChange={onChange?e=>onChange(e.target.value):undefined} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:compact?12:13,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>e.target.parentElement.style.borderColor=C.azulProfundo} onBlur={e=>e.target.parentElement.style.borderColor=C.inputBorder}/>
       </div>
@@ -143,6 +144,41 @@ function FieldLabel({icon,children}){
     <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:2}}>
       {icon&&<span style={{display:"flex",opacity:.6}}>{icon}</span>}
       <span style={{fontSize:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}>{children}</span>
+    </div>
+  );
+}
+/* Chip de filtro — 32.5px (padrão da toolbar/Data Listing, mesmo do ChipSelect do Governança BI).
+   Dropdown custom com radio, prefixo mudo + valor bold. Usar em filtros; formulário usa <Select> (h-9/h-12). */
+function ChipSelect({icon,label,options=[],value,onChange}){
+  const [open,setOpen]=useState(false);
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!open)return;
+    const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};
+    document.addEventListener("mousedown",h);
+    return()=>document.removeEventListener("mousedown",h);
+  },[open]);
+  return(
+    <div ref={ref} style={{position:"relative"}}>
+      <button type="button" onClick={()=>setOpen(v=>!v)} style={{display:"flex",width:"100%",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,color:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${open?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,boxShadow:open?`0 0 0 2px ${C.azulProfundo}1F`:"none",transition:"all .15s"}}>
+        {icon&&<span style={{display:"flex",flexShrink:0,opacity:.6}}>{icon}</span>}
+        <span style={{color:C.cinzaChumbo,flexShrink:0}}>{label}:</span>
+        <span style={{flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"left",fontWeight:700,color:C.cinzaEscuro}}>{value}</span>
+        <svg width="10" height="10" viewBox="0 0 20 20" fill="none" style={{flexShrink:0,transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}><path d="M6 8l4 4 4-4" stroke={C.cinzaChumbo} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </button>
+      {open&&(
+        <div role="listbox" style={{position:"absolute",left:0,top:"calc(100% + 6px)",zIndex:50,minWidth:"100%",maxHeight:280,overflowY:"auto",background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"8px 8px 8px 14px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",padding:"6px 0"}}>
+          {options.map(o=>{
+            const active=o===value;
+            return(
+              <div key={o} role="option" aria-selected={active} onClick={()=>{onChange(o);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 14px",fontSize:11,fontWeight:active?700:500,color:active?C.azulProfundo:C.cinzaEscuro,cursor:"pointer",background:active?`${C.azulProfundo}10`:"transparent",transition:"background .12s"}} onMouseEnter={e=>{if(!active)e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{if(!active)e.currentTarget.style.background="transparent"}}>
+                <span style={{display:"flex",flexShrink:0,alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",border:`1.5px solid ${active?C.azulProfundo:C.cardBorder}`}}>{active&&<span style={{width:6,height:6,borderRadius:"50%",background:C.azulProfundo}}/>}</span>
+                <span style={{flex:1}}>{o}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -318,11 +354,13 @@ export default function DrawerDoc(){
   const open=(id)=>setD({open:true,id});
   const close=()=>setD({open:false,id:null});
 
-  /* Filtros avançados — pills de classificação (Status/Prioridade) */
+  /* Filtros avançados — pills de classificação (Status/Prioridade) + chips (Departamento/Segmento) */
   const [filtroStatus,setFiltroStatus]=useState(null);
   const [filtroPrioridade,setFiltroPrioridade]=useState(null);
-  const filtrosAtivos=[filtroStatus,filtroPrioridade].filter(Boolean).length;
-  const limparFiltros=()=>{setFiltroStatus(null);setFiltroPrioridade(null)};
+  const [filtroDepto,setFiltroDepto]=useState("Todos");
+  const [filtroSegmento,setFiltroSegmento]=useState("Todos");
+  const filtrosAtivos=[filtroStatus,filtroPrioridade,filtroDepto!=="Todos"?filtroDepto:null,filtroSegmento!=="Todos"?filtroSegmento:null].filter(Boolean).length;
+  const limparFiltros=()=>{setFiltroStatus(null);setFiltroPrioridade(null);setFiltroDepto("Todos");setFiltroSegmento("Todos")};
 
   return(
     <PlaygroundProvider>
@@ -378,11 +416,11 @@ export default function DrawerDoc(){
             <PillFilterGroup options={[{label:"Baixa",color:C.cinzaChumbo},{label:"Média",color:C.azulClaro},{label:"Alta",color:C.amareloEscuro},{label:"Urgente",color:C.danger}]} value={filtroPrioridade} onChange={setFiltroPrioridade}/>
           </div>
           <div style={{height:1,background:C.cardBorder}}/>
-          <FSelect icon={Ic.building(14)} label="Departamento" options={["Todos","Operações","Logística","TI","SSMA","RH"]} value="Todos" compact/>
-          <FSelect icon={Ic.tag(14)} label="Segmento" options={["Todos","Grãos","Contêiner","Granel","Carga geral"]} value="Todos" compact/>
+          <ChipSelect icon={Ic.building(14)} label="Departamento" options={["Todos","Operações","Logística","TI","SSMA","RH"]} value={filtroDepto} onChange={setFiltroDepto}/>
+          <ChipSelect icon={Ic.tag(14)} label="Segmento" options={["Todos","Grãos","Contêiner","Granel","Carga geral"]} value={filtroSegmento} onChange={setFiltroSegmento}/>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-            <FInput icon={Ic.calendar(14)} label="Período de" type="date" compact/>
-            <FInput icon={Ic.calendar(14)} label="Período até" type="date" compact/>
+            <FInput icon={Ic.calendar(14)} label="Período de" type="date" height={32.5}/>
+            <FInput icon={Ic.calendar(14)} label="Período até" type="date" height={32.5}/>
           </div>
         </div>
       </Drawer>
