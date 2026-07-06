@@ -204,17 +204,17 @@ const stacks: StackItem[] = [
 
   /* ── Dashboard ── */
   {
-    name: "Recharts",
+    name: "Apache ECharts",
     icon: LayoutDashboard,
     color: "#22C55E",
-    url: "https://recharts.org",
+    url: "https://echarts.apache.org",
     category: "dashboard",
-    why: "Graficos React declarativos baseados em D3. API por composicao — cada eixo, tooltip e serie e um componente. Responsivo e animado por padrao. Usado nos dashboards operacionais FIPS.",
+    why: "Biblioteca de visualização da Apache (open-source, originada no Baidu) que renderiza em Canvas ou SVG sobre o motor ZRender. Cobre dezenas de tipos de gráfico — de linha/barra/pizza a heatmap, sankey, treemap, gauge e mapas — configurados por um único objeto option. Performática com grandes volumes de dados e rica em interação (dataZoom, tooltip, brush). Adotada como biblioteca de gráficos dos dashboards operacionais FIPS; no React entra via echarts-for-react ou init manual (ref + useEffect + resize).",
     highlights: [
-      "Composicao declarativa (BarChart, LineChart, etc.)",
-      "Responsivo com ResponsiveContainer",
-      "Tooltips e legends customizaveis",
-      "Animacoes de entrada/saida nativas",
+      "Configuração declarativa por um objeto option (setOption)",
+      "Renderização Canvas ou SVG via ZRender — leve e performática",
+      "Dezenas de tipos: linha, barra, pizza, heatmap, sankey, gauge, mapas, 3D",
+      "Interação nativa: dataZoom, tooltip, brush, legend e animações",
     ],
   },
 
@@ -441,7 +441,7 @@ export default function StacksPage(){
               {[
                 { layer:"Frontend", items:"React 19 + TypeScript + Tailwind 4 + Vite 8", color:C.azulProfundo, icon: Gauge },
                 { layer:"Design System", items:"DS FIPS (este projeto) — tokens, componentes, padroes", color:C.amareloOuro, icon: Palette },
-                { layer:"Dashboard", items:"Recharts + Framer Motion + padroes de data viz", color:"#22C55E", icon: LayoutDashboard },
+                { layer:"Dashboard", items:"Apache ECharts + Framer Motion + padroes de data viz", color:"#22C55E", icon: LayoutDashboard },
                 { layer:"Backend", items:"Node.js + Supabase + PostgreSQL + APIs REST", color:C.azulCeu, icon: Terminal },
                 { layer:"Infra", items:"AWS + Docker Swarm + Traefik + Evolution API", color:C.amareloEscuro, icon: Cloud },
               ].map((l,i,arr)=>(
