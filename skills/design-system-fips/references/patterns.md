@@ -292,6 +292,33 @@ Não faça:
 - export como botão genérico de texto em vez do par de ícones Excel/PDF
 - faixa-stripe lateral colorida em cards (padrão proibido)
 
+## Filtros avançados (barra de chips + drawer)
+
+Padrão canônico para telas com muitos filtros (dashboards, analytics). Implementação de referência: `Governanca_BI/src/pages/KpiDashboardPage.tsx` (`FilterBar`, `ChipSelect`, `PeriodField`, `PillFilter`, `SearchField`). Evolui a "Toolbar canônica" (Data Listing) quando os filtros passam de ~4.
+
+### Barra de chips
+
+Faixa-card (`flex flex-wrap items-center gap-2.5 rounded-[10px_10px_10px_18px] border border-border bg-card p-3 shadow-[var(--shadow-card)] sm:px-4`). Zonas, nesta ordem: **Filtros** (abre o drawer) → **Busca** (`flex-1`, ocupa o vão) → **chips** (Área · Abrangência · Período) → contador `N de M` → **PDF** (`ml-auto`). Todo controle tem **32.5px** de altura (`h-[32.5px]`).
+
+**Chip** (`ChipSelect`/`PeriodField`/botão Filtros — mesmo tamanho): `inline-flex items-center gap-1.5 rounded-lg border bg-[var(--color-surface)] px-3 py-[7px] text-[11px] font-semibold shadow-sm`; aberto = `border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20`. Mostra rótulo mudo prefixado + valor bold (`Área: Todos`, `Período: Últimos 30 dias`). Dropdown ancorado `rounded-[8px_8px_8px_14px]` com itens **radio** (aro 14px, ponto 6px azul); item ativo `bg-[var(--color-primary)]/8 font-bold text-[var(--color-primary)]`.
+
+**Busca** (`SearchField`): `flex h-[32.5px] flex-1 items-center gap-2 rounded-lg border bg-[var(--color-surface)] px-3` + lupa à esquerda + `X` pra limpar quando há texto. `flex-1` mata o espaço vazio da barra.
+
+**Recolhimento progressivo** — os chips somem um a um da direita conforme a tela estreita, e reaparecem no drawer no mesmo breakpoint: Período `hidden xl:block`, Abrangência `hidden lg:block`, Área `hidden md:block`. Abaixo de `md` a barra fica só **Filtros + Busca + PDF**.
+
+### Drawer de Filtros
+
+`Filtros` abre um `Drawer side="left"` (cobre a sidebar, ganha largura). `DrawerContent` **precisa** de `className="… p-0 sm:p-0"` — só `p-0` deixa o `sm:p-7` (28px) do base como moldura fantasma (ver gotcha em Modal Workflow). Header hero = mesmo do `WorkspaceFormDialog` (tile âmbar, eyebrow, título, subtítulo, X próprio; `showCloseButton={false}`). Miolo `space-y-4 px-6 py-5 overflow-y-auto` (1 coluna): campos recolhidos da barra no topo → `PillFilter` (Status/Criticidade/Risco/Nível/Método) → `Select` para os de muitas opções (Tipo/Frequência/Workspace/Fonte/Responsável). Rodapé fixo `bg-[var(--color-surface-muted)]/70 px-6 py-4`: `Limpar tudo` + `Ver N BIs`.
+
+**`PillFilter`** — filtro segmentado single-select para campos de poucas opções semânticas: pills `rounded-full border px-2.5 py-1 text-[11px] font-semibold`. Ativo com cor = fundo cheio da cor semântica + texto branco; inativo com cor = dot colorido (escaneável de relance); "Todos" e campos sem cor = azul primário. Cor reusa o mapa dos badges/charts (`success`/`danger`/`accent-strong`). Preferir pill a dropdown quando há ≤6 opções curtas; dropdown (`Select`) só para muitas opções ou labels longos.
+
+Não faça:
+
+- chips da barra em tamanhos diferentes — todos 32.5px, mude no único `chipTriggerCls`
+- recolher todos os chips no mesmo breakpoint — é um a um (md/lg/xl)
+- `Select` de formulário (h-12) na barra — usar o chip (`ChipSelect`)
+- esquecer `sm:p-0` no `DrawerContent`/`DialogContent` (moldura de 28–32px em desktop)
+
 ## Form Workspace
 
 Fonte: `src/docs/pages/patterns/FormWorkspaceDemo.tsx`
@@ -313,6 +340,12 @@ Regras:
 - títulos claros, resumo curto e CTA inequívoco
 - overlays com `--shadow-elevated`
 - não transformar fluxo longo em modal único se a tarefa exigir navegação complexa
+
+### Header hero + form dialog (padrão canônico)
+
+Implementação de referência REAL (copiar verbatim, não improvisar): `Governanca_BI/src/components/WorkspaceFormDialog.tsx`. Todo modal/drawer com título usa **header hero**, não o header branco simples. Estrutura: `Dialog`+`DialogContent` direto, `className="max-w-* gap-0 overflow-hidden rounded-[12px_12px_12px_24px] p-0 sm:p-0 [&>button]:hidden"`. Header inline: faixa gradiente gov (`linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`), **tile âmbar** `h-11 w-11 rounded-[11px]` (`bg color-mix(in srgb, var(--color-accent) 10%, transparent)`, borda `accent 19%`, ícone `accent` — NÃO glass branco) + eyebrow dourado uppercase (`accent-strong`) + título branco 21px (Saira Expanded) + subtítulo `white/65`, X próprio `right-4 top-5` (`bg-white/8`). Body `space-y-4 px-6 py-5`, campos `Field density="compact"` + `Input/Textarea density="compact"` com `leftIcon`. Footer `bg-[var(--color-surface-muted)]/70 px-6 py-4`. O componente `Modal` (DS-FIPS+GovBI) tem props `hero`/`eyebrow`/`noPadBody`/`showCloseButton` para o mesmo visual sem repetir o markup.
+
+**Gotcha do padding-fantasma:** `DialogContent` tem `sm:p-8` e `DrawerContent` tem `sm:p-7` no base. Passar só `p-0` **não** remove (variante responsive; twMerge não funde com `p-0`) → moldura de 28–32px em volta em desktop. **Sempre `p-0 sm:p-0`.** Sintoma: header hero com margem branca em vez de ir borda-a-borda.
 
 ## Hero
 

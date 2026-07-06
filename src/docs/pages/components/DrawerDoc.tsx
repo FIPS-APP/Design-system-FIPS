@@ -2,10 +2,13 @@
 import { useState, useEffect } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
+import { Select } from '../../../components/ui/select';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"#CBD5E1"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
+/* Gradiente gov 3-stops — mesma linguagem do header do Modal (DialogDoc), agora também no Drawer "Filtros avançados" */
+const GOV_GRAD="linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)";
 
 /* ═══════════════════════════════════════════ ICONS ═══════════════════════════════════════════ */
 const Ic={
@@ -37,7 +40,7 @@ function Badge({variant="default",children,dot,size="md"}){const v=BV[variant]||
 /* ═══════════════════════════════════════════
    DRAWER COMPONENT
    ═══════════════════════════════════════════ */
-function Drawer({open,onClose,title,subtitle,children,footer,side="right",width=420}){
+function Drawer({open,onClose,title,subtitle,header,children,footer,side="right",width=420}){
   const [visible,setVisible]=useState(false);
   const [animIn,setAnimIn]=useState(false);
 
@@ -75,14 +78,16 @@ function Drawer({open,onClose,title,subtitle,children,footer,side="right",width=
     <div style={{position:"fixed",inset:0,zIndex:1000}}>
       <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.35)",opacity:animIn?1:0,transition:"opacity .3s",cursor:"pointer"}}/>
       <div style={panelStyle}>
-        {/* Header */}
-        <div style={{padding:"18px 24px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
-          <div>
-            <h2 style={{fontSize:16,fontWeight:700,color:C.cinzaEscuro,margin:0,fontFamily:Fn.title}}>{title}</h2>
-            {subtitle&&<p style={{fontSize:12,color:C.cinzaChumbo,margin:"2px 0 0",fontFamily:Fn.body}}>{subtitle}</p>}
+        {/* Header — customizável via `header` (ex.: painel gov com ícone/eyebrow); default = título/subtítulo simples */}
+        {header??(
+          <div style={{padding:"18px 24px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
+            <div>
+              <h2 style={{fontSize:16,fontWeight:700,color:C.cinzaEscuro,margin:0,fontFamily:Fn.title}}>{title}</h2>
+              {subtitle&&<p style={{fontSize:12,color:C.cinzaChumbo,margin:"2px 0 0",fontFamily:Fn.body}}>{subtitle}</p>}
+            </div>
+            <span onClick={onClose} style={{display:"flex",cursor:"pointer",opacity:.5,padding:4,borderRadius:4,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.opacity=".5";e.currentTarget.style.background="transparent"}}>{Ic.x(18,C.cinzaChumbo)}</span>
           </div>
-          <span onClick={onClose} style={{display:"flex",cursor:"pointer",opacity:.5,padding:4,borderRadius:4,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.opacity=".5";e.currentTarget.style.background="transparent"}}>{Ic.x(18,C.cinzaChumbo)}</span>
-        </div>
+        )}
         {/* Body */}
         <div style={{flex:1,overflowY:"auto",padding:"20px 24px"}}>{children}</div>
         {/* Footer */}
@@ -93,13 +98,13 @@ function Drawer({open,onClose,title,subtitle,children,footer,side="right",width=
 }
 
 /* ═══════════════════════════════════════════ MINI COMPONENTS ═══════════════════════════════════════════ */
-function FInput({label,placeholder,value,required,compact,icon}){
+function FInput({label,placeholder,value,required,compact,icon,type="text",onChange}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:7,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}
       <div style={{display:"flex",alignItems:"center",gap:8,height:compact?30:35,padding:"0 12px",border:`1.5px solid ${C.inputBorder}`,borderRadius:8,background:C.branco,transition:"all .18s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
         {icon&&<span style={{display:"flex",flexShrink:0,opacity:.5}}>{icon}</span>}
-        <input placeholder={placeholder} defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:compact?12:13,color:C.cinzaEscuro,minWidth:0}} onFocus={e=>e.target.parentElement.style.borderColor=C.azulProfundo} onBlur={e=>e.target.parentElement.style.borderColor=C.inputBorder}/>
+        <input type={type} placeholder={placeholder} defaultValue={onChange?undefined:value} value={onChange?value:undefined} onChange={onChange?e=>onChange(e.target.value):undefined} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:compact?12:13,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>e.target.parentElement.style.borderColor=C.azulProfundo} onBlur={e=>e.target.parentElement.style.borderColor=C.inputBorder}/>
       </div>
     </div>
   );
@@ -108,13 +113,36 @@ function FSelect({label,options=[],value,compact,icon}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:7}}>{label}</label>}
-      <div style={{display:"flex",alignItems:"center",gap:8,height:compact?30:35,padding:"0 12px",border:`1.5px solid ${C.inputBorder}`,borderRadius:8,background:C.branco}}>
-        {icon&&<span style={{display:"flex",flexShrink:0,opacity:.5}}>{icon}</span>}
-        <select defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:compact?12:13,color:C.cinzaEscuro,appearance:"none",WebkitAppearance:"none",cursor:"pointer"}}>
-          {options.map(o=><option key={o} value={o}>{o}</option>)}
-        </select>
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style={{opacity:.4,flexShrink:0}}><path d="M6 8l4 4 4-4" stroke={C.cinzaChumbo} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-      </div>
+      <Select density="compact" aria-label={typeof label==="string"?label:undefined} defaultValue={value??options[0]} leftIcon={icon} options={options.map(o=>({value:o,label:o}))}/>
+    </div>
+  );
+}
+/* Pill 1-clique — filtros de classificação (Status, Prioridade). Padrão do FilterBar Governança BI
+   (skill patterns.md "Filtros avançados"): ativo com cor = fundo cheio + texto branco; inativo com
+   cor = dot colorido (escaneável de relance); sem cor = azul primário. */
+function PillFilterGroup({options=[],value,onChange}){
+  return(
+    <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+      {options.map(o=>{
+        const label=typeof o==="string"?o:o.label;
+        const semantic=typeof o==="string"?null:o.color;
+        const active=label===value;
+        const c=semantic||C.azulProfundo;
+        return(
+          <button key={label} type="button" onClick={()=>onChange(active?null:label)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 12px",fontSize:12,fontWeight:600,borderRadius:20,border:`1.5px solid ${active?c:C.cardBorder}`,background:active?c:C.branco,color:active?C.branco:C.cinzaChumbo,cursor:"pointer",transition:"all .15s",fontFamily:Fn.body}}>
+            {!active&&semantic&&<span style={{width:7,height:7,borderRadius:"50%",background:semantic,flexShrink:0}}/>}
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+function FieldLabel({icon,children}){
+  return(
+    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:2}}>
+      {icon&&<span style={{display:"flex",opacity:.6}}>{icon}</span>}
+      <span style={{fontSize:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}>{children}</span>
     </div>
   );
 }
@@ -290,6 +318,12 @@ export default function DrawerDoc(){
   const open=(id)=>setD({open:true,id});
   const close=()=>setD({open:false,id:null});
 
+  /* Filtros avançados — pills de classificação (Status/Prioridade) */
+  const [filtroStatus,setFiltroStatus]=useState(null);
+  const [filtroPrioridade,setFiltroPrioridade]=useState(null);
+  const filtrosAtivos=[filtroStatus,filtroPrioridade].filter(Boolean).length;
+  const limparFiltros=()=>{setFiltroStatus(null);setFiltroPrioridade(null)};
+
   return(
     <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
@@ -319,18 +353,36 @@ export default function DrawerDoc(){
         </div>
       </Drawer>
 
-      {/* Left - Filtros */}
-      <Drawer open={d.open&&d.id==="left"} onClose={close} title="Filtros avançados" subtitle="Refine a listagem de resultados" side="left" width={360}
-        footer={<><Btn label="Limpar filtros" outline onClick={close}/><Btn label="Aplicar" color={C.azulProfundo} onClick={close}/></>}>
-        <div style={{display:"flex",flexDirection:"column",gap:14}}>
-          <FSelect icon={Ic.status(14)} label="Status" options={["Todos","Ativo","Pendente","Inativo","Vencido"]} value="Todos" compact/>
+      {/* Left - Filtros avançados — padrão trazido do FilterBar do Governança BI (header gov, pills de classificação + selects + datas) */}
+      <Drawer open={d.open&&d.id==="left"} onClose={close} side="left" width={360}
+        header={
+          <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"18px 24px",paddingRight:56,overflow:"hidden",background:GOV_GRAD,flexShrink:0}}>
+            <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:.06}}/>
+            <span style={{position:"relative",display:"flex",flexShrink:0,width:44,height:44,borderRadius:11,alignItems:"center",justifyContent:"center",background:`${C.amareloOuro}1A`,border:`1px solid ${C.amareloOuro}30`}}>{Ic.filter(20,C.amareloOuro)}</span>
+            <div style={{position:"relative",minWidth:0,flex:1}}>
+              <span style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title}}>Requisições</span>
+              <h2 style={{margin:0,fontSize:20,fontWeight:700,lineHeight:1.2,color:C.branco,fontFamily:Fn.title}}>Filtros avançados</h2>
+              <p style={{margin:"2px 0 0",fontSize:12,color:"rgba(255,255,255,.68)",fontFamily:Fn.body}}>{filtrosAtivos>0?`${filtrosAtivos} ${filtrosAtivos===1?"filtro ativo":"filtros ativos"}`:"Refine a listagem de resultados"}</p>
+            </div>
+            <span onClick={close} style={{position:"absolute",top:18,right:18,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",transition:"all .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>{Ic.x(16,"currentColor")}</span>
+          </div>
+        }
+        footer={<><Btn label="Limpar filtros" outline onClick={limparFiltros}/><Btn label="Aplicar filtros" color={C.azulProfundo} onClick={close}/></>}>
+        <div style={{display:"flex",flexDirection:"column",gap:16}}>
+          <div>
+            <FieldLabel icon={Ic.status(13)}>Status</FieldLabel>
+            <PillFilterGroup options={[{label:"Ativo",color:C.verdeFloresta},{label:"Pendente",color:C.amareloEscuro},{label:"Inativo",color:"#64748B"},{label:"Vencido",color:C.danger}]} value={filtroStatus} onChange={setFiltroStatus}/>
+          </div>
+          <div>
+            <FieldLabel icon={Ic.prioridade(13)}>Prioridade</FieldLabel>
+            <PillFilterGroup options={[{label:"Baixa",color:C.cinzaChumbo},{label:"Média",color:C.azulClaro},{label:"Alta",color:C.amareloEscuro},{label:"Urgente",color:C.danger}]} value={filtroPrioridade} onChange={setFiltroPrioridade}/>
+          </div>
+          <div style={{height:1,background:C.cardBorder}}/>
           <FSelect icon={Ic.building(14)} label="Departamento" options={["Todos","Operações","Logística","TI","SSMA","RH"]} value="Todos" compact/>
           <FSelect icon={Ic.tag(14)} label="Segmento" options={["Todos","Grãos","Contêiner","Granel","Carga geral"]} value="Todos" compact/>
-          <FInput icon={Ic.calendar(14)} label="Período de" placeholder="01/01/2026" compact/>
-          <FInput icon={Ic.calendar(14)} label="Período até" placeholder="31/03/2026" compact/>
-          <FSelect icon={Ic.prioridade(14)} label="Prioridade" options={["Todas","Baixa","Média","Alta","Urgente"]} value="Todas" compact/>
-          <div style={{marginTop:8,padding:"10px 12px",background:`${C.amareloOuro}15`,borderRadius:6,border:`1px solid ${C.amareloOuro}30`}}>
-            <span style={{fontSize:11,color:C.amareloEscuro,fontFamily:Fn.body}}>6 filtros disponíveis. Combine para refinar a busca.</span>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <FInput icon={Ic.calendar(14)} label="Período de" type="date" compact/>
+            <FInput icon={Ic.calendar(14)} label="Período até" type="date" compact/>
           </div>
         </div>
       </Drawer>
