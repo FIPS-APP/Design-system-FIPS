@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { X } from 'lucide-react'
+import { X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 
 const Drawer = DialogPrimitive.Root
@@ -82,6 +82,75 @@ const DrawerDescription = React.forwardRef<
 ))
 DrawerDescription.displayName = 'DrawerDescription'
 
+export interface DrawerHeroProps {
+  /** Ícone lucide no tile âmbar. Omitido → só texto. */
+  icon?: LucideIcon
+  /** Rótulo dourado uppercase acima do título (Saira Expanded). */
+  eyebrow?: React.ReactNode
+  title: React.ReactNode
+  description?: React.ReactNode
+  /** aria-label do botão de fechar. */
+  closeLabel?: string
+  className?: string
+}
+
+/**
+ * Header hero institucional FIPS para Drawer — gradiente azul 3-stops, tile âmbar,
+ * eyebrow dourado, título branco 21px e X próprio (glass). Use com
+ * `<DrawerContent showCloseButton={false}>`, pois já traz o próprio DrawerClose.
+ */
+function DrawerHero({
+  icon: Icon,
+  eyebrow,
+  title,
+  description,
+  closeLabel = 'Fechar painel',
+  className,
+}: DrawerHeroProps) {
+  return (
+    <div
+      className={cn('relative flex shrink-0 items-center gap-4 overflow-hidden px-6 py-5 pr-14', className)}
+      style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)' }}
+    >
+      {Icon ? (
+        <span
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] border"
+          style={{
+            background: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
+            borderColor: 'color-mix(in srgb, var(--color-accent) 19%, transparent)',
+            color: 'var(--color-accent)',
+          }}
+        >
+          <Icon className="h-5 w-5" aria-hidden />
+        </span>
+      ) : null}
+      <div className="relative min-w-0 flex-1 space-y-0.5">
+        {eyebrow ? (
+          <span
+            className="font-heading block text-[11px] font-semibold uppercase tracking-[0.14em]"
+            style={{ color: 'var(--color-accent-strong)' }}
+          >
+            {eyebrow}
+          </span>
+        ) : null}
+        <DrawerTitle className="font-heading text-[21px] font-bold leading-[1.15] tracking-[-0.2px] text-white">
+          {title}
+        </DrawerTitle>
+        {description ? (
+          <DrawerDescription className="text-xs leading-snug text-white/65">{description}</DrawerDescription>
+        ) : null}
+      </div>
+      <DrawerClose
+        className="absolute right-4 top-5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/90 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+        aria-label={closeLabel}
+      >
+        <X className="h-4 w-4" aria-hidden />
+      </DrawerClose>
+    </div>
+  )
+}
+DrawerHero.displayName = 'DrawerHero'
+
 export {
   Drawer,
   DrawerPortal,
@@ -90,6 +159,7 @@ export {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
+  DrawerHero,
   DrawerTitle,
   DrawerDescription,
 }

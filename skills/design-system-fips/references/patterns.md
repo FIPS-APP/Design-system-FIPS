@@ -296,6 +296,8 @@ Não faça:
 
 Padrão canônico para telas com muitos filtros (dashboards, analytics). Implementação de referência: `Governanca_BI/src/pages/KpiDashboardPage.tsx` (`FilterBar`, `ChipSelect`, `PeriodField`, `PillFilter`, `SearchField`). Evolui a "Toolbar canônica" (Data Listing) quando os filtros passam de ~4.
 
+Demo viva (só o drawer, sem a barra de chips) em `src/docs/pages/components/DrawerDoc.tsx` — variante "Filtros avançados" (`side="left"`). `PillFilter` lá é `PillFilterGroup`; cores semânticas de Status/Prioridade reusam os mesmos tokens hex de `DataListingDemo.tsx` (`PRIO_COLOR`).
+
 ### Barra de chips
 
 Faixa-card (`flex flex-wrap items-center gap-2.5 rounded-[10px_10px_10px_18px] border border-border bg-card p-3 shadow-[var(--shadow-card)] sm:px-4`). Zonas, nesta ordem: **Filtros** (abre o drawer) → **Busca** (`flex-1`, ocupa o vão) → **chips** (Área · Abrangência · Período) → contador `N de M` → **PDF** (`ml-auto`). Todo controle tem **32.5px** de altura (`h-[32.5px]`).
