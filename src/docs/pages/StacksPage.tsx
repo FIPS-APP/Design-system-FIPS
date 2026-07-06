@@ -209,12 +209,12 @@ const stacks: StackItem[] = [
     color: "#22C55E",
     url: "https://echarts.apache.org",
     category: "dashboard",
-    why: "Biblioteca de visualização da Apache (open-source, originada no Baidu) que renderiza em Canvas ou SVG sobre o motor ZRender. Cobre dezenas de tipos de gráfico — de linha/barra/pizza a heatmap, sankey, treemap, gauge e mapas — configurados por um único objeto option. Performática com grandes volumes de dados e rica em interação (dataZoom, tooltip, brush). Adotada como biblioteca de gráficos dos dashboards operacionais FIPS; no React entra via echarts-for-react ou init manual (ref + useEffect + resize).",
+    why: "Motor de visualizacao que renderiza em Canvas ou SVG, configurado por um unico objeto option. Cobre muito mais tipos de grafico que o Recharts e aguenta grandes volumes de dados sem perder performance. Biblioteca oficial de graficos dos dashboards operacionais FIPS.",
     highlights: [
-      "Configuração declarativa por um objeto option (setOption)",
-      "Renderização Canvas ou SVG via ZRender — leve e performática",
-      "Dezenas de tipos: linha, barra, pizza, heatmap, sankey, gauge, mapas, 3D",
-      "Interação nativa: dataZoom, tooltip, brush, legend e animações",
+      "Configuracao declarativa por um unico objeto option",
+      "Renderiza em Canvas ou SVG pelo motor ZRender",
+      "Dezenas de tipos: linha, barra, heatmap, sankey, gauge, mapas",
+      "Interacao nativa: zoom, tooltip e selecao por brush",
     ],
   },
 
