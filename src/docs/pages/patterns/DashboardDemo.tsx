@@ -3,7 +3,11 @@ import { motion } from "framer-motion";
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown, LuCheck } from "react-icons/lu";
-import { PieChart, Pie, Cell } from "recharts";
+import * as echarts from "echarts/core";
+import { PieChart } from "echarts/charts";
+import { CanvasRenderer } from "echarts/renderers";
+
+echarts.use([PieChart, CanvasRenderer]);
 import { useFipsTheme } from '../../../hooks/useFipsTheme';
 
 const C={azulProfundo:"#004B9B",azulEscuro:"#002A68",azulClaro:"#658EC9",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
@@ -12,7 +16,34 @@ const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono
 
 function JunctionLines({style}:{style?:React.CSSProperties}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
 
-function Donut({pct,color,size=48,stroke=4}:{pct:number,color:string,size?:number,stroke?:number}){const data=[{value:pct},{value:100-pct}];return <PieChart width={size} height={size}><Pie data={data} cx={size/2-1} cy={size/2-1} innerRadius={(size-stroke*2)/2-stroke} outerRadius={(size-stroke)/2} startAngle={90} endAngle={-270} dataKey="value" stroke="none" isAnimationActive={false}><Cell fill={color}/><Cell fill={`${color}18`}/></Pie></PieChart>}
+function Donut({pct,color,size=48,stroke=4}:{pct:number,color:string,size?:number,stroke?:number}){
+  const ref=useRef<HTMLDivElement>(null);
+  const chartRef=useRef<echarts.ECharts|null>(null);
+  useEffect(()=>{
+    if(!ref.current)return;
+    const chart=echarts.init(ref.current,undefined,{width:size,height:size});
+    chartRef.current=chart;
+    return ()=>{chart.dispose();chartRef.current=null};
+  },[size]);
+  useEffect(()=>{
+    const inner=(size-stroke*2)/2-stroke,outer=(size-stroke)/2,c=size/2-1;
+    chartRef.current?.setOption({
+      series:[{
+        type:"pie",
+        radius:[inner,outer],
+        center:[c,c],
+        startAngle:90,
+        silent:true,
+        animation:false,
+        label:{show:false},
+        labelLine:{show:false},
+        itemStyle:{borderWidth:0},
+        data:[{value:pct,itemStyle:{color}},{value:100-pct,itemStyle:{color:`${color}18`}}],
+      }],
+    });
+  },[pct,color,size,stroke]);
+  return <div ref={ref} style={{width:size,height:size}}/>;
+}
 
 const BV_LIGHT: Record<string,{bg:string,color:string,border:string}>={Finalizada:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},Aguardando:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},Recusada:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},"Em análise":{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu}};
 const BV_DARK: Record<string,{bg:string,color:string,border:string}>={Finalizada:{bg:"rgba(0,198,76,0.14)",color:"#8BE5AD",border:"rgba(0,198,76,0.28)"},Aguardando:{bg:"rgba(246,146,30,0.14)",color:"#FDC24E",border:"rgba(246,146,30,0.28)"},Recusada:{bg:"rgba(239,68,68,0.14)",color:"#FCA5A5",border:"rgba(239,68,68,0.28)"},"Em análise":{bg:"rgba(147,189,228,0.14)",color:"#93BDE4",border:"rgba(147,189,228,0.28)"}};
