@@ -434,7 +434,7 @@ function ShellSidebar({
     <aside
       className={cn(
         'flex h-full flex-col text-white',
-        dark ? 'bg-[#1A1A1A] shadow-[4px_0_24px_rgba(0,0,0,0.4)]' : 'bg-[#002a68] shadow-[4px_0_24px_rgba(0,26,64,0.28)]',
+        dark ? 'bg-[#1A1A1A]' : 'bg-[#002a68]',
         drawer ? 'w-[252px]' : collapsed ? 'w-[76px]' : 'w-64',
       )}
     >
