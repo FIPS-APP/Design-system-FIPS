@@ -27,8 +27,9 @@ export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '0.7.0',
     date: '2026-07-06',
-    title: 'Novo padrão: Filtros avançados (drawer)',
+    title: 'Novo padrão: Filtros avançados (drawer + barra de chips)',
     entries: [
+      { type: 'feature', description: 'Barra de Filtros do padrão Dashboard (`/docs/patterns/dashboard`) trocada de um grid de 6 `DSSelect` (boxes rotulados, label acima, 30px) para uma linha de chips (`ChipSelect`, 32.5px, "Label: Valor" inline + dropdown com radio) — mesmo padrão do `FilterBar` real do Governança BI (`KpiDashboardPage.tsx`). Ocupa uma linha só em vez de duas, e os chips com valor ativo ganham destaque de cor (borda/fundo azul).' },
       { type: 'feature', description: 'Drawer "Filtros avançados" (`/docs/components/drawer`) reescrito seguindo o padrão já especificado em `patterns.md` ("Filtros avançados — barra de chips + drawer", referência real: `Governanca_BI/src/pages/KpiDashboardPage.tsx`), que ainda não tinha implementação viva no DS-FIPS. Header gov-gradient com tile âmbar + eyebrow + subtítulo com contador dinâmico de filtros ativos ("N filtros ativos") + botão fechar próprio.' },
       { type: 'feature', description: 'Novo componente local `PillFilterGroup`: filtro segmentado single-select para campos de poucas opções (Status, Prioridade). Ativo com cor = fundo cheio da cor semântica + texto branco; inativo com cor = dot colorido; sem cor = azul primário — exatamente como especificado no spec da skill.' },
       { type: 'fix', description: '`FSelect` local do `DrawerDoc.tsx` (Tipo, UF etc. nos outros 5 drawers de exemplo) delega agora para o `Select` governado, mesma correção já aplicada no `DialogDoc.tsx`.' },

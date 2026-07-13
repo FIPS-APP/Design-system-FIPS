@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
-import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown, LuCheck } from "react-icons/lu";
+import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown } from "react-icons/lu";
 import * as echarts from "echarts/core";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
@@ -79,31 +79,49 @@ function seed(): Row[]{
 }
 
 /* ═══════════════════ DSSelect ═══════════════════ */
-function DSSelect({label,value,onChange,options,placeholder="Todos",icon}:{label?:string,value:string|null,onChange:(v:string|null)=>void,options:string[],placeholder?:string,icon?:React.ReactNode}){
+/* Chip de filtro — 32.5px, dropdown com radio (padrão da toolbar: DataListingDemo/ChipSelect real do Governança BI).
+   Substitui o antigo DSSelect (box rotulado, label acima) na barra de filtros. */
+function ChipSelect({label,value,onChange,options,placeholder="Todos",icon}:{label:string,value:string|null,onChange:(v:string|null)=>void,options:string[],placeholder?:string,icon?:React.ReactNode}){
   const {dark}=useFipsTheme();
   const [open,setOpen]=useState(false);
-  const [hi,setHi]=useState(-1);
   const ref=useRef<HTMLDivElement>(null);
-  useEffect(()=>{const h=(e:MouseEvent)=>{if(ref.current&&!ref.current.contains(e.target as Node))setOpen(false)};document.addEventListener("mousedown",h);return()=>document.removeEventListener("mousedown",h)},[]);
+  useEffect(()=>{
+    if(!open)return;
+    const h=(e:MouseEvent)=>{if(ref.current&&!ref.current.contains(e.target as Node))setOpen(false)};
+    document.addEventListener("mousedown",h);
+    return()=>document.removeEventListener("mousedown",h);
+  },[open]);
   const display=value||placeholder;
-  const bc=open?(dark?"#93BDE4":C.azulProfundo):(dark?"#4A5568":"#CBD5E1");
+  const active=Boolean(value);
+  const accent=dark?"#93BDE4":C.azulProfundo;
   return(
-    <div ref={ref} style={{display:"flex",flexDirection:"column",minWidth:0,position:"relative",zIndex:open?30:1}}>
-      {label&&<label style={{fontSize:11,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginBottom:1,marginLeft:7}}>{label}</label>}
-      <div onClick={()=>setOpen(!open)} style={{display:"flex",alignItems:"center",gap:8,height:30,padding:"0 12px",background:dark?"var(--color-surface)":C.branco,border:`1.5px solid ${bc}`,borderRadius:open?"8px 8px 0 0":8,transition:"all .18s",boxShadow:open?"0 0 0 3px rgba(147,189,228,0.35)":"none",cursor:"pointer",fontFamily:Fn.body,fontSize:12,userSelect:"none"}}>
-        {icon&&<span style={{display:"flex",flexShrink:0,opacity:.55}}>{icon}</span>}
-        <span style={{flex:1,color:value?C.cinzaEscuro:C.textLight,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{display}</span>
-        <LuChevronDown size={14} color={C.cinzaChumbo} style={{flexShrink:0,opacity:.45,transition:"transform .2s",transform:open?"rotate(180deg)":"rotate(0)"}}/>
-      </div>
-      {open&&<div style={{position:"absolute",top:"100%",left:0,right:0,zIndex:20,background:dark?"var(--color-surface)":C.branco,border:`1.5px solid ${dark?"#93BDE4":C.azulProfundo}`,borderTop:"none",borderRadius:"0 0 8px 8px",boxShadow:dark?"0 6px 20px rgba(0,0,0,.3)":"0 6px 20px rgba(0,75,155,.12)",maxHeight:200,overflowY:"auto"}}>
-        <div onClick={()=>{onChange(null);setOpen(false)}} onMouseEnter={()=>setHi(-1)} style={{padding:"6px 14px",paddingLeft:icon?20:14,fontSize:12,fontFamily:Fn.body,color:!value?(dark?"#93BDE4":C.azulProfundo):C.cinzaEscuro,fontWeight:!value?600:400,background:!value?(dark?"rgba(147,189,228,0.14)":C.azulCeuClaro):"transparent",cursor:"pointer"}}>{placeholder}</div>
-        {options.map((o,i)=>{const sel=o===value;return <div key={o} onClick={()=>{onChange(o);setOpen(false)}} onMouseEnter={()=>setHi(i)} onMouseLeave={()=>setHi(-1)} style={{padding:"6px 14px",paddingLeft:icon?20:14,fontSize:12,fontFamily:Fn.body,color:sel?(dark?"#93BDE4":C.azulProfundo):C.cinzaEscuro,fontWeight:sel?600:400,background:sel?(dark?"rgba(147,189,228,0.14)":C.azulCeuClaro):i===hi?C.bg:"transparent",cursor:"pointer",display:"flex",alignItems:"center",gap:8}}>
-          {sel&&<LuCheck size={12} color={dark?"#93BDE4":C.azulProfundo} style={{marginLeft:-14,flexShrink:0}}/>}
-          {o}
-        </div>})}
-      </div>}
+    <div ref={ref} style={{position:"relative"}}>
+      <button type="button" onClick={()=>setOpen(v=>!v)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,color:active?accent:C.cinzaEscuro,background:active?(dark?"rgba(147,189,228,0.10)":C.azulCeuClaro):C.cardBg,border:`1px solid ${open||active?accent:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,boxShadow:open?`0 0 0 2px ${dark?"rgba(147,189,228,.25)":"rgba(0,75,155,.12)"}`:"none",transition:"all .15s",whiteSpace:"nowrap"}}>
+        {icon&&<span style={{display:"flex",flexShrink:0,opacity:.7}}>{icon}</span>}
+        <span style={{color:C.cinzaChumbo,flexShrink:0}}>{label}:</span>
+        <span style={{fontWeight:700}}>{display}</span>
+        <LuChevronDown size={11} color={C.cinzaChumbo} style={{flexShrink:0,transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}/>
+      </button>
+      {open&&(
+        <div role="listbox" style={{position:"absolute",left:0,top:"calc(100% + 6px)",zIndex:50,minWidth:180,maxHeight:280,overflowY:"auto",background:dark?"var(--color-surface)":C.branco,border:`1px solid ${C.cardBorder}`,borderRadius:"8px 8px 8px 14px",boxShadow:dark?"0 12px 36px rgba(0,0,0,.35)":"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",padding:"6px 0"}}>
+          <div onClick={()=>{onChange(null);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 14px",fontSize:11,fontWeight:!value?700:500,color:!value?accent:C.cinzaEscuro,cursor:"pointer",background:!value?(dark?"rgba(147,189,228,.14)":`${C.azulProfundo}10`):"transparent"}}>
+            <ChipRadioDot active={!value} color={accent}/>{placeholder}
+          </div>
+          {options.map(o=>{
+            const sel=o===value;
+            return(
+              <div key={o} onClick={()=>{onChange(o);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 14px",fontSize:11,fontWeight:sel?700:500,color:sel?accent:C.cinzaEscuro,cursor:"pointer",background:sel?(dark?"rgba(147,189,228,.14)":`${C.azulProfundo}10`):"transparent"}}>
+                <ChipRadioDot active={sel} color={accent}/>{o}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
+}
+function ChipRadioDot({active,color}:{active:boolean,color:string}){
+  return <span style={{display:"flex",flexShrink:0,alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",border:`1.5px solid ${active?color:C.cardBorder}`}}>{active&&<span style={{width:6,height:6,borderRadius:"50%",background:color}}/>}</span>;
 }
 
 /* ═══════════════════ PDF Export ═══════════════════ */
@@ -611,13 +629,13 @@ export default function DSFIPSDashboard(){
               {hasFilter&&<button onClick={clearAll} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.cinzaChumbo,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}><LuX size={10} color={C.cinzaChumbo}/> Limpar</button>}
             </div>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:mob?"1fr 1fr 1fr":"repeat(6,1fr)",gap:mob?8:12}}>
-            <DSSelect label="Área / Processo" value={filter.dept} onChange={v=>setF("dept",v)} options={DEPTS} icon={<LuBuilding2 size={14} color={C.cinzaChumbo}/>}/>
-            <DSSelect label="Ano" value={filter.year} onChange={v=>setF("year",v)} options={YEARS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
-            <DSSelect label="Mês" value={filter.month} onChange={v=>setF("month",v)} options={MONTHS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
-            <DSSelect label="Solicitante" value={filter.sol} onChange={v=>setF("sol",v)} options={NAMES} icon={<LuUser size={14} color={C.cinzaChumbo}/>}/>
-            <DSSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>
-            <DSSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+            <ChipSelect label="Área / Processo" value={filter.dept} onChange={v=>setF("dept",v)} options={DEPTS} icon={<LuBuilding2 size={14} color={C.cinzaChumbo}/>}/>
+            <ChipSelect label="Ano" value={filter.year} onChange={v=>setF("year",v)} options={YEARS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
+            <ChipSelect label="Mês" value={filter.month} onChange={v=>setF("month",v)} options={MONTHS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
+            <ChipSelect label="Solicitante" value={filter.sol} onChange={v=>setF("sol",v)} options={NAMES} icon={<LuUser size={14} color={C.cinzaChumbo}/>}/>
+            <ChipSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>
+            <ChipSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>
           </div>
         </div>
         </Copyable>
