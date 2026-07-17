@@ -1,0 +1,57 @@
+{
+  "name": "home",
+  "root": {
+    "id": "el_f4qdxb6",
+    "type": "Container",
+    "props": {
+      "className": "min-h-screen bg-slate-950 text-slate-100 p-8 flex items-center justify-center"
+    },
+    "children": [
+      {
+        "id": "el_bls64yo",
+        "type": "Card",
+        "props": {
+          "className": "max-w-md w-full"
+        },
+        "children": [
+          {
+            "id": "el_wwi73vz",
+            "type": "Heading",
+            "props": {
+              "text": "Bem-vindo",
+              "className": "text-2xl font-bold"
+            },
+            "children": []
+          },
+          {
+            "id": "el_z520874",
+            "type": "Text",
+            "props": {
+              "text": "Sua primeira página visual no Nook.",
+              "className": "text-slate-400 mt-2"
+            },
+            "children": []
+          },
+          {
+            "id": "el_fy126tq",
+            "type": "Input",
+            "props": {
+              "placeholder": "Seu nome",
+              "className": "mt-4"
+            },
+            "children": []
+          },
+          {
+            "id": "el_r8ftvad",
+            "type": "Button",
+            "props": {
+              "text": "Cumprimentar",
+              "className": "mt-4 w-full"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -101,8 +101,8 @@ export function DocLayout() {
         id="docs-app-sidebar"
         data-tour-step="nav-lateral"
         className={cn(
-          'fixed inset-y-0 left-0 z-40 overflow-hidden shadow-[4px_0_32px_rgba(0,26,64,0.36)] transition-[width,transform] duration-300 ease-in-out lg:relative lg:inset-auto lg:overflow-visible',
-          dark ? 'bg-[var(--color-surface-muted)] shadow-none' : 'bg-[#002a68]',
+          'fixed inset-y-0 left-0 z-40 overflow-hidden transition-[width,transform] duration-300 ease-in-out lg:relative lg:inset-auto lg:overflow-visible',
+          dark ? 'bg-[var(--color-surface-muted)]' : 'bg-[#002a68]',
           sidebarCollapsed ? 'w-[68px]' : 'w-64',
           effectiveMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
