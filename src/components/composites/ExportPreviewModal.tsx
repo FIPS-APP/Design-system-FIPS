@@ -269,7 +269,6 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
           fullscreen ? 'max-h-[96vh] max-w-[min(96vw,1400px)]' : 'max-w-4xl',
         )}
       >
-        <div className="relative z-[2] flex max-h-[inherit] min-h-0 flex-col overflow-hidden">
           <DialogHeader className="shrink-0 border-b border-[var(--color-border)] px-6 pt-5 pb-4">
             <div className="flex items-start gap-3 pr-8">
               <DialogIconTile>
@@ -487,7 +486,6 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
               </div>
             </div>
           </DialogFooter>
-        </div>
       </DialogContent>
     </Dialog>
   )
