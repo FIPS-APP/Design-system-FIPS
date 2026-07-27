@@ -181,35 +181,40 @@ Regras:
 ## Data Listing
 
 Fonte: `src/docs/pages/patterns/DataListingDemo.tsx`
-Implementação de referência (port fiel): `src/pages/CatalogPage.tsx` + `src/components/ExportButtons.tsx` (Governança BI).
+Implementação de referência: `src/components/composites/ExportButtons.tsx` + `ListingKpiRow` + `RowActionsMenu`.
 
 Regras:
 
 - barra de busca e filtros acima da tabela
-- KPIs resumidos antes da listagem
+- **Indicadores rápidos** (`ListingKpiRow`) no `panelHeader` do mesmo card da toolbar (borda inferior)
+- KPIs sparkline fora do card = variante alternativa documentada
 - tabela dentro de card
+- coluna Ações usa `RowActionsMenu` (menu radial), não kebab genérico
 - detalhes da linha em painel lateral ou modal, não em navegação improvisada
 
 ### Toolbar canônica
 
-Uma única faixa-card (`rounded-[10px_10px_10px_18px] border border-border bg-card shadow-[var(--shadow-card)]`, padding `p-3 sm:p-4`), em coluna no mobile e linha no `sm+`. Três zonas, nesta ordem:
+Uma única faixa-card (`rounded-[10px_10px_10px_18px] border …`), com:
 
-1. **Filtros** (esquerda, `shrink-0`) — `Button variant="outline" size="sm"` que abre um popover `absolute` com os `Select density="compact"`. Com filtro ativo, o botão ganha `border-primary text-primary` + badge-contador (`rounded-full bg-primary text-primary-foreground`). Fecha em clique-fora.
-2. **Busca** (centro, `flex-1`) — `Input density="compact"` com `leftIcon={<Search />}`.
-3. **Exportar** (direita, `shrink-0`) — `ExportButtons` (par Excel + PDF). O `Limpar` (`Button variant="ghost" size="sm"` com `<X />`) entra à esquerda do par só quando há filtro/busca ativos.
+0. **panelHeader** (opcional) — `ListingKpiRow` (Indicadores rápidos clicáveis)
+1. **Filtros** (esquerda, `shrink-0`)
+2. **Busca** (centro, `flex-1`)
+3. **Exportar** (direita, `shrink-0`) — `ExportButtons` (par Excel + PDF **32.5×32.5**)
 
 Snippet:
 
 ```tsx
-<div className="flex flex-col gap-3 rounded-[10px_10px_10px_18px] border border-border bg-card p-3 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:p-4">
-  <FiltersPopover /> {/* Button outline + popover absolute com Selects compact */}
-  <div className="flex-1">
-    <Input density="compact" leftIcon={<Search />} placeholder="Buscar…" />
+<div className="rounded-[10px_10px_10px_18px] border border-border bg-card shadow-[var(--shadow-card)]">
+  <div className="border-b border-border px-4 py-4">
+    <ListingKpiRow cards={…} focusId={…} onSelect={…} onClear={…} />
   </div>
-  {hasFilters && (
-    <Button variant="ghost" size="sm" onClick={clear}><X />Limpar</Button>
-  )}
-  <ExportButtons onExcel={exportXlsx} onPdf={exportPdf} />
+  <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
+    <FiltersPopover />
+    <div className="flex-1">
+      <Input density="compact" leftIcon={<Search />} placeholder="Buscar…" />
+    </div>
+    <ExportButtons onExcel={exportXlsx} onPdf={exportPdf} />
+  </div>
 </div>
 ```
 

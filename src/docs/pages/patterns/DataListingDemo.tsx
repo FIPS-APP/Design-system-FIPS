@@ -1,9 +1,13 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { Package, Clock, CheckCircle2, Ban, Pencil, Trash2 } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, CopyableInline, CodePlayground } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
 import { useFipsTheme } from '../../../hooks/useFipsTheme'
+import { ExportButtons } from '../../../components/composites/ExportButtons'
+import { ListingKpiRow } from '../../../components/composites/ListingKpiRow'
+import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"var(--color-gov-verde-escuro)",danger:"#DC3545",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",gradFrom:"var(--color-gov-gradient-from)",gradTo:"var(--color-gov-gradient-to)"};
@@ -244,6 +248,7 @@ export default function DataListingDemo() {
   const [filters,setFilters]=useState({status:[],dept:[],priority:[]});
   const [search,setSearch]=useState("");
   const [searchFocused,setSearchFocused]=useState(false);
+  const [kpiFocus,setKpiFocus]=useState("");
   const [configTab,setConfigTab]=useState("colunas");
   const [density,setDensity]=useState("normal");
   const [visibleCols,setVisibleCols]=useState(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
@@ -253,17 +258,20 @@ export default function DataListingDemo() {
   const allData=useMemo(()=>seed(60),[]);
   const data=useMemo(()=>{
     let r=allData;
+    if(kpiFocus==="pendentes")r=r.filter(x=>x.status==="Pendente");
+    else if(kpiFocus==="aprovadas")r=r.filter(x=>x.status==="Aprovada");
+    else if(kpiFocus==="recusadas")r=r.filter(x=>x.status==="Recusada");
     if(search)r=r.filter(x=>x.id.toLowerCase().includes(search.toLowerCase())||x.sol.toLowerCase().includes(search.toLowerCase()));
     if(filters.status.length)r=r.filter(x=>filters.status.includes(x.status));
     if(filters.dept.length)r=r.filter(x=>filters.dept.includes(x.dept));
     if(filters.priority.length)r=r.filter(x=>filters.priority.includes(x.priority));
     return r.slice(0,10);
-  },[allData,search,filters]);
+  },[allData,search,filters,kpiFocus]);
   const D=DENSITY[density];
 
   const totalFilters=filters.status.length+filters.dept.length+filters.priority.length;
   const toggleFilter=(group,val)=>setFilters(f=>{const a=f[group]||[];return{...f,[group]:a.includes(val)?a.filter(v=>v!==val):[...a,val]}});
-  const clearFilters=()=>setFilters({status:[],dept:[],priority:[]});
+  const clearFilters=()=>{setFilters({status:[],dept:[],priority:[]});setKpiFocus("");};
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
 
@@ -359,8 +367,8 @@ export default function DataListingDemo() {
           </div>
           </CopyableInline>
 
-          {/* KPIs com sparkline area chart */}
-          <CopyableInline label="KPI Cards" code={dlCode('kpi')} preview={dlPreview('kpi')}>
+          {/* KPIs sparkline — variante alternativa (fora do card da toolbar) */}
+          <CopyableInline label="KPI Cards (sparkline — variante)" code={dlCode('kpi')} preview={dlPreview('kpi')}>
           {(()=>{
             const total=allData.length;
             const pendentes=allData.filter(r=>r.status==="Pendente").length;
@@ -428,9 +436,23 @@ export default function DataListingDemo() {
             );
           })()}
           </CopyableInline>
-          {/* TOOLBAR SEPARADA — card próprio acima do Table */}
+          {/* TOOLBAR SEPARADA — card próprio: panelHeader (Indicadores) + filtros/export */}
           <CopyableInline label="Toolbar + Table" code={dlCode('toolbar')} preview={dlPreview('toolbar')}>
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
+            <div style={{borderBottom:`1px solid ${C.cardBorder}`,padding:"14px 18px 18px"}}>
+              <ListingKpiRow
+                focusId={kpiFocus}
+                onSelect={(id)=>{setKpiFocus(id==="total"?"":id);if(id==="total")setFilters(f=>({...f,status:[]}));}}
+                onClear={()=>setKpiFocus("")}
+                gridClassName="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3"
+                cards={[
+                  {id:"total",label:"Total registros",value:allData.length,subtitle:"Cadastrados no sistema",icon:Package,color:"#004B9B"},
+                  {id:"pendentes",label:"Pendentes",value:allData.filter(r=>r.status==="Pendente").length,subtitle:"Aguardando decisão — clique para filtrar",icon:Clock,color:"#F6921E"},
+                  {id:"aprovadas",label:"Aprovadas",value:allData.filter(r=>r.status==="Aprovada").length,subtitle:"Prontas no fluxo",icon:CheckCircle2,color:"#00C64C"},
+                  {id:"recusadas",label:"Recusadas",value:allData.filter(r=>r.status==="Recusada").length,subtitle:"Fora do fluxo",icon:Ban,color:"#DC3545"},
+                ]}
+              />
+            </div>
             <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
               {/* Filtros */}
               <div ref={filterRef} style={{position:"relative"}}>
@@ -532,10 +554,10 @@ export default function DataListingDemo() {
 
               <div style={{flex:1}}/>
 
-              {/* Exportar Excel */}
-              <button title="Exportar para Excel" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:32.5,height:32.5,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#1D6F4208";e.currentTarget.style.borderColor="#1D6F4240"}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.excel(16)}</button>
-              {/* Exportar PDF */}
-              <button title="Exportar para PDF" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:32.5,height:32.5,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background=`${C.danger}08`;e.currentTarget.style.borderColor=`${C.danger}40`}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.pdf(16)}</button>
+              <ExportButtons
+                onExcel={()=>undefined}
+                onPdf={()=>undefined}
+              />
             </div>
           </div>
 
@@ -642,10 +664,17 @@ export default function DataListingDemo() {
                     {visibleCols.has("sla")&&<td style={{padding:`0 ${D.padX}px`,borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}><div style={{display:"flex",alignItems:"center",gap:6,minWidth:80}}><div style={{flex:1,height:4,borderRadius:2,background:`${r.sla>=70?C.verdeFloresta:r.sla>=50?C.amareloEscuro:C.danger}20`}}><div style={{height:4,borderRadius:2,background:r.sla>=70?C.verdeFloresta:r.sla>=50?C.amareloEscuro:C.danger,width:`${r.sla}%`}}/></div><span style={{fontSize:9,fontFamily:Fn.mono,fontWeight:700,color:r.sla>=70?C.verdeFloresta:r.sla>=50?C.amareloEscuro:C.danger}}>{r.sla}%</span></div></td>}
                     {visibleCols.has("valor")&&<td style={{padding:`0 ${D.padX}px`,fontSize:D.fs-1,fontFamily:Fn.mono,fontWeight:700,color:C.cinzaEscuro,textAlign:"right",whiteSpace:"nowrap",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>R$ {r.valor.toLocaleString("pt-BR")}</td>}
                     {visibleCols.has("data")&&<td style={{padding:`0 ${D.padX}px`,fontSize:D.fs-1,fontFamily:Fn.mono,color:C.textMuted,whiteSpace:"nowrap",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>{r.data}</td>}
-                    {visibleCols.has("actions")&&<td style={{padding:`0 ${D.padX}px`,textAlign:"center"}}><div style={{display:"inline-flex",gap:2}}>
-                      <button style={{width:24,height:24,borderRadius:5,background:"transparent",border:"none",cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>{Ic.edit(12)}</button>
-                      <button style={{width:24,height:24,borderRadius:5,background:"transparent",border:"none",cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>{Ic.more(12)}</button>
-                    </div></td>}
+                    {visibleCols.has("actions")&&<td style={{padding:`0 ${D.padX}px`,textAlign:"center"}} onClick={e=>e.stopPropagation()}>
+                      <RowActionsMenu
+                        rowId={r.id}
+                        radius={56}
+                        actions={[
+                          {key:"edit",label:"Editar pedido",icon:<Pencil className="h-4 w-4"/>,onClick:()=>undefined},
+                          {key:"cancel",label:"Cancelar",icon:<Ban className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
+                          {key:"delete",label:"Excluir",icon:<Trash2 className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
+                        ]}
+                      />
+                    </td>}
                   </tr>);
                 })}</tbody>
               </table>
@@ -791,7 +820,7 @@ export default function DataListingDemo() {
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
               {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (multi-select popover)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
-              {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 34×34, ícone verde)","PDF (botão 34×34, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados"]},
+              {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 32.5×32.5, ícone verde)","PDF (botão 32.5×32.5, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados · ExportButtons"]},
               {title:"Padrão visual",icon:Ic.list,color:C.amareloEscuro,items:["Card próprio com borderRadius FIPS","Padding 14px 18px","display:flex flexWrap:wrap","Spacer central com flex:1","marginBottom 14 antes da Table"]},
               {title:"Filtros oficiais",icon:Ic.calendar,color:C.verdeFloresta,items:["Multi-select (popover com 3 grupos)","Single-select (dropdown com radio)","Período suporta presets + Personalizado","Personalizado abre 2 inputs date","Contador no botão quando há filtros"]},
             ].map((r,i)=>(

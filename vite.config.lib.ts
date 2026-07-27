@@ -16,9 +16,13 @@ export default defineConfig({
       cssFileName: 'styles',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'framer-motion'],
       output: {
-        globals: { react: 'React', 'react-dom': 'ReactDOM' },
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'framer-motion': 'Motion',
+        },
       },
     },
     sourcemap: true,

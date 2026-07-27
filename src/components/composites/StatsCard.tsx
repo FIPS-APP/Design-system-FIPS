@@ -13,11 +13,17 @@ export type StatsCardProps = {
   size?: StatsCardSize
   loading?: boolean
   className?: string
+  /** Cartão clicável (filtro / drill) — paridade Tecnopano */
+  onClick?: () => void
+  disabled?: boolean
+  /** Realce quando corresponde ao filtro ativo */
+  selected?: boolean
 }
 
 /**
  * Card de métrica estilo Tecnopano StatsCard / Home Suprimentos.
- * Texto à esquerda → ícone circular à direita. Sem clique (use wrapper se precisar).
+ * Texto à esquerda → ícone circular à direita.
+ * Com `onClick` vira botão (Indicadores rápidos).
  */
 export function StatsCard({
   label,
@@ -28,14 +34,26 @@ export function StatsCard({
   size = 'compact',
   loading = false,
   className,
+  onClick,
+  disabled,
+  selected,
 }: StatsCardProps) {
   const compact = size === 'compact'
+  const Tag = onClick ? 'button' : 'div'
 
   return (
-    <div
+    <Tag
+      type={onClick ? 'button' : undefined}
+      onClick={onClick}
+      disabled={onClick ? disabled : undefined}
       className={cn(
         'relative flex min-w-0 items-center justify-between gap-2 rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_1px_3px_rgba(0,75,155,0.04)]',
         compact ? 'px-3 py-2.5' : 'px-4 py-3.5',
+        onClick &&
+          'cursor-pointer text-left transition-[box-shadow,border-color,transform] hover:border-[color-mix(in_srgb,var(--color-primary)_35%,var(--color-border))] hover:shadow-[0_4px_14px_rgba(0,75,155,0.08)] active:scale-[0.99]',
+        onClick && disabled && 'pointer-events-none cursor-not-allowed opacity-50',
+        selected &&
+          'ring-2 ring-[var(--color-primary)]/35 ring-offset-1 ring-offset-[var(--color-surface)]',
         className,
       )}
       style={{ borderLeft: `${compact ? 3 : 4}px solid ${color}` }}
@@ -85,7 +103,7 @@ export function StatsCard({
           style={{ color }}
         />
       </div>
-    </div>
+    </Tag>
   )
 }
 

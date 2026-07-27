@@ -255,16 +255,18 @@ Não faça:
 
 ## ExportButtons (par de exportação)
 
-Fonte: `src/docs/pages/patterns/DataListingDemo.tsx` (canônico) · port: `src/components/ExportButtons.tsx`
+Fonte: `src/components/composites/ExportButtons.tsx` · ícones `src/components/icons/FileIcons.tsx` · demo: `src/docs/pages/patterns/DataListingDemo.tsx`
 
-Par de ações no fim da toolbar de listagem: dois botões **34×34 só-ícone** (`Button variant="secondary" size="icon"`), cada um tintado pela cor da extensão (hover na mesma cor, suave):
+Par de ações no fim da toolbar de listagem: dois botões **32.5×32.5 só-ícone**, cada um tintado pela cor da extensão (hover na mesma cor, suave):
 
-- **Excel** — ícone verde Office `#1D6F42`; `aria-label="Exportar para Excel"`
-- **PDF** — ícone vermelho (`text-destructive`); `aria-label="Exportar para PDF"`
+- **Excel** — ícone verde Office `#1D6F42`; `aria-label="Exportar para Excel (.xlsx)"`
+- **PDF** — ícone vermelho (`--color-danger`); `aria-label="Exportar para PDF (.pdf)"`
 
 API:
 
 ```tsx
+import { ExportButtons } from '@fips-app/ds-fips'
+
 <ExportButtons onExcel={() => exportXlsx(rows)} onPdf={() => exportPdf(rows)} />
 ```
 
@@ -273,7 +275,30 @@ Regras:
 - sempre o par, sempre à direita da toolbar
 - só-ícone com `title` + `aria-label` (sem rótulo de texto)
 - não trocar as cores: verde = Excel, vermelho = PDF — é convenção de extensão, não decoração
-- ícones de arquivo vêm de `src/components/icons/FileIcons.tsx` (`ExcelIcon`, `PdfIcon`), não do `lucide-react`
+- botões nativos no composite (não `Button` + tint via `className` — governance)
+
+## ListingKpiRow + StatsCard clicável
+
+Fonte: `src/components/composites/ListingKpiRow.tsx` · `StatsCard` com `onClick` / `selected` / `disabled`
+
+Bloco **Indicadores rápidos** no `panelHeader` da toolbar (borda inferior, acima de filtros/busca/export). Clique no card filtra a tabela; “Limpar filtro” limpa o foco.
+
+## CircularCommandMenu / RowActionsMenu
+
+Fonte: `src/components/composites/CircularCommandMenu.tsx` · `RowActionsMenu.tsx` · CSS `.cmd-glass*` / `.fips-row-action` em `globals.css`
+
+Menu radial por linha (portal + órbita + teclado). **Peer dependency:** `framer-motion` (>=11). Doc: `/docs/components/circular-command-menu`.
+
+```tsx
+<RowActionsMenu
+  rowId={row.id}
+  radius={56}
+  actions={[
+    { key: 'edit', label: 'Editar pedido', icon: <Pencil />, onClick: () => {} },
+    { key: 'delete', label: 'Excluir', icon: <Trash2 />, danger: true, onClick: () => {} },
+  ]}
+/>
+```
 
 ## PageHero
 

@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.8.0`
+## Versão atual: `v0.9.0`
 
 ## Consumindo a biblioteca
 
@@ -47,8 +47,9 @@ E os componentes/utilitários onde precisar:
 import { Button, FipsLogo, cn } from '@fips-app/ds-fips'
 ```
 
-> Requer `react`, `react-dom` e `tailwindcss` v4 instalados no projeto
-> consumidor (declarados como `peerDependencies`).
+> Requer `react`, `react-dom`, `tailwindcss` v4 e `framer-motion` (>=11, para
+> `CircularCommandMenu` / `RowActionsMenu`) instalados no projeto consumidor
+> (declarados como `peerDependencies`).
 
 ## Versionamento
 
@@ -75,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.9.0 | 2026-07-27 | Data Listing parity: ExportButtons, ListingKpiRow, CircularCommandMenu/RowActionsMenu |
 | 0.8.0 | 2026-07-27 | StatsCard/StatsCardGrid (KPI Home) e HowItWorksCard/HowItWorksGrid (Como Funciona) |
 | 0.7.0 | 2026-07-06 | Barra de Filtros do padrão Dashboard trocada de um grid de 6 selects rotulados (30px, 2 linhas) para uma linha de chips `ChipSelect` (32.5px, "Label: Valor" + dropdown com radio) — mesmo padrão do `FilterBar` real do Governança BI. Novo padrão: Drawer "Filtros avançados" (`/docs/components/drawer`) ganha implementação viva seguindo o spec já documentado em `patterns.md` (referência real `Governanca_BI/src/pages/KpiDashboardPage.tsx`) — header gov-gradient com contador dinâmico de filtros ativos, novo componente `PillFilterGroup` (pill 1-clique com cor semântica: ativo = fundo cheio + texto branco, inativo com cor = dot). `FSelect` do `DrawerDoc.tsx` (5 dos 6 drawers de exemplo) passa a delegar pro `Select` governado; campos de período viram `type="date"`. No próprio drawer de Filtros, Departamento/Segmento usam o novo `ChipSelect` (32.5px, dropdown com radio) em vez do `Select` governado (36px, sem variante compacta) — assim ficam do mesmo tamanho que os campos de data. Fix: sidebar real tinha `shadow-[4px_0_32px_...]` vazando pra direita sobre o conteúdo (dark já cancelava, light não) — removida dos dois temas |
 | 0.6.3 | 2026-07-03 | Fix no padrão Login: `login-ds.css` nunca era importado na doc (`/docs/login`), então `.login-v1-container` renderizava `display:block` em vez de `flex` e o card de vidro colapsava sem padding/tamanho no rodapé do preview; import corrigido em `LoginPage.tsx`. Também corrigida a falta de acentuação pt-BR em `LoginDsShell.tsx` e nos exemplos de código copiáveis ("Eficiencia" → "Eficiência", "Rota dos principios" → "Rota dos princípios" etc.) e a altura do preview (herdava `100svh` do componente real de tela cheia, ~1000px dentro do card; override escopado fixa 720px só na doc). Fix no mockup do Application Shell (`/docs/patterns/application-shell`): hero passou a replicar o hero real da HomePage (imagem full-bleed + overlay azul vertical `#002A68/60→45→60` + vinheta) e o header trocou botões chapados + busca "Q" pelos botões neumorphic (`DocHeaderNeuIconButton`), removeu o campo de busca e trocou o chip estático "AF Usuário" pelo `UserChip` canônico (menu de conta completo); botões do hero reduzidos de `lg` para `sm`; cards de indicador mais compactos (label em uma linha, ícone 32px, altura 118px→96px); blocos de conteúdo viraram linhas horizontais (sem aperto), "Notas visuais" virou checklist compacta, sidebar do mockup alinhada ao real (logo, "Modo menu") e header mobile agora segue o padrão real (logo, avatar isolado, 3 ícones). Fix no padrão Data Listing: toolbar tinha 3 campos fora do padrão de altura desktop (32.5px) — Busca (`35px`) e botões Excel/PDF (`34px`) corrigidos. Migração de gráficos Recharts → Apache ECharts: card da página Stacks atualizado e o mini-donut do padrão Dashboard migrado de verdade (init manual via `echarts/core`, dependência `recharts` removida) |

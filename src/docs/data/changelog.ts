@@ -25,6 +25,17 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.9.0',
+    date: '2026-07-27',
+    title: 'Data Listing parity Tecnopano (export, KPIs, menu radial)',
+    entries: [
+      { type: 'feature', description: 'ExportButtons + ExcelIcon/PdfIcon: par 32.5×32.5 Excel/PDF com hover tintado (convenção de extensão).' },
+      { type: 'feature', description: 'StatsCard clicável (onClick/selected) + ListingKpiRow — Indicadores rápidos no panelHeader da toolbar.' },
+      { type: 'feature', description: 'CircularCommandMenu + RowActionsMenu — menu radial de ações da linha (peer framer-motion).' },
+      { type: 'improvement', description: 'Data Listing demo: KPIs no card da toolbar, ExportButtons e radial na coluna Ações.' },
+    ],
+  },
+  {
     version: '0.8.0',
     date: '2026-07-27',
     title: 'StatsCard e HowItWorksCard (Home Suprimentos)',
