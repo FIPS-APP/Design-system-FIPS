@@ -11,7 +11,7 @@ const DialogClose = DialogPrimitive.Close
 /** Grão SVG — paridade Tecnopano (Menu Automático / Assistente IA / ExportPreview). */
 const DIALOG_GRAIN_BG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")`
 
-export const DIALOG_CONTENT_SCROLL_WRAPPER_CLASS =
+const DIALOG_CONTENT_SCROLL_WRAPPER_CLASS =
   'relative z-[2] flex max-h-[inherit] min-h-0 flex-col overflow-hidden'
 
 const DialogOverlay = React.forwardRef<
