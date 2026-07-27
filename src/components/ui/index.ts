@@ -40,6 +40,7 @@ export {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogIconTile,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
