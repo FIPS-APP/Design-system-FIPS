@@ -265,8 +265,11 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn(
-          'flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:p-0',
-          fullscreen ? 'max-h-[96vh] max-w-[min(96vw,1400px)]' : 'max-w-4xl',
+          'flex flex-col gap-0 overflow-hidden p-0 sm:p-0',
+          fullscreen
+            ? // sm:max-h do Dialog base (90vh) sobrescrevia max-h solto — forçar altura cheia em todos breakpoints
+              'h-[96dvh] max-h-[96dvh] w-[min(96vw,1400px)] max-w-[min(96vw,1400px)] sm:h-[96dvh] sm:max-h-[96dvh]'
+            : 'max-h-[85vh] max-w-4xl sm:max-h-[85vh]',
         )}
       >
           <DialogHeader className="shrink-0 border-b border-[var(--color-border)] px-6 pt-5 pb-4">
@@ -286,7 +289,8 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 type="button"
                 onClick={() => setFullscreen((f) => !f)}
                 className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-[10px] font-semibold tracking-wider text-[var(--color-fg-muted)] uppercase transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-fg)]"
-                title={fullscreen ? 'Sair tela cheia' : 'Tela cheia'}
+                title={fullscreen ? 'Voltar ao tamanho compacto' : 'Ampliar em tela cheia'}
+                aria-pressed={fullscreen}
               >
                 {fullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
                 {fullscreen ? 'Compacto' : 'Tela cheia'}
