@@ -58,10 +58,10 @@ const DialogContent = React.forwardRef<
         className="pointer-events-none absolute inset-0 z-0 rounded-[20px] opacity-[0.025] mix-blend-multiply dark:opacity-[0.03] dark:mix-blend-overlay"
         style={{ backgroundImage: DIALOG_GRAIN_BG }}
       />
-      {/* Faixa vermelha no topo — efeito Tecnopano */}
+      {/* Faixa no topo — padrão FIPS azul (Tutorial / GuidedTour), não vermelho Tecnopano */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-0 right-0 left-0 z-[1] h-[3px] rounded-t-[20px] bg-gradient-to-r from-[#FF073A] via-[#B20028] to-transparent"
+        className="pointer-events-none absolute top-0 right-0 left-0 z-[1] h-[3px] rounded-t-[20px] bg-gradient-to-r from-[#004B9B] via-[#93BDE4] to-transparent"
       />
       <div className={DIALOG_CONTENT_SCROLL_WRAPPER_CLASS}>{children}</div>
       {showCloseButton ? (
@@ -69,9 +69,10 @@ const DialogContent = React.forwardRef<
           className={cn(
             'absolute top-4 right-4 z-[30] flex h-7 w-7 items-center justify-center rounded-lg transition-all',
             'border border-black/[0.08] bg-black/[0.04] text-zinc-500',
-            'hover:border-[rgba(255,7,58,0.3)] hover:bg-[rgba(255,7,58,0.15)] hover:text-[#FF073A]',
+            'hover:border-[color-mix(in_srgb,var(--color-primary)_35%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] hover:text-[var(--color-primary)]',
             'dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400',
-            'focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:outline-none',
+            'dark:hover:text-[var(--color-fips-blue-200)]',
+            'focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]/25 focus-visible:outline-none',
           )}
           aria-label="Fechar"
         >

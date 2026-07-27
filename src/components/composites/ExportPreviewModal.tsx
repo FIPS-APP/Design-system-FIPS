@@ -473,15 +473,15 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                   </Button>
                 ) : null}
                 {isExcelIntent && onExportExcel ? (
-                  <button
-                    type="button"
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={() => runExport('excel')}
                     disabled={exportKeys.length === 0}
-                    className="inline-flex h-[30px] min-h-[30px] cursor-pointer items-center justify-center gap-[7px] rounded-md border-[1.5px] border-transparent bg-gradient-to-r from-[#ed1b24] to-[#d6174a] px-3.5 text-[12px] font-semibold text-white shadow-sm transition-all hover:from-[#d6174a] hover:to-[#b20028] disabled:pointer-events-none disabled:opacity-55 [&_svg]:size-3.5 [&_svg]:text-white"
                   >
                     <FileSpreadsheet className="h-3.5 w-3.5" />
                     Planilha
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             </div>
