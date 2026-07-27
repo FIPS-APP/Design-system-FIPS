@@ -107,7 +107,7 @@ export default function ModalRadixDoc() {
           size="lg"
           headerIcon={Sparkles}
           title="Novidades do sistema"
-          description="Versão 0.9.1 · Design System FIPS — padrão alinhado ao Suprimentos."
+          description="Versão 0.9.2 · Design System FIPS — padrão alinhado ao Suprimentos."
           className="max-h-[min(90vh,720px)]"
         >
           <ul className="divide-y divide-[var(--color-border)] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-soft)]/50">
