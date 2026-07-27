@@ -259,7 +259,10 @@ Fonte: `src/components/composites/ExportPreviewModal.tsx` · canônico Tecnopano
 
 Modal grande de exportação: header (ícone + título + Tela cheia) · segmented **Tudo / Tabela / Expandida** · chips de colunas (toggle + drag) · preview · footer Cancelar / Imprimir / Planilha|PDF.
 
-Demo: `/docs/patterns/export-modal` e botões Excel/PDF em `/docs/patterns/data-listing`.
+**Família Modal** — demos em:
+- `/docs/components/modal-radix` (Modal Radix — seção ExportPreviewModal)
+- `/docs/patterns/export-modal`
+- botões Excel/PDF em `/docs/patterns/data-listing`
 
 ```tsx
 <ExportPreviewModal
