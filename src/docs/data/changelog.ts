@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.9.1',
+    date: '2026-07-27',
+    title: 'ExportPreviewModal (paridade Tecnopano)',
+    entries: [
+      { type: 'feature', description: 'ExportPreviewModal: Tudo/Tabela/Expandida, chips drag, preview, Tela cheia, Cancelar/Imprimir/Planilha|PDF — réplica de client/.../ExportPreviewModal.tsx.' },
+      { type: 'improvement', description: 'DialogIconTile + close hover vermelho no Dialog; Data Listing e /docs/patterns/export-modal abrem o modal pelos botões Excel/PDF.' },
+    ],
+  },
+  {
     version: '0.9.0',
     date: '2026-07-27',
     title: 'Data Listing parity Tecnopano (export, KPIs, menu radial)',

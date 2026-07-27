@@ -253,6 +253,28 @@ Não faça:
 - usar cores Tailwind cruas nos cards por tipo (`bg-green-100`, `text-red-700` etc. — isso vem do modelo de referência do Governança TI/Suprimentos, mas no DS-FIPS é sempre token semântico + variante `dark:`)
 - auto-abrir por `localStorage` a cada versão nova — neste DS o gatilho é **só** o clique no botão Versão, sem popup intrusivo automático
 
+## ExportPreviewModal
+
+Fonte: `src/components/composites/ExportPreviewModal.tsx` · canônico Tecnopano `ExportPreviewModal.tsx`
+
+Modal grande de exportação: header (ícone + título + Tela cheia) · segmented **Tudo / Tabela / Expandida** · chips de colunas (toggle + drag) · preview · footer Cancelar / Imprimir / Planilha|PDF.
+
+Demo: `/docs/patterns/export-modal` e botões Excel/PDF em `/docs/patterns/data-listing`.
+
+```tsx
+<ExportPreviewModal
+  open={open}
+  onOpenChange={setOpen}
+  intent="excel"
+  columns={cols}
+  tableColumnKeys={[...]}
+  expandedColumnKeys={[...]}
+  data={rows}
+  onExportExcel={(keys, layout) => {}}
+  onPrint={(keys, layout) => {}}
+/>
+```
+
 ## ExportButtons (par de exportação)
 
 Fonte: `src/components/composites/ExportButtons.tsx` · ícones `src/components/icons/FileIcons.tsx` · demo: `src/docs/pages/patterns/DataListingDemo.tsx`

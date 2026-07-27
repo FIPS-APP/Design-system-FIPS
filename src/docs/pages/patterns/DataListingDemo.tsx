@@ -8,6 +8,7 @@ import { useFipsTheme } from '../../../hooks/useFipsTheme'
 import { ExportButtons } from '../../../components/composites/ExportButtons'
 import { ListingKpiRow } from '../../../components/composites/ListingKpiRow'
 import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
+import { ExportPreviewModal, type ExportIntent } from '../../../components/composites/ExportPreviewModal'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"var(--color-gov-verde-escuro)",danger:"#DC3545",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",gradFrom:"var(--color-gov-gradient-from)",gradTo:"var(--color-gov-gradient-to)"};
@@ -249,6 +250,8 @@ export default function DataListingDemo() {
   const [search,setSearch]=useState("");
   const [searchFocused,setSearchFocused]=useState(false);
   const [kpiFocus,setKpiFocus]=useState("");
+  const [exportOpen,setExportOpen]=useState(false);
+  const [exportIntent,setExportIntent]=useState<ExportIntent>("excel");
   const [configTab,setConfigTab]=useState("colunas");
   const [density,setDensity]=useState("normal");
   const [visibleCols,setVisibleCols]=useState(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
@@ -555,11 +558,34 @@ export default function DataListingDemo() {
               <div style={{flex:1}}/>
 
               <ExportButtons
-                onExcel={()=>undefined}
-                onPdf={()=>undefined}
+                onExcel={()=>{setExportIntent("excel");setExportOpen(true)}}
+                onPdf={()=>{setExportIntent("pdf");setExportOpen(true)}}
               />
             </div>
           </div>
+
+          <ExportPreviewModal
+            open={exportOpen}
+            onOpenChange={setExportOpen}
+            intent={exportIntent}
+            filename="requisicoes"
+            columns={[
+              {key:"id",label:"Código"},
+              {key:"sol",label:"Solicitante"},
+              {key:"dept",label:"Departamento"},
+              {key:"status",label:"Status"},
+              {key:"priority",label:"Prioridade"},
+              {key:"sla",label:"SLA"},
+              {key:"valor",label:"Valor",render:(row)=>`R$ ${Number((row as {valor?:number}).valor??0).toLocaleString("pt-BR")}`},
+              {key:"data",label:"Data"},
+            ]}
+            tableColumnKeys={["id","sol","dept","status","priority","valor","data"]}
+            expandedColumnKeys={["id","sol","dept","status","priority","sla","valor","data"]}
+            data={allData as Record<string,unknown>[]}
+            onExportExcel={()=>undefined}
+            onExportPdf={()=>undefined}
+            onPrint={()=>window.print()}
+          />
 
           {/* TABLE CARD com Header obrigatório (ícone + título + subtítulo) */}
           <div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>

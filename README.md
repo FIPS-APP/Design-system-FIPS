@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.9.0`
+## Versão atual: `v0.9.1`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.9.1 | 2026-07-27 | ExportPreviewModal (paridade Tecnopano: Tudo/Tabela/Expandida + chips + preview) |
 | 0.9.0 | 2026-07-27 | Data Listing parity: ExportButtons, ListingKpiRow, CircularCommandMenu/RowActionsMenu |
 | 0.8.0 | 2026-07-27 | StatsCard/StatsCardGrid (KPI Home) e HowItWorksCard/HowItWorksGrid (Como Funciona) |
 | 0.7.0 | 2026-07-06 | Barra de Filtros do padrão Dashboard trocada de um grid de 6 selects rotulados (30px, 2 linhas) para uma linha de chips `ChipSelect` (32.5px, "Label: Valor" + dropdown com radio) — mesmo padrão do `FilterBar` real do Governança BI. Novo padrão: Drawer "Filtros avançados" (`/docs/components/drawer`) ganha implementação viva seguindo o spec já documentado em `patterns.md` (referência real `Governanca_BI/src/pages/KpiDashboardPage.tsx`) — header gov-gradient com contador dinâmico de filtros ativos, novo componente `PillFilterGroup` (pill 1-clique com cor semântica: ativo = fundo cheio + texto branco, inativo com cor = dot). `FSelect` do `DrawerDoc.tsx` (5 dos 6 drawers de exemplo) passa a delegar pro `Select` governado; campos de período viram `type="date"`. No próprio drawer de Filtros, Departamento/Segmento usam o novo `ChipSelect` (32.5px, dropdown com radio) em vez do `Select` governado (36px, sem variante compacta) — assim ficam do mesmo tamanho que os campos de data. Fix: sidebar real tinha `shadow-[4px_0_32px_...]` vazando pra direita sobre o conteúdo (dark já cancelava, light não) — removida dos dois temas |
