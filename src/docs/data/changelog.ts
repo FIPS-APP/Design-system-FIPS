@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.8.0',
+    date: '2026-07-27',
+    title: 'StatsCard e HowItWorksCard (Home Suprimentos)',
+    entries: [
+      { type: 'feature', description: 'StatsCard + StatsCardGrid: KPI compacto Tecnopano/Home (texto à esquerda → ícone circular, borda accent, grade até 7 cols no xl).' },
+      { type: 'feature', description: 'HowItWorksCard + HowItWorksGrid: réplica da seção Como Funciona da Home Suprimentos (badge numerada, ícone em caixa, grade 1/2/3/7 no lg+).' },
+      { type: 'improvement', description: 'Documentação em /docs/components/card — seções 03b (Stats) e 03c (Como Funciona).' },
+    ],
+  },
+  {
     version: '0.7.0',
     date: '2026-07-06',
     title: 'Novo padrão: Filtros avançados (drawer + barra de chips)',

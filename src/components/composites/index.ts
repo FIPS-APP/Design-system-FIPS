@@ -11,3 +11,7 @@ export {
 } from './banner-shared'
 export { ExportModal } from './ExportModal'
 export type { ExportModalProps } from './ExportModal'
+export { StatsCard, StatsCardGrid } from './StatsCard'
+export type { StatsCardProps, StatsCardSize, StatsCardGridProps } from './StatsCard'
+export { HowItWorksCard, HowItWorksGrid } from './HowItWorksCard'
+export type { HowItWorksCardProps, HowItWorksGridProps } from './HowItWorksCard'

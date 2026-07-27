@@ -1,6 +1,24 @@
 import { useState, useEffect } from "react";
+import {
+  ClipboardList,
+  CheckCircle2,
+  Clock3,
+  AlertTriangle,
+  Package,
+  Truck,
+  Warehouse,
+  FilePlus2,
+  FileSearch,
+  FileCheck2,
+  UserCheck,
+  FileClock,
+  Receipt,
+  CircleCheckBig,
+} from "lucide-react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
+import { StatsCard, StatsCardGrid } from '../../../components/composites/StatsCard';
+import { HowItWorksCard, HowItWorksGrid } from '../../../components/composites/HowItWorksCard';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -422,6 +440,56 @@ export default function CardDoc(){
             <CardRelatorio label="Novas" value="31" subtitle="Adicionadas recentemente" icon={Ic.clock(18,C.amareloEscuro)} color={C.amareloEscuro}/>
             <CardRelatorio label="Inativas" value="38" subtitle="Sem movimentação" icon={Ic.doc(18,C.azulEscuro)} color={C.azulEscuro}/>
           </div>
+        </Section>
+
+        {/* 03b — Card Stats compact (Home Suprimentos / Tecnopano) */}
+        <Section
+          n="03b"
+          title="Card Stats compact (Home)"
+          desc="Componente canônico exportável StatsCard + StatsCardGrid. Anatomia Tecnopano: texto à esquerda → ícone circular à direita, borda esquerda accent, valor na cor. Densidade compacta para fileira de KPIs (ex.: Home Suprimentos). Sem clique — envolva se precisar de ação."
+        >
+          <div style={{marginBottom:12}}>
+            <code style={gk}>import {'{'} StatsCard, StatsCardGrid {'}'} from '@fips-app/ds-fips'</code>
+          </div>
+          <StatsCardGrid columnsXl={7}>
+            <StatsCard label="Solicitações" value="247" subtitle="No período" icon={ClipboardList} color={C.azulProfundo} />
+            <StatsCard label="Finalizadas" value="189" subtitle="76% do total" icon={CheckCircle2} color={C.verdeFloresta} />
+            <StatsCard label="Aguardando" value="38" subtitle="Em fila" icon={Clock3} color={C.amareloEscuro} />
+            <StatsCard label="Atrasadas" value="5" subtitle="Crítico" icon={AlertTriangle} color={C.danger} />
+            <StatsCard label="Itens" value="1.284" subtitle="Em estoque" icon={Package} color={C.azulEscuro} />
+            <StatsCard label="Entregas" value="62" subtitle="Hoje" icon={Truck} color="#0EA5E9" />
+            <StatsCard label="Almoxarifados" value="4" subtitle="Ativos" icon={Warehouse} color="#7C3AED" />
+          </StatsCardGrid>
+          <div style={{marginTop:16,display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
+            <div>
+              <div style={{...gl,marginTop:0}}>size="compact" (padrão)</div>
+              <StatsCard label="Compact" value="42" subtitle="Home / fileira" icon={ClipboardList} color={C.azulProfundo} size="compact" />
+            </div>
+            <div>
+              <div style={{...gl,marginTop:0}}>size="default"</div>
+              <StatsCard label="Default" value="42" subtitle="Mais respiro" icon={ClipboardList} color={C.azulProfundo} size="default" />
+            </div>
+          </div>
+        </Section>
+
+        {/* 03c — Como Funciona (Home Suprimentos) */}
+        <Section
+          n="03c"
+          title="Card Como Funciona (etapas)"
+          desc="Réplica da seção Como Funciona da Home Suprimentos: badge numerada, ícone em caixa arredondada, título e descrição densos. Grade 1 → 2 → 3 → 7 colunas no lg+."
+        >
+          <div style={{marginBottom:12}}>
+            <code style={gk}>import {'{'} HowItWorksCard, HowItWorksGrid {'}'} from '@fips-app/ds-fips'</code>
+          </div>
+          <HowItWorksGrid>
+            <HowItWorksCard step={1} title="Pré-cadastro" description="A demanda acabou de ser criada; o formulário ainda nem foi aberto." icon={FilePlus2} />
+            <HowItWorksCard step={2} title="Preenchimento" description="O solicitante responde o formulário. Pode salvar e voltar quando quiser." icon={FileSearch} />
+            <HowItWorksCard step={3} title="Pronto para envio" description="Campos obrigatórios completos. O sistema libera o envio sem pendências." icon={FileCheck2} />
+            <HowItWorksCard step={4} title="Superior imediato" description="O gestor aprova e encaminha, ou reprova com justificativa." icon={UserCheck} />
+            <HowItWorksCard step={5} title="Aprovação da área" description="Gerente e/ou diretor avaliam e aprovam ou devolvem." icon={FileClock} />
+            <HowItWorksCard step={6} title="RC e Suprimentos" description="Anexa a RC e entra na fila de Suprimentos para análise final." icon={Receipt} />
+            <HowItWorksCard step={7} title="Concluída" description="Suprimentos aprovou. PDF consolidado fica no histórico." icon={CircleCheckBig} />
+          </HowItWorksGrid>
         </Section>
 
         {/* 04 — Card Princípio */}
