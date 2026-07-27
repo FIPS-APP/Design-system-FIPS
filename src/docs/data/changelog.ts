@@ -25,12 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.9.2',
+    date: '2026-07-27',
+    title: 'Dialog FIPS + ExportPreviewModal polish',
+    entries: [
+      { type: 'fix', description: 'Faixa do Dialog em azul institucional (#004B9B→#93BDE4); hover do X em primary — sem vermelho Tecnopano.' },
+      { type: 'fix', description: 'CTA Planilha usa Button variant primary (light/dark); Imprimir/Cancelar nas variants padrão.' },
+      { type: 'fix', description: 'Tela cheia = 96dvh (vence sm:max-h do Dialog); Compacto = 85vh; só o preview rola na vertical.' },
+      { type: 'improvement', description: 'ExportPreviewModal documentado em /docs/components/modal-radix (família Modal) além do pattern export-modal.' },
+    ],
+  },
+  {
     version: '0.9.1',
     date: '2026-07-27',
     title: 'ExportPreviewModal (paridade Tecnopano)',
     entries: [
       { type: 'feature', description: 'ExportPreviewModal: Tudo/Tabela/Expandida, chips drag, preview, Tela cheia, Cancelar/Imprimir/Planilha|PDF — réplica de client/.../ExportPreviewModal.tsx.' },
-      { type: 'improvement', description: 'DialogIconTile + close hover vermelho no Dialog; Data Listing e /docs/patterns/export-modal abrem o modal pelos botões Excel/PDF.' },
+      { type: 'improvement', description: 'DialogIconTile + close no Dialog; Data Listing e /docs/patterns/export-modal abrem o modal pelos botões Excel/PDF.' },
     ],
   },
   {
