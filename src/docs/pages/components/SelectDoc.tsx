@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, CodePlayground } from '../../components/CodePlayground'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -1609,7 +1608,6 @@ export default function SelectDoc() {
   ] as const
 
   return (
-    <PlaygroundProvider>
     <div
       style={{
         minHeight: '100vh',
@@ -2100,8 +2098,6 @@ export default function SelectDoc() {
           </Card>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Select (Custom Dropdown)",
           description: "Dropdown customizado com lista fechada, ícone, estados e variantes compact/error/disabled.",
@@ -2115,6 +2111,5 @@ export default function SelectDoc() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }

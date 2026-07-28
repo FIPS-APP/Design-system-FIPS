@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.18',
+    date: '2026-07-28',
+    title: 'Removido o bloco vazio "Teste ao Vivo" de Select, Button e Cores',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Removido `CodePlayground`/`PlaygroundProvider` de `/docs/components/select`, `/docs/components/button` e `/docs/foundations/colors` — o bloco "Teste ao Vivo" ficou órfão (sem nenhum `Copyable` alimentando) desde a série de remoções de função de copiar (v0.11.7 a v0.11.17) e passou a mostrar sempre o estado vazio. `CodeExportSection` mantido nas 3 páginas — vive em contexto próprio, independente do `PlaygroundProvider`.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`ButtonDoc.tsx`: a descrição do `CodeExportSection` ainda dizia "Para copiar uma variante individual, clique nela acima" — texto órfão desde a v0.11.9, que já tinha removido esse comportamento de clique da Seção 01. Frase removida.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`ColorsPage.tsx`: a remoção do playground mudou o número da linha do bloco `{false && <CodeExportSection items={[...]}/>}` (66 linhas mortas desde a v0.11.8, cujo comentário já dizia "removido" mas o JSX nunca foi de fato apagado) e isso expôs um lint pré-existente (`no-constant-binary-expression`) que nunca tinha sido rodado nesse arquivo nesta sessão. Bloco morto deletado por completo, e o import de `CodeExportSection` — órfão depois disso — removido junto.',
+      },
+    ],
+  },
+  {
     version: '0.11.17',
     date: '2026-07-28',
     title: 'Select: removida a função de copiar da Seção 01 (Tipos de seleção)',

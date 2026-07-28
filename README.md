@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.17`
+## Versão atual: `v0.11.18`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.18 | 2026-07-28 | Removido o bloco vazio "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`) de `/docs/components/select`, `/docs/components/button` e `/docs/foundations/colors` — ficou órfão desde as remoções de `Copyable` (v0.11.7–0.11.17), sem nenhum produtor de conteúdo. `CodeExportSection` mantido nas 3 (independente, não depende do `PlaygroundProvider`). De passagem: `ButtonDoc.tsx` tinha frase residual "Para copiar uma variante individual, clique nela acima" (função removida na v0.11.9) — corrigida; `ColorsPage.tsx` tinha 66 linhas de `CodeExportSection` mortas atrás de `{false &&...}` (o comentário já dizia "removido" mas o JSX ficou) — deletadas de vez, junto com o import que ficou órfão |
 | 0.11.17 | 2026-07-28 | Removida a função de copiar da Seção 01 (Tipos de seleção) de `/docs/components/select` — os 13 exemplos viram preview puro. Junto saíram os 9 helpers geradores de snippet (`selectCode`, `autocompleteCode`, `multiSelectCode`, `checkboxCode`, `radioCode`, `toggleCode`, `chipSelectCode`, `chipFiltroCode`, `segmentedCode`), que só eles usavam: 339 linhas a menos. `selectExportCode` foi mantido (alimenta a seção "Exportar código") |
 | 0.11.16 | 2026-07-28 | Nova página `/docs/components/select` ganha o tipo "Chip Filtro": botão fechado "Rótulo: Valor" que abre dropdown com radio, mesmo padrão do `ChipSelect` da toolbar/Filtros avançados (`DrawerDoc.tsx`) — uso exclusivo em barras de filtro, formulário continua usando `Select`. Adicionado componente `DSChipFiltro`, exemplo "Departamento" na vitrine, card na Guia de uso e entrada no resumo "Quando usar" (9 tipos de seleção, antes 8) |
 | 0.11.15 | 2026-07-28 | Correção real dos campos compactos (a v0.11.14 tinha acertado radius/borda mas errado a altura): `Input`/`Select`/`Textarea`/`FieldTrigger`/`InputGroup` alinhados à referência de produto real — `Field`/`Select` de `ColaboradorForm.tsx` no projeto QLP — 32px (`h-8`, não 35px), borda 1px sólida, hover `--color-border-strong`, sem sombra, anel de foco 25%. Restaurado o par `dark:#93BDE4` nos estados de foco/ativo (não é resíduo — `--color-primary` não muda no dark mode neste projeto, então é o substituto funcional de contraste) |

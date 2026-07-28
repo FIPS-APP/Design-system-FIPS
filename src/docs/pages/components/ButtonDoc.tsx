@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
-import { PlaygroundProvider, CodePlayground } from '../../components/CodePlayground';
 
 /* ═══════════════════════════════════════════
    FIPS DESIGN SYSTEM — OFFICIAL BRAND TOKENS
@@ -380,7 +379,6 @@ const VARIANT_MAP: { variant: string; label: string }[] = [
 
 export default function DSFIPSButtons() {
   return (
-    <PlaygroundProvider>
     <div style={{ minHeight: "100vh", background: "var(--color-surface-muted)", fontFamily: FONTS.body, color: C.cinzaEscuro }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
@@ -844,11 +842,9 @@ export default function DSFIPSButtons() {
           </Card>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Button (completo)",
-          description: "Componente completo com todas as variantes, tamanhos e estados. Para copiar uma variante individual, clique nela acima.",
+          description: "Componente completo com todas as variantes, tamanhos e estados.",
           code: buttonExportCode,
         }]} />
 
@@ -859,6 +855,5 @@ export default function DSFIPSButtons() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
