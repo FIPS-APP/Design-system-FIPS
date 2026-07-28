@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.14`
+## Versão atual: `v0.11.15`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.15 | 2026-07-28 | Correção real dos campos compactos (a v0.11.14 tinha acertado radius/borda mas errado a altura): `Input`/`Select`/`Textarea`/`FieldTrigger`/`InputGroup` alinhados à referência de produto real — `Field`/`Select` de `ColaboradorForm.tsx` no projeto QLP — 32px (`h-8`, não 35px), borda 1px sólida, hover `--color-border-strong`, sem sombra, anel de foco 25%. Restaurado o par `dark:#93BDE4` nos estados de foco/ativo (não é resíduo — `--color-primary` não muda no dark mode neste projeto, então é o substituto funcional de contraste) |
 | 0.11.14 | 2026-07-28 | `Input`/`Select`/`Textarea` governados alinhados à referência visual de `/docs/components/input`: radius `rounded-xl` (12px) → `rounded-lg` (8px), borda `1px`+alpha `/60` → `1.5px` sólida, compact `h-9`/`text-sm` → `h-[35px]`/`text-[13px]`. Fecha a divergência entre os primitivos e a própria página que os documenta |
 | 0.11.13 | 2026-07-28 | Removida a função de copiar de `/docs/patterns/form-workspace` (3 wrappers `Copyable`: Hero, Seções do Formulário, Footer) + helpers `wsCode`/`wsPreview` que só ela usava, e o texto "Clique em qualquer seção para copiar o código" do hero |
 | 0.11.12 | 2026-07-28 | Removida a página "Modal Radix" (`/docs/components/modal-radix`): arquivo, rota, nav e referência na skill. O composite `Modal`/`ModalFooter` (`src/components/ui/Modal.tsx`) só era demoed ali e fica sem doc dedicada — arquivo não foi apagado |

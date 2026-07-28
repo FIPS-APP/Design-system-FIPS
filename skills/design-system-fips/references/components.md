@@ -167,19 +167,20 @@ Regras:
 
 Heights reais:
 
-- `Input`/`Select` default: `h-12`
-- `Input`/`Select` compact: `h-[35px]`
-- `Select` dense: `h-8`
+- `Input`/`Select`/`FieldTrigger` default: `h-12`
+- `Input`/`Select`/`FieldTrigger` compact: `h-8` (32px — `Select` `dense` é o mesmo valor, mantido por compat)
 - `Textarea` default: `min-h-[132px]`
 - `Textarea` compact: `min-h-[92px]`
 
-Caixa do campo (`Input`, `Select`, `Textarea` — os 3 compartilham):
+Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
 
 - **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
-- **Borda**: `border-[1.5px] border-[var(--color-border)]` (sólida, sem alpha).
+- **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `globals.css`, light `--color-fips-gray-400` / dark `#3a3a3a`).
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
+- **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
+- **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
 
-Esses valores vêm do `DSInput` de `/docs/components/input` (35px / 8px / 13px / borda 1.5px), que é a referência visual de formulário do DS. Alinhados na v0.11.14 — antes os primitivos governados usavam `rounded-xl` (12px) + borda `1px` com alpha `/60` + `h-9`/`text-sm`, divergindo da própria doc.
+Fonte de verdade: `Field`/`FieldInput`/`Select` de `client/src/components/ui-sup/` no projeto QLP (`~/dev/projetos/QLP`), usados de verdade em `ColaboradorForm.tsx` (tela Edição Colaborador) — comentário do próprio `select.tsx` de lá documenta a cadeia Governança BI (canônico) → QLP (adaptado). Alinhados na v0.11.15 — a v0.11.14 tinha corrigido radius/borda mas errado a altura (35px, tirado do `DSInput` local de `/docs/components/input`, que diverge do padrão real de produto).
 
 Composição recomendada:
 
@@ -233,7 +234,7 @@ Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal
 | Gov gradient (`GOV_GRAD`) | **âmbar** (`C.amareloOuro` / `--color-accent`) |
 | Cor semântica sólida (verde/vermelho/laranja) | **branco** (`rgba(255,255,255,.9)`) |
 
-8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-[35px]`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
+8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-8`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
 
 ### Modal "Novidades do Sistema" (Changelog)
 

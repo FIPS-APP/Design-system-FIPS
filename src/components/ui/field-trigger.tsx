@@ -23,12 +23,12 @@ const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
         ref={ref}
         type={type}
         className={cn(
-          'relative flex w-full items-center rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-all duration-200 hover:border-[var(--color-border)]/80 focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70',
+          'relative flex w-full items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-border-strong)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/25',
           density === 'compact'
-            ? 'h-9 px-3 text-sm shadow-sm'
-            : 'h-12 px-4 text-[1.08rem] shadow-sm',
-          leftIcon && (density === 'compact' ? 'pl-9' : 'pl-11'),
-          rightIcon && (density === 'compact' ? 'pr-9' : 'pr-11'),
+            ? 'h-8 px-2.5 text-[13px]'
+            : 'h-12 px-4 text-[1.08rem]',
+          leftIcon && (density === 'compact' ? 'pl-8' : 'pl-11'),
+          rightIcon && (density === 'compact' ? 'pr-8' : 'pr-11'),
           className,
         )}
         {...props}
@@ -38,7 +38,7 @@ const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
             className={cn(
               'pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)]',
               density === 'compact'
-                ? 'left-3 [&_svg]:h-3.5 [&_svg]:w-3.5'
+                ? 'left-2.5 [&_svg]:h-3.5 [&_svg]:w-3.5'
                 : 'left-4 [&_svg]:h-4 [&_svg]:w-4',
             )}
           >
@@ -55,7 +55,7 @@ const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
             className={cn(
               'pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)]',
               density === 'compact'
-                ? 'right-3 [&_svg]:h-3.5 [&_svg]:w-3.5'
+                ? 'right-2.5 [&_svg]:h-3.5 [&_svg]:w-3.5'
                 : 'right-4 [&_svg]:h-4 [&_svg]:w-4',
             )}
           >

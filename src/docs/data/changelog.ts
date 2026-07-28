@@ -25,6 +25,17 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.15',
+    date: '2026-07-28',
+    title: 'Campos compactos: correção real, alinhados ao QLP (Edição Colaborador)',
+    entries: [
+      { type: 'breaking', description: 'A v0.11.14 corrigiu radius/borda dos campos compactos mas errou a altura: usou 35px, tirado do `DSInput` local de `/docs/components/input` (só uma doc, sem consumidor real). O usuário apontou o campo real de referência — `Field`/`FieldInput`/`Select` de `client/src/components/ui-sup/` no projeto QLP, usados de verdade em `ColaboradorForm.tsx` (tela Edição Colaborador). O comentário do próprio `select.tsx` de lá documenta a cadeia: Governança BI (canônico) → QLP (adaptado, com as diferenças anotadas). Essa é a fonte de verdade — não a doc do próprio DS-FIPS.' },
+      { type: 'fix', description: '`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` (compact/default único, sem tier "dense" separado — a variante `dense` do Select vira sinônimo de compact): `h-9`/`h-[35px]` → `h-8` (32px); `border-[1.5px]` → `border` (1px); `rounded-xl` (`FieldTrigger`/`InputGroup`, ainda não alinhados na v0.11.14) → `rounded-lg`; `hover:border-[...]/80` → `hover:border-[var(--color-border-strong)]` (token que já existia em `globals.css`, só não estava em uso); anel de foco `/20` → `/25`; `shadow-sm` removido de todos.' },
+      { type: 'fix', description: 'Ao remover os `dark:` hardcoded percebi que não eram resíduo: `--color-primary` não muda entre light/dark neste projeto (fica `#004B9B` fixo, diferente de `--color-border`/`--color-surface`/`--color-fg` que redefinem por tema). Todo estado que usa `--color-primary` como acento (borda em foco, anel, Select aberto, borda do dropdown, opção selecionada) ficaria com baixíssimo contraste no escuro sem o par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — restaurado em todos os pontos, com a opacidade nova (25%).' },
+      { type: 'improvement', description: 'Verificado ao vivo via Puppeteer: repouso (32px/8px/1px/sem sombra/13px), foco claro (`#004B9B`, anel 25%) e foco escuro (`#93BDE4`, anel 25%) — todos batendo exato com o alvo. As 4 páginas que usam `density="compact"` (`FormWorkspaceDemo`, `DrawerDoc`, `ModalFormDemo`, `DialogDoc`) revalidadas sem erro de console. Skill `components.md`/`foundations.md` atualizada com a fonte de verdade correta e a explicação do padrão `dark:#93BDE4`.' },
+    ],
+  },
+  {
     version: '0.11.14',
     date: '2026-07-28',
     title: 'Campos de formulário alinhados à referência da página Input',
