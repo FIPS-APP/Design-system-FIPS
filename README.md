@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.9.2`
+## Versão atual: `v0.10.0`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.10.0 | 2026-07-28 | `Modal (legado)` (`/docs/components/dialog`) ganha 9ª variante no playground: botão "Exportação" abre o `ExportPreviewModal` (canônico Tecnopano, não o `ExportModal` legado) — mesmo padrão já em `/docs/patterns/export-modal` e `/docs/patterns/data-listing`, agora também no menu/galeria de modais |
 | 0.9.2 | 2026-07-27 | Dialog FIPS (faixa azul), ExportPreviewModal polish + doc em Modal Radix |
 | 0.9.1 | 2026-07-27 | ExportPreviewModal (paridade Tecnopano: Tudo/Tabela/Expandida + chips + preview) |
 | 0.9.0 | 2026-07-27 | Data Listing parity: ExportButtons, ListingKpiRow, CircularCommandMenu/RowActionsMenu |

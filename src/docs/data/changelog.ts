@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.10.0',
+    date: '2026-07-28',
+    title: 'Modal (legado): 9ª variante "Exportação" no playground (ExportPreviewModal)',
+    entries: [
+      { type: 'feature', description: 'O playground de `Modal (legado)` (`/docs/components/dialog`, Seção 01) ganha um 9º botão, "Exportação", ao lado de Confirmação/Destrutivo/Alerta/Informativo/Formulário/Lista/Popup/Tutorial. Abre o composite real `ExportPreviewModal` (`src/components/composites/ExportPreviewModal.tsx`, paridade Tecnopano — Dialog Radix, faixa azul institucional, Tudo/Tabela/Expandida, chips com drag, preview e footer Cancelar/Imprimir/Planilha) — o mesmo já usado em `/docs/patterns/export-modal` e nos botões Excel/PDF de `/docs/patterns/data-listing`. Dados mock temáticos ao restante da página (REQ-4000+, "Requisição de compra N"). Não usa o `ExportModal` legado/portal.' },
+    ],
+  },
+  {
     version: '0.9.2',
     date: '2026-07-27',
     title: 'Dialog FIPS + ExportPreviewModal polish',

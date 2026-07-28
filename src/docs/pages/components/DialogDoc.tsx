@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef } from "react";
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
+import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
-const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
+const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 /* Gradiente gov 3-stops — mesma linguagem do PageHeader/hero (idêntico ao BiDetailDialog do Governança BI) */
 const GOV_GRAD="linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)";
@@ -979,6 +980,55 @@ export function ModalExample() {
 }`;
 }
 
+/* ═══════════════════════════════════════════ EXPORTAÇÃO ═══════════════════════════════════════════ */
+const EXPORT_COLUMNS = [
+  { key: 'codigo', label: 'Código' },
+  { key: 'titulo', label: 'Título' },
+  { key: 'status', label: 'Status' },
+  { key: 'area', label: 'Área' },
+  { key: 'detalhe', label: 'Detalhe expandido' },
+];
+const EXPORT_ROWS = Array.from({ length: 24 }, (_, i) => ({
+  codigo: `REQ-${4000 + i}`,
+  titulo: `Requisição de compra ${i + 1}`,
+  status: i % 3 === 0 ? 'concluido' : 'em_andamento',
+  area: 'Suprimentos',
+  detalhe: `Linha ${i + 1}`,
+}));
+const EXPORT_MODAL_CODE = `// DS-FIPS — ExportPreviewModal "Exportar planilha" — composite completo (paridade Tecnopano)
+// Fonte: src/components/composites/ExportPreviewModal.tsx
+// Padrão dedicado com mais contexto: /docs/patterns/export-modal
+
+import { useState } from "react";
+import { ExportPreviewModal } from "../components/composites/ExportPreviewModal";
+
+const COLUMNS = [
+  { key: "codigo", label: "Código" },
+  { key: "titulo", label: "Título" },
+  { key: "status", label: "Status" },
+  { key: "area", label: "Área" },
+  { key: "detalhe", label: "Detalhe expandido" },
+];
+
+export function ExportExample({ rows }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Exportar</button>
+      <ExportPreviewModal
+        open={open}
+        onOpenChange={setOpen}
+        intent="excel"
+        filename="requisicoes"
+        columns={COLUMNS}
+        data={rows}
+        onExportExcel={() => {/* gerar XLSX */}}
+        onPrint={() => window.print()}
+      />
+    </>
+  );
+}`;
+
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DialogDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
@@ -1169,6 +1219,20 @@ export default function DialogDoc(){
       {/* 8. TUTORIAL CONTEXTUAL */}
       <TutorialModal open={m==="tutorial"} onClose={close} title="Como usar esta página" subtitle="Tour guiado pelos recursos do Modal (Dialog)" steps={tutorialSteps}/>
 
+      {/* 9. EXPORTAÇÃO — composite real ExportPreviewModal (paridade Tecnopano), não o ExportModal legado */}
+      <ExportPreviewModal
+        open={m==="export"}
+        onOpenChange={(v)=> v ? open("export") : close()}
+        intent="excel"
+        filename="requisicoes"
+        columns={EXPORT_COLUMNS}
+        tableColumnKeys={['codigo','titulo','status','area']}
+        expandedColumnKeys={['codigo','titulo','status','area','detalhe']}
+        data={EXPORT_ROWS}
+        onExportExcel={()=>undefined}
+        onPrint={()=>window.print()}
+      />
+
       {/* ══════════════════════════════════════════════
           PAGE CONTENT
           ══════════════════════════════════════════════ */}
@@ -1211,8 +1275,11 @@ export default function DialogDoc(){
               <Copyable label="Modal Tutorial" code={modalCode("tutorial","Como usar esta página","Tour guiado pelos recursos do Modal (Dialog)",540)} preview={<Btn label="❓ Tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")}/>}>
                 <Btn label="❓ Tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")}/>
               </Copyable>
+              <Copyable label="Modal Exportação" code={EXPORT_MODAL_CODE} preview={<Btn label="📤 Exportação" color={C.azulCeuProfundo} onClick={()=>open("export")}/>}>
+                <Btn label="📤 Exportação" color={C.azulCeuProfundo} onClick={()=>open("export")}/>
+              </Copyable>
             </div>
-            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>8 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável e tutorial step-by-step. Todos fecham com ESC, clique no overlay ou botão X.</p>
+            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>9 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step e exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
         </Section>
 
