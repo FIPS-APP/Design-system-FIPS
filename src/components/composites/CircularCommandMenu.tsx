@@ -20,6 +20,8 @@ export type CircularCommandMenuProps = {
   triggerClassName?: string
   radius?: number
   onSelect?: (item: CommandItem) => void
+  /** aria-label do gatilho. Default cobre o uso mais comum (ação por linha de tabela). */
+  ariaLabel?: string
 }
 
 const DEFAULT_TRIGGER_CLASS = cn(
@@ -40,6 +42,7 @@ export function CircularCommandMenu({
   triggerClassName,
   radius = 120,
   onSelect,
+  ariaLabel = 'Ações da linha',
 }: CircularCommandMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -140,7 +143,7 @@ export function CircularCommandMenu({
         whileTap={{ scale: 0.95 }}
         aria-expanded={isOpen}
         aria-haspopup="menu"
-        aria-label="Ações da linha"
+        aria-label={ariaLabel}
       >
         <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
           {trigger ?? (

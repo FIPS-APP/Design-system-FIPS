@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.31',
+    date: '2026-07-28',
+    title: '"Circular Menu" vira "Ações": rótulo, título e página reconstruídos',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Item do sidebar "Circular Menu" renomeado para "Ações" (`routes/nav.ts`). A página `/docs/components/circular-command-menu` foi reconstruída: título do H1 alinhado ("Circular Command Menu" → "Ações", estava divergindo do breadcrumb/sidebar) e `ExportButtons` removido — não tem relação com menu de ações, já é documentado na toolbar da Data Listing e do próprio Modal.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Nova seção "Quando usar" explica a relação entre os dois exemplos: `RowActionsMenu` não é um componente separado, é o `CircularCommandMenu` com um preset de trigger de 28px pra caber numa célula de tabela; o exemplo "FAB" é o mesmo componente com o trigger padrão de 56px, pra ação isolada de página. Staging dos demos: caixa tracejada (deixa claro que é área de teste) com min-height menor e texto de instrução acima, no lugar da caixa branca vazia enorme com um "+" perdido no meio.',
+      },
+      {
+        type: 'fix',
+        description:
+          'De passagem: `CircularCommandMenu.tsx` tinha `aria-label="Ações da linha"` fixo no gatilho, correto pro uso real (`RowActionsMenu`, sempre linha de tabela) mas semanticamente errado pro exemplo FAB desta própria página, que não é uma linha. Adicionada prop `ariaLabel` (default mantém o texto atual, sem quebrar o consumidor existente em `DataListingDemo.tsx`); a página agora passa `ariaLabel="Ações rápidas"` no exemplo FAB. Verificado ao vivo em light e dark, abrir/fechar/Esc/setas continuam funcionando nos dois exemplos; `tsc` limpo, `eslint` no mesmo 1 erro pré-existente (`react-hooks/set-state-in-effect` no `useEffect` de mount, não tocado).',
+      },
+    ],
+  },
+  {
     version: '0.11.30',
     date: '2026-07-28',
     title: 'Dashboard: removida a função de copiar',

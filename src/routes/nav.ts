@@ -106,7 +106,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Sidebar', to: '/docs/components/sidebar', icon: PanelLeft },
       { label: 'Toast', to: '/docs/components/toast', icon: Sparkles },
       { label: 'Tooltip', to: '/docs/components/tooltip', icon: MousePointer2 },
-      { label: 'Circular Menu', to: '/docs/components/circular-command-menu', icon: CircleDot },
+      { label: 'Ações', to: '/docs/components/circular-command-menu', icon: CircleDot },
     ],
   },
 ]
