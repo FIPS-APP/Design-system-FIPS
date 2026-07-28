@@ -596,3 +596,13 @@
     animation: none;
   }
 }
+
+/* Documentação DS — preview embutido no card (paridade visual com app Suprimentos) */
+.login-doc-preview .login-v1-container {
+  min-height: min(720px, 85vh);
+}
+
+.login-doc-preview .login-left,
+.login-doc-preview .login-right {
+  min-height: min(720px, 85vh);
+}
