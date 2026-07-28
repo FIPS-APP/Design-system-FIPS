@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Ban, Pencil, Trash2 } from 'lucide-react'
+import { Ban, Pencil, Trash2, Filter, Search, X } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { CopyableInline } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
@@ -228,7 +228,6 @@ function dlPreview(part: string) {
 export default function DataListingDemo() {
   const {dark}=useFipsTheme();
   const accentBg=dark?"rgba(147,189,228,0.12)":"#D3E3F4";
-  const accentRing=dark?"rgba(147,189,228,0.2)":"#D3E3F4";
   const zebraBg=dark?"rgba(255,255,255,0.03)":"#D3E3F440";
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
@@ -247,7 +246,6 @@ export default function DataListingDemo() {
   const [customEnd,setCustomEnd]=useState("");
   const [filters,setFilters]=useState({status:[],dept:[],priority:[]});
   const [search,setSearch]=useState("");
-  const [searchFocused,setSearchFocused]=useState(false);
   const [exportOpen,setExportOpen]=useState(false);
   const [exportIntent,setExportIntent]=useState<ExportIntent>("excel");
   const [configTab,setConfigTab]=useState("colunas");
@@ -441,12 +439,25 @@ export default function DataListingDemo() {
           <CopyableInline label="Toolbar + Table" code={dlCode('toolbar')} preview={dlPreview('toolbar')}>
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
             <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-              {/* Filtros — abre o Drawer pela esquerda (padrão QLP `ListingToolbar`) */}
-              <button ref={filterRef} onClick={()=>setShowFilters(true)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"7px 12px",fontSize:11,fontWeight:600,color:totalFilters>0?C.azulProfundo:C.cinzaEscuro,background:totalFilters>0?accentBg:C.cardBg,border:`1px solid ${totalFilters>0?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s",flexShrink:0}}>{Ic.filter(13,totalFilters>0?C.azulProfundo:C.cinzaChumbo)} Filtros{totalFilters>0&&<span style={{fontSize:9,fontFamily:Fn.mono,padding:"1px 5px",background:C.azulProfundo,color:C.branco,borderRadius:8}}>{totalFilters}</span>}</button>
-              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:32.5,padding:"0 12px",background:"var(--color-surface)",border:`1.5px solid ${searchFocused?C.azulProfundo:"#E2E8F0"}`,borderRadius:8,boxShadow:searchFocused?`0 0 0 3px ${accentRing}`:"none",transition:"all 0.18s ease",cursor:"text",flex:1,minWidth:200,maxWidth:320}}>
-                <span style={{display:"flex",flexShrink:0,opacity:.7}}>{Ic.search(15)}</span>
-                <input value={search} onChange={e=>setSearch(e.target.value)} onFocus={()=>setSearchFocused(true)} onBlur={()=>setSearchFocused(false)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:13,color:C.cinzaEscuro,minWidth:0}}/>
-                {search&&<span onClick={e=>{e.stopPropagation();setSearch("")}} style={{display:"flex",cursor:"pointer",opacity:.5,flexShrink:0}}>{Ic.x(14,C.cinzaChumbo)}</span>}
+              {/* Filtros — botão Button variant="outline" size="sm" do QLP (ListingToolbar.tsx):
+                  sempre com borda/texto var(--color-primary), não condicional ao estado ativo.
+                  --color-primary não muda no dark mode neste projeto, por isso o par manual #93BDE4. */}
+              <button
+                ref={filterRef}
+                onClick={()=>setShowFilters(true)}
+                style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:7,height:30,padding:"0 14px",fontSize:12,fontWeight:600,letterSpacing:"0.01em",whiteSpace:"nowrap",color:dark?"#93BDE4":C.azulProfundo,background:"transparent",border:`1.5px solid ${dark?"#93BDE4":C.azulProfundo}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s",flexShrink:0}}
+                onMouseEnter={e=>e.currentTarget.style.background=accentBg}
+                onMouseLeave={e=>e.currentTarget.style.background="transparent"}
+              >
+                <Filter size={14}/> Filtros
+                {totalFilters>0&&<span style={{marginLeft:2,height:16,minWidth:16,padding:"0 4px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,fontFamily:Fn.body,background:dark?"#93BDE4":C.azulProfundo,color:dark?"#002A68":C.branco,borderRadius:999}}>{totalFilters}</span>}
+              </button>
+              {/* Buscar — mesma anatomia do campo do QLP (ListingToolbar.tsx): flex-1 sem
+                  min/maxWidth, borda estática (sem realce de foco), h-34, ícones lucide 14px. */}
+              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:1}}>
+                <Search size={14} style={{flexShrink:0,color:C.cinzaChumbo}}/>
+                <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}}/>
+                {search&&<X size={14} onClick={e=>{e.stopPropagation();setSearch("")}} style={{flexShrink:0,cursor:"pointer",opacity:.5,color:C.cinzaChumbo}}/>}
               </div>
               {/* Período (single-select dropdown) */}
               <div ref={periodoRef} style={{position:"relative"}}>

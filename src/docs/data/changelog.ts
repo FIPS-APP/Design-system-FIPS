@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.28',
+    date: '2026-07-28',
+    title: 'Data Listing: Filtros e Buscar alinhados ao ListingToolbar real do QLP',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Botão "Filtros" reconstruído a partir da fonte real (`button-variants.ts` + `ListingToolbar.tsx` do QLP, `variant="outline" size="sm"`): passa a ser sempre azul (borda 1.5px + texto `var(--color-primary)`), não mais condicional a `totalFilters>0` — outline no QLP é intrinsecamente azul, a cor não muda com o estado. `h-30/px-14/radius-6/gap-7/fontSize-12/fontWeight-600`, ícone trocado do glifo custom de 3 linhas (`Ic.filter`) para o `Filter` real do lucide-react. Badge de contagem vira pill 16×16 (`radius-999`) igual ao `min-w-4 h-4 rounded-full` do QLP.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Campo "Buscar" perde dois comportamentos que o `ListingToolbar` do QLP não tem: o realce de foco (borda azul + `box-shadow` de anel) e a restrição `minWidth:200/maxWidth:320`. QLP usa borda estática (`var(--color-border)`, sem mudança) e `flex-1` puro, sem teto de largura — o campo agora preenche de verdade o espaço disponível na toolbar. Altura 32.5px → 34px, ícones `Search`/`X` do lucide 14px no lugar do `Ic.search`/`Ic.x` custom, fonte do input 13px → 14px (`text-sm`).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Estado e token que ficaram órfãos com a remoção do foco visual (`searchFocused`/`setSearchFocused`, `accentRing`) removidos — nada mais os referenciava. Par dark-mode `#93BDE4` aplicado ao botão Filtros pelo motivo já documentado nesta doc: `--color-primary` não muda entre light/dark neste projeto, então qualquer uso dele como acento precisa do substituto manual.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Verificado ao vivo: `getComputedStyle` do botão bate com o alvo (30px/12px/600/6px/7px, cor `rgb(0,75,155)`, fundo transparente) e do campo de busca também (34px/8px/8px, `flex-grow:1`, fonte 14px). Contraste conferido em light e dark. `tsc` limpo e `eslint` na mesma contagem pré-existente (9), nenhum erro novo.',
+      },
+    ],
+  },
+  {
     version: '0.11.27',
     date: '2026-07-28',
     title: 'Modal (Dialog) ganha 10ª variante: Novidades',
