@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.29',
+    date: '2026-07-28',
+    title: 'Data Listing: miolo do drawer de Filtros reconstruído a partir do QLP/Governança BI',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Os 3 grupos do drawer de Filtros (Status, Departamento, Prioridade) eram checkbox lists multi-select — divergente do padrão real. Fonte conferida em dois projetos de produção: `Colaboradores.tsx` (QLP) e `KpiDashboardPage.tsx` (Governança BI), ambos com a MESMA anatomia — `PillFilter`/`PillGroup` (pills coloridos single-select, "Todos" + 1 por opção) para campos de classificação com poucas opções, divisor, `ChipSelect` (dropdown fechado "Rótulo: Valor" com radio) para campos de muitas opções. Reconstruído igual: Status e Prioridade viram `PillFilter`, Departamento vira `ChipSelect`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Estado `filters` migrado de `{status: string[], dept: string[], priority: string[]}` (multi-select via `toggleFilter`) para `{status: string, dept: string, priority: string}` (single-select, `""` = Todos) — mesma convenção das duas referências. `toggleFilter` removida; `data` useMemo, `totalFilters` e `clearFilters` ajustados para o novo formato.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Cores dos pills fixas (não theme-aware): o pill ativo é sempre fundo cheio + texto branco, e os tokens semânticos do arquivo (ex. `--color-gov-azul-profundo`) clareiam no dark mode — usariam texto branco sobre fundo claro. `STATUS_PILL_COLOR`/`PRIO_PILL_COLOR`/`PILL_PRIMARY` (novo, cor do pill "Todos") usam hex fixo, saturado o bastante para contraste em ambos os temas.',
+      },
+      {
+        type: 'fix',
+        description:
+          'De passagem: o botão "Ver N resultado(s)" do rodapé do drawer tinha o mesmo problema (`background:C.azulProfundo`, clareia pra `#93BDE4` no dark com texto branco em cima) — trocado para `PILL_PRIMARY`. Verificado ao vivo em light e dark: pills, "Todos", dropdown do ChipSelect e badge de contagem funcionando; `tsc` limpo, `eslint` na mesma contagem pré-existente (9).',
+      },
+    ],
+  },
+  {
     version: '0.11.28',
     date: '2026-07-28',
     title: 'Data Listing: Filtros e Buscar alinhados ao ListingToolbar real do QLP',

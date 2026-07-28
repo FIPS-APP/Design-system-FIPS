@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Ban, Pencil, Trash2, Filter, Search, X } from 'lucide-react'
+import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2 } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { CopyableInline } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
@@ -56,12 +56,81 @@ function Checkbox({checked,onChange,size=16}){return(<div onClick={onChange} sty
 
 function Toggle({checked,onChange}){return(<div onClick={onChange} style={{width:30,height:18,borderRadius:9,background:checked?C.azulProfundo:C.cardBorder,position:"relative",cursor:"pointer",transition:"all .15s",flexShrink:0}}><div style={{position:"absolute",top:2,left:checked?14:2,width:14,height:14,borderRadius:"50%",background:C.branco,boxShadow:"0 1px 3px rgba(0,0,0,.15)",transition:"all .15s"}}/></div>)}
 
+/* Rótulo ícone+texto do grupo de filtro — mesmo padrão de FilterLabel/PillGroup do QLP/Governança BI. */
+function FilterLabel({icon:Icon,children}){return(<p style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:7,fontSize:11,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}><Icon size={12} style={{flexShrink:0,color:C.cinzaChumbo}}/>{children}</p>)}
+
+/* Filtro segmentado single-select — mesmo padrão do PillFilter do QLP/Governança BI:
+   "Todos" + 1 pill por opção; ativo = fundo cheio da cor + texto branco; inativo
+   com cor = dot colorido (escaneável de relance); sem cor (Todos) = azul primário. */
+function PillFilter({options,value,onChange}){
+  return(
+    <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+      {[{value:"",label:"Todos"},...options].map(o=>{
+        const active=o.value===value;
+        return(
+          <button key={o.value||"todos"} type="button" onClick={()=>onChange(o.value)} aria-pressed={active} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,borderRadius:999,cursor:"pointer",transition:"all .1s",border:active?"1px solid transparent":`1px solid ${C.cardBorder}`,background:active?(o.color||PILL_PRIMARY):C.cardBg,color:active?C.branco:C.cinzaChumbo,boxShadow:active?"0 1px 2px rgba(0,0,0,.08)":"none"}}>
+            {o.color&&!active&&<span style={{width:6,height:6,borderRadius:"50%",background:o.color,flexShrink:0}}/>}
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Chip de filtro — dropdown fechado "Rótulo: Valor" com radio. Mesmo padrão do
+   ChipSelect do QLP/Governança BI: usar em campos de muitas opções dentro do
+   drawer de filtros; formulário usa <Select>. */
+function ChipSelect({icon:Icon,label,options,value,onChange}){
+  const [open,setOpen]=useState(false);
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!open)return;
+    const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};
+    document.addEventListener("mousedown",h);
+    return()=>document.removeEventListener("mousedown",h);
+  },[open]);
+  const display=options.find(o=>o.value===value)?.label||"Todos";
+  return(
+    <div ref={ref} style={{position:"relative"}}>
+      <button type="button" onClick={()=>setOpen(v=>!v)} style={{display:"flex",width:"100%",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,color:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${open?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,boxShadow:open?`0 0 0 2px ${C.azulProfundo}1F`:"none",transition:"all .15s"}}>
+        {Icon&&<Icon size={14} style={{flexShrink:0,opacity:.6}}/>}
+        <span style={{color:C.cinzaChumbo,flexShrink:0}}>{label}:</span>
+        <span style={{flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"left",fontWeight:700,color:C.cinzaEscuro}}>{display}</span>
+        <span style={{display:"flex",flexShrink:0,transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}>{Ic.chev(10,C.cinzaChumbo)}</span>
+      </button>
+      {open&&(
+        <div role="listbox" style={{position:"absolute",left:0,top:"calc(100% + 6px)",zIndex:50,minWidth:"100%",maxHeight:280,overflowY:"auto",background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"8px 8px 8px 14px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",padding:"6px 0"}}>
+          {[{value:"",label:"Todos"},...options].map(o=>{
+            const active=o.value===value;
+            return(
+              <div key={o.value||"todos"} role="option" aria-selected={active} onClick={()=>{onChange(o.value);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 14px",fontSize:11,fontWeight:active?700:500,color:active?C.azulProfundo:C.cinzaEscuro,cursor:"pointer",background:active?`${C.azulProfundo}10`:"transparent",transition:"background .12s"}} onMouseEnter={e=>{if(!active)e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{if(!active)e.currentTarget.style.background="transparent"}}>
+                <span style={{display:"flex",flexShrink:0,alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",border:`1.5px solid ${active?C.azulProfundo:C.cardBorder}`}}>{active&&<span style={{width:6,height:6,borderRadius:"50%",background:C.azulProfundo}}/>}</span>
+                <span style={{flex:1}}>{o.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const STATUSES=["Aprovada","Pendente","Em análise","Recusada"];
 const DEPTS=["SSMA","Operações","TI","Suprimentos","Manutenção","Financeiro"];
 const PRIO=["Crítica","Alta","Média","Baixa"];
 const NAMES=["Mariana Souza","Carlos Pereira","Amanda Silva","João Mendes","Patricia Costa","Rafael Lima","Beatriz Santos","Eduardo Almeida","Fernanda Castro","Lucas Oliveira"];
 const STATUS_COLOR={"Aprovada":"sucesso","Pendente":"atencao","Em análise":"info","Recusada":"critico"};
 const PRIO_COLOR={"Crítica":C.danger,"Alta":C.amareloEscuro,"Média":C.azulClaro,"Baixa":C.cinzaChumbo};
+/* Cores fixas (não theme-aware) para o fundo cheio dos PillFilter — o pill ativo
+   é sempre texto branco sobre a cor, então usa o tom saturado dos badges em vez
+   do token light/dark (que em muitos casos clareia no dark e perde contraste). */
+const STATUS_PILL_COLOR={"Aprovada":"#00A83E","Pendente":"#F6921E","Em análise":"#002A68","Recusada":"#DC3545"};
+const PRIO_PILL_COLOR={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#6B7784"};
+/* Cor fixa do pill "Todos" (sem cor semântica própria) — não usa C.azulProfundo
+   porque esse token É theme-aware (var(--color-gov-azul-profundo)) e clareia pra
+   #93BDE4 no dark, o que quebraria o texto branco por cima. */
+const PILL_PRIMARY="#0057B8";
 
 function seed(n){
   let r=137;const rnd=()=>{r=(r*9301+49297)%233280;return r/233280;};
@@ -244,7 +313,8 @@ export default function DataListingDemo() {
   const [showCustom,setShowCustom]=useState(false);
   const [customStart,setCustomStart]=useState("");
   const [customEnd,setCustomEnd]=useState("");
-  const [filters,setFilters]=useState({status:[],dept:[],priority:[]});
+  // '' = "Todos" (sem filtro) — mesma convenção do PillFilter/ChipSelect do QLP/Governança BI: single-select por grupo, não multi.
+  const [filters,setFilters]=useState({status:"",dept:"",priority:""});
   const [search,setSearch]=useState("");
   const [exportOpen,setExportOpen]=useState(false);
   const [exportIntent,setExportIntent]=useState<ExportIntent>("excel");
@@ -258,16 +328,15 @@ export default function DataListingDemo() {
   const data=useMemo(()=>{
     let r=allData;
     if(search)r=r.filter(x=>x.id.toLowerCase().includes(search.toLowerCase())||x.sol.toLowerCase().includes(search.toLowerCase()));
-    if(filters.status.length)r=r.filter(x=>filters.status.includes(x.status));
-    if(filters.dept.length)r=r.filter(x=>filters.dept.includes(x.dept));
-    if(filters.priority.length)r=r.filter(x=>filters.priority.includes(x.priority));
+    if(filters.status)r=r.filter(x=>x.status===filters.status);
+    if(filters.dept)r=r.filter(x=>x.dept===filters.dept);
+    if(filters.priority)r=r.filter(x=>x.priority===filters.priority);
     return r.slice(0,10);
   },[allData,search,filters]);
   const D=DENSITY[density];
 
-  const totalFilters=filters.status.length+filters.dept.length+filters.priority.length;
-  const toggleFilter=(group,val)=>setFilters(f=>{const a=f[group]||[];return{...f,[group]:a.includes(val)?a.filter(v=>v!==val):[...a,val]}});
-  const clearFilters=()=>setFilters({status:[],dept:[],priority:[]});
+  const totalFilters=[filters.status,filters.dept,filters.priority].filter(Boolean).length;
+  const clearFilters=()=>setFilters({status:"",dept:"",priority:""});
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
 
@@ -539,46 +608,38 @@ export default function DataListingDemo() {
                   </div>
                   <button onClick={()=>setShowFilters(false)} aria-label="Fechar painel" style={{position:"absolute",top:20,right:16,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",border:"none",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>{Ic.x(16,"currentColor")}</button>
                 </div>
-                {/* Miolo */}
-                <div style={{flex:1,overflowY:"auto",padding:"20px 24px",display:"flex",flexDirection:"column",gap:18}}>
+                {/* Miolo — padrão QLP/Governança BI: pills para classificação (poucas opções,
+                    1 clique, cor escaneável), divisor, chip-dropdown pra muitas opções. */}
+                <div style={{flex:1,overflowY:"auto",padding:"20px 24px",display:"flex",flexDirection:"column",gap:16}}>
                   <div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Status</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                      {STATUSES.map(s=>(
-                        <div key={s} onClick={()=>toggleFilter("status",s)} style={{padding:"7px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.status.includes(s)?C.azulProfundo:C.cardBorder}`,background:filters.status.includes(s)?C.azulProfundo:C.cardBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.status.includes(s)&&Ic.check(10)}</div>
-                          <Badge variant={STATUS_COLOR[s]} dot dark={dark}>{s}</Badge>
-                        </div>
-                      ))}
-                    </div>
+                    <FilterLabel icon={Activity}>Status</FilterLabel>
+                    <PillFilter
+                      value={filters.status}
+                      onChange={v=>setFilters(f=>({...f,status:v}))}
+                      options={STATUSES.map(s=>({value:s,label:s,color:STATUS_PILL_COLOR[s]}))}
+                    />
                   </div>
                   <div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Departamento</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                      {DEPTS.map(d=>(
-                        <div key={d} onClick={()=>toggleFilter("dept",d)} style={{padding:"7px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.dept.includes(d)?C.azulProfundo:C.cardBorder}`,background:filters.dept.includes(d)?C.azulProfundo:C.cardBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.dept.includes(d)&&Ic.check(10)}</div>
-                          <span>{d}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <FilterLabel icon={Flag}>Prioridade</FilterLabel>
+                    <PillFilter
+                      value={filters.priority}
+                      onChange={v=>setFilters(f=>({...f,priority:v}))}
+                      options={PRIO.map(p=>({value:p,label:p,color:PRIO_PILL_COLOR[p]}))}
+                    />
                   </div>
-                  <div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Prioridade</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                      {PRIO.map(p=>(
-                        <div key={p} onClick={()=>toggleFilter("priority",p)} style={{padding:"7px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.priority.includes(p)?C.azulProfundo:C.cardBorder}`,background:filters.priority.includes(p)?C.azulProfundo:C.cardBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.priority.includes(p)&&Ic.check(10)}</div>
-                          <span style={{display:"inline-flex",alignItems:"center",gap:5}}><span style={{width:7,height:7,borderRadius:"50%",background:PRIO_COLOR[p]}}/>{p}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <div style={{height:1,background:C.cardBorder}}/>
+                  <ChipSelect
+                    icon={Building2}
+                    label="Departamento"
+                    value={filters.dept}
+                    onChange={v=>setFilters(f=>({...f,dept:v}))}
+                    options={DEPTS.map(d=>({value:d,label:d}))}
+                  />
                 </div>
                 {/* Rodapé fixo */}
                 <div style={{display:"flex",gap:8,flexShrink:0,padding:"16px 24px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg}}>
                   <button onClick={clearFilters} disabled={totalFilters===0} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:totalFilters===0?C.textLight:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:totalFilters===0?"default":"pointer",opacity:totalFilters===0?.6:1,transition:"all .15s"}}>Limpar tudo</button>
-                  <button onClick={()=>setShowFilters(false)} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:700,fontFamily:Fn.body,color:C.branco,background:C.azulProfundo,border:"none",borderRadius:8,cursor:"pointer",transition:"all .15s"}}>Ver {data.length} resultado(s)</button>
+                  <button onClick={()=>setShowFilters(false)} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:700,fontFamily:Fn.body,color:C.branco,background:PILL_PRIMARY,border:"none",borderRadius:8,cursor:"pointer",transition:"all .15s"}}>Ver {data.length} resultado(s)</button>
                 </div>
               </div>
             </div>

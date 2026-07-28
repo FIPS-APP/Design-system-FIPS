@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.28`
+## Versão atual: `v0.11.29`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.29 | 2026-07-28 | Miolo do drawer de Filtros (`/docs/patterns/data-listing`) reconstruído a partir do padrão real do QLP (`Colaboradores.tsx`) e Governança BI (`KpiDashboardPage.tsx`): checkbox lists multi-select → `PillFilter` single-select (Status, Prioridade) + `ChipSelect` dropdown (Departamento), com divisor entre os dois grupos — mesma anatomia "pills pra poucas opções, chip pra muitas" das duas referências. Estado de filtro migrado de array (`string[]`) pra string única (`''` = Todos). Corrigido de passagem: contraste do pill "Todos" e do botão "Ver N resultado(s)" em dark mode, que caíam no token `--color-gov-azul-profundo` (clareia pra #93BDE4 no dark) com texto branco por cima |
 | 0.11.28 | 2026-07-28 | Botão "Filtros" e campo "Buscar" da toolbar de `/docs/patterns/data-listing` alinhados ao `ListingToolbar` real do QLP (`button-variants.ts` + `ListingToolbar.tsx`): Filtros agora é sempre outline azul (borda 1.5px + texto `--color-primary`, não condicional ao estado ativo), h-30/px-14/radius-6/fontSize-12, ícone `Filter` do lucide (era um glifo de 3 linhas custom) e badge de contagem em pill. Busca perde o realce de foco (borda azul + anel) e o `min/maxWidth` (200-320px) que o QLP não tem — vira h-34 estático, `flex-1` de verdade, ícones `Search`/`X` do lucide 14px. Par dark-mode `#93BDE4` aplicado ao botão pelo mesmo motivo já documentado (`--color-primary` fixo no dark) |
 | 0.11.27 | 2026-07-28 | Playground de `/docs/components/dialog` ganha 10ª variante: botão "Novidades" abre o `ChangelogModal` real (`src/components/layout/ChangelogModal.tsx`) — mesmo componente do rodapé do sidebar, não uma cópia. Props reais são só `{ open, onOpenChange }`; as versões vêm de `CHANGELOG` em `docs/data/changelog.ts`, não são configuráveis via prop — o snippet copy-paste documenta isso explicitamente em vez de inventar uma API `changelog`/`currentVersion` que não existe |
 | 0.11.26 | 2026-07-28 | Filtros de `/docs/patterns/data-listing` migrados do popover ancorado (280px) para **Drawer pela esquerda**, seguindo o `ListingToolbar` do QLP: hero institucional (tile âmbar + eyebrow + título + contagem de filtros ativos + X próprio), miolo rolável com os 3 grupos (Status/Departamento/Prioridade) e rodapé fixo `Limpar tudo` + `Ver N resultado(s)`. Fechamento por overlay/X/Esc no lugar do click-outside. Campo **Período** mantido na toolbar, como pedido; busca e par Excel/PDF inalterados |
