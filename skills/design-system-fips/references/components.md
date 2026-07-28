@@ -257,24 +257,29 @@ Não faça:
 
 Fonte: `src/components/composites/ExportPreviewModal.tsx` · canônico Tecnopano `ExportPreviewModal.tsx`
 
-Modal grande de exportação: header (ícone + título + Tela cheia) · segmented **Tudo / Tabela / Expandida** · chips de colunas (toggle + drag) · preview · footer Cancelar / Imprimir / Planilha|PDF.
+Modal grande de exportação: **header hero gov-gradient** (mesma anatomia canônica do `ChangelogModal`/`Modal` — âmbar, eyebrow "EXPORTAÇÃO", JunctionLines, título dinâmico, close/Tela cheia translúcido-branco) · segmented **Tudo / Tabela / Expandida** · chips de colunas (toggle + drag) · preview · footer Cancelar / Imprimir / PDF / Excel.
+
+Header renderizado com `showCloseButton={false}` no `DialogContent` (que mantém a faixa azul 3px + grain próprios) e uma faixa gov-gradient full-bleed por cima (`-mx-6 -mt-6` cancelando o padding do `DialogContent`, clipada pelos cantos arredondados do painel via `overflow-hidden` do ancestral — **não precisa de radius próprio**). Usa `DialogPrimitive.Title`/`DialogPrimitive.Description` crus (não os wrappers `DialogTitle`/`DialogDescription` governados, que têm cor fixa incompatível com fundo escuro) — mesma técnica do `ChangelogModal`.
+
+**Rodapé — cada botão aparece se a callback correspondente for passada** (não depende mais de `intent`, que agora só define o título/ícone default do header): `onPrint` → Imprimir (outline); `onExportPdf` → PDF (primary azul); `onExportExcel` → Excel (**success/verde**, rótulo "Excel" — não "Planilha"). Um consumidor pode passar as 3 para mostrar tudo (ex.: playground `DialogDoc.tsx`) ou só 1-2 pra manter um fluxo focado.
 
 **Família Modal** — demos em:
 - `/docs/components/modal-radix` (Modal Radix — seção ExportPreviewModal)
 - `/docs/patterns/export-modal`
 - botões Excel/PDF em `/docs/patterns/data-listing`
+- botão "Exportação" do playground de `/docs/components/dialog`
 
 ```tsx
 <ExportPreviewModal
   open={open}
   onOpenChange={setOpen}
-  intent="excel"
   columns={cols}
   tableColumnKeys={[...]}
   expandedColumnKeys={[...]}
   data={rows}
-  onExportExcel={(keys, layout) => {}}
   onPrint={(keys, layout) => {}}
+  onExportPdf={(keys, layout) => {}}
+  onExportExcel={(keys, layout) => {}}
 />
 ```
 

@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.10.1`
+## Versão atual: `v0.11.0`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.0 | 2026-07-28 | `ExportPreviewModal` realinhado ao header canônico DS-FIPS (gov-gradient, âmbar, eyebrow, JunctionLines — igual ao `ChangelogModal`), no lugar do header neutro genérico do `DialogContent`. Rodapé: botões passam a aparecer conforme a callback recebida (não mais travado por `intent`) — PDF e Excel (ex-"Planilha", agora verde) ficam disponíveis juntos quando o consumidor passa as 3 callbacks. Afeta todos os usos: Data Listing, Export Modal pattern, Modal Radix doc e o botão "Exportação" do Modal (legado) |
 | 0.10.1 | 2026-07-28 | Playground de `Modal (legado)`: os 9 botões usavam emoji como ícone — trocados por `lucide-react` (Check/X/AlertTriangle/Info/ClipboardEdit/ClipboardList/Maximize2/HelpCircle/Download), mesma troca nos gatilhos "Abrir tutorial"/"Abrir popup". Largura de conteúdo da página 1100→1280px (só aqui) + `margin:auto` (faltava, página não centralizava) — os 9 cabem numa linha em telas de 1920px+ |
 | 0.10.0 | 2026-07-28 | `Modal (legado)` (`/docs/components/dialog`) ganha 9ª variante no playground: botão "Exportação" abre o `ExportPreviewModal` (canônico Tecnopano, não o `ExportModal` legado) — mesmo padrão já em `/docs/patterns/export-modal` e `/docs/patterns/data-listing`, agora também no menu/galeria de modais |
 | 0.9.2 | 2026-07-27 | Dialog FIPS (faixa azul), ExportPreviewModal polish + doc em Modal Radix |

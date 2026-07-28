@@ -1019,12 +1019,12 @@ export function ExportExample({ rows }) {
       <ExportPreviewModal
         open={open}
         onOpenChange={setOpen}
-        intent="excel"
         filename="requisicoes"
         columns={COLUMNS}
         data={rows}
-        onExportExcel={() => {/* gerar XLSX */}}
         onPrint={() => window.print()}
+        onExportPdf={() => {/* gerar PDF */}}
+        onExportExcel={() => {/* gerar XLSX */}}
       />
     </>
   );
@@ -1224,14 +1224,14 @@ export default function DialogDoc(){
       <ExportPreviewModal
         open={m==="export"}
         onOpenChange={(v)=> v ? open("export") : close()}
-        intent="excel"
         filename="requisicoes"
         columns={EXPORT_COLUMNS}
         tableColumnKeys={['codigo','titulo','status','area']}
         expandedColumnKeys={['codigo','titulo','status','area','detalhe']}
         data={EXPORT_ROWS}
-        onExportExcel={()=>undefined}
         onPrint={()=>window.print()}
+        onExportPdf={()=>undefined}
+        onExportExcel={()=>undefined}
       />
 
       {/* ══════════════════════════════════════════════

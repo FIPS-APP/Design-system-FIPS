@@ -7,15 +7,8 @@ import {
   type DragEvent,
   type ReactNode,
 } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogIconTile,
-} from '../ui/dialog'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { Dialog, DialogContent, DialogFooter, DialogClose } from '../ui/dialog'
 import { Button } from '../ui/button'
 import {
   FileSpreadsheet,
@@ -264,6 +257,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        showCloseButton={false}
         className={cn(
           'flex flex-col gap-0 overflow-hidden p-0 sm:p-0',
           fullscreen
@@ -272,23 +266,54 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
             : 'max-h-[85vh] max-w-4xl sm:max-h-[85vh]',
         )}
       >
-          <DialogHeader className="shrink-0 border-b border-[var(--color-border)] px-6 pt-5 pb-4">
-            <div className="flex items-start gap-3 pr-8">
-              <DialogIconTile>
-                <ModalIcon className="h-4 w-4" />
-              </DialogIconTile>
+          {/* Header — hero gov-gradient, mesmo padrão do ChangelogModal (âmbar + eyebrow + JunctionLines) */}
+          <div
+            className="relative -mx-6 -mt-6 shrink-0 overflow-hidden px-6 pt-5 pb-4 text-white"
+            style={{ background: 'var(--fips-banner-content-bg)' }}
+          >
+            <svg
+              viewBox="0 0 320 200"
+              fill="none"
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 -right-5 h-[200px] w-[360px] opacity-[0.06]"
+            >
+              <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+            </svg>
+
+            <DialogClose
+              className="absolute top-3.5 right-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
+              aria-label="Fechar"
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </DialogClose>
+
+            <div className="relative flex items-start gap-3 pr-10">
+              <div
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10"
+                style={{ boxShadow: '0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)' }}
+              >
+                <ModalIcon className="h-5 w-5 text-[var(--color-accent)]" aria-hidden />
+              </div>
               <div className="min-w-0 flex-1">
-                <DialogTitle>{modalTitle}</DialogTitle>
-                <DialogDescription className="mt-0.5">
-                  <strong className="text-[var(--color-fg)]">{data.length}</strong> registros ·{' '}
-                  <strong className="text-[var(--color-fg)]">{previewColumns.length}</strong> colunas
+                <span className="font-heading block text-[11px] font-semibold tracking-[0.14em] text-[var(--color-accent-strong)] uppercase">
+                  Exportação
+                </span>
+                <DialogPrimitive.Title className="font-heading text-[17px] leading-tight font-bold text-white">
+                  {modalTitle}
+                </DialogPrimitive.Title>
+                <DialogPrimitive.Description className="mt-0.5 text-[12px] text-white/65">
+                  <strong className="text-white">{data.length}</strong> registros ·{' '}
+                  <strong className="text-white">{previewColumns.length}</strong> colunas
                   no preview · arquivo <span className="font-mono">{filename}</span>
-                </DialogDescription>
+                </DialogPrimitive.Description>
               </div>
               <button
                 type="button"
                 onClick={() => setFullscreen((f) => !f)}
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--color-border)] px-2.5 py-1.5 text-[10px] font-semibold tracking-wider text-[var(--color-fg-muted)] uppercase transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-fg)]"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.08] px-2.5 py-1.5 text-[10px] font-semibold tracking-wider text-white/75 uppercase transition-colors hover:bg-white/[0.16] hover:text-white"
                 title={fullscreen ? 'Voltar ao tamanho compacto' : 'Ampliar em tela cheia'}
                 aria-pressed={fullscreen}
               >
@@ -296,7 +321,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 {fullscreen ? 'Compacto' : 'Tela cheia'}
               </button>
             </div>
-          </DialogHeader>
+          </div>
 
           <div className="shrink-0 border-b border-[var(--color-border)] px-6 py-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -454,7 +479,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                   <X className="h-3.5 w-3.5" />
                   Cancelar
                 </Button>
-                {isExcelIntent && onPrint ? (
+                {onPrint ? (
                   <Button
                     variant="outline"
                     size="sm"
@@ -465,7 +490,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                     Imprimir
                   </Button>
                 ) : null}
-                {!isExcelIntent && onExportPdf ? (
+                {onExportPdf ? (
                   <Button
                     variant="primary"
                     size="sm"
@@ -476,15 +501,15 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                     PDF
                   </Button>
                 ) : null}
-                {isExcelIntent && onExportExcel ? (
+                {onExportExcel ? (
                   <Button
-                    variant="primary"
+                    variant="success"
                     size="sm"
                     onClick={() => runExport('excel')}
                     disabled={exportKeys.length === 0}
                   >
                     <FileSpreadsheet className="h-3.5 w-3.5" />
-                    Planilha
+                    Excel
                   </Button>
                 ) : null}
               </div>

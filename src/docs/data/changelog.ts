@@ -25,6 +25,17 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.0',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: header canônico DS-FIPS + PDF/Excel juntos no rodapé',
+    entries: [
+      { type: 'fix', description: 'Header do `ExportPreviewModal` usava o header neutro genérico do `DialogContent` (ícone-tile cinza, sem eyebrow, sem gov-gradient) — divergindo do padrão canônico DS-FIPS já usado no `ChangelogModal` ("Novidades do Sistema", modal real de produto): faixa `var(--fips-banner-content-bg)`, ícone-tile 44×44 âmbar, eyebrow "EXPORTAÇÃO", JunctionLines decorativo, título 17px branco, botões Fechar/Tela cheia translúcido-branco. Header reescrito pra bater com essa anatomia — full-bleed via `-mx-6 -mt-6` (cancela o padding do `DialogContent`, clipado pelos cantos arredondados do painel via overflow-hidden do ancestral) + `DialogPrimitive.Title`/`Description` crus no lugar dos wrappers governados (que têm cor fixa incompatível com fundo escuro), mesma técnica do `ChangelogModal`. `DialogContent` ganhou `showCloseButton={false}` — o close agora é próprio, estilizado pro header escuro.' },
+      { type: 'fix', description: 'Rodapé só mostrava Imprimir+Excel(antigo "Planilha") OU PDF, nunca os dois juntos — gate por `intent` (`isExcelIntent && onPrint`, `!isExcelIntent && onExportPdf` etc.), então quem passasse `intent="excel"` nunca via o botão PDF, mesmo passando a callback `onExportPdf`. Gate trocado por presença da própria callback (`onPrint && ...`, `onExportPdf && ...`, `onExportExcel && ...`) — `intent` agora só define o título/ícone default do header. Backward-compatible: quem já passava só 1-2 callbacks continua vendo só esses botões; quem passar as 3 (como o playground de `DialogDoc.tsx`) vê os 4 botões juntos.' },
+      { type: 'fix', description: 'Botão de exportar Excel chamava "Planilha" e usava `variant="primary"` (azul, mesma cor do PDF) — renomeado para "Excel" e trocado para `variant="success"` (verde), diferenciando visualmente das outras ações.' },
+      { type: 'improvement', description: 'Skill `design-system-fips` (`components.md`, repo + `~/.claude/skills/`) atualizada com a nova anatomia do header e a regra de rodapé por callback. Zip de download regenerado.' },
+    ],
+  },
+  {
     version: '0.10.1',
     date: '2026-07-28',
     title: 'Modal (legado): ícones lucide-react + largura pra caber os 9 botões numa linha',
