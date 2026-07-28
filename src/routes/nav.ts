@@ -16,8 +16,6 @@ import {
   PanelLeft,
   PanelTop,
   Settings,
-  BarChart3,
-  FileDown,
   Ruler,
   ScanText,
   SearchCheck,
@@ -72,8 +70,6 @@ export const navGroups: NavGroup[] = [
       { label: 'Hero', to: '/docs/patterns/hero', icon: MonitorSmartphone },
       { label: 'Banner', to: '/docs/patterns/hero-banner', icon: PanelTop },
       { label: 'Configurações', to: '/docs/patterns/configuracoes', icon: Settings },
-      { label: 'Relatórios operacionais', to: '/docs/patterns/relatorios-operacionais', icon: BarChart3 },
-      { label: 'Export modal', to: '/docs/patterns/export-modal', icon: FileDown },
     ],
   },
   {

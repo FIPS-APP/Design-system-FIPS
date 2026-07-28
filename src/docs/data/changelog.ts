@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.6',
+    date: '2026-07-28',
+    title: 'Removidas páginas de padrão: Relatórios operacionais e Export modal',
+    entries: [
+      { type: 'improvement', description: 'Removidas as páginas `/docs/patterns/relatorios-operacionais` e `/docs/patterns/export-modal` do menu Padrões: arquivos `RelatoriosOperacionaisDemo.tsx`/`ExportModalDemo.tsx`, entradas em `routes/nav.ts`, lazy imports/rotas em `App.tsx` e o mapeamento em `TutorialContextual.tsx`. Rotas antigas caem no catch-all e redirecionam pra `/docs/home`, sem erro.' },
+      { type: 'fix', description: 'O parágrafo "também em Padrões → Export modal" em `/docs/components/modal-radix` linkava pra a página removida — removido junto (o link ficaria quebrado). O comentário de referência no code sample de Exportação de `DialogDoc.tsx` e a lista de demos do `ExportPreviewModal` na skill `components.md` também atualizados.' },
+      { type: 'improvement', description: 'Os composites reais `ExportModal` e `ExportPreviewModal` não foram tocados — seguem em uso normal em `/docs/patterns/data-listing`, `/docs/components/modal-radix` e no botão "Exportação" do playground de `/docs/components/dialog`. Só as páginas de demonstração dedicadas saíram do ar.' },
+    ],
+  },
+  {
     version: '0.11.5',
     date: '2026-07-28',
     title: 'ExportPreviewModal: pill group Tudo/Tabela/Expandida menor',

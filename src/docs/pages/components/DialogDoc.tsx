@@ -998,7 +998,6 @@ const EXPORT_ROWS = Array.from({ length: 24 }, (_, i) => ({
 }));
 const EXPORT_MODAL_CODE = `// DS-FIPS — ExportPreviewModal "Exportar planilha" — composite completo (paridade Tecnopano)
 // Fonte: src/components/composites/ExportPreviewModal.tsx
-// Padrão dedicado com mais contexto: /docs/patterns/export-modal
 
 import { useState } from "react";
 import { ExportPreviewModal } from "../components/composites/ExportPreviewModal";

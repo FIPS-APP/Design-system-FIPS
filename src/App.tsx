@@ -41,8 +41,6 @@ const ModalWorkflowDemo = lazy(() => import('./docs/pages/patterns/ModalWorkflow
 const HeroHeaderDoc = lazy(() => import('./docs/pages/patterns/HeroHeaderDoc'))
 const HeroBannerDoc = lazy(() => import('./docs/pages/patterns/HeroBannerDoc'))
 const ConfiguracoesDemo = lazy(() => import('./docs/pages/patterns/ConfiguracoesDemo'))
-const RelatoriosOperacionaisDemo = lazy(() => import('./docs/pages/patterns/RelatoriosOperacionaisDemo'))
-const ExportModalDemo = lazy(() => import('./docs/pages/patterns/ExportModalDemo'))
 const LoginClaudeLab = lazy(() => import('./docs/pages/LoginClaudeLab'))
 function RouteFallback() {
   return (
@@ -99,8 +97,6 @@ export default function App() {
         <Route path="patterns/hero" element={renderLazyRoute(<HeroHeaderDoc />)} />
         <Route path="patterns/hero-banner" element={renderLazyRoute(<HeroBannerDoc />)} />
         <Route path="patterns/configuracoes" element={renderLazyRoute(<ConfiguracoesDemo />)} />
-        <Route path="patterns/relatorios-operacionais" element={renderLazyRoute(<RelatoriosOperacionaisDemo />)} />
-        <Route path="patterns/export-modal" element={renderLazyRoute(<ExportModalDemo />)} />
         <Route path="patterns/hero-header" element={<Navigate to="/docs/patterns/hero" replace />} />
         <Route path="patterns/certificados" element={<Navigate to="/docs/patterns/data-listing" replace />} />
         <Route path="patterns/modal-form" element={<Navigate to="/docs/patterns/modal-workflow" replace />} />

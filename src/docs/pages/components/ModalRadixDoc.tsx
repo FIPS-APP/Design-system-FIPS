@@ -47,12 +47,7 @@ export default function ModalRadixDoc() {
       <DemoSection title="ExportPreviewModal (listagens)">
         <p className="mb-4 text-sm text-[var(--color-fg-muted)]">
           Modal canônico de exportação (Tecnopano → DS): header + Tela cheia, segmented Tudo/Tabela/Expandida,
-          chips com drag, preview e footer Cancelar / Imprimir / Planilha|PDF. Pertence à família Modal —
-          também em{' '}
-          <a href="/docs/patterns/export-modal" className="font-semibold text-[var(--color-primary)] underline-offset-2 hover:underline">
-            Padrões → Export modal
-          </a>
-          .
+          chips com drag, preview e footer Cancelar / Imprimir / Planilha|PDF.
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <ExportButtons

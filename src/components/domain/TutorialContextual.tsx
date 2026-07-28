@@ -56,8 +56,6 @@ export function routeToPageName(path: string): string {
     "patterns/hero": "hero",
     "patterns/hero-banner": "hero-banner",
     "patterns/configuracoes": "configuracoes",
-    "patterns/relatorios-operacionais": "relatorios-operacionais",
-    "patterns/export-modal": "export-modal",
   };
   return map[p] || "";
 }

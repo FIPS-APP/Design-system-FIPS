@@ -266,7 +266,6 @@ Header renderizado com `showCloseButton={false}` no `DialogContent` (que mantém
 
 **Família Modal** — demos em:
 - `/docs/components/modal-radix` (Modal Radix — seção ExportPreviewModal)
-- `/docs/patterns/export-modal`
 - botões Excel/PDF em `/docs/patterns/data-listing`
 - botão "Exportação" do playground de `/docs/components/dialog`
 
