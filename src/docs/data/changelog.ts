@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.12',
+    date: '2026-07-28',
+    title: 'Removida a página Modal Radix',
+    entries: [
+      { type: 'improvement', description: 'Removida `/docs/components/modal-radix` do menu Componentes: arquivo `ModalRadixDoc.tsx`, lazy import/rota em `App.tsx`, entrada em `routes/nav.ts` e a referência na skill `components.md`. Rota antiga cai no catch-all e redireciona pra `/docs/home`.' },
+      { type: 'improvement', description: 'A página demonstrava 3 coisas: `ExportPreviewModal` (também documentado em `/docs/patterns/data-listing` e no botão "Exportação" de `/docs/components/dialog` — não ficou órfão), o composite `Modal`/`ModalFooter` (`src/components/ui/Modal.tsx`, que só era usado ali — fica sem doc dedicada, mas o arquivo não foi apagado) e uma lista de tokens/anatomia do Dialog (só texto, sem consumidor de código).' },
+    ],
+  },
+  {
     version: '0.11.11',
     date: '2026-07-28',
     title: 'Sidebar: "Modal (legado)" renomeado para "Modal"',

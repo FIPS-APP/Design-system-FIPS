@@ -26,7 +26,6 @@ const TabsDoc = lazy(() => import('./docs/pages/components/TabsDoc'))
 const SwitchDoc = lazy(() => import('./docs/pages/components/SwitchDoc'))
 const TableDoc = lazy(() => import('./docs/pages/components/TableDoc'))
 const DialogDoc = lazy(() => import('./docs/pages/components/DialogDoc'))
-const ModalRadixDoc = lazy(() => import('./docs/pages/components/ModalRadixDoc'))
 const DrawerDoc = lazy(() => import('./docs/pages/components/DrawerDoc'))
 const HeaderDoc = lazy(() => import('./docs/pages/components/HeaderDoc'))
 const SidebarDoc = lazy(() => import('./docs/pages/components/SidebarDoc'))
@@ -82,7 +81,6 @@ export default function App() {
         <Route path="components/switch" element={renderLazyRoute(<SwitchDoc />)} />
         <Route path="components/table" element={renderLazyRoute(<TableDoc />)} />
         <Route path="components/dialog" element={renderLazyRoute(<DialogDoc />)} />
-        <Route path="components/modal-radix" element={renderLazyRoute(<ModalRadixDoc />)} />
         <Route path="components/drawer" element={renderLazyRoute(<DrawerDoc />)} />
         <Route path="components/header" element={renderLazyRoute(<HeaderDoc />)} />
         <Route path="components/sidebar" element={renderLazyRoute(<SidebarDoc />)} />

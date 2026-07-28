@@ -265,7 +265,6 @@ Header renderizado com `showCloseButton={false}` no `DialogContent` (que mantém
 **Rodapé — cada botão aparece se a callback correspondente for passada** (não depende mais de `intent`, que agora só define o título/ícone default do header): `onPrint` → Imprimir (outline); `onExportPdf` → PDF (**danger/vermelho**); `onExportExcel` → Excel (**successStrong/verde escuro**, rótulo "Excel" — não "Planilha"). Um consumidor pode passar as 3 para mostrar tudo (ex.: playground `DialogDoc.tsx`) ou só 1-2 pra manter um fluxo focado.
 
 **Família Modal** — demos em:
-- `/docs/components/modal-radix` (Modal Radix — seção ExportPreviewModal)
 - botões Excel/PDF em `/docs/patterns/data-listing`
 - botão "Exportação" do playground de `/docs/components/dialog`
 

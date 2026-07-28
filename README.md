@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.11`
+## Versão atual: `v0.11.12`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.12 | 2026-07-28 | Removida a página "Modal Radix" (`/docs/components/modal-radix`): arquivo, rota, nav e referência na skill. O composite `Modal`/`ModalFooter` (`src/components/ui/Modal.tsx`) só era demoed ali e fica sem doc dedicada — arquivo não foi apagado |
 | 0.11.11 | 2026-07-28 | Item do sidebar renomeado de "Modal (legado)" para "Modal" (`routes/nav.ts`) |
 | 0.11.10 | 2026-07-28 | Removida a Seção 11 "Exportar Código" de `/docs/components/dialog` (cards Modal/TutorialModal/PopupModal com Ver código + Copiar código), junto com o helper `CodeExport` e as 3 constantes de código copy-paste que só ela usava — 500 linhas a menos |
 | 0.11.9 | 2026-07-28 | Removida a função de copiar da Seção 01 (Variantes do sistema) de `/docs/components/button` — os 10 botões (Primário…Link) viram preview puro. Removida a função `variantCode` (geradora do código copiado, sem outros usos) e o texto "Clique em qualquer botão para copiar o código" |
