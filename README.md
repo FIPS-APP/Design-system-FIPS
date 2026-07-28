@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.8`
+## Versão atual: `v0.11.9`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.9 | 2026-07-28 | Removida a função de copiar da Seção 01 (Variantes do sistema) de `/docs/components/button` — os 10 botões (Primário…Link) viram preview puro. Removida a função `variantCode` (geradora do código copiado, sem outros usos) e o texto "Clique em qualquer botão para copiar o código" |
 | 0.11.8 | 2026-07-28 | Removida a função de copiar dos cards da Paleta principal (`/docs/foundations/colors`): wrapper `Copyable` e botão `CopyHex`. Como efeito colateral positivo, os cards passam a preencher a célula do grid (antes encolhiam pro tamanho do texto, com larguras irregulares de 135–189px em células de 329px) |
 | 0.11.7 | 2026-07-28 | Removido o badge "Preferências" do hero de `/docs/patterns/configuracoes` (`PatternPanelHero`, props `badgePill`/`badge`) |
 | 0.11.6 | 2026-07-28 | Removidas as páginas de padrão "Relatórios operacionais" e "Export modal" (rotas, nav, lazy imports, mapeamento do tutorial contextual) e o link cruzado quebrado que sobrava em Modal Radix. Não afeta os composites `ExportModal`/`ExportPreviewModal`, que seguem em uso normal (Data Listing, Modal Radix, botão "Exportação" do Modal legado) |

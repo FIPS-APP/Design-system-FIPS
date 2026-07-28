@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.9',
+    date: '2026-07-28',
+    title: 'Button: removida a função de copiar da Seção 01 (Variantes do sistema)',
+    entries: [
+      { type: 'improvement', description: 'Os 10 botões de exemplo (Primário, Secundário, Contorno, Inverso, Fantasma, Destaque, Realce, Salvar, Perigo, Link) em `/docs/components/button` estavam envolvidos em `Copyable` — clique copiava um snippet standalone (`variantCode`) pro clipboard/playground da página. Removido: os botões agora são só preview visual, sem clique/cursor pointer. Texto da seção ajustado (não menciona mais "clique para copiar").' },
+      { type: 'fix', description: 'Função `variantCode` (gerava o snippet copy-paste, ~50 linhas, sem outros usos) removida junto — ficaria morta no arquivo.' },
+    ],
+  },
+  {
     version: '0.11.8',
     date: '2026-07-28',
     title: 'Cores: removida a função de copiar dos cards da Paleta principal',
