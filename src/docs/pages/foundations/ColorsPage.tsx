@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Copy, Check } from 'lucide-react'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
+import { PlaygroundProvider, CodePlayground } from '../../components/CodePlayground'
 import { CodeExportSection } from '../../components/CodeExport'
 import { fipsPalette, semanticColors, darkSemanticColors } from '../../../tokens/colors'
 
@@ -88,35 +88,16 @@ export default function ColorsPage() {
           <div style={{ display: 'grid', gridTemplateColumns: mob ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
             {swatches.map(([name, hex]) => {
               const displayName = name.replace(/([a-z])([A-Z])/g, '$1 $2')
-              const codeSnippet = `// DS-FIPS — ${displayName}\nconst ${name} = "${hex}";\n// CSS: var(--color-fips-${name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()})`
               return (
-              <Copyable
-                key={name}
-                label={`color-${name}`}
-                code={codeSnippet}
-                preview={
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <div style={{ width: 64, height: 64, borderRadius: 12, background: hex, border: '1px solid rgba(0,0,0,0.1)' }} />
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Saira Expanded', sans-serif", color: '#333B41' }}>{displayName}</div>
-                      <code style={{ fontSize: 12, fontFamily: "'Fira Code', monospace", color: '#6B7784' }}>{hex}</code>
-                    </div>
-                  </div>
-                }
-              >
-              <div style={{ background: C.cardBg, borderRadius: '10px 10px 10px 18px', border: `1px solid ${C.cardBorder}`, overflow: 'hidden' }}>
+              <div key={name} style={{ background: C.cardBg, borderRadius: '10px 10px 10px 18px', border: `1px solid ${C.cardBorder}`, overflow: 'hidden' }}>
                 <div style={{ height: 96, width: '100%', background: hex }} />
-                <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: C.cinzaEscuro, margin: '0 0 4px', fontFamily: Fn.title, textTransform: 'capitalize' }}>
-                      {displayName}
-                    </p>
-                    <p style={{ fontSize: 12, fontFamily: "'Fira Code', monospace", color: C.cinzaChumbo, margin: 0, textTransform: 'uppercase' }}>{hex}</p>
-                  </div>
-                  <CopyHex hex={hex} />
+                <div style={{ padding: '12px 16px' }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: C.cinzaEscuro, margin: '0 0 4px', fontFamily: Fn.title, textTransform: 'capitalize' }}>
+                    {displayName}
+                  </p>
+                  <p style={{ fontSize: 12, fontFamily: "'Fira Code', monospace", color: C.cinzaChumbo, margin: 0, textTransform: 'uppercase' }}>{hex}</p>
                 </div>
               </div>
-              </Copyable>
               )
             })}
           </div>

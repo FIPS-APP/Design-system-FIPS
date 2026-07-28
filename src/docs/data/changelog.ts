@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.8',
+    date: '2026-07-28',
+    title: 'Cores: removida a função de copiar dos cards da Paleta principal',
+    entries: [
+      { type: 'improvement', description: 'Os cards da seção "Paleta principal" (`/docs/foundations/colors`) tinham dois mecanismos de cópia sobrepostos: o wrapper `Copyable` (card inteiro clicável, alimentava o playground no fim da página) e o botão de ícone `CopyHex` no rodapé do card. Ambos removidos — o card agora é só visual (amostra + nome + hex). As seções 02 (Tokens semânticos) e 03 (Paleta Dark Mode) mantêm o `CopyHex`.' },
+      { type: 'fix', description: 'Efeito colateral positivo da remoção: os cards passam a preencher a largura da célula do grid. O `Copyable` usa `display: inline-flex` sem `width` (a não ser com a prop `fullWidth`), então cada card encolhia até o tamanho do próprio texto — larguras irregulares de 135–189px dentro de células de 329px, deixando buracos visíveis entre as colunas.' },
+    ],
+  },
+  {
     version: '0.11.7',
     date: '2026-07-28',
     title: 'Configurações: removido badge "Preferências" do hero',
