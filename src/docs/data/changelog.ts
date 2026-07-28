@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.30',
+    date: '2026-07-28',
+    title: 'Dashboard: removida a função de copiar',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Os 3 blocos de `/docs/patterns/dashboard` (Barra de Filtros, KPI Cards, Gráficos) estavam envolvidos em `Copyable` — clique em qualquer um copiava um snippet standalone. Removido: agora são preview puro. Junto saiu o "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem nenhum produtor — mesmo tratamento das v0.11.18/0.11.21/0.11.25.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Removidos o gerador `dashCode` (3 snippets copy-paste) e os componentes `DashPreviewKPI`/`DashPreviewFilters`/`DashPreviewChart` — miniaturas que existiam só para o cartão de preview do playground e não são renderizadas em lugar nenhum da página: 211 linhas a menos.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O hero da página ainda dizia "Clique em qualquer seção para copiar o código" — frase que passou a ser falsa com a remoção. Corrigida. `CodeExportSection` mantido (contexto próprio, independente do `PlaygroundProvider`). Verificado ao vivo: 0 elementos clicáveis de cópia, 0 erro de console, filtros/KPIs/gráficos renderizando normalmente; `tsc` limpo e `eslint` com o mesmo 1 erro pré-existente.',
+      },
+    ],
+  },
+  {
     version: '0.11.29',
     date: '2026-07-28',
     title: 'Data Listing: miolo do drawer de Filtros reconstruído a partir do QLP/Governança BI',
