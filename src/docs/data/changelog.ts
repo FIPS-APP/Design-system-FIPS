@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.7',
+    date: '2026-07-28',
+    title: 'Configurações: removido badge "Preferências" do hero',
+    entries: [
+      { type: 'fix', description: 'Removidas as props `badgePill`/`badge="Preferências"` do `PatternPanelHero` em `ConfiguracoesDemo.tsx` (`/docs/patterns/configuracoes`) — o hero fica só com ícone, título e subtítulo.' },
+    ],
+  },
+  {
     version: '0.11.6',
     date: '2026-07-28',
     title: 'Removidas páginas de padrão: Relatórios operacionais e Export modal',

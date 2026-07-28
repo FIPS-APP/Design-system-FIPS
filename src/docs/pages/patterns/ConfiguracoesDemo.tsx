@@ -30,8 +30,6 @@ export default function ConfiguracoesDemo() {
     <div className="min-h-full bg-[var(--color-surface-muted)] font-sans text-[var(--color-fg)]">
       <div className="mx-auto max-w-4xl space-y-6 px-4 pb-12 pt-4 md:px-8 md:pt-6">
         <PatternPanelHero
-          badgePill
-          badge="Preferências"
           title={
             <>
               Configura<span style={{ color: 'var(--color-accent)' }}>ções</span>
