@@ -168,9 +168,18 @@ Regras:
 Heights reais:
 
 - `Input`/`Select` default: `h-12`
-- `Input`/`Select` compact: `h-9`
+- `Input`/`Select` compact: `h-[35px]`
+- `Select` dense: `h-8`
 - `Textarea` default: `min-h-[132px]`
 - `Textarea` compact: `min-h-[92px]`
+
+Caixa do campo (`Input`, `Select`, `Textarea` — os 3 compartilham):
+
+- **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
+- **Borda**: `border-[1.5px] border-[var(--color-border)]` (sólida, sem alpha).
+- **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
+
+Esses valores vêm do `DSInput` de `/docs/components/input` (35px / 8px / 13px / borda 1.5px), que é a referência visual de formulário do DS. Alinhados na v0.11.14 — antes os primitivos governados usavam `rounded-xl` (12px) + borda `1px` com alpha `/60` + `h-9`/`text-sm`, divergindo da própria doc.
 
 Composição recomendada:
 
@@ -224,7 +233,7 @@ Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal
 | Gov gradient (`GOV_GRAD`) | **âmbar** (`C.amareloOuro` / `--color-accent`) |
 | Cor semântica sólida (verde/vermelho/laranja) | **branco** (`rgba(255,255,255,.9)`) |
 
-8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-9`/`rounded-xl`/`text-sm`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
+8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-[35px]`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
 
 ### Modal "Novidades do Sistema" (Changelog)
 

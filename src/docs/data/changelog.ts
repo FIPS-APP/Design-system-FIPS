@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.14',
+    date: '2026-07-28',
+    title: 'Campos de formulário alinhados à referência da página Input',
+    entries: [
+      { type: 'breaking', description: 'Os campos do Form Workspace não batiam com os da página Input: 36px/radius 12px/fonte 14px contra 35px/radius 8px/fonte 13px. O Form Workspace estava usando o `Input` governado corretamente — quem divergia era o próprio primitivo, contra o `DSInput` local que a página `/docs/components/input` usa como referência visual. Não dava pra corrigir no consumidor: a regra `governance/no-visual-overrides` bloqueia `h-`/`rounded-`/`text-` via className em `Input`/`Select` (testado — o lint acusa e manda "promover a necessidade para uma variante oficial"). Corrigido no primitivo, como a própria regra instrui.' },
+      { type: 'improvement', description: '`Input`, `Select` e `Textarea` governados: radius `rounded-xl` (12px) → `rounded-lg` (8px); borda `border` 1px com alpha `/60` → `border-[1.5px]` sólida em `--color-border`; densidade compact `h-9`+`text-sm` → `h-[35px]`+`text-[13px]`. O dropdown do `Select` acompanhou (`rounded-b-xl` → `rounded-b-lg`, borda 1.5px). Densidade `default` (h-12) e `dense` do Select (h-8) mantidas — só radius/borda mudaram nelas.' },
+      { type: 'improvement', description: 'Alcance verificado antes de aplicar: `density="compact"` é usado em 4 arquivos, todos páginas de doc/demo (`DrawerDoc`, `ModalFormDemo`, `FormWorkspaceDemo`, `DialogDoc`) — todas revalidadas sem erro de console. Skill `components.md` atualizada com as métricas novas da caixa do campo.' },
+    ],
+  },
+  {
     version: '0.11.13',
     date: '2026-07-28',
     title: 'Form Workspace: removida a função de copiar',
