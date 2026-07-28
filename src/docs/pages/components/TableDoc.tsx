@@ -51,7 +51,7 @@ function Avatar({name,photo}){
 /* ═══════════════════════════════════════════
    TABLE COMPONENT
    ═══════════════════════════════════════════ */
-function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,sortable=true,emptyText,loading,footer,paginate,perPageOptions,title,subtitle,icon,iconBg,configurable}){
+function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,sortable=true,emptyText,loading,footer,paginate,perPageOptions,title,subtitle,icon,iconBg,iconBorder,configurable}){
   const [sortCol,setSortCol]=useState(null);
   const [sortDir,setSortDir]=useState("asc");
   const [selected,setSelected]=useState([]);
@@ -126,14 +126,15 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
 
   return(
     <div style={{border:`1px solid ${C.cardBorder}`,borderRadius:"12px 12px 12px 24px",overflow:"hidden",background:C.cardBg,position:"relative"}}>
-      {/* Title bar */}
+      {/* Title bar — mesma anatomia do header do card de Data Listing (DataListingDemo.tsx:593-598):
+          padding 18/20/14, borda inferior, ícone 48 com aro azul, título 16/1.2, subtítulo 11/1.4. */}
       {(title||configurable)&&(
-        <div style={{padding:"16px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+        <div style={{padding:"18px 20px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:14,borderBottom:`1px solid ${C.cardBorder}`}}>
           <div style={{display:"flex",alignItems:"center",gap:14}}>
-            {icon&&<div style={{width:48,height:48,borderRadius:14,background:iconBg||C.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{icon}</div>}
+            {icon&&<div style={{width:48,height:48,borderRadius:14,background:iconBg||C.bg,border:`1px solid ${iconBorder||C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{icon}</div>}
             <div>
-              {title&&<h3 style={{fontSize:15,fontWeight:700,color:C.cinzaEscuro,margin:0,fontFamily:Fn.title}}>{title}</h3>}
-              {subtitle&&<p style={{fontSize:12,color:C.cinzaChumbo,margin:"2px 0 0",fontFamily:Fn.body}}>{subtitle}</p>}
+              {title&&<h3 style={{fontSize:16,fontWeight:700,color:C.cinzaEscuro,margin:0,lineHeight:1.2,fontFamily:Fn.title}}>{title}</h3>}
+              {subtitle&&<p style={{fontSize:11,color:C.cinzaChumbo,margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:12}}>
@@ -642,7 +643,8 @@ export default function TableDoc() {
             title="Requisições de compra"
             subtitle="Lista de requisições do módulo Suprimentos."
             icon={<svg width="28" height="28" viewBox="0 0 48 48" fill="none"><path d="M14 6h14l10 10v24a2 2 0 01-2 2H14a2 2 0 01-2-2V8a2 2 0 012-2z" stroke={C.azulProfundo} strokeWidth="2.5" strokeLinejoin="round"/><path d="M28 6v10h10M20 24h8M20 30h12M20 36h6" stroke={C.azulProfundo} strokeWidth="2" strokeLinecap="round"/></svg>}
-            iconBg={`color-mix(in srgb, ${C.azulProfundo} 5%, transparent)`}
+            iconBg={`color-mix(in srgb, ${C.azulProfundo} 4%, transparent)`}
+            iconBorder={`color-mix(in srgb, ${C.azulProfundo} 8%, transparent)`}
             footer={<><span>12 requisições · 4 pendentes</span><span style={{fontWeight:600,color:C.cinzaEscuro}}>Total: R$ 75.930</span></>}
           />
         </Section>
@@ -817,7 +819,8 @@ export default function TableDoc() {
                 title="Carteira de Fornecedores"
                 subtitle="Fornecedores cadastrados no sistema."
                 icon={<svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect x="8" y="6" width="32" height="36" rx="3" stroke={C.verdeFloresta} strokeWidth="2.5"/><path d="M18 16h4M26 16h4M18 24h4M26 24h4M20 32h8v10H20z" stroke={C.verdeFloresta} strokeWidth="2" strokeLinecap="round"/></svg>}
-                iconBg={`${C.verdeFloresta}0C`}
+                iconBg={`color-mix(in srgb, ${C.verdeFloresta} 4%, transparent)`}
+                iconBorder={`color-mix(in srgb, ${C.verdeFloresta} 8%, transparent)`}
                 footer={<><span>5 fornecedores · 3 ativos</span><span style={{fontWeight:600,color:C.cinzaEscuro}}>Score médio: 77%</span></>}
               />
             </div>

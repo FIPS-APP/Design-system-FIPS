@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.22`
+## Versão atual: `v0.11.23`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.23 | 2026-07-28 | Header do card de `/docs/components/table` (`DSTable`) alinhado ao header do card de Data Listing — direção inversa da v0.11.22 (lá o Data Listing copiou o footer do Table): padding `16px 20px` → `18px 20px 14px`, ganha borda inferior (não tinha), gap 12 → 14, título 15px → 16px + `lineHeight 1.2`, subtítulo 12px → 11px + `margin-top` 2 → 3px + `lineHeight 1.4`, e o tile do ícone ganha aro (nova prop `iconBorder`, 8% da cor do ícone, com o fundo indo de 5% → 4%). Aplicado às 2 chamadas com header (Requisições, Fornecedores) |
 | 0.11.22 | 2026-07-28 | Footer de paginação de `/docs/patterns/data-listing` alinhado ao footer do `<Table>` governado (`TableDoc.tsx`): faixa `--color-surface-muted` (antes sem fundo), padding `12px 18px` → `10px 16px`, setas `←`/`→` (28×28, mesmo estilo dos números) → `‹`/`›` no estilo `pgBtn` (borda `#93BDE4`, texto azul; desabilitada quando na 1ª página), números 28×28 radius 6 → 24×24 radius 5 (inativo transparente/`fg-muted`/400, ativo azul sem borda/700), e adicionado o seletor "Linhas:" que o Table tem e a própria anotação ⑤ da página já documentava como parte do footer |
 | 0.11.21 | 2026-07-28 | Removida a função de copiar da Seção 01 (Vitrine de variantes) de `/docs/components/badge` — as 8 variantes viram preview puro. Junto saíram o helper `badgeCode` e o mapa `VARIANT_STYLES` (só ele usava) e o bloco vazio "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem produtor — mesmo tratamento da v0.11.18. `CodeExportSection` mantido |
 | 0.11.20 | 2026-07-28 | Removida a página "Switch" (`/docs/components/switch`): arquivo `SwitchDoc.tsx`, rota/import em `App.tsx`, item do sidebar em `nav.ts`, mapeamento e conteúdo do tutorial contextual (`TutorialContextual.tsx`, `pageTutorials.ts`). O primitive `Switch` (`src/components/ui/switch.tsx`, governado, exportado pela library) e o composite `SettingsPreferenceRow` não foram tocados — ficam sem doc dedicada, só isso |

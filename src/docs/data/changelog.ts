@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.23',
+    date: '2026-07-28',
+    title: 'Table: header do card alinhado ao padrão do Data Listing',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Direção inversa da v0.11.22 (onde o Data Listing copiou o footer do Table): agora o header do `DSTable` (`/docs/components/table`) passa a seguir o header do card de `/docs/patterns/data-listing` (`DataListingDemo.tsx:593-598`). Padding `16px 20px` → `18px 20px 14px`; ganha `borderBottom` de 1px (não tinha nenhuma, o header e a tabela ficavam colados sem separação); gap 12 → 14.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Tipografia do header: título 15px → 16px com `lineHeight 1.2` (era o default 1.5, que abria 22.5px de altura de linha contra 19.2px da referência); subtítulo 12px → 11px, `margin-top` 2px → 3px e `lineHeight 1.4`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O tile 48×48 do ícone ganha aro, que só o Data Listing tinha: nova prop `iconBorder` no `DSTable`, passada nas 2 chamadas com header (Requisições de compra em azul, Carteira de Fornecedores em verde) como 8% da cor do ícone, com o fundo saindo de 5% para 4% — mesma proporção da referência. Conferido ao vivo via Puppeteer: `getComputedStyle` do header, do tile, do título e do subtítulo bate valor a valor nas duas páginas.',
+      },
+    ],
+  },
+  {
     version: '0.11.22',
     date: '2026-07-28',
     title: 'Data Listing: footer de paginação alinhado ao padrão do Table',
