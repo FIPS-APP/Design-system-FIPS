@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.21',
+    date: '2026-07-28',
+    title: 'Badge: removida a função de copiar da Seção 01 (Vitrine de variantes)',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'As 8 variantes da vitrine de `/docs/components/badge` (Padrão, Secundário, Sucesso, Atenção, Crítico, Contorno, Informativo, Destaque) estavam envolvidas em `Copyable` — clique copiava um snippet standalone. Removido: agora são preview puro, sem clique/cursor pointer. Texto da seção ajustado (não menciona mais "clique em qualquer badge para copiar"). As outras 6 faixas da vitrine (dot, ícone, pílula, contador, removíveis, tamanhos) já eram preview puro desde antes.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Removidos o helper `badgeCode` (gerador do snippet) e o mapa `VARIANT_STYLES` que só ele consumia — ficariam mortos no arquivo. `VARIANTS` (usado pelo componente `Badge` local que renderiza a vitrine) é outro objeto e continua intacto.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Removido também o bloco "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem nenhum produtor — mesmo tratamento aplicado a Select/Button/Cores na v0.11.18. `CodeExportSection` mantido: vive em contexto próprio e segue funcionando.',
+      },
+    ],
+  },
+  {
     version: '0.11.20',
     date: '2026-07-28',
     title: 'Removida a página "Switch" do menu Componentes',
