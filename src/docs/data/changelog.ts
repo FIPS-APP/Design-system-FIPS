@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.19',
+    date: '2026-07-28',
+    title: 'Chip Filtro ganha busca dentro do dropdown',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'O `DSChipFiltro` (`/docs/components/select`) ganha um campo de busca fixo no topo do dropdown, abaixo do botão fechado "Rótulo: Valor". Digitar filtra a lista de opções em tempo real (case-insensitive, substring), igual ao `Autocomplete` — mas mantendo o gatilho fechado e compacto (32.5px) do chip, sem virar um campo de formulário.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Input de busca ganha autofoco ao abrir o dropdown (mesmo padrão do `DSAutocomplete`). Estado vazio quando nada bate com a busca: "Nenhum resultado para \\"X\\"". Lista de opções agora scrolla (`maxHeight: 220, overflowY: auto`) — cap que o `ChipSelect` original (`DrawerDoc.tsx`) já tinha e que se perdeu ao portar o componente pra cá na v0.11.16.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Reset do campo de busca movido de um `useEffect` (disparava `react-hooks/set-state-in-effect`) para o próprio `onClick` do botão gatilho — limpa a busca ao abrir, não ao fechar via effect. `tsc`/`eslint` sem erro novo introduzido.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Card da Guia de uso (Seção 02) atualizado: "abre um dropdown com radio" → "abre um dropdown com busca + radio", e a faixa "2 a 8 opções" relaxada pra "poucas ou muitas — o campo de busca filtra a lista", já que a limitação de tamanho da lista deixou de existir. Nota: isso diverge de propósito do `ChipSelect` real (Governança BI/`DrawerDoc.tsx`), que continua só radio, sem busca — mudança pedida explicitamente pelo usuário e isolada ao tipo novo do DS-FIPS.',
+      },
+    ],
+  },
+  {
     version: '0.11.18',
     date: '2026-07-28',
     title: 'Removido o bloco vazio "Teste ao Vivo" de Select, Button e Cores',

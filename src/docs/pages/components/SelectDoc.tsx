@@ -1046,7 +1046,10 @@ function DSChipFiltro({
 }) {
   const [open, setOpen] = useState(false)
   const [val, setVal] = useState(cv ?? options[0] ?? '')
+  const [query, setQuery] = useState('')
   const ref = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
+  const filtered = options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
 
   useEffect(() => {
     if (!open) return
@@ -1057,11 +1060,20 @@ function DSChipFiltro({
     return () => document.removeEventListener('mousedown', h)
   }, [open])
 
+  useEffect(() => {
+    if (!open) return
+    const t = setTimeout(() => searchRef.current?.focus(), 50)
+    return () => clearTimeout(t)
+  }, [open])
+
   return (
     <div ref={ref} style={{ position: 'relative', width: 'fit-content' }}>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (!open) setQuery('')
+          setOpen((v) => !v)
+        }}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -1106,55 +1118,93 @@ function DSChipFiltro({
             border: `1px solid ${C.cardBorder}`,
             borderRadius: '8px 8px 8px 14px',
             boxShadow: '0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)',
-            padding: '6px 0',
+            padding: '6px',
           }}
         >
-          {options.map((o) => {
-            const active = o === val
-            return (
-              <div
-                key={o}
-                role="option"
-                aria-selected={active}
-                onClick={() => {
-                  setVal(o)
-                  onChange?.(o)
-                  setOpen(false)
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '8px 14px',
-                  fontSize: 11,
-                  fontWeight: active ? 700 : 500,
-                  color: active ? C.azulProfundo : C.cinzaEscuro,
-                  cursor: 'pointer',
-                  background: active ? `${C.azulProfundo}10` : 'transparent',
-                  whiteSpace: 'nowrap',
-                  fontFamily: F.body,
-                }}
-              >
-                <span
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '5px 8px',
+              marginBottom: 4,
+              background: C.bg,
+              border: `1px solid ${C.cardBorder}`,
+              borderRadius: 6,
+            }}
+          >
+            <span style={{ display: 'flex', flexShrink: 0, opacity: 0.6 }}>{Ic.busca(12)}</span>
+            <input
+              ref={searchRef}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              placeholder="Digitar para buscar..."
+              style={{
+                flex: 1,
+                minWidth: 0,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                fontSize: 11,
+                fontFamily: F.body,
+                color: C.cinzaEscuro,
+              }}
+            />
+          </div>
+          <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+            {filtered.length === 0 ? (
+              <div style={{ padding: '10px 14px', fontSize: 11, color: C.textMuted, fontFamily: F.body }}>
+                Nenhum resultado para "{query}"
+              </div>
+            ) : null}
+            {filtered.map((o) => {
+              const active = o === val
+              return (
+                <div
+                  key={o}
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => {
+                    setVal(o)
+                    onChange?.(o)
+                    setOpen(false)
+                  }}
                   style={{
                     display: 'flex',
-                    flexShrink: 0,
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 14,
-                    height: 14,
-                    borderRadius: '50%',
-                    border: `1.5px solid ${active ? C.azulProfundo : C.cardBorder}`,
+                    gap: 8,
+                    padding: '8px 14px',
+                    fontSize: 11,
+                    fontWeight: active ? 700 : 500,
+                    color: active ? C.azulProfundo : C.cinzaEscuro,
+                    cursor: 'pointer',
+                    background: active ? `${C.azulProfundo}10` : 'transparent',
+                    whiteSpace: 'nowrap',
+                    fontFamily: F.body,
                   }}
                 >
-                  {active ? (
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.azulProfundo }} />
-                  ) : null}
-                </span>
-                <span>{o}</span>
-              </div>
-            )
-          })}
+                  <span
+                    style={{
+                      display: 'flex',
+                      flexShrink: 0,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 14,
+                      height: 14,
+                      borderRadius: '50%',
+                      border: `1.5px solid ${active ? C.azulProfundo : C.cardBorder}`,
+                    }}
+                  >
+                    {active ? (
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.azulProfundo }} />
+                    ) : null}
+                  </span>
+                  <span>{o}</span>
+                </div>
+              )
+            })}
+          </div>
         </div>
       ) : null}
     </div>
@@ -1591,8 +1641,8 @@ export default function SelectDoc() {
       name: 'Chip Filtro',
       c: C.azulEscuro,
       badge: 'uso: filtros',
-      desc: 'Botão fechado "Rótulo: Valor" que abre um dropdown com radio. Visual de chip, comportamento de Select.',
-      when: 'Barra de filtros de listagem/toolbar. 2 a 8 opções, uma selecionada por vez.',
+      desc: 'Botão fechado "Rótulo: Valor" que abre um dropdown com busca + radio. Visual de chip, comportamento de Select/Autocomplete.',
+      when: 'Barra de filtros de listagem/toolbar. Poucas opções ou muitas — o campo de busca filtra a lista.',
       not: 'Dentro de formulário — usar Select. Múltiplas opções visíveis ao mesmo tempo — usar Chip Select.',
       ex: "'Departamento' e 'Segmento' nos Filtros avançados; toolbar do Data Listing.",
     },
