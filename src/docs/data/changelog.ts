@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.1',
+    date: '2026-07-28',
+    title: 'Fix: botão de fechar do ExportPreviewModal cortado pelo canto do painel',
+    entries: [
+      { type: 'fix', description: 'O header gov-gradient novo (v0.11.0) posicionava o botão de fechar em `top-3.5 right-3.5` — o mesmo offset do `ChangelogModal`, copiado por analogia. Mas o `DialogContent` usa `rounded-2xl sm:rounded-[20px]`, um raio bem maior que o `rounded-[12px_12px_12px_24px]` do painel hand-rolled do `ChangelogModal`. Nesse offset o botão caía dentro da curva do canto e ficava cortado pelo `overflow-hidden` do painel — só um fragmento arredondado aparecia, sem o ícone X visível. Ajustado para `top-5 right-6`, testado em compacto, tela cheia e dark mode.' },
+    ],
+  },
+  {
     version: '0.11.0',
     date: '2026-07-28',
     title: 'ExportPreviewModal: header canônico DS-FIPS + PDF/Excel juntos no rodapé',

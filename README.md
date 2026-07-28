@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.0`
+## Versão atual: `v0.11.1`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.1 | 2026-07-28 | Fix: botão de fechar do header do `ExportPreviewModal` (novo header gov-gradient, v0.11.0) ficava cortado pelo canto arredondado do painel — copiei o offset `top-3.5 right-3.5` do `ChangelogModal`, mas o `DialogContent` usa raio 20px (bem maior que os 12px do painel do ChangelogModal). Ajustado para `top-5 right-6` |
 | 0.11.0 | 2026-07-28 | `ExportPreviewModal` realinhado ao header canônico DS-FIPS (gov-gradient, âmbar, eyebrow, JunctionLines — igual ao `ChangelogModal`), no lugar do header neutro genérico do `DialogContent`. Rodapé: botões passam a aparecer conforme a callback recebida (não mais travado por `intent`) — PDF e Excel (ex-"Planilha", agora verde) ficam disponíveis juntos quando o consumidor passa as 3 callbacks. Afeta todos os usos: Data Listing, Export Modal pattern, Modal Radix doc e o botão "Exportação" do Modal (legado) |
 | 0.10.1 | 2026-07-28 | Playground de `Modal (legado)`: os 9 botões usavam emoji como ícone — trocados por `lucide-react` (Check/X/AlertTriangle/Info/ClipboardEdit/ClipboardList/Maximize2/HelpCircle/Download), mesma troca nos gatilhos "Abrir tutorial"/"Abrir popup". Largura de conteúdo da página 1100→1280px (só aqui) + `margin:auto` (faltava, página não centralizava) — os 9 cabem numa linha em telas de 1920px+ |
 | 0.10.0 | 2026-07-28 | `Modal (legado)` (`/docs/components/dialog`) ganha 9ª variante no playground: botão "Exportação" abre o `ExportPreviewModal` (canônico Tecnopano, não o `ExportModal` legado) — mesmo padrão já em `/docs/patterns/export-modal` e `/docs/patterns/data-listing`, agora também no menu/galeria de modais |

@@ -284,7 +284,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
             </svg>
 
             <DialogClose
-              className="absolute top-3.5 right-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
+              className="absolute top-5 right-6 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
               aria-label="Fechar"
             >
               <X className="h-4 w-4" aria-hidden />
