@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.24`
+## Versão atual: `v0.11.25`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.25 | 2026-07-28 | Removido o bloco vazio "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`) das 2 páginas restantes onde ele nunca podia ser preenchido: `/docs/patterns/data-listing` (usa só `CopyableInline`, que é passthrough e não alimenta o playground) e `/docs/patterns/form-workspace` (perdeu os `Copyable` na v0.11.13). Levantamento ao vivo confirmou que as outras 8 páginas com playground têm produtores reais (1 a 60 elementos clicáveis) e seguem funcionando — não foram tocadas. `CodeExportSection` mantido nas 2 |
 | 0.11.24 | 2026-07-28 | Removido o bloco "Indicadores rápidos" (`ListingKpiRow`) do topo do card da toolbar em `/docs/patterns/data-listing`, junto com os imports órfãos (`ListingKpiRow`, ícones `Package`/`Clock`/`CheckCircle2`) e o estado `kpiFocus` — que ficou sem nenhum setter e cujas 3 branches de filtro viravam código morto. O composite `ListingKpiRow` e o `StatsCard` não foram tocados, seguem exportados pela library. Os KPI cards com sparkline (bloco separado, acima da toolbar) continuam intactos |
 | 0.11.23 | 2026-07-28 | Header do card de `/docs/components/table` (`DSTable`) alinhado ao header do card de Data Listing — direção inversa da v0.11.22 (lá o Data Listing copiou o footer do Table): padding `16px 20px` → `18px 20px 14px`, ganha borda inferior (não tinha), gap 12 → 14, título 15px → 16px + `lineHeight 1.2`, subtítulo 12px → 11px + `margin-top` 2 → 3px + `lineHeight 1.4`, e o tile do ícone ganha aro (nova prop `iconBorder`, 8% da cor do ícone, com o fundo indo de 5% → 4%). Aplicado às 2 chamadas com header (Requisições, Fornecedores) |
 | 0.11.22 | 2026-07-28 | Footer de paginação de `/docs/patterns/data-listing` alinhado ao footer do `<Table>` governado (`TableDoc.tsx`): faixa `--color-surface-muted` (antes sem fundo), padding `12px 18px` → `10px 16px`, setas `←`/`→` (28×28, mesmo estilo dos números) → `‹`/`›` no estilo `pgBtn` (borda `#93BDE4`, texto azul; desabilitada quando na 1ª página), números 28×28 radius 6 → 24×24 radius 5 (inativo transparente/`fg-muted`/400, ativo azul sem borda/700), e adicionado o seletor "Linhas:" que o Table tem e a própria anotação ⑤ da página já documentava como parte do footer |

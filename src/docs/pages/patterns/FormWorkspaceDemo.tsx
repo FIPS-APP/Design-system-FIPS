@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, CodePlayground } from '../../components/CodePlayground'
 import {
   BadgeDollarSign,
   CalendarDays,
@@ -299,7 +298,6 @@ export default function FormWorkspaceDemo() {
   const [progress] = useState(82)
 
   return (
-    <PlaygroundProvider>
     <TooltipProvider>
     <div style={{ minHeight: '100vh', background: 'var(--color-surface-muted)', fontFamily: "'Open Sans', sans-serif", color: 'var(--color-fg)' }}>
       {/* HEADER HERO */}
@@ -694,8 +692,6 @@ export default function FormWorkspaceDemo() {
         { icon: <ArrowUpFromLine size={20} color="var(--color-gov-azul-escuro)" />, color: 'var(--color-gov-azul-escuro)', bg: 'color-mix(in srgb, var(--color-gov-azul-escuro) 3%, transparent)', tag: 'REGRA 3', title: 'Quando usar em vez do modal', desc: 'Use o Form Workspace quando o formulário tem muitas seções, campos complementares e contexto lateral que não cabem em um modal. Ideal para cadastros complexos, solicitações com múltiplas etapas e fluxos que exigem visão completa dos dados.' },
       ]} />
 
-        <CodePlayground />
-
         <CodeExportSection items={[
           {
             label: 'Form Workspace Layout',
@@ -785,6 +781,5 @@ function FormWorkspacePage() {
       </div>
     </div>
     </TooltipProvider>
-    </PlaygroundProvider>
   )
 }

@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.25',
+    date: '2026-07-28',
+    title: 'Removido o "Teste ao Vivo" vazio de Data Listing e Form Workspace',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Fecha a limpeza começada na v0.11.18: `CodePlayground`/`PlaygroundProvider` removidos de `/docs/patterns/data-listing` e `/docs/patterns/form-workspace`, as 2 páginas restantes onde o bloco nunca podia sair do estado vazio. No Form Workspace foi efeito da v0.11.13 (que removeu os `Copyable`); no Data Listing o motivo é mais sutil — ela usa `CopyableInline`, que apesar do nome é um passthrough (`return <>{children}</>`) e não envia nada pro playground.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Antes de mexer, levantamento ao vivo das 10 páginas que ainda renderizavam o playground: 8 delas (`header`, `sidebar`, `textarea`, `icons`, `radius`, `shadows`, `spacing`, `typography`) têm produtores reais — de 1 a 60 elementos clicáveis — e o "Nenhum elemento selecionado" ali é só o estado inicial, não um bloco morto. Essas não foram tocadas. `CodeExportSection` mantido nas 2 páginas alteradas.',
+      },
+    ],
+  },
+  {
     version: '0.11.24',
     date: '2026-07-28',
     title: 'Data Listing: removido o bloco "Indicadores rápidos" da toolbar',

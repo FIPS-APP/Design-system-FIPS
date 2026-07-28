@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { Ban, Pencil, Trash2 } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, CopyableInline, CodePlayground } from '../../components/CodePlayground'
+import { CopyableInline } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
 import { useFipsTheme } from '../../../hooks/useFipsTheme'
 import { ExportButtons } from '../../../components/composites/ExportButtons'
@@ -321,7 +321,6 @@ export default function DataListingDemo() {
   );
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
@@ -1017,8 +1016,6 @@ export default function DataListingDemo() {
           </div>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[
           {
             label: 'Data Listing Pattern',
@@ -1106,6 +1103,5 @@ function DataListingPage() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
