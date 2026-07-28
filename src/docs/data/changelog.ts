@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.11',
+    date: '2026-07-28',
+    title: 'Sidebar: "Modal (legado)" renomeado para "Modal"',
+    entries: [
+      { type: 'fix', description: 'Item do menu Componentes renomeado de "Modal (legado)" para "Modal" (`routes/nav.ts`) — já batia com o `<h1>` da própria página, só o rótulo do sidebar/breadcrumb estava desatualizado.' },
+    ],
+  },
+  {
     version: '0.11.10',
     date: '2026-07-28',
     title: 'Modal (legado): removida a Seção 11 "Exportar Código"',

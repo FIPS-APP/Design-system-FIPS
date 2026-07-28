@@ -101,7 +101,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Tabs', to: '/docs/components/tabs', icon: BookOpen },
       { label: 'Switch', to: '/docs/components/switch', icon: MousePointer2 },
       { label: 'Table', to: '/docs/components/table', icon: TableProperties },
-      { label: 'Modal (legado)', to: '/docs/components/dialog', icon: ScanText },
+      { label: 'Modal', to: '/docs/components/dialog', icon: ScanText },
       { label: 'Modal Radix', to: '/docs/components/modal-radix', icon: ScanText },
       { label: 'Drawer', to: '/docs/components/drawer', icon: PanelLeft },
       { label: 'Header', to: '/docs/components/header', icon: PanelTop },
