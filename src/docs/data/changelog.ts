@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.17',
+    date: '2026-07-28',
+    title: 'Select: removida a função de copiar da Seção 01 (Tipos de seleção)',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Os 13 exemplos da vitrine de `/docs/components/select` (Select, Autocomplete, Multi-select, Checkbox, Radio, 5 Toggles, Chip Select, Chip Filtro, Segmented) estavam envolvidos em `Copyable` — clique copiava um snippet standalone pro clipboard/playground. Removido: agora são só preview visual, sem clique/cursor pointer. Texto da seção ajustado (não menciona mais "clique para copiar").',
+      },
+      {
+        type: 'fix',
+        description:
+          'Os 9 helpers geradores dos snippets (`selectCode`, `autocompleteCode`, `multiSelectCode`, `checkboxCode`, `radioCode`, `toggleCode`, `chipSelectCode`, `chipFiltroCode`, `segmentedCode`) removidos junto — ficariam mortos no arquivo: 339 linhas a menos. `selectExportCode` foi mantido, é o que alimenta a seção "Exportar código" no fim da página.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Efeito colateral: o bloco "Teste ao Vivo" (`CodePlayground`) fica sem nenhum produtor e passa a exibir só o estado vazio ("Nenhum elemento selecionado"). Mantido por ora para não divergir de `/docs/components/button` e `/docs/foundations/colors`, que ficaram no mesmo estado após as remoções das v0.11.9/v0.11.8.',
+      },
+    ],
+  },
+  {
     version: '0.11.16',
     date: '2026-07-28',
     title: 'Select: novo tipo "Chip Filtro" (dropdown fechado, uso exclusivo em filtros)',
