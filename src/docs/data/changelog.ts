@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.4',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: fileira Tudo/Tabela/Expandida mais compacta',
+    entries: [
+      { type: 'fix', description: 'Seção do segmented control (Tudo/Tabela/Expandida + "Colunas visíveis na listagem") ocupava 70px de altura — reduzida para 58px: wrapper `px-6 py-3`→`px-6 py-2`, botões do segmented `px-4 py-2`→`px-3 py-1.5`, ícone `size={13}`→`size={12}`.' },
+    ],
+  },
+  {
     version: '0.11.3',
     date: '2026-07-28',
     title: 'ExportPreviewModal: PDF vermelho, Excel verde escuro',

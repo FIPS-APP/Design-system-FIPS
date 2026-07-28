@@ -323,7 +323,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
             </div>
           </div>
 
-          <div className="shrink-0 border-b border-[var(--color-border)] px-6 py-3">
+          <div className="shrink-0 border-b border-[var(--color-border)] px-6 py-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div
                 className="flex w-max min-w-0 items-center gap-0.5 p-1"
@@ -341,7 +341,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                       key={id}
                       type="button"
                       onClick={() => setLayout(id)}
-                      className="relative flex items-center gap-1.5 px-4 py-2 text-[11px] font-semibold transition-all"
+                      className="relative flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold transition-all"
                       style={{
                         borderRadius: '8px 8px 8px 14px',
                         background: isActive ? 'rgba(0,75,155,0.15)' : 'transparent',
@@ -353,7 +353,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                         fontWeight: isActive ? 700 : 500,
                       }}
                     >
-                      <Icon size={13} />
+                      <Icon size={12} />
                       {label}
                     </button>
                   )
