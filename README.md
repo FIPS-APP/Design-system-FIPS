@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.4`
+## Versão atual: `v0.11.5`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.5 | 2026-07-28 | Pill group Tudo/Tabela/Expandida do `ExportPreviewModal` reduzido: 264×41 → 216×31 (botões `px-3 py-1.5 text-[11px]`→`px-2 py-1 text-[10px]`, ícone 12→11px, container `p-1`→`p-0.5`) |
 | 0.11.4 | 2026-07-28 | Fileira Tudo/Tabela/Expandida do `ExportPreviewModal` mais compacta: seção 70px → 58px (padding `py-3`→`py-2`, botões `px-4 py-2`→`px-3 py-1.5`, ícone 13→12px) |
 | 0.11.3 | 2026-07-28 | Botões PDF/Excel do `ExportPreviewModal`: PDF de azul para `variant="danger"` (vermelho); Excel de verde médio para nova variante `successStrong` (verde escuro, `--color-success-strong`) — adicionada ao `buttonVariants` governado |
 | 0.11.2 | 2026-07-28 | Fix real do corte no header do `ExportPreviewModal`: o `-mx-6 -mt-6` (v0.11.0) assumia `p-6` no `DialogContent`, mas este componente já zera o padding via `className="...p-0 sm:p-0"` — a margem negativa empurrava o header ~24px pra fora do painel de verdade, cortando o topo inteiro pelo `overflow-hidden`. Removida a margem negativa (não havia padding a cancelar) |

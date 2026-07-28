@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.5',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: pill group Tudo/Tabela/Expandida menor',
+    entries: [
+      { type: 'fix', description: 'Pill group Tudo/Tabela/Expandida reduzido de 264×41 para 216×31: botões `px-3 py-1.5 text-[11px]`→`px-2 py-1 text-[10px]`, ícone `size={12}`→`size={11}`, container `p-1`→`p-0.5`, raios proporcionalmente menores (9/9/9/16 e 7/7/7/12).' },
+    ],
+  },
+  {
     version: '0.11.4',
     date: '2026-07-28',
     title: 'ExportPreviewModal: fileira Tudo/Tabela/Expandida mais compacta',

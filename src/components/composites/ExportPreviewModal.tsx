@@ -326,11 +326,11 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
           <div className="shrink-0 border-b border-[var(--color-border)] px-6 py-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div
-                className="flex w-max min-w-0 items-center gap-0.5 p-1"
+                className="flex w-max min-w-0 items-center gap-0.5 p-0.5"
                 style={{
                   background: 'var(--color-surface)',
                   border: '1px solid var(--color-border)',
-                  borderRadius: '10px 10px 10px 18px',
+                  borderRadius: '9px 9px 9px 16px',
                   boxShadow: 'var(--shadow-card)',
                 }}
               >
@@ -341,9 +341,9 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                       key={id}
                       type="button"
                       onClick={() => setLayout(id)}
-                      className="relative flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold transition-all"
+                      className="relative flex items-center gap-1 px-2 py-1 text-[10px] font-semibold transition-all"
                       style={{
-                        borderRadius: '8px 8px 8px 14px',
+                        borderRadius: '7px 7px 7px 12px',
                         background: isActive ? 'rgba(0,75,155,0.15)' : 'transparent',
                         color: isActive ? 'var(--color-primary)' : 'var(--color-fg-muted)',
                         border: isActive
@@ -353,7 +353,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                         fontWeight: isActive ? 700 : 500,
                       }}
                     >
-                      <Icon size={12} />
+                      <Icon size={11} />
                       {label}
                     </button>
                   )
