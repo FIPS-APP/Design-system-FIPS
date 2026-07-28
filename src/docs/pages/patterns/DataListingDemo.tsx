@@ -729,12 +729,22 @@ export default function DataListingDemo() {
               )})}
             </div>}
 
-            <div style={{padding:"12px 18px",borderTop:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+            {/* Footer — mesma anatomia do footer do <Table> governado (TableDoc.tsx:320-343):
+                faixa C.bg, range à esquerda, "Linhas:" + nav ‹ 1 2 3 4 › à direita. */}
+            <div style={{padding:"10px 16px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap",fontSize:11,color:C.cinzaChumbo,fontFamily:Fn.body}}>
               <span style={{fontSize:11,color:C.textMuted}}>Mostrando 1–{data.length} de 247 registros {selected.size>0&&<>· <strong style={{color:C.cinzaEscuro}}>{selected.size} selecionado{selected.size>1?"s":""}</strong></>}</span>
-              <div style={{display:"flex",gap:4}}>
-                {["←","1","2","3","4","→"].map((p,i)=>(
-                  <button key={i} style={{minWidth:28,height:28,padding:"0 8px",fontSize:11,fontWeight:600,color:p==="1"?C.branco:C.cinzaEscuro,background:p==="1"?C.azulProfundo:C.cardBg,border:`1px solid ${p==="1"?C.azulProfundo:C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>{p}</button>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginLeft:"auto"}}>
+                <div style={{display:"flex",alignItems:"center",gap:4}}>
+                  <span style={{fontSize:11,color:C.textMuted}}>Linhas:</span>
+                  <select defaultValue={10} style={{padding:"2px 4px",fontSize:11,border:`1px solid ${C.cardBorder}`,borderRadius:4,background:C.cardBg,color:C.cinzaEscuro,fontFamily:Fn.body,cursor:"pointer"}}>
+                    {[10,25,50].map(n=><option key={n} value={n}>{n}</option>)}
+                  </select>
+                </div>
+                <button style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:"transparent",color:C.textLight,border:`1px solid ${C.cardBorder}`,borderRadius:5,cursor:"default",transition:"all .15s"}}>‹</button>
+                {[1,2,3,4].map(p=>(
+                  <button key={p} style={{width:24,height:24,fontSize:11,fontWeight:p===1?700:400,fontFamily:Fn.body,background:p===1?C.azulProfundo:"transparent",color:p===1?C.branco:C.cinzaChumbo,border:p===1?"none":`1px solid ${C.cardBorder}`,borderRadius:5,cursor:"pointer"}}>{p}</button>
                 ))}
+                <button style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:C.cardBg,color:C.azulProfundo,border:`1px solid ${C.azulCeu}`,borderRadius:5,cursor:"pointer",transition:"all .15s"}}>›</button>
               </div>
             </div>
           </div>

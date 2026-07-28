@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.22',
+    date: '2026-07-28',
+    title: 'Data Listing: footer de paginação alinhado ao padrão do Table',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O footer de `/docs/patterns/data-listing` tinha uma paginação própria, divergente do footer do `<Table>` governado (`TableDoc.tsx:320-343`) que ela deveria demonstrar. Alinhado: faixa ganha fundo `--color-surface-muted` (antes transparente), padding `12px 18px` → `10px 16px`, gap 8 → 12, e tipografia base (11px/`--color-fg-muted`) no container.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Botões de página: 28×28 radius 6 → 24×24 radius 5. Inativo passa de fundo branco + borda + texto `--color-fg` + peso 600 para fundo transparente + texto `--color-fg-muted` + peso 400; ativo perde a borda azul redundante (só fundo `--color-primary`) e vai a peso 700. Setas `←`/`→` (que usavam o mesmo estilo dos números) viram `‹`/`›` no formato `pgBtn` do Table: `4px 10px`, borda `#93BDE4`, texto azul — e a anterior renderiza no estado desabilitado, coerente com estar na página 1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Adicionado o seletor "Linhas:" (10/25/50) que existe no footer do Table e que a própria anotação ⑤ da página ("Mostrando X-Y de Z + per-page selector + nav") já descrevia como parte do padrão, mas não estava renderizado. Verificado ao vivo via Puppeteer: `getComputedStyle` do footer e dos 6 botões bate valor a valor com o footer do Table (padding, fundo, gap, dimensões, cores, bordas, radius, peso).',
+      },
+    ],
+  },
+  {
     version: '0.11.21',
     date: '2026-07-28',
     title: 'Badge: removida a função de copiar da Seção 01 (Vitrine de variantes)',

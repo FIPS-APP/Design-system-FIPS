@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.21`
+## Versão atual: `v0.11.22`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.22 | 2026-07-28 | Footer de paginação de `/docs/patterns/data-listing` alinhado ao footer do `<Table>` governado (`TableDoc.tsx`): faixa `--color-surface-muted` (antes sem fundo), padding `12px 18px` → `10px 16px`, setas `←`/`→` (28×28, mesmo estilo dos números) → `‹`/`›` no estilo `pgBtn` (borda `#93BDE4`, texto azul; desabilitada quando na 1ª página), números 28×28 radius 6 → 24×24 radius 5 (inativo transparente/`fg-muted`/400, ativo azul sem borda/700), e adicionado o seletor "Linhas:" que o Table tem e a própria anotação ⑤ da página já documentava como parte do footer |
 | 0.11.21 | 2026-07-28 | Removida a função de copiar da Seção 01 (Vitrine de variantes) de `/docs/components/badge` — as 8 variantes viram preview puro. Junto saíram o helper `badgeCode` e o mapa `VARIANT_STYLES` (só ele usava) e o bloco vazio "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem produtor — mesmo tratamento da v0.11.18. `CodeExportSection` mantido |
 | 0.11.20 | 2026-07-28 | Removida a página "Switch" (`/docs/components/switch`): arquivo `SwitchDoc.tsx`, rota/import em `App.tsx`, item do sidebar em `nav.ts`, mapeamento e conteúdo do tutorial contextual (`TutorialContextual.tsx`, `pageTutorials.ts`). O primitive `Switch` (`src/components/ui/switch.tsx`, governado, exportado pela library) e o composite `SettingsPreferenceRow` não foram tocados — ficam sem doc dedicada, só isso |
 | 0.11.19 | 2026-07-28 | `Chip Filtro` (`/docs/components/select`) ganha campo de busca dentro do dropdown: digitar filtra a lista de radio em tempo real (case-insensitive, substring), input com autofoco ao abrir, estado vazio "Nenhum resultado para X", lista com scroll (`maxHeight: 220`, cap que faltava desde a v0.11.16). Diverge de propósito do `ChipSelect` real do Governança BI/`DrawerDoc.tsx` (que é só radio, sem busca) — mudança pedida explicitamente, escopo isolado ao tipo novo do DS-FIPS |
