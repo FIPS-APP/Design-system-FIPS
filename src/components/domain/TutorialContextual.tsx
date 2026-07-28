@@ -40,7 +40,6 @@ export function routeToPageName(path: string): string {
     "components/badge": "badge",
     "components/card": "card",
     "components/tabs": "tabs",
-    "components/switch": "switch",
     "components/table": "table",
     "components/dialog": "dialog",
     "components/drawer": "drawer",

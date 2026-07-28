@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.19`
+## Versão atual: `v0.11.20`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.20 | 2026-07-28 | Removida a página "Switch" (`/docs/components/switch`): arquivo `SwitchDoc.tsx`, rota/import em `App.tsx`, item do sidebar em `nav.ts`, mapeamento e conteúdo do tutorial contextual (`TutorialContextual.tsx`, `pageTutorials.ts`). O primitive `Switch` (`src/components/ui/switch.tsx`, governado, exportado pela library) e o composite `SettingsPreferenceRow` não foram tocados — ficam sem doc dedicada, só isso |
 | 0.11.19 | 2026-07-28 | `Chip Filtro` (`/docs/components/select`) ganha campo de busca dentro do dropdown: digitar filtra a lista de radio em tempo real (case-insensitive, substring), input com autofoco ao abrir, estado vazio "Nenhum resultado para X", lista com scroll (`maxHeight: 220`, cap que faltava desde a v0.11.16). Diverge de propósito do `ChipSelect` real do Governança BI/`DrawerDoc.tsx` (que é só radio, sem busca) — mudança pedida explicitamente, escopo isolado ao tipo novo do DS-FIPS |
 | 0.11.18 | 2026-07-28 | Removido o bloco vazio "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`) de `/docs/components/select`, `/docs/components/button` e `/docs/foundations/colors` — ficou órfão desde as remoções de `Copyable` (v0.11.7–0.11.17), sem nenhum produtor de conteúdo. `CodeExportSection` mantido nas 3 (independente, não depende do `PlaygroundProvider`). De passagem: `ButtonDoc.tsx` tinha frase residual "Para copiar uma variante individual, clique nela acima" (função removida na v0.11.9) — corrigida; `ColorsPage.tsx` tinha 66 linhas de `CodeExportSection` mortas atrás de `{false &&...}` (o comentário já dizia "removido" mas o JSX ficou) — deletadas de vez, junto com o import que ficou órfão |
 | 0.11.17 | 2026-07-28 | Removida a função de copiar da Seção 01 (Tipos de seleção) de `/docs/components/select` — os 13 exemplos viram preview puro. Junto saíram os 9 helpers geradores de snippet (`selectCode`, `autocompleteCode`, `multiSelectCode`, `checkboxCode`, `radioCode`, `toggleCode`, `chipSelectCode`, `chipFiltroCode`, `segmentedCode`), que só eles usavam: 339 linhas a menos. `selectExportCode` foi mantido (alimenta a seção "Exportar código") |

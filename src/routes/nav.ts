@@ -99,7 +99,6 @@ export const navGroups: NavGroup[] = [
       { label: 'Badge', to: '/docs/components/badge', icon: Blocks },
       { label: 'Card', to: '/docs/components/card', icon: LayoutTemplate },
       { label: 'Tabs', to: '/docs/components/tabs', icon: BookOpen },
-      { label: 'Switch', to: '/docs/components/switch', icon: MousePointer2 },
       { label: 'Table', to: '/docs/components/table', icon: TableProperties },
       { label: 'Modal', to: '/docs/components/dialog', icon: ScanText },
       { label: 'Drawer', to: '/docs/components/drawer', icon: PanelLeft },

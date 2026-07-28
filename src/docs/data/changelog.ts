@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.20',
+    date: '2026-07-28',
+    title: 'Removida a página "Switch" do menu Componentes',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Removida a página `/docs/components/switch` (`SwitchDoc.tsx`): rota e lazy import em `App.tsx`, item "Switch" do sidebar em `routes/nav.ts`, mapeamento `"components/switch": "switch"` em `TutorialContextual.tsx` e o bloco de conteúdo do tutorial (`switch: [...]`) em `data/pageTutorials.ts`. Navegar direto pra rota antiga cai no catch-all e volta pra Home, mesmo comportamento das remoções de página anteriores.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O primitive `Switch` (`src/components/ui/switch.tsx`, Radix, exportado pela library em `components/ui/index.ts`) e o composite `SettingsPreferenceRow` — únicos consumidores reais demonstrados na página removida — não foram alterados nem removidos, seguem funcionando normalmente em qualquer app consumidor. Ficam sem doc dedicada no site, só isso.',
+      },
+    ],
+  },
+  {
     version: '0.11.19',
     date: '2026-07-28',
     title: 'Chip Filtro ganha busca dentro do dropdown',

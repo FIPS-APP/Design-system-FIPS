@@ -23,7 +23,6 @@ const TextareaDoc = lazy(() => import('./docs/pages/components/TextareaDoc'))
 const BadgeDoc = lazy(() => import('./docs/pages/components/BadgeDoc'))
 const CardDoc = lazy(() => import('./docs/pages/components/CardDoc'))
 const TabsDoc = lazy(() => import('./docs/pages/components/TabsDoc'))
-const SwitchDoc = lazy(() => import('./docs/pages/components/SwitchDoc'))
 const TableDoc = lazy(() => import('./docs/pages/components/TableDoc'))
 const DialogDoc = lazy(() => import('./docs/pages/components/DialogDoc'))
 const DrawerDoc = lazy(() => import('./docs/pages/components/DrawerDoc'))
@@ -78,7 +77,6 @@ export default function App() {
         <Route path="components/badge" element={renderLazyRoute(<BadgeDoc />)} />
         <Route path="components/card" element={renderLazyRoute(<CardDoc />)} />
         <Route path="components/tabs" element={renderLazyRoute(<TabsDoc />)} />
-        <Route path="components/switch" element={renderLazyRoute(<SwitchDoc />)} />
         <Route path="components/table" element={renderLazyRoute(<TableDoc />)} />
         <Route path="components/dialog" element={renderLazyRoute(<DialogDoc />)} />
         <Route path="components/drawer" element={renderLazyRoute(<DrawerDoc />)} />
