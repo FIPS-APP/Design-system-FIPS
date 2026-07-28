@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.2',
+    date: '2026-07-28',
+    title: 'Fix real: header do ExportPreviewModal cortado pelo overflow-hidden do painel',
+    entries: [
+      { type: 'fix', description: 'A v0.11.0 usava `-mx-6 -mt-6` no header pra cancelar o `p-6` default do `DialogContent` e fazer a faixa gov-gradient sangrar até a borda do painel. Só que o `<DialogContent>` do `ExportPreviewModal` já recebe `className="flex flex-col gap-0 overflow-hidden p-0 sm:p-0"` — zerando o padding via `cn()`/`twMerge` — então não havia `p-6` nenhum a cancelar. A margem negativa empurrava o header ~24px além do painel de verdade, e essa fatia inteira (ícone-tile, eyebrow, parte do título) sumia cortada pelo `overflow-hidden` do `DialogPrimitive.Content`. O fix da v0.11.1 (mover o botão fechar) tratou só um sintoma lateral do mesmo bug. Removida a margem negativa — o header já nasce encostado nos cantos do painel (padding real = 0), sem precisar de bleed.' },
+    ],
+  },
+  {
     version: '0.11.1',
     date: '2026-07-28',
     title: 'Fix: botão de fechar do ExportPreviewModal cortado pelo canto do painel',

@@ -268,7 +268,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
       >
           {/* Header — hero gov-gradient, mesmo padrão do ChangelogModal (âmbar + eyebrow + JunctionLines) */}
           <div
-            className="relative -mx-6 -mt-6 shrink-0 overflow-hidden px-6 pt-5 pb-4 text-white"
+            className="relative shrink-0 overflow-hidden px-6 pt-5 pb-4 text-white"
             style={{ background: 'var(--fips-banner-content-bg)' }}
           >
             <svg
