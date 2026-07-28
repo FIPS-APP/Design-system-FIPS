@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.10',
+    date: '2026-07-28',
+    title: 'Modal (legado): removida a Seção 11 "Exportar Código"',
+    entries: [
+      { type: 'improvement', description: 'Removida a Seção 11 de `/docs/components/dialog` — três cards (Modal, TutorialModal, PopupModal) com botões "Ver código" (expandia um `<pre>` com o fonte completo) e "Copiar código". Junto saíram o helper local `CodeExport` e as 3 constantes de código copy-paste (`MODAL_CODE`, `TUTORIAL_MODAL_CODE`, `POPUP_MODAL_CODE`), que só essa seção consumia: 500 linhas removidas do arquivo.' },
+      { type: 'improvement', description: 'A constante `EXPORT_MODAL_CODE` foi mantida — é usada pelo `Copyable` do botão "Exportação" (Seção 01), que segue alimentando o playground "Teste ao Vivo" no fim da página.' },
+    ],
+  },
+  {
     version: '0.11.9',
     date: '2026-07-28',
     title: 'Button: removida a função de copiar da Seção 01 (Variantes do sistema)',
