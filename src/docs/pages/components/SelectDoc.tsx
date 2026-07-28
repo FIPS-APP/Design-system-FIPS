@@ -1031,6 +1031,137 @@ function DSChipSelect({
   )
 }
 
+/* ═══════════════════════════════════════════ 7b. CHIP FILTRO (dropdown fechado, uso exclusivo em filtros) ═══════════════════════════════════════════ */
+function DSChipFiltro({
+  icon,
+  label,
+  options = [],
+  value: cv,
+  onChange,
+}: {
+  icon?: ReactNode
+  label: string
+  options?: string[]
+  value?: string
+  onChange?: (v: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const [val, setVal] = useState(cv ?? options[0] ?? '')
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [open])
+
+  return (
+    <div ref={ref} style={{ position: 'relative', width: 'fit-content' }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '7px 12px',
+          fontSize: 11,
+          fontWeight: 600,
+          color: C.cinzaEscuro,
+          background: C.cardBg,
+          border: `1px solid ${open ? C.azulProfundo : C.cardBorder}`,
+          borderRadius: 8,
+          cursor: 'pointer',
+          fontFamily: F.body,
+          boxShadow: open ? `0 0 0 2px ${C.azulProfundo}1F` : 'none',
+          transition: 'all .15s',
+        }}
+      >
+        {icon ? <span style={{ display: 'flex', flexShrink: 0, opacity: 0.6 }}>{icon}</span> : null}
+        <span style={{ color: C.cinzaChumbo, flexShrink: 0 }}>{label}:</span>
+        <span style={{ fontWeight: 700, color: C.cinzaEscuro, whiteSpace: 'nowrap' }}>{val}</span>
+        <span
+          style={{
+            display: 'flex',
+            flexShrink: 0,
+            transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform .2s',
+          }}
+        >
+          {Ic.chevron(10)}
+        </span>
+      </button>
+      {open ? (
+        <div
+          role="listbox"
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 'calc(100% + 6px)',
+            zIndex: 50,
+            minWidth: '100%',
+            background: C.cardBg,
+            border: `1px solid ${C.cardBorder}`,
+            borderRadius: '8px 8px 8px 14px',
+            boxShadow: '0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)',
+            padding: '6px 0',
+          }}
+        >
+          {options.map((o) => {
+            const active = o === val
+            return (
+              <div
+                key={o}
+                role="option"
+                aria-selected={active}
+                onClick={() => {
+                  setVal(o)
+                  onChange?.(o)
+                  setOpen(false)
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 14px',
+                  fontSize: 11,
+                  fontWeight: active ? 700 : 500,
+                  color: active ? C.azulProfundo : C.cinzaEscuro,
+                  cursor: 'pointer',
+                  background: active ? `${C.azulProfundo}10` : 'transparent',
+                  whiteSpace: 'nowrap',
+                  fontFamily: F.body,
+                }}
+              >
+                <span
+                  style={{
+                    display: 'flex',
+                    flexShrink: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 14,
+                    height: 14,
+                    borderRadius: '50%',
+                    border: `1.5px solid ${active ? C.azulProfundo : C.cardBorder}`,
+                  }}
+                >
+                  {active ? (
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.azulProfundo }} />
+                  ) : null}
+                </span>
+                <span>{o}</span>
+              </div>
+            )
+          })}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 /* ═══════════════════════════════════════════ 8. SEGMENTED CONTROL ═══════════════════════════════════════════ */
 function DSSegmented({
   label,
@@ -1526,6 +1657,57 @@ export function ChipSelect${label.replace(/\s+/g, '')}() {
 }`;
 }
 
+function chipFiltroCode(label: string, opts: string, defaultValue: string): string {
+  return `// DS-FIPS — Chip Filtro "${label}" — uso exclusivo em barras de filtro (formulário usa Select) — Copy-paste ready
+import { useState, useEffect, useRef } from "react";
+
+export function ChipFiltro${label.replace(/\s+/g, '')}() {
+  const options = ${opts};
+  const [open, setOpen] = useState(false);
+  const [val, setVal] = useState("${defaultValue}");
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative", width: "fit-content" }}>
+      <button type="button" onClick={() => setOpen((v) => !v)}
+        style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 12px", fontSize: 11, fontWeight: 600, color: "#333B41", background: "#FFFFFF", border: \`1px solid \${open ? "#004B9B" : "#D7E0EA"}\`, borderRadius: 8, cursor: "pointer", fontFamily: "'Open Sans', sans-serif", boxShadow: open ? "0 0 0 2px #004B9B1F" : "none", transition: "all .15s" }}>
+        <span style={{ color: "#7B8C96", flexShrink: 0 }}>${label}:</span>
+        <span style={{ fontWeight: 700, color: "#333B41", whiteSpace: "nowrap" }}>{val}</span>
+        <svg width="10" height="10" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }}>
+          <path d="M6 8l4 4 4-4" stroke="#7B8C96" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      {open && (
+        <div role="listbox" style={{ position: "absolute", left: 0, top: "calc(100% + 6px)", zIndex: 50, minWidth: "100%", background: "#FFFFFF", border: "1px solid #D7E0EA", borderRadius: "8px 8px 8px 14px", boxShadow: "0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)", padding: "6px 0" }}>
+          {options.map((o) => {
+            const active = o === val;
+            return (
+              <div key={o} role="option" aria-selected={active} onClick={() => { setVal(o); setOpen(false); }}
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", fontSize: 11, fontWeight: active ? 700 : 500, color: active ? "#004B9B" : "#333B41", cursor: "pointer", background: active ? "#004B9B10" : "transparent", whiteSpace: "nowrap", fontFamily: "'Open Sans', sans-serif" }}>
+                <span style={{ display: "flex", flexShrink: 0, alignItems: "center", justifyContent: "center", width: 14, height: 14, borderRadius: "50%", border: \`1.5px solid \${active ? "#004B9B" : "#D7E0EA"}\` }}>
+                  {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#004B9B" }} />}
+                </span>
+                <span>{o}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Uso: componente fechado — abre dropdown com radio. Só para filtros de listagem/toolbar;
+// dentro de formulário use <Select>.`;
+}
+
 function segmentedCode(label: string, opts: string, _extra = ''): string {
   return `// DS-FIPS — Segmented "${label}" — Copy-paste ready
 import { useState } from "react";
@@ -1746,6 +1928,15 @@ export default function SelectDoc() {
       ex: "'Turno' (Manhã/Tarde/Noite); 'Tipo' em filtros rápidos; categorias do App Ideias.",
     },
     {
+      name: 'Chip Filtro',
+      c: C.azulEscuro,
+      badge: 'uso: filtros',
+      desc: 'Botão fechado "Rótulo: Valor" que abre um dropdown com radio. Visual de chip, comportamento de Select.',
+      when: 'Barra de filtros de listagem/toolbar. 2 a 8 opções, uma selecionada por vez.',
+      not: 'Dentro de formulário — usar Select. Múltiplas opções visíveis ao mesmo tempo — usar Chip Select.',
+      ex: "'Departamento' e 'Segmento' nos Filtros avançados; toolbar do Data Listing.",
+    },
+    {
       name: 'Segmented',
       c: C.azulClaro,
       badge: 'tabs',
@@ -1879,7 +2070,7 @@ export default function SelectDoc() {
         <Section
           n="01"
           title="Tipos de seleção"
-          desc="8 componentes de seleção para cobrir qualquer cenário. Clique em qualquer elemento para copiar o código e visualizar no playground."
+          desc="9 componentes de seleção para cobrir qualquer cenário. Clique em qualquer elemento para copiar o código e visualizar no playground."
         >
           <Card mob={mob}>
             <div style={{ display: 'grid', gridTemplateColumns: vitrineCols, gap: vitrineGap, overflow: 'visible' }}>
@@ -2005,6 +2196,27 @@ export default function SelectDoc() {
                   <DSChipSelect label="Turno" options={['Manhã', 'Tarde', 'Noite']} />
                 </Copyable>
                 <div style={{ marginTop: 6 }} />
+                <DotLabel color={C.azulEscuro} label="Chip Filtro" badge="uso: filtros" />
+                <Copyable
+                  label="ChipFiltro Departamento"
+                  code={chipFiltroCode('Departamento', `["Todos","Operações","Logística","TI","SSMA","RH"]`, 'Todos')}
+                  preview={
+                    <DSChipFiltro
+                      icon={Ic.edificio(14)}
+                      label="Departamento"
+                      options={['Todos', 'Operações', 'Logística', 'TI', 'SSMA', 'RH']}
+                      value="Todos"
+                    />
+                  }
+                >
+                  <DSChipFiltro
+                    icon={Ic.edificio(14)}
+                    label="Departamento"
+                    options={['Todos', 'Operações', 'Logística', 'TI', 'SSMA', 'RH']}
+                    value="Todos"
+                  />
+                </Copyable>
+                <div style={{ marginTop: 6 }} />
                 <DotLabel color={C.azulClaro} label="Segmented" badge="tabs" />
                 <Copyable
                   label="Segmented Visualização"
@@ -2038,6 +2250,7 @@ export default function SelectDoc() {
                 { r: 'Lista visível exclusiva', v: 'Radio', c: C.danger },
                 { r: 'Sim/Não binário', v: 'Toggle', c: C.cinzaEscuro },
                 { r: 'Poucas opções visuais', v: 'Chips', c: C.amareloOuro },
+                { r: 'Barra de filtros/toolbar', v: 'Chip Filtro', c: C.azulEscuro },
                 { r: '2–4 modos de view', v: 'Segmented', c: C.azulClaro },
               ].map((i) => (
                 <span

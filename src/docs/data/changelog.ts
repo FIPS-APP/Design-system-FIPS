@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.16',
+    date: '2026-07-28',
+    title: 'Select: novo tipo "Chip Filtro" (dropdown fechado, uso exclusivo em filtros)',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Nova entrada em `/docs/components/select`: "Chip Filtro" — botão fechado "Rótulo: Valor" que abre dropdown com radio, mesmo padrão do `ChipSelect` já usado na toolbar/Filtros avançados (`DrawerDoc.tsx`, exemplo "Departamento"). Visualmente é um chip (32.5px, borda 1px, radius 8px), mas o comportamento é de `Select` — por isso ganhou nome e card próprios, distintos do "Chip Select" existente (pílulas sempre visíveis, sem dropdown).',
+      },
+      {
+        type: 'feature',
+        description:
+          'Componente `DSChipFiltro` adicionado a `SelectDoc.tsx` com o exemplo "Departamento" (ícone prédio, opções Todos/Operações/Logística/TI/SSMA/RH) na vitrine da Seção 01, mais o helper `chipFiltroCode` para o snippet copy-paste do `Copyable`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Guia de uso (Seção 02) ganha o card "Chip Filtro" explicando quando usar (barra de filtros/toolbar) e quando não (formulário → `Select`; múltiplas opções visíveis ao mesmo tempo → `Chip Select`). Resumo "Quando usar" da Seção 01 ganha a linha "Barra de filtros/toolbar → Chip Filtro". Contagem do cabeçalho da Seção 01 atualizada de 8 para 9 tipos de seleção.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Verificado ao vivo via Puppeteer em light e dark: medição da caixa do botão bate exata com o elemento capturado no picker (352×32.5px, padding 7px 12px, borda 1px `#D7E0EA`, radius 8px, fonte 11px/600) e o dropdown abre com os radios corretos. `tsc -b` e `eslint` limpos — nenhum erro novo introduzido (os 4 erros pré-existentes de `react-hooks/set-state-in-effect`/`no-unused-vars` no arquivo não foram tocados, são de outros componentes já presentes antes desta mudança).',
+      },
+    ],
+  },
+  {
     version: '0.11.15',
     date: '2026-07-28',
     title: 'Campos compactos: correção real, alinhados ao QLP (Edição Colaborador)',
