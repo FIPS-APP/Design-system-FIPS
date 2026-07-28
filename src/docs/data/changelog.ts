@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.13',
+    date: '2026-07-28',
+    title: 'Form Workspace: removida a função de copiar',
+    entries: [
+      { type: 'improvement', description: 'Removidos os 3 wrappers `Copyable` de `/docs/patterns/form-workspace` (Hero Header, Seções do Formulário, Footer de Ações) — as seções agora são só preview visual, sem clique/cursor pointer. Junto saíram os helpers `wsCode` (gerava ~115 linhas de snippet copy-paste) e `wsPreview`, que só eles consumiam, e o texto "Clique em qualquer seção para copiar o código" do hero, que ficaria desatualizado.' },
+    ],
+  },
+  {
     version: '0.11.12',
     date: '2026-07-28',
     title: 'Removida a página Modal Radix',

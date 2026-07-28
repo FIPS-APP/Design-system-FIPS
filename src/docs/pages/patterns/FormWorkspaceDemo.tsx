@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
+import { PlaygroundProvider, CodePlayground } from '../../components/CodePlayground'
 import {
   BadgeDollarSign,
   CalendarDays,
@@ -294,124 +294,6 @@ function WorkspaceField({ label, inset = 'control', required, tooltip, hint, cla
   )
 }
 
-/* ── Helper: código copy-paste-ready para o Playground ── */
-function wsCode(part: 'hero' | 'form' | 'footer') {
-  if (part === 'hero') return `// DS-FIPS — Form Workspace Hero Header — Copy-paste ready
-
-export function WorkspaceHeroHeader() {
-  const metrics = [
-    { label: 'Obrigatorios', value: '8/10', helper: 'campos essenciais' },
-    { label: 'Locais', value: '3 pares', helper: 'local e sublocal' },
-    { label: 'Cadeia', value: 'Pronta', helper: 'aprovador definido' },
-    { label: 'RC SAP', value: 'Depois', helper: 'informado apos criacao' },
-  ];
-
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #002A68 0%, #004B9B 60%, #001A4A 100%)',
-      padding: '20px 28px', color: '#fff', borderRadius: '12px 12px 0 0',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 11, background: 'rgba(253,194,78,0.18)', border: '1px solid rgba(253,194,78,0.19)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FDC24E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-        </div>
-        <div>
-          <h2 style={{ fontFamily: "'Saira Expanded',sans-serif", fontSize: 21, fontWeight: 700, margin: 0 }}>
-            Workspace de Solicitacao
-          </h2>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.66)', margin: '4px 0 0' }}>
-            Organize cabecalho, classificacao e contexto operacional
-          </p>
-        </div>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, marginTop: 16 }}>
-        {metrics.map(m => (
-          <div key={m.label} style={{ borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.07)', padding: '6px 10px', backdropFilter: 'blur(8px)' }}>
-            <span style={{ fontSize: 9, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.5)' }}>{m.label}</span>
-            <p style={{ fontSize: 14, fontWeight: 700, margin: '2px 0 0', color: '#fff' }}>{m.value}</p>
-            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', margin: '1px 0 0' }}>{m.helper}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}`
-
-  if (part === 'form') return `// DS-FIPS — Form Workspace Numbered Section — Copy-paste ready
-
-export function WorkspaceFormSection() {
-  return (
-    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, overflow: 'hidden' }}>
-      <div style={{ padding: '16px 20px', borderBottom: '1px solid #E2E8F0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 12, background: 'rgba(0,75,155,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: "'Saira Expanded',sans-serif", fontSize: 14, fontWeight: 700, color: '#004B9B' }}>01</span>
-          </div>
-          <div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#333B41', margin: 0 }}>Cabecalho da solicitacao</h3>
-            <p style={{ fontSize: 12, color: '#7B8C96', margin: '2px 0 0' }}>Quem esta abrindo a demanda e qual escopo.</p>
-          </div>
-        </div>
-      </div>
-      <div style={{ padding: '16px 20px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
-        <div>
-          <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#333B41', marginBottom: 4 }}>
-            Data de emissao <span style={{ color: '#DC3545' }}>*</span>
-          </label>
-          <input placeholder="dd/mm/aaaa" style={{ width: '100%', height: 36, padding: '0 12px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} />
-        </div>
-        <div>
-          <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#333B41', marginBottom: 4 }}>
-            Nome do solicitante <span style={{ color: '#DC3545' }}>*</span>
-          </label>
-          <input placeholder="Nome completo" style={{ width: '100%', height: 36, padding: '0 12px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} />
-        </div>
-        <div>
-          <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#333B41', marginBottom: 4 }}>
-            Nome do escopo <span style={{ color: '#DC3545' }}>*</span>
-          </label>
-          <input placeholder="Ex.: Contratacao de manutencao" style={{ width: '100%', height: 36, padding: '0 12px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} />
-        </div>
-      </div>
-    </div>
-  );
-}`
-
-  return `// DS-FIPS — Form Workspace Footer — Copy-paste ready
-
-export function WorkspaceFooter() {
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #004B9B 0%, #002A68 50%, #0090D0 100%)',
-      borderRadius: 16, padding: 24, color: '#fff',
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    }}>
-      <div>
-        <p style={{ fontFamily: "'Saira Expanded',sans-serif", fontSize: 14, fontWeight: 600, margin: 0 }}>Acoes do workspace</p>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: '4px 0 0' }}>Rodape persistente para acoes principais.</p>
-      </div>
-      <div style={{ display: 'flex', gap: 12 }}>
-        <button style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', borderRadius: 8, padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Salvar rascunho</button>
-        <button style={{ background: '#F6921E', border: 'none', color: '#fff', borderRadius: 8, padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Enviar para aprovacao</button>
-      </div>
-    </div>
-  );
-}`
-}
-
-function wsPreview(part: 'hero' | 'form' | 'footer') {
-  const labels = { hero: 'Hero Header + Metricas', form: 'Secao numerada + Fields', footer: 'Footer de acoes' }
-  const colors = { hero: '#002A68', form: '#004B9B', footer: '#F6921E' }
-  return (
-    <div style={{ padding: 12, textAlign: 'center' }}>
-      <div style={{ background: `linear-gradient(135deg, ${colors[part]}, #004B9B)`, borderRadius: 8, padding: '14px 12px', color: '#fff', fontSize: 11, fontFamily: "'Saira Expanded', sans-serif" }}>
-        <div style={{ fontSize: 9, textTransform: 'uppercase', letterSpacing: 1, color: '#FDC24E', marginBottom: 4 }}>Form Workspace</div>
-        <strong>{labels[part]}</strong>
-      </div>
-    </div>
-  )
-}
-
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function FormWorkspaceDemo() {
   const [progress] = useState(82)
@@ -434,7 +316,7 @@ export default function FormWorkspaceDemo() {
           </div>
           <h1 style={{ fontSize: 44, fontWeight: 700, color: '#fff', margin: '0 0 10px', fontFamily: "'Saira Expanded', sans-serif" }}>Form Workspace</h1>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.69)', lineHeight: 1.6, maxWidth: 700, margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
-            Workspace de formulário para fluxos densos: resumo no topo, seções claras, grid principal + painel contextual lateral. Clique em qualquer seção para copiar o código.
+            Workspace de formulário para fluxos densos: resumo no topo, seções claras, grid principal + painel contextual lateral.
           </p>
         </div>
       </header>
@@ -446,7 +328,6 @@ export default function FormWorkspaceDemo() {
         <div className="space-y-6 bg-[var(--color-surface-muted)] p-6">
 
           {/* ═══════ HERO HEADER ═══════ */}
-          <Copyable label="Hero Header" code={wsCode('hero')} preview={wsPreview('hero')}>
           <Card className="overflow-hidden">
             <div
               className="relative overflow-hidden border-b border-[var(--color-border)] px-7 py-5"
@@ -546,13 +427,11 @@ export default function FormWorkspaceDemo() {
               </div>
             </CardContent>
           </Card>
-          </Copyable>
 
           {/* ═══════ MAIN GRID ═══════ */}
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1.22fr)_360px]">
 
             {/* LEFT — Form sections */}
-            <Copyable label="Secoes do Formulario" code={wsCode('form')} preview={wsPreview('form')}>
             <div className="space-y-6">
               {/* Section 1: Cabeçalho */}
               <Card className="ws-card ws-section-card">
@@ -684,7 +563,6 @@ export default function FormWorkspaceDemo() {
                 </CardContent>
               </Card>
             </div>
-            </Copyable>
 
             {/* RIGHT — Sidebar */}
             <aside className="space-y-4">
@@ -788,7 +666,6 @@ export default function FormWorkspaceDemo() {
           </div>
 
           {/* ═══════ FOOTER ACTIONS ═══════ */}
-          <Copyable label="Footer de Acoes" code={wsCode('footer')} preview={wsPreview('footer')}>
           <div className="ws-footer rounded-2xl p-6 shadow-[var(--shadow-card)]">
             <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="min-w-0">
@@ -808,7 +685,6 @@ export default function FormWorkspaceDemo() {
               </div>
             </div>
           </div>
-          </Copyable>
         </div>
       </div>
 
