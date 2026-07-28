@@ -1,9 +1,10 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
-import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download } from "lucide-react";
+import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles } from "lucide-react";
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
+import { ChangelogModal } from '../../../components/layout/ChangelogModal';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
@@ -537,6 +538,25 @@ export function ExportExample({ rows }) {
     </>
   );
 }`;
+const CHANGELOG_MODAL_CODE = `// DS-FIPS — ChangelogModal "Novidades do Sistema" — composite reutilizável
+// Fonte: src/components/layout/ChangelogModal.tsx
+// Props: apenas { open, onOpenChange } — as versões vêm de CHANGELOG em
+// src/docs/data/changelog.ts (fonte única do changelog, 1 entrada por release,
+// tipos feature | improvement | fix | breaking). Edite esse arquivo para
+// publicar uma versão nova; o modal lê CHANGELOG[0] como a versão atual.
+
+import { useState } from "react";
+import { ChangelogModal } from "../components/layout/ChangelogModal";
+
+export function NovidadesTrigger() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Ver novidades</button>
+      <ChangelogModal open={open} onOpenChange={setOpen} />
+    </>
+  );
+}`;
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DialogDoc(){
@@ -742,6 +762,9 @@ export default function DialogDoc(){
         onExportExcel={()=>undefined}
       />
 
+      {/* 10. NOVIDADES — composite real ChangelogModal, mesmo usado no rodapé do sidebar */}
+      <ChangelogModal open={m==="changelog"} onOpenChange={v=>v?open("changelog"):close()} />
+
       {/* ══════════════════════════════════════════════
           PAGE CONTENT
           ══════════════════════════════════════════════ */}
@@ -787,8 +810,11 @@ export default function DialogDoc(){
               <Copyable label="Modal Exportação" code={EXPORT_MODAL_CODE} preview={<Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>}>
                 <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
               </Copyable>
+              <Copyable label="Modal Novidades" code={CHANGELOG_MODAL_CODE} preview={<Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>}>
+                <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
+              </Copyable>
             </div>
-            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>9 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step e exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha). Todos fecham com ESC, clique no overlay ou botão X.</p>
+            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>10 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha) e novidades (ChangelogModal — header gov, versão atual + histórico expansível). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
         </Section>
 

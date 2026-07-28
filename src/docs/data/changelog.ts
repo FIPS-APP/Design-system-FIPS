@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.27',
+    date: '2026-07-28',
+    title: 'Modal (Dialog) ganha 10ª variante: Novidades',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Playground de `/docs/components/dialog` ganha o botão "Novidades" (dourado, ícone sparkle) que abre o `ChangelogModal` real (`src/components/layout/ChangelogModal.tsx`) — o MESMO componente acionado pelo item "Versão" do rodapé do sidebar, importado e reutilizado, não uma reimplementação local. Segue a mesma anatomia dos outros 9 triggers do playground (Copyable + Btn + instância do modal fora da grid).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O snippet copy-paste (`CHANGELOG_MODAL_CODE`) documenta a API real: só `{ open, onOpenChange }`. O primeiro rascunho do snippet inventava props `changelog`/`currentVersion` que o componente não tem — corrigido antes de publicar. As versões exibidas vêm de `CHANGELOG` em `docs/data/changelog.ts` (fonte única já usada por toda a documentação), não são configuráveis via prop; o comentário no topo do snippet deixa isso explícito.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Verificado ao vivo: clique em "Novidades" abre o modal com a versão atual (0.11.26 no momento do teste) e o histórico completo, idêntico ao acionado pelo sidebar. Texto da Seção 01 atualizado de "9 variantes" para "10 variantes". `tsc` e `eslint` sem erro novo (os 4 erros pré-existentes de `react-hooks/set-state-in-effect` no arquivo não foram tocados).',
+      },
+    ],
+  },
+  {
     version: '0.11.26',
     date: '2026-07-28',
     title: 'Data Listing: Filtros viram Drawer pela esquerda (padrão QLP)',
