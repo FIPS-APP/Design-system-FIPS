@@ -1,12 +1,11 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Package, Clock, CheckCircle2, Ban, Pencil, Trash2 } from 'lucide-react'
+import { Ban, Pencil, Trash2 } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, CopyableInline, CodePlayground } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
 import { useFipsTheme } from '../../../hooks/useFipsTheme'
 import { ExportButtons } from '../../../components/composites/ExportButtons'
-import { ListingKpiRow } from '../../../components/composites/ListingKpiRow'
 import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
 import { ExportPreviewModal, type ExportIntent } from '../../../components/composites/ExportPreviewModal'
 
@@ -249,7 +248,6 @@ export default function DataListingDemo() {
   const [filters,setFilters]=useState({status:[],dept:[],priority:[]});
   const [search,setSearch]=useState("");
   const [searchFocused,setSearchFocused]=useState(false);
-  const [kpiFocus,setKpiFocus]=useState("");
   const [exportOpen,setExportOpen]=useState(false);
   const [exportIntent,setExportIntent]=useState<ExportIntent>("excel");
   const [configTab,setConfigTab]=useState("colunas");
@@ -261,20 +259,17 @@ export default function DataListingDemo() {
   const allData=useMemo(()=>seed(60),[]);
   const data=useMemo(()=>{
     let r=allData;
-    if(kpiFocus==="pendentes")r=r.filter(x=>x.status==="Pendente");
-    else if(kpiFocus==="aprovadas")r=r.filter(x=>x.status==="Aprovada");
-    else if(kpiFocus==="recusadas")r=r.filter(x=>x.status==="Recusada");
     if(search)r=r.filter(x=>x.id.toLowerCase().includes(search.toLowerCase())||x.sol.toLowerCase().includes(search.toLowerCase()));
     if(filters.status.length)r=r.filter(x=>filters.status.includes(x.status));
     if(filters.dept.length)r=r.filter(x=>filters.dept.includes(x.dept));
     if(filters.priority.length)r=r.filter(x=>filters.priority.includes(x.priority));
     return r.slice(0,10);
-  },[allData,search,filters,kpiFocus]);
+  },[allData,search,filters]);
   const D=DENSITY[density];
 
   const totalFilters=filters.status.length+filters.dept.length+filters.priority.length;
   const toggleFilter=(group,val)=>setFilters(f=>{const a=f[group]||[];return{...f,[group]:a.includes(val)?a.filter(v=>v!==val):[...a,val]}});
-  const clearFilters=()=>{setFilters({status:[],dept:[],priority:[]});setKpiFocus("");};
+  const clearFilters=()=>setFilters({status:[],dept:[],priority:[]});
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
 
@@ -439,23 +434,9 @@ export default function DataListingDemo() {
             );
           })()}
           </CopyableInline>
-          {/* TOOLBAR SEPARADA — card próprio: panelHeader (Indicadores) + filtros/export */}
+          {/* TOOLBAR SEPARADA — card próprio: filtros/busca à esquerda, export à direita */}
           <CopyableInline label="Toolbar + Table" code={dlCode('toolbar')} preview={dlPreview('toolbar')}>
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
-            <div style={{borderBottom:`1px solid ${C.cardBorder}`,padding:"14px 18px 18px"}}>
-              <ListingKpiRow
-                focusId={kpiFocus}
-                onSelect={(id)=>{setKpiFocus(id==="total"?"":id);if(id==="total")setFilters(f=>({...f,status:[]}));}}
-                onClear={()=>setKpiFocus("")}
-                gridClassName="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3"
-                cards={[
-                  {id:"total",label:"Total registros",value:allData.length,subtitle:"Cadastrados no sistema",icon:Package,color:"#004B9B"},
-                  {id:"pendentes",label:"Pendentes",value:allData.filter(r=>r.status==="Pendente").length,subtitle:"Aguardando decisão — clique para filtrar",icon:Clock,color:"#F6921E"},
-                  {id:"aprovadas",label:"Aprovadas",value:allData.filter(r=>r.status==="Aprovada").length,subtitle:"Prontas no fluxo",icon:CheckCircle2,color:"#00C64C"},
-                  {id:"recusadas",label:"Recusadas",value:allData.filter(r=>r.status==="Recusada").length,subtitle:"Fora do fluxo",icon:Ban,color:"#DC3545"},
-                ]}
-              />
-            </div>
             <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
               {/* Filtros */}
               <div ref={filterRef} style={{position:"relative"}}>

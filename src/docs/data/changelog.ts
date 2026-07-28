@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.24',
+    date: '2026-07-28',
+    title: 'Data Listing: removido o bloco "Indicadores rápidos" da toolbar',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Removido o `ListingKpiRow` ("Indicadores rápidos" — 4 StatsCard clicáveis: Total registros, Pendentes, Aprovadas, Recusadas) que ocupava a faixa superior do card da toolbar em `/docs/patterns/data-listing`, junto com o `<div>` de moldura (`borderBottom` + `padding 14px 18px 18px`) que só existia pra ele. A toolbar fica só com o que ela demonstra: filtros/busca/período à esquerda, Excel/PDF à direita.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Limpeza do que ficou órfão: import do `ListingKpiRow`, ícones `Package`/`Clock`/`CheckCircle2` do `lucide-react` (`Ban` permanece, é usado no `RowActionsMenu`) e o estado `kpiFocus`. Este último merece nota: as 3 branches de filtro que ele alimentava (`pendentes`/`aprovadas`/`recusadas` no `useMemo` de `data`) continuariam no arquivo, mas `setKpiFocus` só era chamado de dentro do bloco removido — ou seja, `kpiFocus` seria `""` para sempre e o filtro nunca dispararia. Removidas junto, com a dependência do `useMemo` e a chamada em `clearFilters` ajustadas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Não foram tocados: o composite `ListingKpiRow` e o `StatsCard` (`src/components/composites/`), que seguem exportados pela library e disponíveis para qualquer app consumidor; e o bloco de KPI cards com sparkline (variante separada, logo acima da toolbar), que é outro componente e continua na página. `tsc` limpo e `eslint` com a mesma contagem de erros pré-existentes de antes da mudança (9), nenhum novo.',
+      },
+    ],
+  },
+  {
     version: '0.11.23',
     date: '2026-07-28',
     title: 'Table: header do card alinhado ao padrão do Data Listing',
