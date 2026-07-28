@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
+import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download } from "lucide-react";
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
@@ -268,9 +269,9 @@ function FSelect({label,options=[],value,icon}){
     </div>
   );
 }
-function Btn({label,color,outline,onClick,full,danger}){
+function Btn({label,color,outline,onClick,full,danger,icon:IconCmp}){
   const bg=danger?C.danger:color||C.azulProfundo;
-  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{label}</button>;
+  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s",...(IconCmp?{display:"inline-flex",alignItems:"center",gap:7,justifyContent:full?"center":"flex-start"}:null)}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{IconCmp&&<IconCmp size={14} strokeWidth={2.2}/>}{label}</button>;
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
@@ -1245,38 +1246,38 @@ export default function DialogDoc(){
         </div>
       </header>
 
-      <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1100}}>
+      <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1280,margin:"0 auto"}}>
 
         {/* ═══════════════════ 01 — PLAYGROUND ═══════════════════ */}
         <Section n="01" title="Playground interativo" desc="Clique em qualquer botão para abrir o modal e copiar o código correspondente. ESC ou overlay para fechar. Hover nos botões para ver feedback visual.">
           <DSCard mob={mob}>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <Copyable label="Modal Confirmação" code={modalCode("confirm","Aprovar requisição?","Encaminhará REQ-4025 para o departamento de compras.",440)} preview={<Btn label="✓ Confirmação" color={C.verdeFloresta} onClick={()=>open("confirm")}/>}>
-                <Btn label="✓ Confirmação" color={C.verdeFloresta} onClick={()=>open("confirm")}/>
+              <Copyable label="Modal Confirmação" code={modalCode("confirm","Aprovar requisição?","Encaminhará REQ-4025 para o departamento de compras.",440)} preview={<Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>}>
+                <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
               </Copyable>
-              <Copyable label="Modal Destrutivo" code={modalCode("delete","Excluir fornecedor?","Esta ação é irreversível e afetará contratos ativos.",420)} preview={<Btn label="✕ Destrutivo" danger onClick={()=>open("delete")}/>}>
-                <Btn label="✕ Destrutivo" danger onClick={()=>open("delete")}/>
+              <Copyable label="Modal Destrutivo" code={modalCode("delete","Excluir fornecedor?","Esta ação é irreversível e afetará contratos ativos.",420)} preview={<Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>}>
+                <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
               </Copyable>
-              <Copyable label="Modal Alerta" code={modalCode("alert","Sessão expirando","Sessões inativas são encerradas por segurança.",400)} preview={<Btn label="⚠ Alerta" color={C.amareloEscuro} onClick={()=>open("alert")}/>}>
-                <Btn label="⚠ Alerta" color={C.amareloEscuro} onClick={()=>open("alert")}/>
+              <Copyable label="Modal Alerta" code={modalCode("alert","Sessão expirando","Sessões inativas são encerradas por segurança.",400)} preview={<Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>}>
+                <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
               </Copyable>
-              <Copyable label="Modal Informativo" code={modalCode("info","Movimentação de Pátio","Detalhe de artefato BI — somente leitura",680)} preview={<Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>}>
-                <Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>
+              <Copyable label="Modal Informativo" code={modalCode("info","Movimentação de Pátio","Detalhe de artefato BI — somente leitura",680)} preview={<Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>}>
+                <Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>
               </Copyable>
-              <Copyable label="Modal Formulário" code={modalCode("form","Atribuir responsável","Selecione o colaborador e tipo de atribuição.",480)} preview={<Btn label="📝 Formulário" color={C.azulCeu} onClick={()=>open("form")}/>}>
-                <Btn label="📝 Formulário" color={C.azulCeu} onClick={()=>open("form")}/>
+              <Copyable label="Modal Formulário" code={modalCode("form","Atribuir responsável","Selecione o colaborador e tipo de atribuição.",480)} preview={<Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>}>
+                <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>
               </Copyable>
-              <Copyable label="Modal Lista" code={modalCode("list","Itens da requisição","REQ-4025 · 3 itens · R$ 2.450,00",520)} preview={<Btn label="📋 Lista" color={C.cinzaChumbo} onClick={()=>open("list")}/>}>
-                <Btn label="📋 Lista" color={C.cinzaChumbo} onClick={()=>open("list")}/>
+              <Copyable label="Modal Lista" code={modalCode("list","Itens da requisição","REQ-4025 · 3 itens · R$ 2.450,00",520)} preview={<Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>}>
+                <Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>
               </Copyable>
-              <Copyable label="Modal Popup" code={modalCode("popup","Atribuir responsável","Selecione o colaborador e tipo de atribuição para a tarefa.",480)} preview={<Btn label="🖥 Popup" color={C.azulClaro} onClick={()=>open("popup")}/>}>
-                <Btn label="🖥 Popup" color={C.azulClaro} onClick={()=>open("popup")}/>
+              <Copyable label="Modal Popup" code={modalCode("popup","Atribuir responsável","Selecione o colaborador e tipo de atribuição para a tarefa.",480)} preview={<Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>}>
+                <Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>
               </Copyable>
-              <Copyable label="Modal Tutorial" code={modalCode("tutorial","Como usar esta página","Tour guiado pelos recursos do Modal (Dialog)",540)} preview={<Btn label="❓ Tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")}/>}>
-                <Btn label="❓ Tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")}/>
+              <Copyable label="Modal Tutorial" code={modalCode("tutorial","Como usar esta página","Tour guiado pelos recursos do Modal (Dialog)",540)} preview={<Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>}>
+                <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
               </Copyable>
-              <Copyable label="Modal Exportação" code={EXPORT_MODAL_CODE} preview={<Btn label="📤 Exportação" color={C.azulCeuProfundo} onClick={()=>open("export")}/>}>
-                <Btn label="📤 Exportação" color={C.azulCeuProfundo} onClick={()=>open("export")}/>
+              <Copyable label="Modal Exportação" code={EXPORT_MODAL_CODE} preview={<Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>}>
+                <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
               </Copyable>
             </div>
             <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>9 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step e exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha). Todos fecham com ESC, clique no overlay ou botão X.</p>
@@ -1652,7 +1653,7 @@ export default function DialogDoc(){
                     </div>
                   ))}
                 </div>
-                <Btn label="❓ Abrir tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")} full/>
+                <Btn label="Abrir tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")} full/>
               </div>
 
               {/* Specs */}
@@ -1782,7 +1783,7 @@ export default function DialogDoc(){
                     </div>
                   ))}
                 </div>
-                <Btn label="🖥 Abrir popup" color={C.azulClaro} onClick={()=>open("popup")} full/>
+                <Btn label="Abrir popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")} full/>
               </div>
 
               {/* Specs */}

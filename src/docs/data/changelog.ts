@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.10.1',
+    date: '2026-07-28',
+    title: 'Modal (legado): ícones lucide-react + largura pra caber os 9 botões numa linha',
+    entries: [
+      { type: 'fix', description: 'Os 9 botões do playground de `Modal (legado)` (`/docs/components/dialog`, Seção 01) usavam emoji/símbolo Unicode como ícone (✓ ✕ ⚠ ℹ 📝 📋 🖥 ❓ 📤) — trocados por `lucide-react` (Check/X/AlertTriangle/Info/ClipboardEdit/ClipboardList/Maximize2/HelpCircle/Download), todos no mesmo peso visual do ✓ original de Confirmação. `Btn` (helper local da doc) ganhou prop opcional `icon`. Mesma troca replicada nos 2 gatilhos duplicados "Abrir tutorial" e "Abrir popup" das seções de aprofundamento.' },
+      { type: 'fix', description: 'A fileira de 9 botões (~1105px) não cabia dentro da largura de conteúdo padrão (1100px) — "Exportação" quebrava pra uma 2ª linha sozinho. Aumentada para 1280px, só nesta página. De quebra, a página nunca tinha `margin:"0 auto"` no wrapper (única entre as páginas de doc) — conteúdo ficava encostado à esquerda em telas largas; adicionado. Cabe numa linha em 1920px+; em viewports menores (ex. 1440px) ainda quebra normalmente — menos largura de conteúdo disponível, comportamento responsivo esperado.' },
+    ],
+  },
+  {
     version: '0.10.0',
     date: '2026-07-28',
     title: 'Modal (legado): 9ª variante "Exportação" no playground (ExportPreviewModal)',
