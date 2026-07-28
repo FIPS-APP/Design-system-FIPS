@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.3',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: PDF vermelho, Excel verde escuro',
+    entries: [
+      { type: 'fix', description: 'Botão "PDF" do rodapé trocado de `variant="primary"` (azul) para `variant="danger"` (vermelho, `--color-danger`).' },
+      { type: 'feature', description: 'Nova variante `successStrong` no `buttonVariants` governado (`button-variants.ts`) — sólido `--color-success-strong` (verde escuro) com hover pro `--color-success` (verde médio), inverso da variante `success` existente. Botão "Excel" passa a usar essa variante em vez de `success`.' },
+    ],
+  },
+  {
     version: '0.11.2',
     date: '2026-07-28',
     title: 'Fix real: header do ExportPreviewModal cortado pelo overflow-hidden do painel',

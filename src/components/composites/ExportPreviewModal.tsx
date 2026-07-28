@@ -492,7 +492,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 ) : null}
                 {onExportPdf ? (
                   <Button
-                    variant="primary"
+                    variant="danger"
                     size="sm"
                     onClick={() => runExport('pdf')}
                     disabled={exportKeys.length === 0}
@@ -503,7 +503,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 ) : null}
                 {onExportExcel ? (
                   <Button
-                    variant="success"
+                    variant="successStrong"
                     size="sm"
                     onClick={() => runExport('excel')}
                     disabled={exportKeys.length === 0}
