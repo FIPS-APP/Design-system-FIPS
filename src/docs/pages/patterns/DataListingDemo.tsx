@@ -277,11 +277,13 @@ export default function DataListingDemo() {
   const configRef=useRef(null);
   const periodoRef=useRef(null);
   const configDemoRef=useRef(null);
+  // Filtros abrem em Drawer (padrão QLP `ListingToolbar`), não em popover ancorado:
+  // fechar é overlay/X/Esc — não click-outside.
   useEffect(()=>{
     if(!showFilters)return;
-    const h=e=>{if(filterRef.current&&!filterRef.current.contains(e.target))setShowFilters(false)};
-    document.addEventListener("mousedown",h);
-    return()=>document.removeEventListener("mousedown",h);
+    const h=e=>{if(e.key==="Escape")setShowFilters(false)};
+    document.addEventListener("keydown",h);
+    return()=>document.removeEventListener("keydown",h);
   },[showFilters]);
   useEffect(()=>{
     if(!showConfig)return;
@@ -326,6 +328,8 @@ export default function DataListingDemo() {
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
         @keyframes popIn{from{opacity:0;transform:scale(.95) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
         @keyframes dsShimmer{0%{left:-100%}100%{left:150%}}
+        @keyframes dlFade{from{opacity:0}to{opacity:1}}
+        @keyframes dlSlideLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
         .ds-btn-wrap{position:relative;overflow:hidden;display:inline-flex;border-radius:6px}
         .ds-btn-wrap::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0) 30%,rgba(255,255,255,0.35) 50%,rgba(255,255,255,0) 70%,transparent 80%);pointer-events:none;transition:none}
         .ds-btn-wrap:hover::after{animation:dsShimmer 0.65s ease-out forwards}
@@ -437,45 +441,8 @@ export default function DataListingDemo() {
           <CopyableInline label="Toolbar + Table" code={dlCode('toolbar')} preview={dlPreview('toolbar')}>
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
             <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-              {/* Filtros */}
-              <div ref={filterRef} style={{position:"relative"}}>
-                <button onClick={()=>setShowFilters(!showFilters)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"7px 12px",fontSize:11,fontWeight:600,color:totalFilters>0?C.azulProfundo:C.cinzaEscuro,background:totalFilters>0?accentBg:C.cardBg,border:`1px solid ${totalFilters>0?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s"}}>{Ic.filter(13,totalFilters>0?C.azulProfundo:C.cinzaChumbo)} Filtros{totalFilters>0&&<span style={{fontSize:9,fontFamily:Fn.mono,padding:"1px 5px",background:C.azulProfundo,color:C.branco,borderRadius:8}}>{totalFilters}</span>}</button>
-                {showFilters&&<div style={{position:"absolute",top:"calc(100% + 6px)",left:0,zIndex:50,width:280,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Filtros</span>
-                    {totalFilters>0&&<button onClick={clearFilters} style={{fontSize:10,fontWeight:600,color:C.danger,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body}}>Limpar tudo</button>}
-                  </div>
-                  <div style={{padding:"12px 16px",maxHeight:340,overflowY:"auto"}}>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:6}}>Status</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:14}}>
-                      {STATUSES.map(s=>(
-                        <div key={s} onClick={()=>toggleFilter("status",s)} style={{padding:"6px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.status.includes(s)?C.azulProfundo:C.cardBorder}`,background:filters.status.includes(s)?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.status.includes(s)&&Ic.check(10)}</div>
-                          <Badge variant={STATUS_COLOR[s]} dot dark={dark}>{s}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:6}}>Departamento</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:14}}>
-                      {DEPTS.map(d=>(
-                        <div key={d} onClick={()=>toggleFilter("dept",d)} style={{padding:"6px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.dept.includes(d)?C.azulProfundo:C.cardBorder}`,background:filters.dept.includes(d)?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.dept.includes(d)&&Ic.check(10)}</div>
-                          <span>{d}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:6}}>Prioridade</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                      {PRIO.map(p=>(
-                        <div key={p} onClick={()=>toggleFilter("priority",p)} style={{padding:"6px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.priority.includes(p)?C.azulProfundo:C.cardBorder}`,background:filters.priority.includes(p)?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.priority.includes(p)&&Ic.check(10)}</div>
-                          <span style={{display:"inline-flex",alignItems:"center",gap:5}}><span style={{width:7,height:7,borderRadius:"50%",background:PRIO_COLOR[p]}}/>{p}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>}
-              </div>
+              {/* Filtros — abre o Drawer pela esquerda (padrão QLP `ListingToolbar`) */}
+              <button ref={filterRef} onClick={()=>setShowFilters(true)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"7px 12px",fontSize:11,fontWeight:600,color:totalFilters>0?C.azulProfundo:C.cinzaEscuro,background:totalFilters>0?accentBg:C.cardBg,border:`1px solid ${totalFilters>0?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s",flexShrink:0}}>{Ic.filter(13,totalFilters>0?C.azulProfundo:C.cinzaChumbo)} Filtros{totalFilters>0&&<span style={{fontSize:9,fontFamily:Fn.mono,padding:"1px 5px",background:C.azulProfundo,color:C.branco,borderRadius:8}}>{totalFilters}</span>}</button>
               <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:32.5,padding:"0 12px",background:"var(--color-surface)",border:`1.5px solid ${searchFocused?C.azulProfundo:"#E2E8F0"}`,borderRadius:8,boxShadow:searchFocused?`0 0 0 3px ${accentRing}`:"none",transition:"all 0.18s ease",cursor:"text",flex:1,minWidth:200,maxWidth:320}}>
                 <span style={{display:"flex",flexShrink:0,opacity:.7}}>{Ic.search(15)}</span>
                 <input value={search} onChange={e=>setSearch(e.target.value)} onFocus={()=>setSearchFocused(true)} onBlur={()=>setSearchFocused(false)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:13,color:C.cinzaEscuro,minWidth:0}}/>
@@ -543,6 +510,68 @@ export default function DataListingDemo() {
               />
             </div>
           </div>
+
+          {/* DRAWER DE FILTROS — padrão QLP `ListingToolbar`: abre pela ESQUERDA (cobre a sidebar),
+              hero institucional + miolo rolável + rodapé fixo (Limpar tudo / Ver N resultados). */}
+          {showFilters&&(
+            <div style={{position:"fixed",inset:0,zIndex:1000}}>
+              <div onClick={()=>setShowFilters(false)} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.35)",animation:"dlFade .2s ease"}}/>
+              <div role="dialog" aria-modal="true" aria-label="Filtros" style={{position:"fixed",top:0,left:0,width:400,maxWidth:"90vw",height:"100vh",background:C.cardBg,display:"flex",flexDirection:"column",boxShadow:"4px 0 24px rgba(0,0,0,.12)",animation:"dlSlideLeft .3s cubic-bezier(.4,0,.2,1)"}}>
+                {/* Hero */}
+                <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"20px 56px 20px 24px",overflow:"hidden",flexShrink:0,background:dark?"linear-gradient(135deg,#1e2a3a 0%,#162030 50%,#1a2840 100%)":`linear-gradient(135deg,${C.gradFrom} 0%,${C.gradTo} 60%,#001A4A 100%)`}}>
+                  <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:dark?.04:.06}}/>
+                  <span style={{position:"relative",display:"flex",flexShrink:0,width:44,height:44,borderRadius:11,alignItems:"center",justifyContent:"center",background:`${C.amareloOuro}1A`,border:`1px solid ${C.amareloOuro}30`}}>{Ic.filter(20,C.amareloOuro)}</span>
+                  <div style={{position:"relative",minWidth:0,flex:1}}>
+                    <span style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title}}>Requisições</span>
+                    <h2 style={{margin:0,fontSize:21,fontWeight:700,lineHeight:1.15,letterSpacing:"-.2px",color:C.branco,fontFamily:Fn.title}}>Filtros</h2>
+                    <p style={{margin:"2px 0 0",fontSize:12,lineHeight:1.4,color:"rgba(255,255,255,.65)",fontFamily:Fn.body}}>{totalFilters>0?`${totalFilters} filtro(s) ativo(s)`:"Refine a listagem pelos campos abaixo"}</p>
+                  </div>
+                  <button onClick={()=>setShowFilters(false)} aria-label="Fechar painel" style={{position:"absolute",top:20,right:16,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",border:"none",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>{Ic.x(16,"currentColor")}</button>
+                </div>
+                {/* Miolo */}
+                <div style={{flex:1,overflowY:"auto",padding:"20px 24px",display:"flex",flexDirection:"column",gap:18}}>
+                  <div>
+                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Status</span>
+                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
+                      {STATUSES.map(s=>(
+                        <div key={s} onClick={()=>toggleFilter("status",s)} style={{padding:"7px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.status.includes(s)?C.azulProfundo:C.cardBorder}`,background:filters.status.includes(s)?C.azulProfundo:C.cardBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.status.includes(s)&&Ic.check(10)}</div>
+                          <Badge variant={STATUS_COLOR[s]} dot dark={dark}>{s}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Departamento</span>
+                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
+                      {DEPTS.map(d=>(
+                        <div key={d} onClick={()=>toggleFilter("dept",d)} style={{padding:"7px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.dept.includes(d)?C.azulProfundo:C.cardBorder}`,background:filters.dept.includes(d)?C.azulProfundo:C.cardBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.dept.includes(d)&&Ic.check(10)}</div>
+                          <span>{d}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Prioridade</span>
+                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
+                      {PRIO.map(p=>(
+                        <div key={p} onClick={()=>toggleFilter("priority",p)} style={{padding:"7px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.priority.includes(p)?C.azulProfundo:C.cardBorder}`,background:filters.priority.includes(p)?C.azulProfundo:C.cardBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.priority.includes(p)&&Ic.check(10)}</div>
+                          <span style={{display:"inline-flex",alignItems:"center",gap:5}}><span style={{width:7,height:7,borderRadius:"50%",background:PRIO_COLOR[p]}}/>{p}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                {/* Rodapé fixo */}
+                <div style={{display:"flex",gap:8,flexShrink:0,padding:"16px 24px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg}}>
+                  <button onClick={clearFilters} disabled={totalFilters===0} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:totalFilters===0?C.textLight:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:totalFilters===0?"default":"pointer",opacity:totalFilters===0?.6:1,transition:"all .15s"}}>Limpar tudo</button>
+                  <button onClick={()=>setShowFilters(false)} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:700,fontFamily:Fn.body,color:C.branco,background:C.azulProfundo,border:"none",borderRadius:8,cursor:"pointer",transition:"all .15s"}}>Ver {data.length} resultado(s)</button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <ExportPreviewModal
             open={exportOpen}

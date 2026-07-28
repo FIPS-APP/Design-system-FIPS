@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.26',
+    date: '2026-07-28',
+    title: 'Data Listing: Filtros viram Drawer pela esquerda (padrão QLP)',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'O botão "Filtros" de `/docs/patterns/data-listing` abria um popover ancorado de 280px. Agora abre um **Drawer pela esquerda** (400px, cobre a sidebar), seguindo o `ListingToolbar` do QLP (`client/src/components/composites/ListingToolbar.tsx`) — a mesma anatomia de 3 zonas que o DS já documenta em `/docs/components/drawer` ("Filtros avançados").',
+      },
+      {
+        type: 'feature',
+        description:
+          'Anatomia do drawer: hero institucional no topo (gradiente gov 3-stops + `JunctionLines`, tile âmbar 44px, eyebrow "Requisições", título 21px e descrição que alterna entre "N filtro(s) ativo(s)" e "Refine a listagem pelos campos abaixo", com X próprio em glass); miolo rolável `flex-1` com os 3 grupos (Status/Departamento/Prioridade) preservando a seleção múltipla por checkbox; rodapé fixo com `Limpar tudo` (desabilitado sem filtro) + `Ver N resultado(s)`, que reflete a contagem real da tabela.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O fechamento deixa de ser click-outside (que fazia sentido pro popover, mas fecharia o drawer ao clicar no próprio conteúdo em alguns casos) e passa a ser overlay + botão X + `Escape`. `role="dialog"`/`aria-modal`/`aria-label` adicionados. Duas keyframes novas no bloco `<style>` da página: `dlFade` (overlay) e `dlSlideLeft` (painel).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Campo **Período** mantido na toolbar, conforme pedido — junto com a busca e o par Excel/PDF. A toolbar fica: `Filtros` · busca · `Período: X` · export. Verificado ao vivo: drawer ancora em `x=0` com 400×altura-total, hero e rodapé renderizam corretos, `Escape` fecha, 0 erro de console; `tsc` limpo e `eslint` na mesma contagem pré-existente (9).',
+      },
+    ],
+  },
+  {
     version: '0.11.25',
     date: '2026-07-28',
     title: 'Removido o "Teste ao Vivo" vazio de Data Listing e Form Workspace',
