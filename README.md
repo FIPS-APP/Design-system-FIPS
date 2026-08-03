@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.11.31`
+## Versão atual: `v0.11.32`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.11.32 | 2026-07-28 | Corpo do `DSTable` (`/docs/components/table`) alinhado à tabela do Data Listing: cabeçalho passa de centralizado/10px para **alinhado à esquerda**/9px (o dado é lido da esquerda; centralizar quebra a varredura vertical), padding `12px`→`8px`; densidade migra de padding vertical (`py`) para **altura de linha fixa** (`rowH` 30/42/56 por densidade, igual ao `DENSITY` da referência) — linha normal cai de 54px para 42px; zebra de `#93BDE4`@5% para `#D3E3F4`@25%, que é o tom real da referência; card ganha a `box-shadow` sutil que faltava. Skeleton de loading alinhado à mesma altura |
 | 0.11.31 | 2026-07-28 | Item "Circular Menu" do sidebar renomeado para "Ações" (`routes/nav.ts`) e a página (`/docs/components/circular-command-menu`) reconstruída: título alinhado (estava "Circular Command Menu", divergindo do sidebar), `ExportButtons` removido (não relacionado, já documentado na Data Listing), staging dos 2 demos reduzido e com hint de uso, seção nova "Quando usar" explicando que `RowActionsMenu` é o mesmo `CircularCommandMenu` com só o trigger menor — não dois componentes distintos. De passagem: `aria-label` do gatilho, antes fixo em "Ações da linha" nas duas variantes, agora configurável (`ariaLabel` prop) — a variante FAB não é uma "linha" |
 | 0.11.30 | 2026-07-28 | Removida a função de copiar de `/docs/patterns/dashboard` (3 wrappers `Copyable`: Barra de Filtros, KPI Cards, Gráficos) e o bloco "Teste ao Vivo", que ficaria sem produtor. Junto saíram o gerador `dashCode` e os 3 componentes de miniatura `DashPreviewKPI`/`DashPreviewFilters`/`DashPreviewChart`, que só ele usava: 211 linhas a menos. Corrigida a frase órfã "Clique em qualquer seção para copiar o código" no hero. `CodeExportSection` mantido |
 | 0.11.29 | 2026-07-28 | Miolo do drawer de Filtros (`/docs/patterns/data-listing`) reconstruído a partir do padrão real do QLP (`Colaboradores.tsx`) e Governança BI (`KpiDashboardPage.tsx`): checkbox lists multi-select → `PillFilter` single-select (Status, Prioridade) + `ChipSelect` dropdown (Departamento), com divisor entre os dois grupos — mesma anatomia "pills pra poucas opções, chip pra muitas" das duas referências. Estado de filtro migrado de array (`string[]`) pra string única (`''` = Todos). Corrigido de passagem: contraste do pill "Todos" e do botão "Ver N resultado(s)" em dark mode, que caíam no token `--color-gov-azul-profundo` (clareia pra #93BDE4 no dark) com texto branco por cima |

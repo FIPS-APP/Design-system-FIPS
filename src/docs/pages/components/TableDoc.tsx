@@ -119,13 +119,15 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   const toggleAll=()=>setSelected(allSelected?[]:paged.map((_,i)=>i));
   const toggleRow=(i)=>setSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i]);
 
-  const py=densityS==="compact"?6:densityS==="comfortable"?14:10;
-  const fs=densityS==="compact"?11:densityS==="comfortable"?13:12;
+  // Densidade idêntica à do Data Listing (`DENSITY` em DataListingDemo.tsx): altura de
+  // linha fixa (não padding vertical), que é o que mantém a tabela densa e previsível.
+  const D=densityS==="compact"?{rowH:30,fs:11,padX:12}:densityS==="comfortable"?{rowH:56,fs:13,padX:20}:{rowH:42,fs:12,padX:16};
+  const py=8; // padding vertical só do thead — o corpo usa rowH
 
   const pgBtn=(label,disabled,onClick)=><button onClick={onClick} disabled={disabled} style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:disabled?"transparent":C.cardBg,color:disabled?C.textLight:C.azulProfundo,border:`1px solid ${disabled?C.cardBorder:C.azulCeu}`,borderRadius:5,cursor:disabled?"default":"pointer",transition:"all .15s"}}>{label}</button>;
 
   return(
-    <div style={{border:`1px solid ${C.cardBorder}`,borderRadius:"12px 12px 12px 24px",overflow:"hidden",background:C.cardBg,position:"relative"}}>
+    <div style={{border:`1px solid ${C.cardBorder}`,borderRadius:"12px 12px 12px 24px",overflow:"hidden",background:C.cardBg,boxShadow:"0 1px 3px rgba(0,75,155,.04)",position:"relative"}}>
       {/* Title bar — mesma anatomia do header do card de Data Listing (DataListingDemo.tsx:593-598):
           padding 18/20/14, borda inferior, ícone 48 com aro azul, título 16/1.2, subtítulo 11/1.4. */}
       {(title||configurable)&&(
@@ -243,10 +245,10 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
         <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
           <thead style={stickyHS?{position:"sticky",top:0,zIndex:2,background:C.bg,boxShadow:`0 1px 0 ${C.cardBorder}`}:undefined}>
             <tr style={{background:C.bg}}>
-              {selectable&&<th style={{padding:`${py}px 12px ${py}px 16px`,width:36,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={allSelected} onChange={toggleAll} style={{cursor:"pointer",}}/></th>}
+              {selectable&&<th style={{padding:`${py}px ${D.padX}px`,width:36,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={allSelected} onChange={toggleAll} style={{cursor:"pointer",}}/></th>}
               {visibleCols.map((col,ci)=>(
-                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py+2}px 16px`,textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortable?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
-                  <span style={{display:"inline-flex",alignItems:"center",gap:4,justifyContent:"center"}}>
+                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:col.align||"left",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortable?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
+                  <span style={{display:"inline-flex",alignItems:"center",gap:4}}>
                     {col.label}
                     {sortable&&col.sortable!==false&&(sortCol===col.key?sortDir==="asc"?Ic.sortAsc(12,C.azulProfundo):Ic.sortDesc(12,C.azulProfundo):Ic.sortNone(12))}
                   </span>
@@ -256,10 +258,10 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
           </thead>
           <tbody>
             {loading&&Array.from({length:5}).map((_,ri)=>(
-              <tr key={`sk${ri}`} style={{borderBottom:`1px solid ${C.cardBorder}`}}>
-                {selectable&&<td style={{padding:`${py}px 12px ${py}px 16px`}}><div className="ds-shim" style={{width:16,height:16,borderRadius:3}}/></td>}
+              <tr key={`sk${ri}`} style={{height:D.rowH,borderBottom:`1px solid ${C.cardBorder}`}}>
+                {selectable&&<td style={{padding:`0 ${D.padX}px`}}><div className="ds-shim" style={{width:16,height:16,borderRadius:3}}/></td>}
                 {visibleCols.map((col,ci)=>(
-                  <td key={ci} style={{padding:`${py}px 16px`}}>
+                  <td key={ci} style={{padding:`0 ${D.padX}px`}}>
                     {ci===0?(
                       <div style={{display:"flex",alignItems:"center",gap:10}}>
                         <div className="ds-shim" style={{width:32,height:32,borderRadius:"50%",flexShrink:0}}/>
@@ -303,12 +305,12 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             {!loading&&paged.map((row,i)=>{
               const isSelected=selected.includes(i);
               const isHover=hoverRow===i;
-              const rowBg=isSelected?`${C.azulCeu}20`:isHover?`${C.amareloOuro}18`:stripedS&&i%2===1?`${C.azulCeu}0D`:"transparent";
+              const rowBg=isSelected?`${C.azulCeu}20`:isHover?`${C.amareloOuro}18`:stripedS&&i%2===1?`${C.azulCeuClaro}40`:"transparent";
               return(
-                <tr key={i} onMouseEnter={()=>setHoverRow(i)} onMouseLeave={()=>setHoverRow(-1)} style={{background:rowBg,transition:"background .12s",cursor:selectable?"pointer":"default",...(borderedS?{borderBottom:`1px solid ${C.cardBorder}`}:{borderBottom:i<paged.length-1?`1px solid ${C.cardBorder}`:"none"})}} onClick={()=>selectable&&toggleRow(i)}>
-                  {selectable&&<td style={{padding:`${py}px 12px ${py}px 16px`,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={isSelected} onChange={()=>toggleRow(i)} style={{cursor:"pointer",}}/></td>}
+                <tr key={i} onMouseEnter={()=>setHoverRow(i)} onMouseLeave={()=>setHoverRow(-1)} style={{height:wrapTextS?undefined:D.rowH,background:rowBg,transition:"background .12s",cursor:selectable?"pointer":"default",...(borderedS?{borderBottom:`1px solid ${C.cardBorder}`}:{borderBottom:i<paged.length-1?`1px solid ${C.cardBorder}`:"none"})}} onClick={()=>selectable&&toggleRow(i)}>
+                  {selectable&&<td style={{padding:`0 ${D.padX}px`,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={isSelected} onChange={()=>toggleRow(i)} style={{cursor:"pointer",}}/></td>}
                   {visibleCols.map((col,ci)=>(
-                    <td key={col.key} style={{padding:`${py}px 16px`,fontSize:fs,color:C.cinzaEscuro,textAlign:col.align||"left",whiteSpace:wrapTextS?"normal":"nowrap",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{})}}>
+                    <td key={col.key} style={{padding:wrapTextS?`10px ${D.padX}px`:`0 ${D.padX}px`,fontSize:D.fs,color:C.cinzaEscuro,textAlign:col.align||"left",whiteSpace:wrapTextS?"normal":"nowrap",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{})}}>
                       {col.render?col.render(row[col.key],row):row[col.key]}
                     </td>
                   ))}

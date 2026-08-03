@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.32',
+    date: '2026-07-28',
+    title: 'Table: corpo da tabela alinhado ao padrão do Data Listing',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'A v0.11.23 alinhou só o header do card; o corpo da tabela continuava divergente. Cabeçalho de coluna: `textAlign` centralizado → **esquerda** (o conteúdo das células é alinhado à esquerda; centralizar o rótulo quebrava a varredura vertical da coluna) e fonte 10px → 9px, padding `12px 16px` → `8px 16px`. `th` passa a respeitar `col.align`, como as células já faziam.',
+      },
+      {
+        type: 'breaking',
+        description:
+          'Densidade reescrita: era padding vertical (`py` 6/10/14) e virou **altura de linha fixa** — `{rowH, fs, padX}` por densidade (30/42/56), cópia literal do `DENSITY` de `DataListingDemo.tsx`. Efeito prático: a linha em densidade normal cai de 54px para 42px e a tabela fica com a mesma cadência da referência. Células passam a `padding: 0 padX` (a altura vem da linha), com fallback para padding vertical quando "quebra de linha" está ligada, que é o único caso em que a linha precisa crescer.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Zebra estava em `#93BDE4` a 5% (`${C.azulCeu}0D`) contra `#D3E3F4` a 25% (`${C.azulCeuClaro}40`) da referência — quase invisível, o que fazia a tabela parecer não-zebrada. Corrigido. O card também ganhou a `box-shadow: 0 1px 3px rgba(0,75,155,.04)` que o Data Listing tem e que faltava aqui.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Skeleton de carregamento alinhado à mesma altura de linha (usava o `py` antigo, então as linhas "pulavam" de altura ao sair do loading). Verificado por medição: card, thead, th, td e linhas batem valor a valor com a referência. A única diferença que sobra é intencional: no Data Listing as colunas secundárias (código, depto, valor — mono) usam `fs-1`, ajuste manual por coluna que o `DSTable`, sendo genérico, não tem como inferir — ele usa `fs` em todas, igual ao texto principal de lá. `tsc` e `eslint` limpos (0 erro no arquivo).',
+      },
+    ],
+  },
+  {
     version: '0.11.31',
     date: '2026-07-28',
     title: '"Circular Menu" vira "Ações": rótulo, título e página reconstruídos',
