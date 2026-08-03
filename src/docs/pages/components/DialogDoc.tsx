@@ -1,10 +1,13 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
+import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles } from "lucide-react";
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
+import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
+import { ChangelogModal } from '../../../components/layout/ChangelogModal';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
-const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
+const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 /* Gradiente gov 3-stops — mesma linguagem do PageHeader/hero (idêntico ao BiDetailDialog do Governança BI) */
 const GOV_GRAD="linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)";
@@ -267,9 +270,9 @@ function FSelect({label,options=[],value,icon}){
     </div>
   );
 }
-function Btn({label,color,outline,onClick,full,danger}){
+function Btn({label,color,outline,onClick,full,danger,icon:IconCmp}){
   const bg=danger?C.danger:color||C.azulProfundo;
-  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{label}</button>;
+  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s",...(IconCmp?{display:"inline-flex",alignItems:"center",gap:7,justifyContent:full?"center":"flex-start"}:null)}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{IconCmp&&<IconCmp size={14} strokeWidth={2.2}/>}{label}</button>;
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
@@ -284,497 +287,6 @@ const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.
 function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
 function Kbd({children}){return <kbd style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:26,height:24,padding:"0 7px",background:C.branco,border:`1px solid ${C.cardBorder}`,borderBottom:`2px solid ${C.cinzaClaro}`,borderRadius:5,fontSize:11,fontWeight:600,fontFamily:Fn.mono,color:C.cinzaEscuro,boxShadow:"0 1px 2px rgba(0,0,0,.06)"}}>{children}</kbd>}
 
-/* ═══════════════════════════════════════════ CODE EXPORT ═══════════════════════════════════════════ */
-function CodeExport({label,description,code}){
-  const [copied,setCopied]=useState(false);
-  const [expanded,setExpanded]=useState(false);
-  const doCopy=()=>{navigator.clipboard.writeText(code).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000)})};
-  return(
-    <div style={{borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,overflow:"hidden",background:C.cardBg,transition:"all .2s"}}>
-      <div style={{padding:"16px 20px",display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
-        <div style={{width:40,height:40,borderRadius:10,background:"#004B9B12",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid #004B9B25"}}>{Ic.codeBraces(20,"#93BDE4")}</div>
-        <div style={{flex:1,minWidth:150}}>
-          <span style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,display:"block"}}>{label}</span>
-          <span style={{fontSize:11,color:C.textMuted,lineHeight:1.4}}>{description}</span>
-        </div>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}>
-          <Btn label={expanded?"{ } Ocultar":"{ } Ver código"} color="#546E7A" onClick={()=>setExpanded(e=>!e)}/>
-          <Btn label={copied?"✓ Copiado!":"📋 Copiar código"} color={copied?"#00C64C":"#004B9B"} onClick={doCopy}/>
-        </div>
-      </div>
-      {expanded&&(
-        <div style={{borderTop:`1px solid ${C.cardBorder}`}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 20px",background:C.bg}}>
-            <span style={{fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.textMuted,fontFamily:Fn.title}}>{code.split("\n").length} linhas · TSX · Copy-paste ready</span>
-            <Btn label={copied?"✓ Copiado":"📋 Copiar"} color={copied?"#00C64C":"#004B9B"} onClick={doCopy}/>
-          </div>
-          <pre style={{margin:0,padding:"18px 20px",background:"#0F172A",color:"#E2E8F0",fontFamily:Fn.mono,fontSize:11.5,lineHeight:1.7,overflowX:"auto",maxHeight:420,overflowY:"auto",whiteSpace:"pre",tabSize:2}}><code>{code}</code></pre>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════ EXPORTABLE CODE STRINGS ═══════════════════════════════════════════ */
-
-const MODAL_CODE=`// ═══════════════════════════════════════════
-// DS-FIPS — Modal — Copy-paste ready
-// Requer: React 18+, fonts Saira Expanded + Open Sans + Fira Code
-// CSS vars: --color-surface, --color-fg, --color-border, --color-fg-muted,
-//           --color-surface-muted, --color-surface-soft,
-//           --color-gov-azul-profundo, --color-gov-azul-escuro, --color-gov-azul-claro
-// ═══════════════════════════════════════════
-import { useState, useEffect } from "react";
-
-const C = {
-  azulProfundo: "#004B9B",
-  azulEscuro: "#002A68",
-  cinzaChumbo: "#7B8C96",
-  cinzaEscuro: "#333B41",
-  cinzaClaro: "#C0CCD2",
-  azulCeu: "#93BDE4",
-  verdeFloresta: "#00C64C",
-  verdeEscuro: "#00904C",
-  danger: "#DC3545",
-  branco: "#FFFFFF",
-  bg: "#F8FAFC",
-  cardBg: "#FFFFFF",
-  cardBorder: "#E2E8F0",
-  textMuted: "#7B8C96",
-  inputBorder: "#E2E8F0",
-  focusRing: "rgba(147,189,228,0.35)",
-};
-
-const Fn = {
-  title: "'Saira Expanded', sans-serif",
-  body: "'Open Sans', sans-serif",
-  mono: "'Fira Code', monospace",
-};
-
-/* Ícones inline */
-const Ic = {
-  x: (s = 18, c = C.cinzaChumbo) => (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none">
-      <path d="M5 5l10 10M15 5L5 15" stroke={c} strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  ),
-};
-
-/* Botão reutilizável */
-function Btn({ label, color, outline, onClick, danger }) {
-  const bg = danger ? C.danger : color || C.azulProfundo;
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "8px 20px", fontSize: 12, fontWeight: 600,
-        background: outline ? "transparent" : bg,
-        color: outline ? (danger ? C.danger : color || C.cinzaChumbo) : C.branco,
-        border: outline ? \`1.5px solid \${danger ? C.danger : color || C.cinzaClaro}\` : "none",
-        borderRadius: 8, cursor: "pointer", fontFamily: Fn.body,
-        transition: "all .15s",
-      }}
-    >
-      {label}
-    </button>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   MODAL — DS-FIPS
-   Overlay blur, animação spring, ESC fecha, border-radius FIPS, aria-modal
-   ═══════════════════════════════════════════ */
-export function Modal({ open, onClose, title, subtitle, children, footer, footerBg, width = 480, icon, iconBg, bodyBg, noPadBody }) {
-  const [vis, setVis] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setVis(true);
-      requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true)));
-    } else {
-      setAnimIn(false);
-      const t = setTimeout(() => setVis(false), 280);
-      return () => clearTimeout(t);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open, onClose]);
-
-  if (!vis) return null;
-
-  return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.45)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", opacity: animIn ? 1 : 0, transition: "opacity .28s", cursor: "pointer" }} />
-      <div role="dialog" aria-modal="true" aria-labelledby="modal-title" style={{
-        position: "relative", zIndex: 1, width, maxWidth: "95vw", maxHeight: "90vh",
-        background: C.cardBg, borderRadius: "12px 12px 12px 24px",
-        boxShadow: "0 12px 48px rgba(0,42,104,.2), 0 2px 8px rgba(0,42,104,.08)",
-        display: "flex", flexDirection: "column",
-        transform: animIn ? "scale(1) translateY(0)" : "scale(.96) translateY(10px)",
-        opacity: animIn ? 1 : 0,
-        transition: "all .28s cubic-bezier(.32,.72,.37,1.1)",
-        overflow: "hidden",
-      }}>
-        <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar modal" style={{ position: "absolute", top: 10, right: 10, zIndex: 2, width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all .15s", background: "transparent" }}>
-          {Ic.x(16, C.cinzaChumbo)}
-        </div>
-        <div style={{ padding: "20px 24px", paddingRight: 50, borderBottom: \`1px solid \${C.cardBorder}\`, display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
-          {icon && <div style={{ width: 48, height: 48, borderRadius: 14, background: iconBg || C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: \`1px solid \${C.cardBorder}\` }}>{icon}</div>}
-          <div style={{ minWidth: 0 }}>
-            <h2 id="modal-title" style={{ fontSize: 17, fontWeight: 700, color: C.azulEscuro, margin: 0, fontFamily: Fn.title, lineHeight: 1.3 }}>{title}</h2>
-            {subtitle && <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: "3px 0 0", lineHeight: 1.4, fontFamily: Fn.body }}>{subtitle}</p>}
-          </div>
-        </div>
-        <div style={{ flex: 1, overflowY: "auto", padding: noPadBody ? 0 : "20px 24px", background: bodyBg || "transparent" }}>{children}</div>
-        {footer && <div style={{ padding: "14px 24px", borderTop: \`1px solid \${C.cardBorder}\`, background: footerBg || C.bg, display: "flex", gap: 10, justifyContent: "flex-end", alignItems: "center", flexShrink: 0 }}>{footer}</div>}
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════
-// USO:
-// const [open, setOpen] = useState(false);
-// <Modal open={open} onClose={() => setOpen(false)}
-//   title="Título do modal" subtitle="Subtítulo descritivo"
-//   icon={<span>📋</span>} width={480}
-//   footer={<><Btn label="Cancelar" outline onClick={() => setOpen(false)} /><Btn label="Confirmar" color="#00C64C" onClick={() => setOpen(false)} /></>}
-// >
-//   <p>Conteúdo do modal aqui.</p>
-// </Modal>
-// ═══════════════════════════════════════════`;
-
-const TUTORIAL_MODAL_CODE=`// ═══════════════════════════════════════════
-// DS-FIPS — TutorialModal — Copy-paste ready
-// Requer: React 18+, fonts Saira Expanded + Open Sans + Fira Code
-// ═══════════════════════════════════════════
-import { useState, useEffect, useRef } from "react";
-
-const C = {
-  azulProfundo: "#004B9B",
-  azulEscuro: "#002A68",
-  azulClaro: "#0090D0",
-  cinzaChumbo: "#7B8C96",
-  cinzaEscuro: "#333B41",
-  cinzaClaro: "#C0CCD2",
-  azulCeu: "#93BDE4",
-  azulCeuClaro: "#D3E3F4",
-  verdeFloresta: "#00C64C",
-  branco: "#FFFFFF",
-  bg: "#F8FAFC",
-  cardBg: "#FFFFFF",
-  cardBorder: "#E2E8F0",
-  textMuted: "#7B8C96",
-};
-
-const Fn = {
-  title: "'Saira Expanded', sans-serif",
-  body: "'Open Sans', sans-serif",
-  mono: "'Fira Code', monospace",
-};
-
-const Ic = {
-  x: (s = 18, c = C.cinzaChumbo) => (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none">
-      <path d="M5 5l10 10M15 5L5 15" stroke={c} strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  ),
-  helpCircle: (s = 28, c = C.azulProfundo) => (
-    <svg width={s} height={s} viewBox="0 0 48 48" fill="none">
-      <circle cx="24" cy="24" r="20" stroke={c} strokeWidth="2.5" />
-      <path d="M18 18a6 6 0 0111.13 3.15c0 4-6 5.5-6 9.85M24 36v1" stroke={c} strokeWidth="3" strokeLinecap="round" />
-    </svg>
-  ),
-  target: (s = 14, c = C.azulProfundo) => (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="7" stroke={c} strokeWidth="1.5" />
-      <circle cx="10" cy="10" r="3" stroke={c} strokeWidth="1.5" />
-      <circle cx="10" cy="10" r="1" fill={c} />
-    </svg>
-  ),
-};
-
-function Btn({ label, color, outline, onClick }) {
-  const bg = color || C.azulProfundo;
-  return (
-    <button onClick={onClick} style={{
-      padding: "8px 20px", fontSize: 12, fontWeight: 600,
-      background: outline ? "transparent" : bg, color: outline ? C.cinzaChumbo : "#fff",
-      border: outline ? \`1.5px solid \${C.cinzaClaro}\` : "none",
-      borderRadius: 8, cursor: "pointer", fontFamily: Fn.body, transition: "all .15s",
-    }}>{label}</button>
-  );
-}
-
-function Kbd({ children }) {
-  return <kbd style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 26, height: 24, padding: "0 7px", background: C.branco, border: \`1px solid \${C.cardBorder}\`, borderBottom: \`2px solid \${C.cinzaClaro}\`, borderRadius: 5, fontSize: 11, fontWeight: 600, fontFamily: Fn.mono, color: C.cinzaEscuro }}>{children}</kbd>;
-}
-
-/**
- * TutorialModal — Walkthrough step-by-step contextual
- * Props:
- *   open: boolean
- *   onClose: () => void
- *   title: string
- *   subtitle?: string
- *   steps: Array<{ title, ref?, description, tips?: string[], visual?: ReactNode }>
- */
-export function TutorialModal({ open, onClose, title, subtitle, steps = [] }) {
-  const [vis, setVis] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-  const [step, setStep] = useState(0);
-  const bodyRef = useRef(null);
-
-  useEffect(() => {
-    if (open) { setStep(0); setVis(true); requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true))); }
-    else { setAnimIn(false); const t = setTimeout(() => setVis(false), 280); return () => clearTimeout(t); }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight" && step < steps.length - 1) setStep((s) => s + 1);
-      if (e.key === "ArrowLeft" && step > 0) setStep((s) => s - 1);
-    };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open, onClose, step, steps.length]);
-
-  useEffect(() => { if (bodyRef.current) bodyRef.current.scrollTo({ top: 0, behavior: "smooth" }); }, [step]);
-
-  if (!vis || !steps.length) return null;
-  const cur = steps[step];
-  const total = steps.length;
-  const pct = ((step + 1) / total) * 100;
-
-  return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.50)", backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)", opacity: animIn ? 1 : 0, transition: "opacity .28s", cursor: "pointer" }} />
-      <div role="dialog" aria-modal="true" style={{
-        position: "relative", zIndex: 1, width: 540, maxWidth: "95vw", maxHeight: "90vh",
-        background: C.cardBg, borderRadius: "12px 12px 12px 24px",
-        boxShadow: "0 12px 48px rgba(0,42,104,.22), 0 2px 8px rgba(0,42,104,.08)",
-        display: "flex", flexDirection: "column",
-        transform: animIn ? "scale(1) translateY(0)" : "scale(.96) translateY(10px)",
-        opacity: animIn ? 1 : 0, transition: "all .28s cubic-bezier(.32,.72,.37,1.1)", overflow: "hidden",
-      }}>
-        {/* Header */}
-        <div style={{ padding: "20px 24px", paddingRight: 50, borderBottom: \`1px solid \${C.cardBorder}\`, display: "flex", alignItems: "center", gap: 16, flexShrink: 0, background: \`linear-gradient(135deg,\${C.azulProfundo}08 0%,\${C.azulCeuClaro}20 100%)\` }}>
-          <div style={{ width: 48, height: 48, borderRadius: 14, background: \`\${C.azulProfundo}10\`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: \`1px solid \${C.azulCeu}30\` }}>{Ic.helpCircle(28, C.azulProfundo)}</div>
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: C.azulEscuro, margin: 0, fontFamily: Fn.title, lineHeight: 1.3 }}>{title}</h2>
-            {subtitle && <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: "3px 0 0", lineHeight: 1.4, fontFamily: Fn.body }}>{subtitle}</p>}
-          </div>
-          <span style={{ fontSize: 11, fontWeight: 700, color: C.azulProfundo, fontFamily: Fn.mono }}>{step + 1}/{total}</span>
-        </div>
-        {/* Close */}
-        <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar tutorial" style={{ position: "absolute", top: 10, right: 10, zIndex: 2, width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all .15s", background: "transparent" }}>
-          {Ic.x(16, C.cinzaChumbo)}
-        </div>
-        {/* Progress */}
-        <div style={{ height: 3, background: C.bg, flexShrink: 0 }}>
-          <div style={{ height: "100%", width: \`\${pct}%\`, background: \`linear-gradient(90deg,\${C.azulProfundo},\${C.azulCeu})\`, borderRadius: 2, transition: "width .35s cubic-bezier(.4,0,.2,1)" }} />
-        </div>
-        {/* Body */}
-        <div ref={bodyRef} style={{ flex: 1, overflowY: "auto", padding: "24px 28px", background: "#fafafa" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: \`linear-gradient(135deg,\${C.azulProfundo},\${C.azulCeu})\`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: Fn.mono }}>{step + 1}</span>
-            </div>
-            <div>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: C.azulEscuro, margin: 0, fontFamily: Fn.title }}>{cur.title}</h3>
-              {cur.ref && <span style={{ fontSize: 11, color: C.azulClaro, fontFamily: Fn.mono, display: "flex", alignItems: "center", gap: 4, marginTop: 2 }}>{Ic.target(12, C.azulClaro)} {cur.ref}</span>}
-            </div>
-          </div>
-          <p style={{ fontSize: 13, color: C.cinzaEscuro, lineHeight: 1.7, margin: "0 0 16px", fontFamily: Fn.body }}>{cur.description}</p>
-          {cur.visual && <div style={{ background: C.cardBg, borderRadius: 10, border: \`1px solid \${C.cardBorder}\`, padding: 16, marginBottom: 16 }}>{cur.visual}</div>}
-          {cur.tips?.length > 0 && (
-            <div style={{ background: \`\${C.azulCeuClaro}30\`, border: \`1px solid \${C.azulCeuClaro}\`, borderRadius: 10, padding: "14px 18px" }}>
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", color: C.azulProfundo, fontFamily: Fn.title, display: "block", marginBottom: 8 }}>Dica</span>
-              {cur.tips.map((t, i) => (
-                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: i < cur.tips.length - 1 ? 6 : 0 }}>
-                  <span style={{ color: C.azulProfundo, fontSize: 12, marginTop: 1, flexShrink: 0 }}>→</span>
-                  <span style={{ fontSize: 12, color: C.cinzaEscuro, lineHeight: 1.5 }}>{t}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        {/* Footer */}
-        <div style={{ padding: "14px 24px", borderTop: \`1px solid \${C.cardBorder}\`, background: C.bg, display: "flex", gap: 10, justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            {steps.map((_, i) => (
-              <div key={i} onClick={() => setStep(i)} style={{ width: i === step ? 20 : 8, height: 8, borderRadius: 4, background: i === step ? C.azulProfundo : i < step ? C.azulCeu : C.cinzaClaro, cursor: "pointer", transition: "all .25s" }} />
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <div style={{ display: "flex", gap: 4, marginRight: 8 }}><Kbd>←</Kbd><Kbd>→</Kbd></div>
-            {step > 0 && <Btn label="Anterior" outline onClick={() => setStep((s) => s - 1)} />}
-            {step < total - 1 ? <Btn label="Próximo" color={C.azulProfundo} onClick={() => setStep((s) => s + 1)} /> : <Btn label="Concluir" color={C.verdeFloresta} onClick={onClose} />}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════
-// USO:
-// const steps = [
-//   { title: "Passo 1", ref: "Seção 01", description: "Descrição...", tips: ["Dica 1"], visual: <div>Preview</div> },
-//   { title: "Passo 2", description: "Descrição do passo 2..." },
-// ];
-// <TutorialModal open={open} onClose={() => setOpen(false)} title="Tutorial" subtitle="Guia da página" steps={steps} />
-// ═══════════════════════════════════════════`;
-
-const POPUP_MODAL_CODE=`// ═══════════════════════════════════════════
-// DS-FIPS — PopupModal (redimensionável) — Copy-paste ready
-// Requer: React 18+, fonts Saira Expanded + Open Sans + Fira Code
-// ═══════════════════════════════════════════
-import { useState, useEffect } from "react";
-
-const C = {
-  azulProfundo: "#004B9B",
-  azulEscuro: "#002A68",
-  cinzaChumbo: "#7B8C96",
-  cinzaEscuro: "#333B41",
-  cinzaClaro: "#C0CCD2",
-  azulCeu: "#93BDE4",
-  branco: "#FFFFFF",
-  bg: "#F8FAFC",
-  cardBg: "#FFFFFF",
-  cardBorder: "#E2E8F0",
-};
-
-const Fn = {
-  title: "'Saira Expanded', sans-serif",
-  body: "'Open Sans', sans-serif",
-  mono: "'Fira Code', monospace",
-};
-
-const Ic = {
-  x: (s = 18, c = C.cinzaChumbo) => (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none">
-      <path d="M5 5l10 10M15 5L5 15" stroke={c} strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  ),
-  maximize: (s = 16, c = C.cinzaChumbo) => (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none">
-      <path d="M3 7V4a1 1 0 011-1h3M13 3h3a1 1 0 011 1v3M17 13v3a1 1 0 01-1 1h-3M7 17H4a1 1 0 01-1-1v-3" stroke={c} strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  minimize: (s = 16, c = C.cinzaChumbo) => (
-    <svg width={s} height={s} viewBox="0 0 20 20" fill="none">
-      <path d="M7 3v3a1 1 0 01-1 1H3M13 3v3a1 1 0 001 1h3M17 13h-3a1 1 0 00-1 1v3M3 13h3a1 1 0 011 1v3" stroke={c} strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-};
-
-const POPUP_SIZES = {
-  normal: { width: 480, maxH: "85vh", label: "Normal" },
-  grande: { width: 720, maxH: "90vh", label: "Grande" },
-  "tela-cheia": { width: "92vw", maxH: "95vh", label: "Tela cheia" },
-};
-const POPUP_ORDER = ["normal", "grande", "tela-cheia"];
-
-/**
- * PopupModal — Modal redimensionável Normal / Grande / Tela Cheia
- * Props:
- *   open, onClose, title, subtitle, icon, iconBg, footer
- *   children: ReactNode | (({ size, isWide, isFullscreen }) => ReactNode)
- */
-export function PopupModal({ open, onClose, title, subtitle, children, footer, icon, iconBg }) {
-  const [vis, setVis] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-  const [size, setSize] = useState("normal");
-
-  useEffect(() => {
-    if (open) { setSize("normal"); setVis(true); requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true))); }
-    else { setAnimIn(false); const t = setTimeout(() => setVis(false), 280); return () => clearTimeout(t); }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open, onClose]);
-
-  const cycleSize = () => { const i = POPUP_ORDER.indexOf(size); setSize(POPUP_ORDER[(i + 1) % POPUP_ORDER.length]); };
-  const sz = POPUP_SIZES[size];
-  const isFullscreen = size === "tela-cheia";
-
-  if (!vis) return null;
-
-  return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: isFullscreen ? 8 : 16 }}>
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.45)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", opacity: animIn ? 1 : 0, transition: "opacity .28s", cursor: "pointer" }} />
-      <div role="dialog" aria-modal="true" style={{
-        position: "relative", zIndex: 1,
-        width: typeof sz.width === "number" ? sz.width : undefined,
-        maxWidth: typeof sz.width === "string" ? sz.width : "95vw",
-        minWidth: typeof sz.width === "string" ? sz.width : undefined,
-        maxHeight: sz.maxH, background: C.cardBg,
-        borderRadius: isFullscreen ? "8px" : "12px 12px 12px 24px",
-        boxShadow: "0 12px 48px rgba(0,42,104,.2), 0 2px 8px rgba(0,42,104,.08)",
-        display: "flex", flexDirection: "column",
-        transform: animIn ? "scale(1) translateY(0)" : "scale(.96) translateY(10px)",
-        opacity: animIn ? 1 : 0,
-        transition: "all .28s cubic-bezier(.32,.72,.37,1.1), width .25s ease, max-width .25s ease",
-        overflow: "hidden",
-      }}>
-        {/* Header */}
-        <div style={{ padding: "20px 24px", paddingRight: 100, borderBottom: \`1px solid \${C.cardBorder}\`, display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
-          {icon && <div style={{ width: 48, height: 48, borderRadius: 14, background: iconBg || C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: \`1px solid \${C.cardBorder}\` }}>{icon}</div>}
-          <div style={{ minWidth: 0 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: C.azulEscuro, margin: 0, fontFamily: Fn.title, lineHeight: 1.3 }}>{title}</h2>
-            {subtitle && <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: "3px 0 0", fontFamily: Fn.body }}>{subtitle}</p>}
-          </div>
-          <div style={{ position: "absolute", top: 12, right: 12, display: "flex", gap: 6, zIndex: 2 }}>
-            <button onClick={cycleSize} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, border: \`1px solid \${C.cardBorder}\`, background: "transparent", cursor: "pointer", fontSize: 10, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", color: C.cinzaChumbo, fontFamily: Fn.title, transition: "all .15s" }}>
-              {isFullscreen ? Ic.minimize(13, C.cinzaChumbo) : Ic.maximize(13, C.cinzaChumbo)}
-              {sz.label}
-            </button>
-            <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar" style={{ width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all .15s", background: "transparent" }}>
-              {Ic.x(16, C.cinzaChumbo)}
-            </div>
-          </div>
-        </div>
-        {/* Body */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px", background: "#fafafa" }}>
-          {typeof children === "function" ? children({ size, isWide: size !== "normal", isFullscreen }) : children}
-        </div>
-        {/* Footer */}
-        {footer && <div style={{ padding: "14px 24px", borderTop: \`1px solid \${C.cardBorder}\`, background: C.bg, display: "flex", gap: 10, justifyContent: "flex-end", alignItems: "center", flexShrink: 0 }}>{footer}</div>}
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════
-// USO:
-// <PopupModal open={open} onClose={() => setOpen(false)}
-//   title="Formulário" subtitle="Descrição"
-//   icon={<span>📋</span>}
-//   footer={<><button onClick={() => setOpen(false)}>Cancelar</button><button>Salvar</button></>}
-// >
-//   {({ size, isWide, isFullscreen }) => (
-//     <div style={{ display: "grid", gridTemplateColumns: isWide ? "1fr 1fr" : "1fr", gap: 14 }}>
-//       <input placeholder="Campo 1" />
-//       <input placeholder="Campo 2" />
-//       {isWide && <input placeholder="Campo extra (grande)" />}
-//       {isFullscreen && <input placeholder="Campo extra (tela cheia)" />}
-//     </div>
-//   )}
-// </PopupModal>
-// ═══════════════════════════════════════════`;
 
 /* ═══════════════════════════════════════════ COPYABLE HELPERS ═══════════════════════════════════════════ */
 function modalCode(variant: string, title: string, subtitle: string, width: number) {
@@ -979,6 +491,73 @@ export function ModalExample() {
 }`;
 }
 
+/* ═══════════════════════════════════════════ EXPORTAÇÃO ═══════════════════════════════════════════ */
+const EXPORT_COLUMNS = [
+  { key: 'codigo', label: 'Código' },
+  { key: 'titulo', label: 'Título' },
+  { key: 'status', label: 'Status' },
+  { key: 'area', label: 'Área' },
+  { key: 'detalhe', label: 'Detalhe expandido' },
+];
+const EXPORT_ROWS = Array.from({ length: 24 }, (_, i) => ({
+  codigo: `REQ-${4000 + i}`,
+  titulo: `Requisição de compra ${i + 1}`,
+  status: i % 3 === 0 ? 'concluido' : 'em_andamento',
+  area: 'Suprimentos',
+  detalhe: `Linha ${i + 1}`,
+}));
+const EXPORT_MODAL_CODE = `// DS-FIPS — ExportPreviewModal "Exportar planilha" — composite completo (paridade Tecnopano)
+// Fonte: src/components/composites/ExportPreviewModal.tsx
+
+import { useState } from "react";
+import { ExportPreviewModal } from "../components/composites/ExportPreviewModal";
+
+const COLUMNS = [
+  { key: "codigo", label: "Código" },
+  { key: "titulo", label: "Título" },
+  { key: "status", label: "Status" },
+  { key: "area", label: "Área" },
+  { key: "detalhe", label: "Detalhe expandido" },
+];
+
+export function ExportExample({ rows }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Exportar</button>
+      <ExportPreviewModal
+        open={open}
+        onOpenChange={setOpen}
+        filename="requisicoes"
+        columns={COLUMNS}
+        data={rows}
+        onPrint={() => window.print()}
+        onExportPdf={() => {/* gerar PDF */}}
+        onExportExcel={() => {/* gerar XLSX */}}
+      />
+    </>
+  );
+}`;
+const CHANGELOG_MODAL_CODE = `// DS-FIPS — ChangelogModal "Novidades do Sistema" — composite reutilizável
+// Fonte: src/components/layout/ChangelogModal.tsx
+// Props: apenas { open, onOpenChange } — as versões vêm de CHANGELOG em
+// src/docs/data/changelog.ts (fonte única do changelog, 1 entrada por release,
+// tipos feature | improvement | fix | breaking). Edite esse arquivo para
+// publicar uma versão nova; o modal lê CHANGELOG[0] como a versão atual.
+
+import { useState } from "react";
+import { ChangelogModal } from "../components/layout/ChangelogModal";
+
+export function NovidadesTrigger() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Ver novidades</button>
+      <ChangelogModal open={open} onOpenChange={setOpen} />
+    </>
+  );
+}`;
+
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DialogDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
@@ -1169,6 +748,23 @@ export default function DialogDoc(){
       {/* 8. TUTORIAL CONTEXTUAL */}
       <TutorialModal open={m==="tutorial"} onClose={close} title="Como usar esta página" subtitle="Tour guiado pelos recursos do Modal (Dialog)" steps={tutorialSteps}/>
 
+      {/* 9. EXPORTAÇÃO — composite real ExportPreviewModal (paridade Tecnopano), não o ExportModal legado */}
+      <ExportPreviewModal
+        open={m==="export"}
+        onOpenChange={(v)=> v ? open("export") : close()}
+        filename="requisicoes"
+        columns={EXPORT_COLUMNS}
+        tableColumnKeys={['codigo','titulo','status','area']}
+        expandedColumnKeys={['codigo','titulo','status','area','detalhe']}
+        data={EXPORT_ROWS}
+        onPrint={()=>window.print()}
+        onExportPdf={()=>undefined}
+        onExportExcel={()=>undefined}
+      />
+
+      {/* 10. NOVIDADES — composite real ChangelogModal, mesmo usado no rodapé do sidebar */}
+      <ChangelogModal open={m==="changelog"} onOpenChange={v=>v?open("changelog"):close()} />
+
       {/* ══════════════════════════════════════════════
           PAGE CONTENT
           ══════════════════════════════════════════════ */}
@@ -1181,38 +777,44 @@ export default function DialogDoc(){
         </div>
       </header>
 
-      <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1100}}>
+      <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1280,margin:"0 auto"}}>
 
         {/* ═══════════════════ 01 — PLAYGROUND ═══════════════════ */}
         <Section n="01" title="Playground interativo" desc="Clique em qualquer botão para abrir o modal e copiar o código correspondente. ESC ou overlay para fechar. Hover nos botões para ver feedback visual.">
           <DSCard mob={mob}>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <Copyable label="Modal Confirmação" code={modalCode("confirm","Aprovar requisição?","Encaminhará REQ-4025 para o departamento de compras.",440)} preview={<Btn label="✓ Confirmação" color={C.verdeFloresta} onClick={()=>open("confirm")}/>}>
-                <Btn label="✓ Confirmação" color={C.verdeFloresta} onClick={()=>open("confirm")}/>
+              <Copyable label="Modal Confirmação" code={modalCode("confirm","Aprovar requisição?","Encaminhará REQ-4025 para o departamento de compras.",440)} preview={<Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>}>
+                <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
               </Copyable>
-              <Copyable label="Modal Destrutivo" code={modalCode("delete","Excluir fornecedor?","Esta ação é irreversível e afetará contratos ativos.",420)} preview={<Btn label="✕ Destrutivo" danger onClick={()=>open("delete")}/>}>
-                <Btn label="✕ Destrutivo" danger onClick={()=>open("delete")}/>
+              <Copyable label="Modal Destrutivo" code={modalCode("delete","Excluir fornecedor?","Esta ação é irreversível e afetará contratos ativos.",420)} preview={<Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>}>
+                <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
               </Copyable>
-              <Copyable label="Modal Alerta" code={modalCode("alert","Sessão expirando","Sessões inativas são encerradas por segurança.",400)} preview={<Btn label="⚠ Alerta" color={C.amareloEscuro} onClick={()=>open("alert")}/>}>
-                <Btn label="⚠ Alerta" color={C.amareloEscuro} onClick={()=>open("alert")}/>
+              <Copyable label="Modal Alerta" code={modalCode("alert","Sessão expirando","Sessões inativas são encerradas por segurança.",400)} preview={<Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>}>
+                <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
               </Copyable>
-              <Copyable label="Modal Informativo" code={modalCode("info","Movimentação de Pátio","Detalhe de artefato BI — somente leitura",680)} preview={<Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>}>
-                <Btn label="ℹ Informativo" color={C.azulProfundo} onClick={()=>open("info")}/>
+              <Copyable label="Modal Informativo" code={modalCode("info","Movimentação de Pátio","Detalhe de artefato BI — somente leitura",680)} preview={<Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>}>
+                <Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>
               </Copyable>
-              <Copyable label="Modal Formulário" code={modalCode("form","Atribuir responsável","Selecione o colaborador e tipo de atribuição.",480)} preview={<Btn label="📝 Formulário" color={C.azulCeu} onClick={()=>open("form")}/>}>
-                <Btn label="📝 Formulário" color={C.azulCeu} onClick={()=>open("form")}/>
+              <Copyable label="Modal Formulário" code={modalCode("form","Atribuir responsável","Selecione o colaborador e tipo de atribuição.",480)} preview={<Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>}>
+                <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>
               </Copyable>
-              <Copyable label="Modal Lista" code={modalCode("list","Itens da requisição","REQ-4025 · 3 itens · R$ 2.450,00",520)} preview={<Btn label="📋 Lista" color={C.cinzaChumbo} onClick={()=>open("list")}/>}>
-                <Btn label="📋 Lista" color={C.cinzaChumbo} onClick={()=>open("list")}/>
+              <Copyable label="Modal Lista" code={modalCode("list","Itens da requisição","REQ-4025 · 3 itens · R$ 2.450,00",520)} preview={<Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>}>
+                <Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>
               </Copyable>
-              <Copyable label="Modal Popup" code={modalCode("popup","Atribuir responsável","Selecione o colaborador e tipo de atribuição para a tarefa.",480)} preview={<Btn label="🖥 Popup" color={C.azulClaro} onClick={()=>open("popup")}/>}>
-                <Btn label="🖥 Popup" color={C.azulClaro} onClick={()=>open("popup")}/>
+              <Copyable label="Modal Popup" code={modalCode("popup","Atribuir responsável","Selecione o colaborador e tipo de atribuição para a tarefa.",480)} preview={<Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>}>
+                <Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>
               </Copyable>
-              <Copyable label="Modal Tutorial" code={modalCode("tutorial","Como usar esta página","Tour guiado pelos recursos do Modal (Dialog)",540)} preview={<Btn label="❓ Tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")}/>}>
-                <Btn label="❓ Tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")}/>
+              <Copyable label="Modal Tutorial" code={modalCode("tutorial","Como usar esta página","Tour guiado pelos recursos do Modal (Dialog)",540)} preview={<Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>}>
+                <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
+              </Copyable>
+              <Copyable label="Modal Exportação" code={EXPORT_MODAL_CODE} preview={<Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>}>
+                <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
+              </Copyable>
+              <Copyable label="Modal Novidades" code={CHANGELOG_MODAL_CODE} preview={<Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>}>
+                <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
               </Copyable>
             </div>
-            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>8 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável e tutorial step-by-step. Todos fecham com ESC, clique no overlay ou botão X.</p>
+            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>10 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha) e novidades (ChangelogModal — header gov, versão atual + histórico expansível). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
         </Section>
 
@@ -1585,7 +1187,7 @@ export default function DialogDoc(){
                     </div>
                   ))}
                 </div>
-                <Btn label="❓ Abrir tutorial" color={C.azulEscuro} onClick={()=>open("tutorial")} full/>
+                <Btn label="Abrir tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")} full/>
               </div>
 
               {/* Specs */}
@@ -1715,7 +1317,7 @@ export default function DialogDoc(){
                     </div>
                   ))}
                 </div>
-                <Btn label="🖥 Abrir popup" color={C.azulClaro} onClick={()=>open("popup")} full/>
+                <Btn label="Abrir popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")} full/>
               </div>
 
               {/* Specs */}
@@ -1817,15 +1419,6 @@ export default function DialogDoc(){
         </Section>
 
         <CodePlayground />
-
-        {/* ═══════════════════ 11 — EXPORTAR CÓDIGO ═══════════════════ */}
-        <Section n="11" title="Exportar Código" desc="Código copy-paste ready de cada componente. Inclui tokens, ícones, helpers e exemplo de uso. Cole direto no seu projeto.">
-          <div style={{display:"flex",flexDirection:"column",gap:14}}>
-            <CodeExport label="Modal" description="Modal base — confirmação, destrutivo, alerta, informativo, formulário, lista" code={MODAL_CODE}/>
-            <CodeExport label="TutorialModal" description="Walkthrough step-by-step contextual com barra de progresso e navegação por teclado" code={TUTORIAL_MODAL_CODE}/>
-            <CodeExport label="PopupModal" description="Modal redimensionável — Normal (480px), Grande (720px), Tela Cheia (92vw)" code={POPUP_MODAL_CODE}/>
-          </div>
-        </Section>
 
         <div style={{textAlign:"center",padding:"20px 0 0",borderTop:`1px solid ${C.cardBorder}`,marginTop:20}}>
           <span style={{fontSize:12,color:C.cinzaChumbo,letterSpacing:".5px",fontFamily:Fn.title,fontWeight:400}}>DS-FIPS v2.0 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>

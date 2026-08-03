@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -182,53 +181,6 @@ export function Badge({ variant = "default", size = "md", children, icon, dot, d
 // <Badge variant="default" count={5}>Notificacoes</Badge>
 `;
 
-/* ═══════════════════════════════════════════ BADGE CODE HELPER ═══════════════════════════════════════════ */
-const VARIANT_STYLES: Record<string,{bg:string,color:string,border:string}> = {
-  default:   { bg:"#004B9B", color:"#FFFFFF", border:"transparent" },
-  secondary: { bg:"#F2F4F8", color:"var(--color-fg)", border:"var(--color-border)" },
-  sucesso:   { bg:"#ECFDF5", color:"#00904C", border:"#A7F3D0" },
-  atencao:   { bg:"#FFF7ED", color:"#C2410C", border:"#FDBA74" },
-  critico:   { bg:"#FEF2F2", color:"#B91C1C", border:"#FECACA" },
-  outline:   { bg:"transparent", color:"var(--color-fg)", border:"#C0CCD2" },
-  info:      { bg:"#D3E3F4", color:"#002A68", border:"#93BDE4" },
-  ouro:      { bg:"#FEF9E7", color:"#92400E", border:"#FDC24E" },
-};
-
-function badgeCode(variant: string, label: string): string {
-  const v = VARIANT_STYLES[variant] || VARIANT_STYLES.default;
-  return `// DS-FIPS — Badge "${label}" — Copy-paste ready
-import { type ReactNode } from "react";
-
-export function Badge({ children }: { children: ReactNode }) {
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 5,
-        padding: "2px 8px",
-        fontSize: 11,
-        fontWeight: 600,
-        fontFamily: "'Open Sans', sans-serif",
-        color: "${v.color}",
-        background: "${v.bg}",
-        border: "1px solid ${v.border}",
-        borderRadius: 4,
-        lineHeight: 1.3,
-        whiteSpace: "nowrap",
-        transition: "all .15s",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-// Uso:
-// <Badge>${label}</Badge>
-`;
-}
-
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function BadgeDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
@@ -239,7 +191,6 @@ export default function BadgeDoc(){
   const [notif,setNotif]=useState(5);
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');`}</style>
 
@@ -256,20 +207,20 @@ export default function BadgeDoc(){
       <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1100,margin:"0 auto"}}>
 
         {/* 01 — VITRINE COMPLETA */}
-        <Section n="01" title="Vitrine de variantes" desc="Todas as variantes, composições e tamanhos do Badge em um único painel interativo. Clique em qualquer badge para copiar o código.">
+        <Section n="01" title="Vitrine de variantes" desc="Todas as variantes, composições e tamanhos do Badge em um único painel.">
           <Card mob={mob}>
             {/* Variantes base */}
             <div style={{marginBottom:20}}>
               <span style={{fontSize:11,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,display:"block",marginBottom:8}}>Variantes</span>
               <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                <Copyable label="Badge Padrão" code={badgeCode("default","Padrão")} preview={<Badge variant="default">Padrão</Badge>}><Badge variant="default">Padrão</Badge></Copyable>
-                <Copyable label="Badge Secundário" code={badgeCode("secondary","Secundário")} preview={<Badge variant="secondary">Secundário</Badge>}><Badge variant="secondary">Secundário</Badge></Copyable>
-                <Copyable label="Badge Sucesso" code={badgeCode("sucesso","Sucesso")} preview={<Badge variant="sucesso">Sucesso</Badge>}><Badge variant="sucesso">Sucesso</Badge></Copyable>
-                <Copyable label="Badge Atenção" code={badgeCode("atencao","Atenção")} preview={<Badge variant="atencao">Atenção</Badge>}><Badge variant="atencao">Atenção</Badge></Copyable>
-                <Copyable label="Badge Crítico" code={badgeCode("critico","Crítico")} preview={<Badge variant="critico">Crítico</Badge>}><Badge variant="critico">Crítico</Badge></Copyable>
-                <Copyable label="Badge Contorno" code={badgeCode("outline","Contorno")} preview={<Badge variant="outline">Contorno</Badge>}><Badge variant="outline">Contorno</Badge></Copyable>
-                <Copyable label="Badge Informativo" code={badgeCode("info","Informativo")} preview={<Badge variant="info">Informativo</Badge>}><Badge variant="info">Informativo</Badge></Copyable>
-                <Copyable label="Badge Destaque" code={badgeCode("ouro","Destaque")} preview={<Badge variant="ouro">Destaque</Badge>}><Badge variant="ouro">Destaque</Badge></Copyable>
+                <Badge variant="default">Padrão</Badge>
+                <Badge variant="secondary">Secundário</Badge>
+                <Badge variant="sucesso">Sucesso</Badge>
+                <Badge variant="atencao">Atenção</Badge>
+                <Badge variant="critico">Crítico</Badge>
+                <Badge variant="outline">Contorno</Badge>
+                <Badge variant="info">Informativo</Badge>
+                <Badge variant="ouro">Destaque</Badge>
               </div>
             </div>
 
@@ -616,8 +567,6 @@ export default function BadgeDoc(){
           </Card>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Badge",
           description: "Badge com variantes (default, sucesso, atencao, critico, info, ouro, outline), dot, icone, contador e remocao.",
@@ -640,6 +589,5 @@ export default function BadgeDoc(){
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }

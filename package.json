@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.8.0",
+  "version": "0.11.32",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -33,6 +33,7 @@
     "preview": "vite preview"
   },
   "peerDependencies": {
+    "framer-motion": ">=11",
     "react": ">=18",
     "react-dom": ">=18",
     "tailwindcss": ">=4"

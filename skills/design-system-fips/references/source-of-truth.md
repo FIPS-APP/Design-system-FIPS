@@ -68,6 +68,11 @@ Se houver conflito:
 - `src/docs/pages/patterns/ApplicationShellDemo.tsx`
 - `src/docs/pages/patterns/DashboardDemo.tsx`
 - `src/docs/pages/patterns/DataListingDemo.tsx`
+- `src/components/composites/ExportButtons.tsx`
+- `src/components/composites/ListingKpiRow.tsx`
+- `src/components/composites/CircularCommandMenu.tsx`
+- `src/components/composites/RowActionsMenu.tsx`
+- `src/components/icons/FileIcons.tsx`
 - `src/docs/pages/patterns/FormWorkspaceDemo.tsx`
 - `src/docs/pages/patterns/ModalWorkflowDemo.tsx`
 - `src/docs/pages/patterns/HeroHeaderDoc.tsx` (página **Hero** em `/docs/patterns/hero`)

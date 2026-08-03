@@ -34,6 +34,7 @@ Variantes exatas:
 - `accent`
 - `inverseOutline`
 - `success`
+- `successStrong` (verde escuro — `--color-success-strong`; hover pro `success` normal, inverso da variante `success`)
 - `ouro`
 - `danger`
 - `link`
@@ -166,10 +167,20 @@ Regras:
 
 Heights reais:
 
-- `Input`/`Select` default: `h-12`
-- `Input`/`Select` compact: `h-9`
+- `Input`/`Select`/`FieldTrigger` default: `h-12`
+- `Input`/`Select`/`FieldTrigger` compact: `h-8` (32px — `Select` `dense` é o mesmo valor, mantido por compat)
 - `Textarea` default: `min-h-[132px]`
 - `Textarea` compact: `min-h-[92px]`
+
+Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
+
+- **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
+- **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `globals.css`, light `--color-fips-gray-400` / dark `#3a3a3a`).
+- **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
+- **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
+- **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
+
+Fonte de verdade: `Field`/`FieldInput`/`Select` de `client/src/components/ui-sup/` no projeto QLP (`~/dev/projetos/QLP`), usados de verdade em `ColaboradorForm.tsx` (tela Edição Colaborador) — comentário do próprio `select.tsx` de lá documenta a cadeia Governança BI (canônico) → QLP (adaptado). Alinhados na v0.11.15 — a v0.11.14 tinha corrigido radius/borda mas errado a altura (35px, tirado do `DSInput` local de `/docs/components/input`, que diverge do padrão real de produto).
 
 Composição recomendada:
 
@@ -223,7 +234,7 @@ Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal
 | Gov gradient (`GOV_GRAD`) | **âmbar** (`C.amareloOuro` / `--color-accent`) |
 | Cor semântica sólida (verde/vermelho/laranja) | **branco** (`rgba(255,255,255,.9)`) |
 
-8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-9`/`rounded-xl`/`text-sm`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
+8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-8`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
 
 ### Modal "Novidades do Sistema" (Changelog)
 
@@ -253,18 +264,48 @@ Não faça:
 - usar cores Tailwind cruas nos cards por tipo (`bg-green-100`, `text-red-700` etc. — isso vem do modelo de referência do Governança TI/Suprimentos, mas no DS-FIPS é sempre token semântico + variante `dark:`)
 - auto-abrir por `localStorage` a cada versão nova — neste DS o gatilho é **só** o clique no botão Versão, sem popup intrusivo automático
 
+## ExportPreviewModal
+
+Fonte: `src/components/composites/ExportPreviewModal.tsx` · canônico Tecnopano `ExportPreviewModal.tsx`
+
+Modal grande de exportação: **header hero gov-gradient** (mesma anatomia canônica do `ChangelogModal`/`Modal` — âmbar, eyebrow "EXPORTAÇÃO", JunctionLines, título dinâmico, close/Tela cheia translúcido-branco) · segmented **Tudo / Tabela / Expandida** · chips de colunas (toggle + drag) · preview · footer Cancelar / Imprimir / PDF / Excel.
+
+Header renderizado com `showCloseButton={false}` no `DialogContent` (que mantém a faixa azul 3px + grain próprios) e uma faixa gov-gradient full-bleed por cima (`-mx-6 -mt-6` cancelando o padding do `DialogContent`, clipada pelos cantos arredondados do painel via `overflow-hidden` do ancestral — **não precisa de radius próprio**). Usa `DialogPrimitive.Title`/`DialogPrimitive.Description` crus (não os wrappers `DialogTitle`/`DialogDescription` governados, que têm cor fixa incompatível com fundo escuro) — mesma técnica do `ChangelogModal`.
+
+**Rodapé — cada botão aparece se a callback correspondente for passada** (não depende mais de `intent`, que agora só define o título/ícone default do header): `onPrint` → Imprimir (outline); `onExportPdf` → PDF (**danger/vermelho**); `onExportExcel` → Excel (**successStrong/verde escuro**, rótulo "Excel" — não "Planilha"). Um consumidor pode passar as 3 para mostrar tudo (ex.: playground `DialogDoc.tsx`) ou só 1-2 pra manter um fluxo focado.
+
+**Família Modal** — demos em:
+- botões Excel/PDF em `/docs/patterns/data-listing`
+- botão "Exportação" do playground de `/docs/components/dialog`
+
+```tsx
+<ExportPreviewModal
+  open={open}
+  onOpenChange={setOpen}
+  columns={cols}
+  tableColumnKeys={[...]}
+  expandedColumnKeys={[...]}
+  data={rows}
+  onPrint={(keys, layout) => {}}
+  onExportPdf={(keys, layout) => {}}
+  onExportExcel={(keys, layout) => {}}
+/>
+```
+
 ## ExportButtons (par de exportação)
 
-Fonte: `src/docs/pages/patterns/DataListingDemo.tsx` (canônico) · port: `src/components/ExportButtons.tsx`
+Fonte: `src/components/composites/ExportButtons.tsx` · ícones `src/components/icons/FileIcons.tsx` · demo: `src/docs/pages/patterns/DataListingDemo.tsx`
 
-Par de ações no fim da toolbar de listagem: dois botões **34×34 só-ícone** (`Button variant="secondary" size="icon"`), cada um tintado pela cor da extensão (hover na mesma cor, suave):
+Par de ações no fim da toolbar de listagem: dois botões **32.5×32.5 só-ícone**, cada um tintado pela cor da extensão (hover na mesma cor, suave):
 
-- **Excel** — ícone verde Office `#1D6F42`; `aria-label="Exportar para Excel"`
-- **PDF** — ícone vermelho (`text-destructive`); `aria-label="Exportar para PDF"`
+- **Excel** — ícone verde Office `#1D6F42`; `aria-label="Exportar para Excel (.xlsx)"`
+- **PDF** — ícone vermelho (`--color-danger`); `aria-label="Exportar para PDF (.pdf)"`
 
 API:
 
 ```tsx
+import { ExportButtons } from '@fips-app/ds-fips'
+
 <ExportButtons onExcel={() => exportXlsx(rows)} onPdf={() => exportPdf(rows)} />
 ```
 
@@ -273,7 +314,30 @@ Regras:
 - sempre o par, sempre à direita da toolbar
 - só-ícone com `title` + `aria-label` (sem rótulo de texto)
 - não trocar as cores: verde = Excel, vermelho = PDF — é convenção de extensão, não decoração
-- ícones de arquivo vêm de `src/components/icons/FileIcons.tsx` (`ExcelIcon`, `PdfIcon`), não do `lucide-react`
+- botões nativos no composite (não `Button` + tint via `className` — governance)
+
+## ListingKpiRow + StatsCard clicável
+
+Fonte: `src/components/composites/ListingKpiRow.tsx` · `StatsCard` com `onClick` / `selected` / `disabled`
+
+Bloco **Indicadores rápidos** no `panelHeader` da toolbar (borda inferior, acima de filtros/busca/export). Clique no card filtra a tabela; “Limpar filtro” limpa o foco.
+
+## CircularCommandMenu / RowActionsMenu
+
+Fonte: `src/components/composites/CircularCommandMenu.tsx` · `RowActionsMenu.tsx` · CSS `.cmd-glass*` / `.fips-row-action` em `globals.css`
+
+Menu radial por linha (portal + órbita + teclado). **Peer dependency:** `framer-motion` (>=11). Doc: `/docs/components/circular-command-menu`.
+
+```tsx
+<RowActionsMenu
+  rowId={row.id}
+  radius={56}
+  actions={[
+    { key: 'edit', label: 'Editar pedido', icon: <Pencil />, onClick: () => {} },
+    { key: 'delete', label: 'Excluir', icon: <Trash2 />, danger: true, onClick: () => {} },
+  ]}
+/>
+```
 
 ## PageHero
 

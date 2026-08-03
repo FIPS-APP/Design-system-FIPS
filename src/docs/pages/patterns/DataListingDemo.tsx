@@ -1,9 +1,13 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2 } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, CopyableInline, CodePlayground } from '../../components/CodePlayground'
+import { CopyableInline } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
 import { useFipsTheme } from '../../../hooks/useFipsTheme'
+import { ExportButtons } from '../../../components/composites/ExportButtons'
+import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
+import { ExportPreviewModal, type ExportIntent } from '../../../components/composites/ExportPreviewModal'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"var(--color-gov-verde-escuro)",danger:"#DC3545",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",gradFrom:"var(--color-gov-gradient-from)",gradTo:"var(--color-gov-gradient-to)"};
@@ -52,12 +56,81 @@ function Checkbox({checked,onChange,size=16}){return(<div onClick={onChange} sty
 
 function Toggle({checked,onChange}){return(<div onClick={onChange} style={{width:30,height:18,borderRadius:9,background:checked?C.azulProfundo:C.cardBorder,position:"relative",cursor:"pointer",transition:"all .15s",flexShrink:0}}><div style={{position:"absolute",top:2,left:checked?14:2,width:14,height:14,borderRadius:"50%",background:C.branco,boxShadow:"0 1px 3px rgba(0,0,0,.15)",transition:"all .15s"}}/></div>)}
 
+/* Rótulo ícone+texto do grupo de filtro — mesmo padrão de FilterLabel/PillGroup do QLP/Governança BI. */
+function FilterLabel({icon:Icon,children}){return(<p style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:7,fontSize:11,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}><Icon size={12} style={{flexShrink:0,color:C.cinzaChumbo}}/>{children}</p>)}
+
+/* Filtro segmentado single-select — mesmo padrão do PillFilter do QLP/Governança BI:
+   "Todos" + 1 pill por opção; ativo = fundo cheio da cor + texto branco; inativo
+   com cor = dot colorido (escaneável de relance); sem cor (Todos) = azul primário. */
+function PillFilter({options,value,onChange}){
+  return(
+    <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+      {[{value:"",label:"Todos"},...options].map(o=>{
+        const active=o.value===value;
+        return(
+          <button key={o.value||"todos"} type="button" onClick={()=>onChange(o.value)} aria-pressed={active} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,borderRadius:999,cursor:"pointer",transition:"all .1s",border:active?"1px solid transparent":`1px solid ${C.cardBorder}`,background:active?(o.color||PILL_PRIMARY):C.cardBg,color:active?C.branco:C.cinzaChumbo,boxShadow:active?"0 1px 2px rgba(0,0,0,.08)":"none"}}>
+            {o.color&&!active&&<span style={{width:6,height:6,borderRadius:"50%",background:o.color,flexShrink:0}}/>}
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Chip de filtro — dropdown fechado "Rótulo: Valor" com radio. Mesmo padrão do
+   ChipSelect do QLP/Governança BI: usar em campos de muitas opções dentro do
+   drawer de filtros; formulário usa <Select>. */
+function ChipSelect({icon:Icon,label,options,value,onChange}){
+  const [open,setOpen]=useState(false);
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!open)return;
+    const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};
+    document.addEventListener("mousedown",h);
+    return()=>document.removeEventListener("mousedown",h);
+  },[open]);
+  const display=options.find(o=>o.value===value)?.label||"Todos";
+  return(
+    <div ref={ref} style={{position:"relative"}}>
+      <button type="button" onClick={()=>setOpen(v=>!v)} style={{display:"flex",width:"100%",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,color:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${open?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,boxShadow:open?`0 0 0 2px ${C.azulProfundo}1F`:"none",transition:"all .15s"}}>
+        {Icon&&<Icon size={14} style={{flexShrink:0,opacity:.6}}/>}
+        <span style={{color:C.cinzaChumbo,flexShrink:0}}>{label}:</span>
+        <span style={{flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"left",fontWeight:700,color:C.cinzaEscuro}}>{display}</span>
+        <span style={{display:"flex",flexShrink:0,transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}>{Ic.chev(10,C.cinzaChumbo)}</span>
+      </button>
+      {open&&(
+        <div role="listbox" style={{position:"absolute",left:0,top:"calc(100% + 6px)",zIndex:50,minWidth:"100%",maxHeight:280,overflowY:"auto",background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"8px 8px 8px 14px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",padding:"6px 0"}}>
+          {[{value:"",label:"Todos"},...options].map(o=>{
+            const active=o.value===value;
+            return(
+              <div key={o.value||"todos"} role="option" aria-selected={active} onClick={()=>{onChange(o.value);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 14px",fontSize:11,fontWeight:active?700:500,color:active?C.azulProfundo:C.cinzaEscuro,cursor:"pointer",background:active?`${C.azulProfundo}10`:"transparent",transition:"background .12s"}} onMouseEnter={e=>{if(!active)e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{if(!active)e.currentTarget.style.background="transparent"}}>
+                <span style={{display:"flex",flexShrink:0,alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",border:`1.5px solid ${active?C.azulProfundo:C.cardBorder}`}}>{active&&<span style={{width:6,height:6,borderRadius:"50%",background:C.azulProfundo}}/>}</span>
+                <span style={{flex:1}}>{o.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const STATUSES=["Aprovada","Pendente","Em análise","Recusada"];
 const DEPTS=["SSMA","Operações","TI","Suprimentos","Manutenção","Financeiro"];
 const PRIO=["Crítica","Alta","Média","Baixa"];
 const NAMES=["Mariana Souza","Carlos Pereira","Amanda Silva","João Mendes","Patricia Costa","Rafael Lima","Beatriz Santos","Eduardo Almeida","Fernanda Castro","Lucas Oliveira"];
 const STATUS_COLOR={"Aprovada":"sucesso","Pendente":"atencao","Em análise":"info","Recusada":"critico"};
 const PRIO_COLOR={"Crítica":C.danger,"Alta":C.amareloEscuro,"Média":C.azulClaro,"Baixa":C.cinzaChumbo};
+/* Cores fixas (não theme-aware) para o fundo cheio dos PillFilter — o pill ativo
+   é sempre texto branco sobre a cor, então usa o tom saturado dos badges em vez
+   do token light/dark (que em muitos casos clareia no dark e perde contraste). */
+const STATUS_PILL_COLOR={"Aprovada":"#00A83E","Pendente":"#F6921E","Em análise":"#002A68","Recusada":"#DC3545"};
+const PRIO_PILL_COLOR={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#6B7784"};
+/* Cor fixa do pill "Todos" (sem cor semântica própria) — não usa C.azulProfundo
+   porque esse token É theme-aware (var(--color-gov-azul-profundo)) e clareia pra
+   #93BDE4 no dark, o que quebraria o texto branco por cima. */
+const PILL_PRIMARY="#0057B8";
 
 function seed(n){
   let r=137;const rnd=()=>{r=(r*9301+49297)%233280;return r/233280;};
@@ -224,7 +297,6 @@ function dlPreview(part: string) {
 export default function DataListingDemo() {
   const {dark}=useFipsTheme();
   const accentBg=dark?"rgba(147,189,228,0.12)":"#D3E3F4";
-  const accentRing=dark?"rgba(147,189,228,0.2)":"#D3E3F4";
   const zebraBg=dark?"rgba(255,255,255,0.03)":"#D3E3F440";
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
@@ -241,9 +313,11 @@ export default function DataListingDemo() {
   const [showCustom,setShowCustom]=useState(false);
   const [customStart,setCustomStart]=useState("");
   const [customEnd,setCustomEnd]=useState("");
-  const [filters,setFilters]=useState({status:[],dept:[],priority:[]});
+  // '' = "Todos" (sem filtro) — mesma convenção do PillFilter/ChipSelect do QLP/Governança BI: single-select por grupo, não multi.
+  const [filters,setFilters]=useState({status:"",dept:"",priority:""});
   const [search,setSearch]=useState("");
-  const [searchFocused,setSearchFocused]=useState(false);
+  const [exportOpen,setExportOpen]=useState(false);
+  const [exportIntent,setExportIntent]=useState<ExportIntent>("excel");
   const [configTab,setConfigTab]=useState("colunas");
   const [density,setDensity]=useState("normal");
   const [visibleCols,setVisibleCols]=useState(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
@@ -254,16 +328,15 @@ export default function DataListingDemo() {
   const data=useMemo(()=>{
     let r=allData;
     if(search)r=r.filter(x=>x.id.toLowerCase().includes(search.toLowerCase())||x.sol.toLowerCase().includes(search.toLowerCase()));
-    if(filters.status.length)r=r.filter(x=>filters.status.includes(x.status));
-    if(filters.dept.length)r=r.filter(x=>filters.dept.includes(x.dept));
-    if(filters.priority.length)r=r.filter(x=>filters.priority.includes(x.priority));
+    if(filters.status)r=r.filter(x=>x.status===filters.status);
+    if(filters.dept)r=r.filter(x=>x.dept===filters.dept);
+    if(filters.priority)r=r.filter(x=>x.priority===filters.priority);
     return r.slice(0,10);
   },[allData,search,filters]);
   const D=DENSITY[density];
 
-  const totalFilters=filters.status.length+filters.dept.length+filters.priority.length;
-  const toggleFilter=(group,val)=>setFilters(f=>{const a=f[group]||[];return{...f,[group]:a.includes(val)?a.filter(v=>v!==val):[...a,val]}});
-  const clearFilters=()=>setFilters({status:[],dept:[],priority:[]});
+  const totalFilters=[filters.status,filters.dept,filters.priority].filter(Boolean).length;
+  const clearFilters=()=>setFilters({status:"",dept:"",priority:""});
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
 
@@ -271,11 +344,13 @@ export default function DataListingDemo() {
   const configRef=useRef(null);
   const periodoRef=useRef(null);
   const configDemoRef=useRef(null);
+  // Filtros abrem em Drawer (padrão QLP `ListingToolbar`), não em popover ancorado:
+  // fechar é overlay/X/Esc — não click-outside.
   useEffect(()=>{
     if(!showFilters)return;
-    const h=e=>{if(filterRef.current&&!filterRef.current.contains(e.target))setShowFilters(false)};
-    document.addEventListener("mousedown",h);
-    return()=>document.removeEventListener("mousedown",h);
+    const h=e=>{if(e.key==="Escape")setShowFilters(false)};
+    document.addEventListener("keydown",h);
+    return()=>document.removeEventListener("keydown",h);
   },[showFilters]);
   useEffect(()=>{
     if(!showConfig)return;
@@ -315,12 +390,13 @@ export default function DataListingDemo() {
   );
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
         @keyframes popIn{from{opacity:0;transform:scale(.95) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
         @keyframes dsShimmer{0%{left:-100%}100%{left:150%}}
+        @keyframes dlFade{from{opacity:0}to{opacity:1}}
+        @keyframes dlSlideLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
         .ds-btn-wrap{position:relative;overflow:hidden;display:inline-flex;border-radius:6px}
         .ds-btn-wrap::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0) 30%,rgba(255,255,255,0.35) 50%,rgba(255,255,255,0) 70%,transparent 80%);pointer-events:none;transition:none}
         .ds-btn-wrap:hover::after{animation:dsShimmer 0.65s ease-out forwards}
@@ -359,8 +435,8 @@ export default function DataListingDemo() {
           </div>
           </CopyableInline>
 
-          {/* KPIs com sparkline area chart */}
-          <CopyableInline label="KPI Cards" code={dlCode('kpi')} preview={dlPreview('kpi')}>
+          {/* KPIs sparkline — variante alternativa (fora do card da toolbar) */}
+          <CopyableInline label="KPI Cards (sparkline — variante)" code={dlCode('kpi')} preview={dlPreview('kpi')}>
           {(()=>{
             const total=allData.length;
             const pendentes=allData.filter(r=>r.status==="Pendente").length;
@@ -428,53 +504,29 @@ export default function DataListingDemo() {
             );
           })()}
           </CopyableInline>
-          {/* TOOLBAR SEPARADA — card próprio acima do Table */}
+          {/* TOOLBAR SEPARADA — card próprio: filtros/busca à esquerda, export à direita */}
           <CopyableInline label="Toolbar + Table" code={dlCode('toolbar')} preview={dlPreview('toolbar')}>
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
             <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-              {/* Filtros */}
-              <div ref={filterRef} style={{position:"relative"}}>
-                <button onClick={()=>setShowFilters(!showFilters)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"7px 12px",fontSize:11,fontWeight:600,color:totalFilters>0?C.azulProfundo:C.cinzaEscuro,background:totalFilters>0?accentBg:C.cardBg,border:`1px solid ${totalFilters>0?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s"}}>{Ic.filter(13,totalFilters>0?C.azulProfundo:C.cinzaChumbo)} Filtros{totalFilters>0&&<span style={{fontSize:9,fontFamily:Fn.mono,padding:"1px 5px",background:C.azulProfundo,color:C.branco,borderRadius:8}}>{totalFilters}</span>}</button>
-                {showFilters&&<div style={{position:"absolute",top:"calc(100% + 6px)",left:0,zIndex:50,width:280,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Filtros</span>
-                    {totalFilters>0&&<button onClick={clearFilters} style={{fontSize:10,fontWeight:600,color:C.danger,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body}}>Limpar tudo</button>}
-                  </div>
-                  <div style={{padding:"12px 16px",maxHeight:340,overflowY:"auto"}}>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:6}}>Status</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:14}}>
-                      {STATUSES.map(s=>(
-                        <div key={s} onClick={()=>toggleFilter("status",s)} style={{padding:"6px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.status.includes(s)?C.azulProfundo:C.cardBorder}`,background:filters.status.includes(s)?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.status.includes(s)&&Ic.check(10)}</div>
-                          <Badge variant={STATUS_COLOR[s]} dot dark={dark}>{s}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:6}}>Departamento</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:14}}>
-                      {DEPTS.map(d=>(
-                        <div key={d} onClick={()=>toggleFilter("dept",d)} style={{padding:"6px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.dept.includes(d)?C.azulProfundo:C.cardBorder}`,background:filters.dept.includes(d)?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.dept.includes(d)&&Ic.check(10)}</div>
-                          <span>{d}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,display:"block",marginBottom:6}}>Prioridade</span>
-                    <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                      {PRIO.map(p=>(
-                        <div key={p} onClick={()=>toggleFilter("priority",p)} style={{padding:"6px 8px",fontSize:11,color:C.cinzaEscuro,cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <div style={{width:14,height:14,borderRadius:3,border:`1.5px solid ${filters.priority.includes(p)?C.azulProfundo:C.cardBorder}`,background:filters.priority.includes(p)?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{filters.priority.includes(p)&&Ic.check(10)}</div>
-                          <span style={{display:"inline-flex",alignItems:"center",gap:5}}><span style={{width:7,height:7,borderRadius:"50%",background:PRIO_COLOR[p]}}/>{p}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>}
-              </div>
-              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:32.5,padding:"0 12px",background:"var(--color-surface)",border:`1.5px solid ${searchFocused?C.azulProfundo:"#E2E8F0"}`,borderRadius:8,boxShadow:searchFocused?`0 0 0 3px ${accentRing}`:"none",transition:"all 0.18s ease",cursor:"text",flex:1,minWidth:200,maxWidth:320}}>
-                <span style={{display:"flex",flexShrink:0,opacity:.7}}>{Ic.search(15)}</span>
-                <input value={search} onChange={e=>setSearch(e.target.value)} onFocus={()=>setSearchFocused(true)} onBlur={()=>setSearchFocused(false)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:13,color:C.cinzaEscuro,minWidth:0}}/>
-                {search&&<span onClick={e=>{e.stopPropagation();setSearch("")}} style={{display:"flex",cursor:"pointer",opacity:.5,flexShrink:0}}>{Ic.x(14,C.cinzaChumbo)}</span>}
+              {/* Filtros — botão Button variant="outline" size="sm" do QLP (ListingToolbar.tsx):
+                  sempre com borda/texto var(--color-primary), não condicional ao estado ativo.
+                  --color-primary não muda no dark mode neste projeto, por isso o par manual #93BDE4. */}
+              <button
+                ref={filterRef}
+                onClick={()=>setShowFilters(true)}
+                style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:7,height:30,padding:"0 14px",fontSize:12,fontWeight:600,letterSpacing:"0.01em",whiteSpace:"nowrap",color:dark?"#93BDE4":C.azulProfundo,background:"transparent",border:`1.5px solid ${dark?"#93BDE4":C.azulProfundo}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s",flexShrink:0}}
+                onMouseEnter={e=>e.currentTarget.style.background=accentBg}
+                onMouseLeave={e=>e.currentTarget.style.background="transparent"}
+              >
+                <Filter size={14}/> Filtros
+                {totalFilters>0&&<span style={{marginLeft:2,height:16,minWidth:16,padding:"0 4px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,fontFamily:Fn.body,background:dark?"#93BDE4":C.azulProfundo,color:dark?"#002A68":C.branco,borderRadius:999}}>{totalFilters}</span>}
+              </button>
+              {/* Buscar — mesma anatomia do campo do QLP (ListingToolbar.tsx): flex-1 sem
+                  min/maxWidth, borda estática (sem realce de foco), h-34, ícones lucide 14px. */}
+              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:1}}>
+                <Search size={14} style={{flexShrink:0,color:C.cinzaChumbo}}/>
+                <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}}/>
+                {search&&<X size={14} onClick={e=>{e.stopPropagation();setSearch("")}} style={{flexShrink:0,cursor:"pointer",opacity:.5,color:C.cinzaChumbo}}/>}
               </div>
               {/* Período (single-select dropdown) */}
               <div ref={periodoRef} style={{position:"relative"}}>
@@ -532,12 +584,89 @@ export default function DataListingDemo() {
 
               <div style={{flex:1}}/>
 
-              {/* Exportar Excel */}
-              <button title="Exportar para Excel" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:32.5,height:32.5,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#1D6F4208";e.currentTarget.style.borderColor="#1D6F4240"}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.excel(16)}</button>
-              {/* Exportar PDF */}
-              <button title="Exportar para PDF" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:32.5,height:32.5,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background=`${C.danger}08`;e.currentTarget.style.borderColor=`${C.danger}40`}} onMouseLeave={e=>{e.currentTarget.style.background=C.cardBg;e.currentTarget.style.borderColor=C.cardBorder}}>{Ic.pdf(16)}</button>
+              <ExportButtons
+                onExcel={()=>{setExportIntent("excel");setExportOpen(true)}}
+                onPdf={()=>{setExportIntent("pdf");setExportOpen(true)}}
+              />
             </div>
           </div>
+
+          {/* DRAWER DE FILTROS — padrão QLP `ListingToolbar`: abre pela ESQUERDA (cobre a sidebar),
+              hero institucional + miolo rolável + rodapé fixo (Limpar tudo / Ver N resultados). */}
+          {showFilters&&(
+            <div style={{position:"fixed",inset:0,zIndex:1000}}>
+              <div onClick={()=>setShowFilters(false)} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.35)",animation:"dlFade .2s ease"}}/>
+              <div role="dialog" aria-modal="true" aria-label="Filtros" style={{position:"fixed",top:0,left:0,width:400,maxWidth:"90vw",height:"100vh",background:C.cardBg,display:"flex",flexDirection:"column",boxShadow:"4px 0 24px rgba(0,0,0,.12)",animation:"dlSlideLeft .3s cubic-bezier(.4,0,.2,1)"}}>
+                {/* Hero */}
+                <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"20px 56px 20px 24px",overflow:"hidden",flexShrink:0,background:dark?"linear-gradient(135deg,#1e2a3a 0%,#162030 50%,#1a2840 100%)":`linear-gradient(135deg,${C.gradFrom} 0%,${C.gradTo} 60%,#001A4A 100%)`}}>
+                  <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:dark?.04:.06}}/>
+                  <span style={{position:"relative",display:"flex",flexShrink:0,width:44,height:44,borderRadius:11,alignItems:"center",justifyContent:"center",background:`${C.amareloOuro}1A`,border:`1px solid ${C.amareloOuro}30`}}>{Ic.filter(20,C.amareloOuro)}</span>
+                  <div style={{position:"relative",minWidth:0,flex:1}}>
+                    <span style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title}}>Requisições</span>
+                    <h2 style={{margin:0,fontSize:21,fontWeight:700,lineHeight:1.15,letterSpacing:"-.2px",color:C.branco,fontFamily:Fn.title}}>Filtros</h2>
+                    <p style={{margin:"2px 0 0",fontSize:12,lineHeight:1.4,color:"rgba(255,255,255,.65)",fontFamily:Fn.body}}>{totalFilters>0?`${totalFilters} filtro(s) ativo(s)`:"Refine a listagem pelos campos abaixo"}</p>
+                  </div>
+                  <button onClick={()=>setShowFilters(false)} aria-label="Fechar painel" style={{position:"absolute",top:20,right:16,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",border:"none",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>{Ic.x(16,"currentColor")}</button>
+                </div>
+                {/* Miolo — padrão QLP/Governança BI: pills para classificação (poucas opções,
+                    1 clique, cor escaneável), divisor, chip-dropdown pra muitas opções. */}
+                <div style={{flex:1,overflowY:"auto",padding:"20px 24px",display:"flex",flexDirection:"column",gap:16}}>
+                  <div>
+                    <FilterLabel icon={Activity}>Status</FilterLabel>
+                    <PillFilter
+                      value={filters.status}
+                      onChange={v=>setFilters(f=>({...f,status:v}))}
+                      options={STATUSES.map(s=>({value:s,label:s,color:STATUS_PILL_COLOR[s]}))}
+                    />
+                  </div>
+                  <div>
+                    <FilterLabel icon={Flag}>Prioridade</FilterLabel>
+                    <PillFilter
+                      value={filters.priority}
+                      onChange={v=>setFilters(f=>({...f,priority:v}))}
+                      options={PRIO.map(p=>({value:p,label:p,color:PRIO_PILL_COLOR[p]}))}
+                    />
+                  </div>
+                  <div style={{height:1,background:C.cardBorder}}/>
+                  <ChipSelect
+                    icon={Building2}
+                    label="Departamento"
+                    value={filters.dept}
+                    onChange={v=>setFilters(f=>({...f,dept:v}))}
+                    options={DEPTS.map(d=>({value:d,label:d}))}
+                  />
+                </div>
+                {/* Rodapé fixo */}
+                <div style={{display:"flex",gap:8,flexShrink:0,padding:"16px 24px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg}}>
+                  <button onClick={clearFilters} disabled={totalFilters===0} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:totalFilters===0?C.textLight:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:totalFilters===0?"default":"pointer",opacity:totalFilters===0?.6:1,transition:"all .15s"}}>Limpar tudo</button>
+                  <button onClick={()=>setShowFilters(false)} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:700,fontFamily:Fn.body,color:C.branco,background:PILL_PRIMARY,border:"none",borderRadius:8,cursor:"pointer",transition:"all .15s"}}>Ver {data.length} resultado(s)</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <ExportPreviewModal
+            open={exportOpen}
+            onOpenChange={setExportOpen}
+            intent={exportIntent}
+            filename="requisicoes"
+            columns={[
+              {key:"id",label:"Código"},
+              {key:"sol",label:"Solicitante"},
+              {key:"dept",label:"Departamento"},
+              {key:"status",label:"Status"},
+              {key:"priority",label:"Prioridade"},
+              {key:"sla",label:"SLA"},
+              {key:"valor",label:"Valor",render:(row)=>`R$ ${Number((row as {valor?:number}).valor??0).toLocaleString("pt-BR")}`},
+              {key:"data",label:"Data"},
+            ]}
+            tableColumnKeys={["id","sol","dept","status","priority","valor","data"]}
+            expandedColumnKeys={["id","sol","dept","status","priority","sla","valor","data"]}
+            data={allData as Record<string,unknown>[]}
+            onExportExcel={()=>undefined}
+            onExportPdf={()=>undefined}
+            onPrint={()=>window.print()}
+          />
 
           {/* TABLE CARD com Header obrigatório (ícone + título + subtítulo) */}
           <div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,overflow:"visible",boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
@@ -642,10 +771,17 @@ export default function DataListingDemo() {
                     {visibleCols.has("sla")&&<td style={{padding:`0 ${D.padX}px`,borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}><div style={{display:"flex",alignItems:"center",gap:6,minWidth:80}}><div style={{flex:1,height:4,borderRadius:2,background:`${r.sla>=70?C.verdeFloresta:r.sla>=50?C.amareloEscuro:C.danger}20`}}><div style={{height:4,borderRadius:2,background:r.sla>=70?C.verdeFloresta:r.sla>=50?C.amareloEscuro:C.danger,width:`${r.sla}%`}}/></div><span style={{fontSize:9,fontFamily:Fn.mono,fontWeight:700,color:r.sla>=70?C.verdeFloresta:r.sla>=50?C.amareloEscuro:C.danger}}>{r.sla}%</span></div></td>}
                     {visibleCols.has("valor")&&<td style={{padding:`0 ${D.padX}px`,fontSize:D.fs-1,fontFamily:Fn.mono,fontWeight:700,color:C.cinzaEscuro,textAlign:"right",whiteSpace:"nowrap",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>R$ {r.valor.toLocaleString("pt-BR")}</td>}
                     {visibleCols.has("data")&&<td style={{padding:`0 ${D.padX}px`,fontSize:D.fs-1,fontFamily:Fn.mono,color:C.textMuted,whiteSpace:"nowrap",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>{r.data}</td>}
-                    {visibleCols.has("actions")&&<td style={{padding:`0 ${D.padX}px`,textAlign:"center"}}><div style={{display:"inline-flex",gap:2}}>
-                      <button style={{width:24,height:24,borderRadius:5,background:"transparent",border:"none",cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>{Ic.edit(12)}</button>
-                      <button style={{width:24,height:24,borderRadius:5,background:"transparent",border:"none",cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>{Ic.more(12)}</button>
-                    </div></td>}
+                    {visibleCols.has("actions")&&<td style={{padding:`0 ${D.padX}px`,textAlign:"center"}} onClick={e=>e.stopPropagation()}>
+                      <RowActionsMenu
+                        rowId={r.id}
+                        radius={56}
+                        actions={[
+                          {key:"edit",label:"Editar pedido",icon:<Pencil className="h-4 w-4"/>,onClick:()=>undefined},
+                          {key:"cancel",label:"Cancelar",icon:<Ban className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
+                          {key:"delete",label:"Excluir",icon:<Trash2 className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
+                        ]}
+                      />
+                    </td>}
                   </tr>);
                 })}</tbody>
               </table>
@@ -674,12 +810,22 @@ export default function DataListingDemo() {
               )})}
             </div>}
 
-            <div style={{padding:"12px 18px",borderTop:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+            {/* Footer — mesma anatomia do footer do <Table> governado (TableDoc.tsx:320-343):
+                faixa C.bg, range à esquerda, "Linhas:" + nav ‹ 1 2 3 4 › à direita. */}
+            <div style={{padding:"10px 16px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap",fontSize:11,color:C.cinzaChumbo,fontFamily:Fn.body}}>
               <span style={{fontSize:11,color:C.textMuted}}>Mostrando 1–{data.length} de 247 registros {selected.size>0&&<>· <strong style={{color:C.cinzaEscuro}}>{selected.size} selecionado{selected.size>1?"s":""}</strong></>}</span>
-              <div style={{display:"flex",gap:4}}>
-                {["←","1","2","3","4","→"].map((p,i)=>(
-                  <button key={i} style={{minWidth:28,height:28,padding:"0 8px",fontSize:11,fontWeight:600,color:p==="1"?C.branco:C.cinzaEscuro,background:p==="1"?C.azulProfundo:C.cardBg,border:`1px solid ${p==="1"?C.azulProfundo:C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>{p}</button>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginLeft:"auto"}}>
+                <div style={{display:"flex",alignItems:"center",gap:4}}>
+                  <span style={{fontSize:11,color:C.textMuted}}>Linhas:</span>
+                  <select defaultValue={10} style={{padding:"2px 4px",fontSize:11,border:`1px solid ${C.cardBorder}`,borderRadius:4,background:C.cardBg,color:C.cinzaEscuro,fontFamily:Fn.body,cursor:"pointer"}}>
+                    {[10,25,50].map(n=><option key={n} value={n}>{n}</option>)}
+                  </select>
+                </div>
+                <button style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:"transparent",color:C.textLight,border:`1px solid ${C.cardBorder}`,borderRadius:5,cursor:"default",transition:"all .15s"}}>‹</button>
+                {[1,2,3,4].map(p=>(
+                  <button key={p} style={{width:24,height:24,fontSize:11,fontWeight:p===1?700:400,fontFamily:Fn.body,background:p===1?C.azulProfundo:"transparent",color:p===1?C.branco:C.cinzaChumbo,border:p===1?"none":`1px solid ${C.cardBorder}`,borderRadius:5,cursor:"pointer"}}>{p}</button>
                 ))}
+                <button style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:C.cardBg,color:C.azulProfundo,border:`1px solid ${C.azulCeu}`,borderRadius:5,cursor:"pointer",transition:"all .15s"}}>›</button>
               </div>
             </div>
           </div>
@@ -791,7 +937,7 @@ export default function DataListingDemo() {
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
               {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (multi-select popover)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
-              {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 34×34, ícone verde)","PDF (botão 34×34, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados"]},
+              {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 32.5×32.5, ícone verde)","PDF (botão 32.5×32.5, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados · ExportButtons"]},
               {title:"Padrão visual",icon:Ic.list,color:C.amareloEscuro,items:["Card próprio com borderRadius FIPS","Padding 14px 18px","display:flex flexWrap:wrap","Spacer central com flex:1","marginBottom 14 antes da Table"]},
               {title:"Filtros oficiais",icon:Ic.calendar,color:C.verdeFloresta,items:["Multi-select (popover com 3 grupos)","Single-select (dropdown com radio)","Período suporta presets + Personalizado","Personalizado abre 2 inputs date","Contador no botão quando há filtros"]},
             ].map((r,i)=>(
@@ -971,8 +1117,6 @@ export default function DataListingDemo() {
           </div>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[
           {
             label: 'Data Listing Pattern',
@@ -1060,6 +1204,5 @@ function DataListingPage() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }

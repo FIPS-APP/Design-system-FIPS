@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Copy, Check } from 'lucide-react'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
-import { CodeExportSection } from '../../components/CodeExport'
 import { fipsPalette, semanticColors, darkSemanticColors } from '../../../tokens/colors'
 
 const C = { azulProfundo: 'var(--color-gov-azul-profundo)', azulEscuro: 'var(--color-gov-azul-escuro)', azulCeuClaro: '#D3E3F4', amareloOuro: '#FDC24E', cinzaChumbo: 'var(--color-fg-muted)', cinzaEscuro: 'var(--color-fg)', branco: '#FFFFFF', bg: 'var(--color-surface-muted)', cardBg: 'var(--color-surface)', cardBorder: 'var(--color-border)', textLight: 'var(--color-fg-muted)' }
@@ -70,7 +68,6 @@ export default function ColorsPage() {
   const mob = w < 640
 
   return (
-    <PlaygroundProvider>
     <div style={{ minHeight: '100vh', background: "var(--color-surface-muted)", fontFamily: Fn.body, color: C.cinzaEscuro }}>
 
       <header style={{ background: `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 100%)`, padding: mob ? '32px 20px' : '48px 40px 44px', position: 'relative', overflow: 'hidden' }}>
@@ -88,35 +85,16 @@ export default function ColorsPage() {
           <div style={{ display: 'grid', gridTemplateColumns: mob ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
             {swatches.map(([name, hex]) => {
               const displayName = name.replace(/([a-z])([A-Z])/g, '$1 $2')
-              const codeSnippet = `// DS-FIPS — ${displayName}\nconst ${name} = "${hex}";\n// CSS: var(--color-fips-${name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()})`
               return (
-              <Copyable
-                key={name}
-                label={`color-${name}`}
-                code={codeSnippet}
-                preview={
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <div style={{ width: 64, height: 64, borderRadius: 12, background: hex, border: '1px solid rgba(0,0,0,0.1)' }} />
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Saira Expanded', sans-serif", color: '#333B41' }}>{displayName}</div>
-                      <code style={{ fontSize: 12, fontFamily: "'Fira Code', monospace", color: '#6B7784' }}>{hex}</code>
-                    </div>
-                  </div>
-                }
-              >
-              <div style={{ background: C.cardBg, borderRadius: '10px 10px 10px 18px', border: `1px solid ${C.cardBorder}`, overflow: 'hidden' }}>
+              <div key={name} style={{ background: C.cardBg, borderRadius: '10px 10px 10px 18px', border: `1px solid ${C.cardBorder}`, overflow: 'hidden' }}>
                 <div style={{ height: 96, width: '100%', background: hex }} />
-                <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: C.cinzaEscuro, margin: '0 0 4px', fontFamily: Fn.title, textTransform: 'capitalize' }}>
-                      {displayName}
-                    </p>
-                    <p style={{ fontSize: 12, fontFamily: "'Fira Code', monospace", color: C.cinzaChumbo, margin: 0, textTransform: 'uppercase' }}>{hex}</p>
-                  </div>
-                  <CopyHex hex={hex} />
+                <div style={{ padding: '12px 16px' }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: C.cinzaEscuro, margin: '0 0 4px', fontFamily: Fn.title, textTransform: 'capitalize' }}>
+                    {displayName}
+                  </p>
+                  <p style={{ fontSize: 12, fontFamily: "'Fira Code', monospace", color: C.cinzaChumbo, margin: 0, textTransform: 'uppercase' }}>{hex}</p>
                 </div>
               </div>
-              </Copyable>
               )
             })}
           </div>
@@ -204,119 +182,10 @@ export default function ColorsPage() {
           </div>
         </Section>
 
-        <CodePlayground />
-
-        {/* CodeExportSection removido — cores são tokens, não componentes */}
-        {false && <CodeExportSection items={[
-          {
-            label: 'Paleta FIPS — CSS Variables',
-            description: 'Todas as CSS variables de cor do DS-FIPS para light e dark mode.',
-            code: `/* ═══════════════════════════════════════════
-   FIPS Color Palette — CSS Custom Properties
-   Cole no :root do seu projeto
-   ═══════════════════════════════════════════ */
-
-:root {
-  /* ── Governamentais ── */
-  --color-gov-azul-profundo: #004B9B;
-  --color-gov-azul-escuro: #002A68;
-  --color-gov-azul-claro: #658EC9;
-  --color-gov-verde-escuro: #00904C;
-  --color-gov-gradient-from: #002A68;
-  --color-gov-gradient-to: #004B9B;
-
-  /* ── Primarias ── */
-  --color-primary: #004B9B;
-  --color-secondary: #0090D0;
-  --color-accent: #F6921E;
-  --color-accent-strong: #F6921E;
-
-  /* ── Semanticas (light) ── */
-  --color-success: #00C64C;
-  --color-success-strong: #00904C;
-  --color-danger: #DC3545;
-  --color-warning: #F6921E;
-
-  /* ── Superficies (light) ── */
-  --color-surface: #FFFFFF;
-  --color-surface-muted: #F3F6FB;
-  --color-surface-soft: #EDF2F7;
-  --color-border: #D7E0EA;
-  --color-border-strong: #C0CCD2;
-
-  /* ── Foreground (light) ── */
-  --color-fg: #333B41;
-  --color-fg-muted: #6B7784;
-
-  /* ── Neutras ── */
-  --color-fips-yellow-400: #FDC24E;
-  --color-fips-yellow-600: #F6921E;
-  --color-fips-orange-100: rgba(246,146,30,0.12);
-  --color-fips-blue-200: #93BDE4;
-}
-
-/* ── Dark mode overrides ── */
-.dark, [data-theme="dark"] {
-  --color-surface: #1A1A1A;
-  --color-surface-muted: #121212;
-  --color-surface-soft: #222222;
-  --color-border: #2E2E2E;
-  --color-border-strong: #3A3A3A;
-  --color-fg: #E2E2E8;
-  --color-fg-muted: #A1A1AA;
-  --color-primary: #93BDE4;
-  --color-success: #8BE5AD;
-}`,
-          },
-          {
-            label: 'Paleta FIPS — JS/TS Object',
-            description: 'Objeto JavaScript com todas as cores da paleta FIPS.',
-            code: `/* FIPS Color Palette — JS/TS Object */
-
-export const fipsColors = {
-  gov: {
-    azulProfundo: '#004B9B',
-    azulEscuro: '#002A68',
-    azulClaro: '#658EC9',
-    verdeEscuro: '#00904C',
-    gradientFrom: '#002A68',
-    gradientTo: '#004B9B',
-  },
-  primary: '#004B9B',
-  secondary: '#0090D0',
-  accent: '#F6921E',
-  success: '#00C64C',
-  danger: '#DC3545',
-  warning: '#F6921E',
-  neutral: {
-    white: '#FFFFFF',
-    surface: '#F3F6FB',
-    border: '#D7E0EA',
-    fg: '#333B41',
-    fgMuted: '#6B7784',
-  },
-  dark: {
-    surface: '#1A1A1A',
-    surfaceMuted: '#121212',
-    border: '#2E2E2E',
-    fg: '#E2E2E8',
-    fgMuted: '#A1A1AA',
-  },
-  fips: {
-    yellow400: '#FDC24E',
-    yellow600: '#F6921E',
-    blue200: '#93BDE4',
-    blue800: '#004B9B',
-  },
-} as const`,
-          },
-        ]} />}
-
         <div style={{ textAlign: 'center', padding: '20px 0 0', borderTop: `1px solid ${C.cardBorder}`, marginTop: 20 }}>
           <span style={{ fontSize: 12, color: C.cinzaChumbo, letterSpacing: '0.5px', fontFamily: Fn.title, fontWeight: 400 }}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }

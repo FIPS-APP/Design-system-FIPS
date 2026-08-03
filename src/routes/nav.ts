@@ -16,8 +16,6 @@ import {
   PanelLeft,
   PanelTop,
   Settings,
-  BarChart3,
-  FileDown,
   Ruler,
   ScanText,
   SearchCheck,
@@ -28,6 +26,7 @@ import {
   Type,
   MonitorSmartphone,
   Cpu,
+  CircleDot,
 } from 'lucide-react'
 
 export type NavItem = {
@@ -71,8 +70,6 @@ export const navGroups: NavGroup[] = [
       { label: 'Hero', to: '/docs/patterns/hero', icon: MonitorSmartphone },
       { label: 'Banner', to: '/docs/patterns/hero-banner', icon: PanelTop },
       { label: 'Configurações', to: '/docs/patterns/configuracoes', icon: Settings },
-      { label: 'Relatórios operacionais', to: '/docs/patterns/relatorios-operacionais', icon: BarChart3 },
-      { label: 'Export modal', to: '/docs/patterns/export-modal', icon: FileDown },
     ],
   },
   {
@@ -102,15 +99,14 @@ export const navGroups: NavGroup[] = [
       { label: 'Badge', to: '/docs/components/badge', icon: Blocks },
       { label: 'Card', to: '/docs/components/card', icon: LayoutTemplate },
       { label: 'Tabs', to: '/docs/components/tabs', icon: BookOpen },
-      { label: 'Switch', to: '/docs/components/switch', icon: MousePointer2 },
       { label: 'Table', to: '/docs/components/table', icon: TableProperties },
-      { label: 'Modal (legado)', to: '/docs/components/dialog', icon: ScanText },
-      { label: 'Modal Radix', to: '/docs/components/modal-radix', icon: ScanText },
+      { label: 'Modal', to: '/docs/components/dialog', icon: ScanText },
       { label: 'Drawer', to: '/docs/components/drawer', icon: PanelLeft },
       { label: 'Header', to: '/docs/components/header', icon: PanelTop },
       { label: 'Sidebar', to: '/docs/components/sidebar', icon: PanelLeft },
       { label: 'Toast', to: '/docs/components/toast', icon: Sparkles },
       { label: 'Tooltip', to: '/docs/components/tooltip', icon: MousePointer2 },
+      { label: 'Ações', to: '/docs/components/circular-command-menu', icon: CircleDot },
     ],
   },
 ]

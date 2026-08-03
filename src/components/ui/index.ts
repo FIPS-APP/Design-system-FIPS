@@ -40,10 +40,12 @@ export {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogIconTile,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  DIALOG_CONTENT_SCROLL_WRAPPER_CLASS,
 } from './dialog'
 export { Modal, ModalFooter, type ModalProps, type ModalFooterProps } from './Modal'
 export {

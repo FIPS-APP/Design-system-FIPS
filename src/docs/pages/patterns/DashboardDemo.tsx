@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown } from "react-icons/lu";
 import * as echarts from "echarts/core";
 import { PieChart } from "echarts/charts";
@@ -249,217 +248,6 @@ function getRowBreakdownValue(row: Row, breakdown: "status" | "dept" | "priority
   return row.priority;
 }
 
-/* ── Helper: código copy-paste-ready para o Playground ── */
-function dashCode(part: 'kpi' | 'filters' | 'chart') {
-  if (part === 'kpi') return `// DS-FIPS — KPI Card com Sparkline — Copy-paste ready
-import { useState } from "react";
-
-const KPIS = [
-  { label: "Solicitações", value: "487", delta: "+12%", up: true, color: "#004B9B", spark: [12,18,14,22,28,25,32,30,35,38,42,48] },
-  { label: "Finalizadas", value: "312", delta: "64%", up: true, color: "#00C64C", spark: [8,12,15,18,22,20,25,28,30,35,32,38] },
-  { label: "Aguardando", value: "98", delta: "20%", up: false, color: "#F6921E", spark: [15,12,18,14,10,13,8,11,9,7,10,8] },
-  { label: "Atrasadas", value: "77", delta: "16%", up: false, color: "#DC3545", spark: [5,8,6,10,12,9,14,11,15,13,10,8] },
-];
-
-export function KPICards() {
-  const [hov, setHov] = useState(-1);
-
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-      {KPIS.map((k, i) => {
-        const max = Math.max(...k.spark), min = Math.min(...k.spark);
-        const sw = 200, sh = 40;
-        const pts = k.spark.map((v, j) => ({
-          x: (j / (k.spark.length - 1)) * sw,
-          y: sh - ((v - min) / (max - min || 1)) * (sh - 8) + 4,
-        }));
-        const line = pts.map(p => \`\${p.x},\${p.y}\`).join(" ");
-        return (
-          <div key={i}
-            onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(-1)}
-            style={{
-              background: "#fff", border: "1px solid #E2E8F0",
-              borderRadius: "10px 10px 10px 18px", overflow: "hidden",
-              transform: hov === i ? "translateY(-2px)" : "none",
-              boxShadow: hov === i ? "0 4px 16px rgba(0,75,155,0.1)" : "none",
-              transition: "all 0.2s",
-            }}>
-            <div style={{ padding: "18px 20px 6px" }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: "#7B8C96", fontFamily: "'Open Sans', sans-serif" }}>{k.label}</span>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 8 }}>
-                <span style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Saira Expanded', sans-serif", color: "#333B41" }}>{k.value}</span>
-                <span style={{ fontSize: 10, fontWeight: 600, color: k.up ? "#00C64C" : "#DC3545" }}>
-                  {k.up ? "↑" : "↓"} {k.delta}
-                </span>
-              </div>
-            </div>
-            <svg width="100%" height={sh + 16} viewBox={\`-2 -12 \${sw + 4} \${sh + 28}\`} preserveAspectRatio="none" style={{ display: "block" }}>
-              <defs>
-                <linearGradient id={\`g\${i}\`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={k.color} stopOpacity=".18" />
-                  <stop offset="100%" stopColor={k.color} stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <polygon points={\`0,\${sh} \${line} \${sw},\${sh}\`} fill={\`url(#g\${i})\`} />
-              <polyline points={line} fill="none" stroke={k.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-        );
-      })}
-    </div>
-  );
-}`;
-
-  if (part === 'filters') return `// DS-FIPS — Barra de Filtros Dashboard — Copy-paste ready
-import { useState } from "react";
-
-function FilterSelect({ label, options, value, onChange }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      <label style={{ fontSize: 10, fontWeight: 600, color: "#7B8C96", fontFamily: "'Open Sans', sans-serif" }}>{label}</label>
-      <select
-        value={value || ""}
-        onChange={e => onChange(e.target.value || null)}
-        style={{
-          height: 32, padding: "0 10px", fontSize: 12, fontFamily: "'Open Sans', sans-serif",
-          border: "1.5px solid #CBD5E1", borderRadius: 8, background: "#fff", color: "#333B41",
-          cursor: "pointer", outline: "none",
-        }}
-      >
-        <option value="">Todos</option>
-        {options.map(o => <option key={o} value={o}>{o}</option>)}
-      </select>
-    </div>
-  );
-}
-
-export function DashboardFilters() {
-  const [filters, setFilters] = useState({ area: null, ano: null, mes: null, solicitante: null, prioridade: null, status: null });
-  const setF = (key, val) => setFilters(f => ({ ...f, [key]: val }));
-
-  return (
-    <div style={{
-      background: "#fff", borderRadius: "10px 10px 10px 18px",
-      border: "1px solid #E2E8F0", padding: "14px 20px",
-      boxShadow: "0 1px 3px rgba(0,75,155,0.04)",
-    }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#333B41", fontFamily: "'Saira Expanded', sans-serif" }}>Filtros</span>
-        <button style={{
-          fontSize: 10, fontWeight: 600, color: "#DC3545",
-          background: "rgba(220,53,69,0.05)", border: "1px solid rgba(220,53,69,0.13)",
-          borderRadius: 6, padding: "4px 10px", cursor: "pointer",
-        }}>
-          Relatório
-        </button>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 12 }}>
-        <FilterSelect label="Área" options={["Operações","Financeiro","RH","TI","Comercial"]} value={filters.area} onChange={v => setF("area", v)} />
-        <FilterSelect label="Ano" options={["2024","2025","2026"]} value={filters.ano} onChange={v => setF("ano", v)} />
-        <FilterSelect label="Mês" options={["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]} value={filters.mes} onChange={v => setF("mes", v)} />
-        <FilterSelect label="Solicitante" options={["Ana","Carlos","Maria","Pedro"]} value={filters.solicitante} onChange={v => setF("solicitante", v)} />
-        <FilterSelect label="Prioridade" options={["Crítica","Alta","Média","Baixa"]} value={filters.prioridade} onChange={v => setF("prioridade", v)} />
-        <FilterSelect label="Status" options={["Aberta","Em andamento","Concluída","Cancelada"]} value={filters.status} onChange={v => setF("status", v)} />
-      </div>
-    </div>
-  );
-}`;
-
-  return `// DS-FIPS — Chart Card (Barras por Mês) — Copy-paste ready
-import { useState } from "react";
-
-const MONTHS = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-const DATA = [32, 45, 28, 52, 61, 48, 55, 42, 67, 58, 72, 65];
-
-export function BarChart() {
-  const [hov, setHov] = useState(null);
-  const max = Math.max(...DATA);
-  const bw = 28, gp = 10, chartH = 100;
-
-  return (
-    <div style={{
-      background: "#fff", border: "1px solid #E2E8F0",
-      borderRadius: "10px 10px 10px 18px", overflow: "hidden",
-      padding: 20, boxShadow: "0 1px 3px rgba(0,75,155,0.04)",
-    }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#333B41", fontFamily: "'Saira Expanded', sans-serif" }}>
-          Solicitações por Mês
-        </span>
-      </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <svg width={DATA.length * (bw + gp) - gp} height={chartH + 30}
-          viewBox={\`0 -10 \${DATA.length * (bw + gp) - gp} \${chartH + 40}\`}>
-          {DATA.map((v, i) => {
-            const bh = Math.max(4, (v / max) * chartH);
-            const x = i * (bw + gp);
-            return (
-              <g key={i} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} style={{ cursor: "pointer" }}>
-                <rect x={x} y={chartH - bh} width={bw} height={bh} rx={5}
-                  fill="#004B9B" opacity={hov === i ? 1 : 0.65} style={{ transition: "opacity 0.15s" }} />
-                <text x={x + bw / 2} y={chartH - bh - 6} textAnchor="middle"
-                  fontSize="10" fontWeight="700" fill="#002A68" fontFamily="'Fira Code', monospace">{v}</text>
-                <text x={x + bw / 2} y={chartH + 14} textAnchor="middle"
-                  fontSize="9" fill="#7B8C96" fontFamily="'Open Sans', sans-serif">{MONTHS[i]}</text>
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-    </div>
-  );
-}`;
-}
-
-/* ── Preview components para o Playground ── */
-function DashPreviewKPI() {
-  const kpis = [
-    { label: "Solicitações", value: "487", delta: "+12%", color: "#004B9B" },
-    { label: "Finalizadas", value: "312", delta: "64%", color: "#00C64C" },
-  ];
-  return (
-    <div style={{ display: "flex", gap: 10 }}>
-      {kpis.map((k, i) => (
-        <div key={i} style={{ flex: 1, background: "#fff", border: "1px solid #E2E8F0", borderRadius: "8px 8px 8px 14px", padding: "10px 12px" }}>
-          <span style={{ fontSize: 9, fontWeight: 600, color: "#7B8C96", display: "block" }}>{k.label}</span>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginTop: 4 }}>
-            <span style={{ fontSize: 18, fontWeight: 800, fontFamily: "'Saira Expanded',sans-serif", color: "#333B41" }}>{k.value}</span>
-            <span style={{ fontSize: 8, fontWeight: 600, color: "#00C64C" }}>↑ {k.delta}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function DashPreviewFilters() {
-  return (
-    <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8, padding: "8px 12px" }}>
-      <span style={{ fontSize: 10, fontWeight: 700, color: "#333B41", fontFamily: "'Saira Expanded',sans-serif", display: "block", marginBottom: 6 }}>Filtros</span>
-      <div style={{ display: "flex", gap: 6 }}>
-        {["Área", "Ano", "Status"].map(l => (
-          <div key={l} style={{ flex: 1, height: 24, borderRadius: 6, border: "1px solid #CBD5E1", display: "flex", alignItems: "center", padding: "0 6px", fontSize: 9, color: "#7B8C96" }}>{l}</div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function DashPreviewChart() {
-  const data = [32, 45, 28, 52, 61, 48];
-  const max = Math.max(...data);
-  return (
-    <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8, padding: "8px 12px" }}>
-      <span style={{ fontSize: 10, fontWeight: 700, color: "#333B41", fontFamily: "'Saira Expanded',sans-serif", display: "block", marginBottom: 6 }}>Solicitações/Mês</span>
-      <svg width="100%" height={50} viewBox="0 0 180 50">
-        {data.map((v, i) => (
-          <rect key={i} x={i * 30} y={50 - (v / max) * 45} width={22} height={(v / max) * 45} rx={3} fill="#004B9B" opacity={0.7} />
-        ))}
-      </svg>
-    </div>
-  );
-}
-
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DSFIPSDashboard(){
   const {dark}=useFipsTheme();
@@ -597,7 +385,6 @@ export default function DSFIPSDashboard(){
   const Avatar=({name}:{name:string})=>{const p=(name||"").split(" ").filter(Boolean);const ini=p.length>=2?`${p[0][0]}${p[p.length-1][0]}`:p[0]?p[0][0]:"?";return <div style={{width:32,height:32,borderRadius:"50%",background:C.bg,border:`1px solid ${C.cardBorder}`,color:C.cinzaChumbo,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,fontFamily:Fn.title,flexShrink:0,letterSpacing:".5px"}}>{ini.toUpperCase()}</div>};
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
@@ -609,14 +396,13 @@ export default function DSFIPSDashboard(){
         <div style={{position:"relative"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:6,background:`${C.branco}10`,border:`1px solid ${C.branco}18`,borderRadius:20,padding:"5px 14px",fontSize:11,fontWeight:600,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title,marginBottom:16}}><LuLayoutGrid size={14} color={C.amareloOuro}/> Design System FIPS</div>
           <h1 style={{fontSize:mob?30:44,fontWeight:700,color:C.branco,margin:"0 0 10px",fontFamily:Fn.title}}>Dashboard</h1>
-          <p style={{fontSize:16,color:`${C.branco}B0`,lineHeight:1.6,maxWidth:700,margin:0,fontFamily:Fn.body}}>Padrão de painel operacional com KPIs, gráficos interativos, barra de filtros e tabela de dados. Clique em qualquer seção para copiar o código.</p>
+          <p style={{fontSize:16,color:`${C.branco}B0`,lineHeight:1.6,maxWidth:700,margin:0,fontFamily:Fn.body}}>Padrão de painel operacional com KPIs, gráficos interativos, barra de filtros e tabela de dados.</p>
         </div>
       </header>
 
       <div style={{padding:mob?"16px 12px 32px":"24px 40px 48px",maxWidth:1200,margin:"0 auto"}}>
 
         {/* ═══ BARRA DE FILTROS ═══ */}
-        <Copyable label="Barra de Filtros" code={dashCode('filters')} preview={<DashPreviewFilters />} fullWidth>
         <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?"12px":"14px 20px",marginBottom:mob?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
             <div style={{display:"flex",alignItems:"center",gap:8}}>
@@ -638,7 +424,6 @@ export default function DSFIPSDashboard(){
             <ChipSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>
           </div>
         </div>
-        </Copyable>
 
         {/* ═══ FILTROS ATIVOS (badges) ═══ */}
         {hasFilter&&(
@@ -653,7 +438,6 @@ export default function DSFIPSDashboard(){
         )}
 
         {/* ═══ KPIs ═══ */}
-        <Copyable label="KPI Cards" code={dashCode('kpi')} preview={<DashPreviewKPI />} fullWidth>
         <div style={{display:"grid",gridTemplateColumns:mob?"repeat(2,1fr)":"repeat(4,1fr)",gap:mob?10:16,marginBottom:mob?16:24}}>
           {kpis.map((k,i)=>{
             const dc=k.up&&k.color!==C.danger?C.verdeFloresta:C.danger;
@@ -696,10 +480,8 @@ export default function DSFIPSDashboard(){
             );
           })}
         </div>
-        </Copyable>
 
         {/* ═══ CHARTS ROW 1 (2 colunas) ═══ */}
-        <Copyable label="Graficos Dashboard" code={dashCode('chart')} preview={<DashPreviewChart />} fullWidth>
         <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:mob?12:16,marginBottom:mob?16:24}}>
 
           {/* Bar — por mês */}
@@ -1254,9 +1036,6 @@ export default function DSFIPSDashboard(){
             </div>
           </div>
         </div>
-        </Copyable>
-
-        <CodePlayground />
 
         <CodeExportSection items={[
           {
@@ -1353,6 +1132,5 @@ function DashboardPage() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }

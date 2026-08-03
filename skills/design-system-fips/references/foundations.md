@@ -131,7 +131,7 @@ Fonte: `src/styles/globals.css`
 
 Uso prático:
 
-- Campos e controles: `rounded-xl` com `shadow-sm` ou `--shadow-field`
+- Campos e controles (`Input`/`Select`/`Textarea`/`FieldTrigger`): `rounded-lg`, borda 1px sólida, **sem sombra em repouso** — só anel de foco. `--shadow-field` fica pra outros usos (ex.: `TabsList`).
 - Cards e tabelas: `rounded-2xl` com `--shadow-card`
 - Overlays, modais, drawers: `--shadow-elevated`
 

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -1031,6 +1030,187 @@ function DSChipSelect({
   )
 }
 
+/* ═══════════════════════════════════════════ 7b. CHIP FILTRO (dropdown fechado, uso exclusivo em filtros) ═══════════════════════════════════════════ */
+function DSChipFiltro({
+  icon,
+  label,
+  options = [],
+  value: cv,
+  onChange,
+}: {
+  icon?: ReactNode
+  label: string
+  options?: string[]
+  value?: string
+  onChange?: (v: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const [val, setVal] = useState(cv ?? options[0] ?? '')
+  const [query, setQuery] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
+  const filtered = options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
+
+  useEffect(() => {
+    if (!open) return
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const t = setTimeout(() => searchRef.current?.focus(), 50)
+    return () => clearTimeout(t)
+  }, [open])
+
+  return (
+    <div ref={ref} style={{ position: 'relative', width: 'fit-content' }}>
+      <button
+        type="button"
+        onClick={() => {
+          if (!open) setQuery('')
+          setOpen((v) => !v)
+        }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '7px 12px',
+          fontSize: 11,
+          fontWeight: 600,
+          color: C.cinzaEscuro,
+          background: C.cardBg,
+          border: `1px solid ${open ? C.azulProfundo : C.cardBorder}`,
+          borderRadius: 8,
+          cursor: 'pointer',
+          fontFamily: F.body,
+          boxShadow: open ? `0 0 0 2px ${C.azulProfundo}1F` : 'none',
+          transition: 'all .15s',
+        }}
+      >
+        {icon ? <span style={{ display: 'flex', flexShrink: 0, opacity: 0.6 }}>{icon}</span> : null}
+        <span style={{ color: C.cinzaChumbo, flexShrink: 0 }}>{label}:</span>
+        <span style={{ fontWeight: 700, color: C.cinzaEscuro, whiteSpace: 'nowrap' }}>{val}</span>
+        <span
+          style={{
+            display: 'flex',
+            flexShrink: 0,
+            transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform .2s',
+          }}
+        >
+          {Ic.chevron(10)}
+        </span>
+      </button>
+      {open ? (
+        <div
+          role="listbox"
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 'calc(100% + 6px)',
+            zIndex: 50,
+            minWidth: '100%',
+            background: C.cardBg,
+            border: `1px solid ${C.cardBorder}`,
+            borderRadius: '8px 8px 8px 14px',
+            boxShadow: '0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)',
+            padding: '6px',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '5px 8px',
+              marginBottom: 4,
+              background: C.bg,
+              border: `1px solid ${C.cardBorder}`,
+              borderRadius: 6,
+            }}
+          >
+            <span style={{ display: 'flex', flexShrink: 0, opacity: 0.6 }}>{Ic.busca(12)}</span>
+            <input
+              ref={searchRef}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              placeholder="Digitar para buscar..."
+              style={{
+                flex: 1,
+                minWidth: 0,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                fontSize: 11,
+                fontFamily: F.body,
+                color: C.cinzaEscuro,
+              }}
+            />
+          </div>
+          <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+            {filtered.length === 0 ? (
+              <div style={{ padding: '10px 14px', fontSize: 11, color: C.textMuted, fontFamily: F.body }}>
+                Nenhum resultado para "{query}"
+              </div>
+            ) : null}
+            {filtered.map((o) => {
+              const active = o === val
+              return (
+                <div
+                  key={o}
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => {
+                    setVal(o)
+                    onChange?.(o)
+                    setOpen(false)
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '8px 14px',
+                    fontSize: 11,
+                    fontWeight: active ? 700 : 500,
+                    color: active ? C.azulProfundo : C.cinzaEscuro,
+                    cursor: 'pointer',
+                    background: active ? `${C.azulProfundo}10` : 'transparent',
+                    whiteSpace: 'nowrap',
+                    fontFamily: F.body,
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'flex',
+                      flexShrink: 0,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 14,
+                      height: 14,
+                      borderRadius: '50%',
+                      border: `1.5px solid ${active ? C.azulProfundo : C.cardBorder}`,
+                    }}
+                  >
+                    {active ? (
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.azulProfundo }} />
+                    ) : null}
+                  </span>
+                  <span>{o}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 /* ═══════════════════════════════════════════ 8. SEGMENTED CONTROL ═══════════════════════════════════════════ */
 function DSSegmented({
   label,
@@ -1265,294 +1445,6 @@ function DotLabel({ color, label, badge }: { color: string; label: string; badge
     </div>
   )
 }
-/* ═══════════════════════════════════════════ COPYABLE CODE HELPERS ═══════════════════════════════════════════ */
-
-function selectCode(label: string, opts: string, extra = ''): string {
-  return `// DS-FIPS — Select "${label}" — Copy-paste ready
-import { useState, useEffect, useRef } from "react";
-
-export function Select${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [open, setOpen] = useState(false);
-  const [val, setVal] = useState("");
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, [open]);
-
-  return (
-    <div ref={ref} style={{ display: "flex", flexDirection: "column", minWidth: 180, position: "relative" }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginBottom: 1, marginLeft: 7 }}>
-        ${label}${extra.includes('required') ? ' <span style={{ color: "#DC3545", fontWeight: 700, fontSize: 14 }}>*</span>' : ''}
-      </label>
-      <div onClick={() => setOpen(!open)}
-        style={{ display: "flex", alignItems: "center", gap: 8, height: ${extra.includes('compact') ? 30 : 35}, padding: "0 12px", background: "#FFFFFF", border: \`1.5px solid \${open ? "#004B9B" : "#CBD5E1"}\`, borderRadius: open ? "8px 8px 0 0" : 8, cursor: "pointer", fontFamily: "'Open Sans', sans-serif", fontSize: 13, userSelect: "none" }}>
-        <span style={{ flex: 1, color: val ? "#333B41" : "#7B8C96", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {val || "Selecione"}
-        </span>
-        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ transition: "transform .2s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>
-          <path d="M6 8l4 4 4-4" stroke="#7B8C96" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </div>
-      {open && (
-        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 20, background: "#FFFFFF", border: "1.5px solid #004B9B", borderTop: "none", borderRadius: "0 0 8px 8px", boxShadow: "0 6px 20px rgba(0,75,155,.12)", maxHeight: 200, overflowY: "auto" }}>
-          {options.map((o) => (
-            <div key={o} onClick={() => { setVal(o); setOpen(false); }}
-              style={{ padding: "8px 14px", fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: o === val ? "#004B9B" : "#333B41", fontWeight: o === val ? 600 : 400, background: o === val ? "#D3E3F4" : "transparent", cursor: "pointer" }}
-              onMouseEnter={(e) => { if (o !== val) e.currentTarget.style.background = "#F2F4F8"; }}
-              onMouseLeave={(e) => { if (o !== val) e.currentTarget.style.background = "transparent"; }}>
-              {o}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}`;
-}
-
-function autocompleteCode(label: string, opts: string, extra = ''): string {
-  return `// DS-FIPS — Autocomplete "${label}" — Copy-paste ready
-import { useState, useEffect, useRef } from "react";
-
-export function Autocomplete${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("");
-  const wRef = useRef(null);
-  const filtered = options.filter((o) => o.toLowerCase().includes(query.toLowerCase()));
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (wRef.current && !wRef.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, [open]);
-
-  return (
-    <div ref={wRef} style={{ display: "flex", flexDirection: "column", minWidth: 200, position: "relative" }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginBottom: 1, marginLeft: 7 }}>${label}</label>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, height: ${extra.includes('compact') ? 30 : 35}, padding: "0 12px", background: "#FFFFFF", border: \`1.5px solid \${open ? "#004B9B" : "#CBD5E1"}\`, borderRadius: 8, fontFamily: "'Open Sans', sans-serif", fontSize: 13 }}>
-        {selected && !open ? (
-          <span style={{ flex: 1, color: "#333B41" }}>{selected}</span>
-        ) : (
-          <input placeholder="Buscar..." value={query}
-            onChange={(e) => { setQuery(e.target.value); setOpen(true); setSelected(""); }}
-            onFocus={() => setOpen(true)}
-            style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: "#333B41", minWidth: 0 }} />
-        )}
-        {(query || selected) && (
-          <span style={{ cursor: "pointer", opacity: 0.45, fontSize: 14 }}
-            onClick={(e) => { e.stopPropagation(); setQuery(""); setSelected(""); setOpen(false); }}>✕</span>
-        )}
-      </div>
-      {open && filtered.length > 0 && (
-        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, marginTop: 4, background: "#FFFFFF", border: "1.5px solid #004B9B", borderRadius: 8, boxShadow: "0 4px 16px rgba(0,75,155,.12)", zIndex: 10, maxHeight: 180, overflowY: "auto" }}>
-          {filtered.map((o) => (
-            <div key={o} onClick={() => { setSelected(o); setQuery(""); setOpen(false); }}
-              style={{ padding: "8px 14px", fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: o === selected ? "#004B9B" : "#333B41", fontWeight: o === selected ? 600 : 400, cursor: "pointer" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#F2F4F8"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-              {o}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}`;
-}
-
-function multiSelectCode(label: string, opts: string, extra = ''): string {
-  return `// DS-FIPS — MultiSelect "${label}" — Copy-paste ready
-import { useState, useEffect, useRef } from "react";
-
-export function MultiSelect${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [open, setOpen] = useState(false);
-  const [sel, setSel] = useState([]);
-  const wRef = useRef(null);
-  const toggle = (v) => setSel((p) => p.includes(v) ? p.filter((x) => x !== v) : [...p, v]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (wRef.current && !wRef.current.contains(e.target)) setOpen(false); };
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, [open]);
-
-  return (
-    <div ref={wRef} style={{ display: "flex", flexDirection: "column", minWidth: 200, position: "relative" }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginBottom: 1, marginLeft: 7 }}>${label}</label>
-      <div onClick={() => setOpen(!open)}
-        style={{ display: "flex", alignItems: "center", gap: 6, minHeight: ${extra.includes('compact') ? 30 : 35}, padding: "4px 12px", background: "#FFFFFF", border: \`1.5px solid \${open ? "#004B9B" : "#CBD5E1"}\`, borderRadius: 8, cursor: "pointer", flexWrap: "wrap" }}>
-        {sel.length === 0 && <span style={{ fontSize: 13, color: "#7B8C96", fontFamily: "'Open Sans', sans-serif", flex: 1 }}>Selecione...</span>}
-        {sel.map((s) => (
-          <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#D3E3F4", color: "#333B41", fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 4 }}>
-            {s}
-            <span style={{ cursor: "pointer", opacity: 0.6, fontSize: 12 }} onClick={(e) => { e.stopPropagation(); toggle(s); }}>✕</span>
-          </span>
-        ))}
-      </div>
-      {open && (
-        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, marginTop: 4, background: "#FFFFFF", border: "1.5px solid #004B9B", borderRadius: 8, boxShadow: "0 4px 16px rgba(0,75,155,.12)", zIndex: 10, maxHeight: 180, overflowY: "auto" }}>
-          {options.map((o) => (
-            <div key={o} onClick={() => toggle(o)}
-              style={{ padding: "8px 14px", fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: "#333B41", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#F2F4F8"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
-              <div style={{ width: 16, height: 16, borderRadius: 4, border: \`1.5px solid \${sel.includes(o) ? "#004B9B" : "#CBD5E1"}\`, background: sel.includes(o) ? "#004B9B" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {sel.includes(o) && <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-              </div>
-              {o}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}`;
-}
-
-function checkboxCode(label: string, opts: string, extra = ''): string {
-  return `// DS-FIPS — CheckboxGroup "${label}" — Copy-paste ready
-import { useState } from "react";
-
-export function Checkbox${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [sel, setSel] = useState([]);
-  const toggle = (v) => setSel((p) => p.includes(v) ? p.filter((x) => x !== v) : [...p, v]);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginLeft: 2 }}>${label}</label>
-      {options.map((o) => {
-        const checked = sel.includes(o);
-        return (
-          <div key={o} onClick={() => toggle(o)}
-            style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", padding: "4px 0" }}>
-            <div style={{ width: 18, height: 18, borderRadius: 4, border: \`1.5px solid \${checked ? "#004B9B" : "#CBD5E1"}\`, background: checked ? "#004B9B" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {checked && <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-            </div>
-            <span style={{ fontSize: 13, color: "#333B41", fontFamily: "'Open Sans', sans-serif" }}>{o}</span>
-          </div>
-        );
-      })}${extra.includes('helper') ? `\n      <span style={{ fontSize: 11, color: "#7B8C96", marginLeft: 28, fontFamily: "'Open Sans', sans-serif" }}>${extra.match(/helper="([^"]+)"/)?.[1] || ''}</span>` : ''}
-    </div>
-  );
-}`;
-}
-
-function radioCode(label: string, opts: string, extra = ''): string {
-  const defaultVal = extra.match(/value="([^"]+)"/)?.[1] || '';
-  return `// DS-FIPS — RadioGroup "${label}" — Copy-paste ready
-import { useState } from "react";
-
-export function Radio${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [val, setVal] = useState("${defaultVal}");
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginLeft: 2 }}>${label}</label>
-      {options.map((o) => {
-        const checked = val === o;
-        return (
-          <div key={o} onClick={() => setVal(o)}
-            style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", padding: "4px 0" }}>
-            <div style={{ width: 18, height: 18, borderRadius: "50%", border: \`1.5px solid \${checked ? "#004B9B" : "#CBD5E1"}\`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {checked && <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#004B9B" }} />}
-            </div>
-            <span style={{ fontSize: 13, color: "#333B41", fontFamily: "'Open Sans', sans-serif" }}>{o}</span>
-          </div>
-        );
-      })}${extra.includes('helper') ? `\n      <span style={{ fontSize: 11, color: "#7B8C96", marginLeft: 28, fontFamily: "'Open Sans', sans-serif" }}>${extra.match(/helper="([^"]+)"/)?.[1] || ''}</span>` : ''}
-    </div>
-  );
-}`;
-}
-
-function toggleCode(label: string, extra = ''): string {
-  const isChecked = extra.includes('checked');
-  const isStatus = extra.includes('status');
-  return `// DS-FIPS — Toggle "${label}" — Copy-paste ready
-import { useState } from "react";
-
-export function Toggle${label.replace(/\s+/g, '')}() {
-  const [on, setOn] = useState(${isChecked});
-
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: ${extra.includes('disabled') ? '"not-allowed"' : '"pointer"'}, opacity: ${extra.includes('disabled') ? 0.5 : 1} }}
-      onClick={() => ${extra.includes('disabled') ? '{}' : 'setOn(!on)'}}>
-      <div style={{ width: 42, height: 24, borderRadius: 24, background: on ? ${isStatus ? '\"#00C64C\"' : '\"#004B9B\"'} : ${isStatus ? '\"#DC3545\"' : '\"#C0CCD2\"'}, transition: "background .2s", padding: 2, display: "flex", alignItems: "center" }}>
-        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,.2)", transition: "transform .2s", transform: on ? "translateX(18px)" : "translateX(0)" }} />
-      </div>
-      <span style={{ fontSize: 13, color: "#333B41", fontFamily: "'Open Sans', sans-serif", fontWeight: 500 }}>${label}</span>${isStatus ? `
-      <span style={{ fontSize: 10, fontWeight: 700, fontFamily: "'Fira Code', monospace", color: on ? "#00C64C" : "#DC3545" }}>{on ? "ON" : "OFF"}</span>` : ''}
-    </div>
-  );
-}`;
-}
-
-function chipSelectCode(label: string, opts: string, _extra = ''): string {
-  return `// DS-FIPS — ChipSelect "${label}" — Copy-paste ready
-import { useState } from "react";
-
-export function ChipSelect${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [sel, setSel] = useState([]);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginLeft: 2 }}>${label}</label>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {options.map((o) => {
-          const active = sel.includes(o);
-          return (
-            <div key={o} onClick={() => setSel((p) => p[0] === o ? [] : [o])}
-              style={{ padding: "6px 16px", borderRadius: 20, border: \`1.5px solid \${active ? "#004B9B" : "#CBD5E1"}\`, background: active ? "#004B9B" : "transparent", color: active ? "#FFFFFF" : "#333B41", fontSize: 12, fontFamily: "'Open Sans', sans-serif", fontWeight: active ? 600 : 400, cursor: "pointer", transition: "all .15s", userSelect: "none" }}>
-              {o}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}`;
-}
-
-function segmentedCode(label: string, opts: string, _extra = ''): string {
-  return `// DS-FIPS — Segmented "${label}" — Copy-paste ready
-import { useState } from "react";
-
-export function Segmented${label.replace(/\s+/g, '')}() {
-  const options = ${opts};
-  const [val, setVal] = useState(options[0]);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: "#333B41", fontFamily: "'Open Sans', sans-serif", marginLeft: 2 }}>${label}</label>
-      <div style={{ display: "inline-flex", background: "#F2F4F8", borderRadius: 8, padding: 3, border: "1px solid #E2E8F0" }}>
-        {options.map((o) => {
-          const active = val === o;
-          return (
-            <div key={o} onClick={() => setVal(o)}
-              style={{ padding: "0 18px", height: 34, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 6, background: active ? "#FFFFFF" : "transparent", color: active ? "#004B9B" : "#7B8C96", fontSize: 12, fontFamily: "'Open Sans', sans-serif", fontWeight: active ? 700 : 500, cursor: "pointer", transition: "all .15s", boxShadow: active ? "0 1px 3px rgba(0,0,0,.08)" : "none", userSelect: "none" }}>
-              {o}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}`;
-}
-
 /* ═══════════════════════════════════════════ EXPORT CODE ═══════════════════════════════════════════ */
 const selectExportCode = `// DS-FIPS — Select (Custom Dropdown) — Copy-paste ready
 import { useState, useEffect, useRef } from "react";
@@ -1746,6 +1638,15 @@ export default function SelectDoc() {
       ex: "'Turno' (Manhã/Tarde/Noite); 'Tipo' em filtros rápidos; categorias do App Ideias.",
     },
     {
+      name: 'Chip Filtro',
+      c: C.azulEscuro,
+      badge: 'uso: filtros',
+      desc: 'Botão fechado "Rótulo: Valor" que abre um dropdown com busca + radio. Visual de chip, comportamento de Select/Autocomplete.',
+      when: 'Barra de filtros de listagem/toolbar. Poucas opções ou muitas — o campo de busca filtra a lista.',
+      not: 'Dentro de formulário — usar Select. Múltiplas opções visíveis ao mesmo tempo — usar Chip Select.',
+      ex: "'Departamento' e 'Segmento' nos Filtros avançados; toolbar do Data Listing.",
+    },
+    {
       name: 'Segmented',
       c: C.azulClaro,
       badge: 'tabs',
@@ -1757,7 +1658,6 @@ export default function SelectDoc() {
   ] as const
 
   return (
-    <PlaygroundProvider>
     <div
       style={{
         minHeight: '100vh',
@@ -1879,140 +1779,76 @@ export default function SelectDoc() {
         <Section
           n="01"
           title="Tipos de seleção"
-          desc="8 componentes de seleção para cobrir qualquer cenário. Clique em qualquer elemento para copiar o código e visualizar no playground."
+          desc="9 componentes de seleção para cobrir qualquer cenário."
         >
           <Card mob={mob}>
             <div style={{ display: 'grid', gridTemplateColumns: vitrineCols, gap: vitrineGap, overflow: 'visible' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14, overflow: 'visible' }}>
                 <DotLabel color={C.azulProfundo} label="Select" badge="dropdown" />
-                <Copyable
-                  label="Select Departamento"
-                  code={selectCode('Departamento', `["Operações","Logística","TI","SSMA","Financeiro","RH"]`, `\n  required`)}
-                  preview={<DSSelect label="Departamento" icon={Ic.edificio()} options={['Operações', 'Logística', 'TI', 'SSMA', 'Financeiro', 'RH']} required />}
-                >
-                  <DSSelect
-                    label="Departamento"
-                    icon={Ic.edificio()}
-                    options={['Operações', 'Logística', 'TI', 'SSMA', 'Financeiro', 'RH']}
-                    required
-                  />
-                </Copyable>
+                <DSSelect
+                  label="Departamento"
+                  icon={Ic.edificio()}
+                  options={['Operações', 'Logística', 'TI', 'SSMA', 'Financeiro', 'RH']}
+                  required
+                />
                 <DotLabel color={C.azulCeu} label="Autocomplete" badge="15+ opções" />
-                <Copyable
-                  label="Autocomplete Fornecedor"
-                  code={autocompleteCode('Fornecedor', `["FIPS Logística","MRS Logística","VLI Multimodal","Rumo S.A.","Porto de Santos","ALL Logística","Brado","Hidrovias do Brasil"]`, `\n  compact`)}
-                  preview={<DSAutocomplete label="Fornecedor" icon={Ic.busca()} options={['FIPS Logística','MRS Logística','VLI Multimodal','Rumo S.A.','Porto de Santos','ALL Logística','Brado','Hidrovias do Brasil']} compact />}
-                >
-                  <DSAutocomplete
-                    label="Fornecedor"
-                    icon={Ic.busca()}
-                    options={[
-                      'FIPS Logística',
-                      'MRS Logística',
-                      'VLI Multimodal',
-                      'Rumo S.A.',
-                      'Porto de Santos',
-                      'ALL Logística',
-                      'Brado',
-                      'Hidrovias do Brasil',
-                    ]}
-                    compact
-                  />
-                </Copyable>
+                <DSAutocomplete
+                  label="Fornecedor"
+                  icon={Ic.busca()}
+                  options={[
+                    'FIPS Logística',
+                    'MRS Logística',
+                    'VLI Multimodal',
+                    'Rumo S.A.',
+                    'Porto de Santos',
+                    'ALL Logística',
+                    'Brado',
+                    'Hidrovias do Brasil',
+                  ]}
+                  compact
+                />
                 <DotLabel color={C.amareloEscuro} label="Multi-select" badge="tags" />
-                <Copyable
-                  label="MultiSelect Permissões"
-                  code={multiSelectCode('Permissões', `["Visualizar","Editar","Excluir","Aprovar","Exportar"]`, `\n  compact`)}
-                  preview={<DSMultiSelect label="Permissões" icon={Ic.tag()} options={['Visualizar', 'Editar', 'Excluir', 'Aprovar', 'Exportar']} compact />}
-                >
-                  <DSMultiSelect label="Permissões" icon={Ic.tag()} options={['Visualizar', 'Editar', 'Excluir', 'Aprovar', 'Exportar']} compact />
-                </Copyable>
+                <DSMultiSelect label="Permissões" icon={Ic.tag()} options={['Visualizar', 'Editar', 'Excluir', 'Aprovar', 'Exportar']} compact />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <DotLabel color={C.verdeFloresta} label="Checkbox" badge="múltipla" />
-                <Copyable
-                  label="Checkbox Notificações"
-                  code={checkboxCode('Notificações', `["Email","SMS","Push","WhatsApp"]`, `\n  helper="Selecione uma ou mais opções."`)}
-                  preview={<DSCheckboxGroup label="Notificações" options={['Email', 'SMS', 'Push', 'WhatsApp']} helper="Selecione uma ou mais opções." />}
-                >
-                  <DSCheckboxGroup
-                    label="Notificações"
-                    options={['Email', 'SMS', 'Push', 'WhatsApp']}
-                    helper="Selecione uma ou mais opções."
-                  />
-                </Copyable>
+                <DSCheckboxGroup
+                  label="Notificações"
+                  options={['Email', 'SMS', 'Push', 'WhatsApp']}
+                  helper="Selecione uma ou mais opções."
+                />
                 <div style={{ marginTop: 6 }} />
                 <DotLabel color={C.danger} label="Radio" badge="exclusiva" />
-                <Copyable
-                  label="Radio Prioridade"
-                  code={radioCode('Prioridade', `["Baixa","Média","Alta","Urgente"]`, `\n  value="Média"\n  helper="Apenas uma opção."`)}
-                  preview={<DSRadioGroup label="Prioridade" options={['Baixa', 'Média', 'Alta', 'Urgente']} value="Média" helper="Apenas uma opção." />}
-                >
-                  <DSRadioGroup
-                    label="Prioridade"
-                    options={['Baixa', 'Média', 'Alta', 'Urgente']}
-                    value="Média"
-                    helper="Apenas uma opção."
-                  />
-                </Copyable>
+                <DSRadioGroup
+                  label="Prioridade"
+                  options={['Baixa', 'Média', 'Alta', 'Urgente']}
+                  value="Média"
+                  helper="Apenas uma opção."
+                />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <DotLabel color={C.cinzaEscuro} label="Toggle" badge="on/off" />
-                <Copyable
-                  label="Toggle Notificações ativas"
-                  code={toggleCode('Notificações ativas', `\n  checked`)}
-                  preview={<DSToggle label="Notificações ativas" checked />}
-                >
-                  <DSToggle label="Notificações ativas" checked />
-                </Copyable>
-                <Copyable
-                  label="Toggle Modo escuro"
-                  code={toggleCode('Modo escuro')}
-                  preview={<DSToggle label="Modo escuro" />}
-                >
-                  <DSToggle label="Modo escuro" />
-                </Copyable>
-                <Copyable
-                  label="Toggle Sistema operante"
-                  code={toggleCode('Sistema operante', `\n  checked\n  status`)}
-                  preview={<DSToggle label="Sistema operante" checked status />}
-                >
-                  <DSToggle label="Sistema operante" checked status />
-                </Copyable>
-                <Copyable
-                  label="Toggle Bloqueio de acesso"
-                  code={toggleCode('Bloqueio de acesso', `\n  status`)}
-                  preview={<DSToggle label="Bloqueio de acesso" status />}
-                >
-                  <DSToggle label="Bloqueio de acesso" status />
-                </Copyable>
-                <Copyable
-                  label="Toggle Campo bloqueado"
-                  code={toggleCode('Campo bloqueado', `\n  disabled`)}
-                  preview={<DSToggle label="Campo bloqueado" disabled />}
-                >
-                  <DSToggle label="Campo bloqueado" disabled />
-                </Copyable>
+                <DSToggle label="Notificações ativas" checked />
+                <DSToggle label="Modo escuro" />
+                <DSToggle label="Sistema operante" checked status />
+                <DSToggle label="Bloqueio de acesso" status />
+                <DSToggle label="Campo bloqueado" disabled />
                 <div style={{ marginTop: 6 }} />
                 <DotLabel color={C.amareloOuro} label="Chip Select" badge="visual" />
-                <Copyable
-                  label="ChipSelect Turno"
-                  code={chipSelectCode('Turno', `["Manhã","Tarde","Noite"]`)}
-                  preview={<DSChipSelect label="Turno" options={['Manhã', 'Tarde', 'Noite']} />}
-                >
-                  <DSChipSelect label="Turno" options={['Manhã', 'Tarde', 'Noite']} />
-                </Copyable>
+                <DSChipSelect label="Turno" options={['Manhã', 'Tarde', 'Noite']} />
+                <div style={{ marginTop: 6 }} />
+                <DotLabel color={C.azulEscuro} label="Chip Filtro" badge="uso: filtros" />
+                <DSChipFiltro
+                  icon={Ic.edificio(14)}
+                  label="Departamento"
+                  options={['Todos', 'Operações', 'Logística', 'TI', 'SSMA', 'RH']}
+                  value="Todos"
+                />
                 <div style={{ marginTop: 6 }} />
                 <DotLabel color={C.azulClaro} label="Segmented" badge="tabs" />
-                <Copyable
-                  label="Segmented Visualização"
-                  code={segmentedCode('Visualização', `["Lista","Kanban","Grid"]`)}
-                  preview={<DSSegmented label="Visualização" options={['Lista', 'Kanban', 'Grid']} />}
-                >
-                  <DSSegmented label="Visualização" options={['Lista', 'Kanban', 'Grid']} />
-                </Copyable>
+                <DSSegmented label="Visualização" options={['Lista', 'Kanban', 'Grid']} />
               </div>
             </div>
 
@@ -2038,6 +1874,7 @@ export default function SelectDoc() {
                 { r: 'Lista visível exclusiva', v: 'Radio', c: C.danger },
                 { r: 'Sim/Não binário', v: 'Toggle', c: C.cinzaEscuro },
                 { r: 'Poucas opções visuais', v: 'Chips', c: C.amareloOuro },
+                { r: 'Barra de filtros/toolbar', v: 'Chip Filtro', c: C.azulEscuro },
                 { r: '2–4 modos de view', v: 'Segmented', c: C.azulClaro },
               ].map((i) => (
                 <span
@@ -2311,8 +2148,6 @@ export default function SelectDoc() {
           </Card>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Select (Custom Dropdown)",
           description: "Dropdown customizado com lista fechada, ícone, estados e variantes compact/error/disabled.",
@@ -2326,6 +2161,5 @@ export default function SelectDoc() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }

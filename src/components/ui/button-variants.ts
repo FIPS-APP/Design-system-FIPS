@@ -20,6 +20,8 @@ export const buttonVariants = cva(
           'border-white/60 bg-white/[0.06] text-white hover:border-white/70 hover:bg-white/[0.12]',
         success:
           'border-transparent bg-[var(--color-success)] text-white shadow-[0_2px_8px_rgba(0,198,76,0.2)] hover:bg-[var(--color-success-strong)]',
+        successStrong:
+          'border-transparent bg-[var(--color-success-strong)] text-white shadow-[0_2px_8px_rgba(0,144,76,0.2)] hover:bg-[var(--color-success)]',
         save:
           'border-transparent bg-[var(--color-success)] text-white shadow-[0_2px_8px_rgba(0,198,76,0.2)] hover:bg-[var(--color-success-strong)]',
         ouro:

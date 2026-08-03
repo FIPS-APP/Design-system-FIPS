@@ -387,3 +387,34 @@
   border-radius: 3px;
   background: var(--color-fips-blue-200);
 }
+
+/* Menu circular de ações (Multitags → Tecnopano → DS-FIPS) */
+.cmd-glass {
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  backdrop-filter: blur(13px) saturate(1.5);
+  -webkit-backdrop-filter: blur(13px) saturate(1.5);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-float);
+}
+.cmd-glass:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+}
+.cmd-glass-center {
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  box-shadow: var(--shadow-float);
+  color: var(--color-fg);
+}
+.fips-row-action {
+  color: var(--color-fg-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.fips-row-action:hover {
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}

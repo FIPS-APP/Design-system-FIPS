@@ -25,6 +25,591 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.32',
+    date: '2026-07-28',
+    title: 'Table: corpo da tabela alinhado ao padrão do Data Listing',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'A v0.11.23 alinhou só o header do card; o corpo da tabela continuava divergente. Cabeçalho de coluna: `textAlign` centralizado → **esquerda** (o conteúdo das células é alinhado à esquerda; centralizar o rótulo quebrava a varredura vertical da coluna) e fonte 10px → 9px, padding `12px 16px` → `8px 16px`. `th` passa a respeitar `col.align`, como as células já faziam.',
+      },
+      {
+        type: 'breaking',
+        description:
+          'Densidade reescrita: era padding vertical (`py` 6/10/14) e virou **altura de linha fixa** — `{rowH, fs, padX}` por densidade (30/42/56), cópia literal do `DENSITY` de `DataListingDemo.tsx`. Efeito prático: a linha em densidade normal cai de 54px para 42px e a tabela fica com a mesma cadência da referência. Células passam a `padding: 0 padX` (a altura vem da linha), com fallback para padding vertical quando "quebra de linha" está ligada, que é o único caso em que a linha precisa crescer.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Zebra estava em `#93BDE4` a 5% (`${C.azulCeu}0D`) contra `#D3E3F4` a 25% (`${C.azulCeuClaro}40`) da referência — quase invisível, o que fazia a tabela parecer não-zebrada. Corrigido. O card também ganhou a `box-shadow: 0 1px 3px rgba(0,75,155,.04)` que o Data Listing tem e que faltava aqui.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Skeleton de carregamento alinhado à mesma altura de linha (usava o `py` antigo, então as linhas "pulavam" de altura ao sair do loading). Verificado por medição: card, thead, th, td e linhas batem valor a valor com a referência. A única diferença que sobra é intencional: no Data Listing as colunas secundárias (código, depto, valor — mono) usam `fs-1`, ajuste manual por coluna que o `DSTable`, sendo genérico, não tem como inferir — ele usa `fs` em todas, igual ao texto principal de lá. `tsc` e `eslint` limpos (0 erro no arquivo).',
+      },
+    ],
+  },
+  {
+    version: '0.11.31',
+    date: '2026-07-28',
+    title: '"Circular Menu" vira "Ações": rótulo, título e página reconstruídos',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Item do sidebar "Circular Menu" renomeado para "Ações" (`routes/nav.ts`). A página `/docs/components/circular-command-menu` foi reconstruída: título do H1 alinhado ("Circular Command Menu" → "Ações", estava divergindo do breadcrumb/sidebar) e `ExportButtons` removido — não tem relação com menu de ações, já é documentado na toolbar da Data Listing e do próprio Modal.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Nova seção "Quando usar" explica a relação entre os dois exemplos: `RowActionsMenu` não é um componente separado, é o `CircularCommandMenu` com um preset de trigger de 28px pra caber numa célula de tabela; o exemplo "FAB" é o mesmo componente com o trigger padrão de 56px, pra ação isolada de página. Staging dos demos: caixa tracejada (deixa claro que é área de teste) com min-height menor e texto de instrução acima, no lugar da caixa branca vazia enorme com um "+" perdido no meio.',
+      },
+      {
+        type: 'fix',
+        description:
+          'De passagem: `CircularCommandMenu.tsx` tinha `aria-label="Ações da linha"` fixo no gatilho, correto pro uso real (`RowActionsMenu`, sempre linha de tabela) mas semanticamente errado pro exemplo FAB desta própria página, que não é uma linha. Adicionada prop `ariaLabel` (default mantém o texto atual, sem quebrar o consumidor existente em `DataListingDemo.tsx`); a página agora passa `ariaLabel="Ações rápidas"` no exemplo FAB. Verificado ao vivo em light e dark, abrir/fechar/Esc/setas continuam funcionando nos dois exemplos; `tsc` limpo, `eslint` no mesmo 1 erro pré-existente (`react-hooks/set-state-in-effect` no `useEffect` de mount, não tocado).',
+      },
+    ],
+  },
+  {
+    version: '0.11.30',
+    date: '2026-07-28',
+    title: 'Dashboard: removida a função de copiar',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Os 3 blocos de `/docs/patterns/dashboard` (Barra de Filtros, KPI Cards, Gráficos) estavam envolvidos em `Copyable` — clique em qualquer um copiava um snippet standalone. Removido: agora são preview puro. Junto saiu o "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem nenhum produtor — mesmo tratamento das v0.11.18/0.11.21/0.11.25.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Removidos o gerador `dashCode` (3 snippets copy-paste) e os componentes `DashPreviewKPI`/`DashPreviewFilters`/`DashPreviewChart` — miniaturas que existiam só para o cartão de preview do playground e não são renderizadas em lugar nenhum da página: 211 linhas a menos.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O hero da página ainda dizia "Clique em qualquer seção para copiar o código" — frase que passou a ser falsa com a remoção. Corrigida. `CodeExportSection` mantido (contexto próprio, independente do `PlaygroundProvider`). Verificado ao vivo: 0 elementos clicáveis de cópia, 0 erro de console, filtros/KPIs/gráficos renderizando normalmente; `tsc` limpo e `eslint` com o mesmo 1 erro pré-existente.',
+      },
+    ],
+  },
+  {
+    version: '0.11.29',
+    date: '2026-07-28',
+    title: 'Data Listing: miolo do drawer de Filtros reconstruído a partir do QLP/Governança BI',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Os 3 grupos do drawer de Filtros (Status, Departamento, Prioridade) eram checkbox lists multi-select — divergente do padrão real. Fonte conferida em dois projetos de produção: `Colaboradores.tsx` (QLP) e `KpiDashboardPage.tsx` (Governança BI), ambos com a MESMA anatomia — `PillFilter`/`PillGroup` (pills coloridos single-select, "Todos" + 1 por opção) para campos de classificação com poucas opções, divisor, `ChipSelect` (dropdown fechado "Rótulo: Valor" com radio) para campos de muitas opções. Reconstruído igual: Status e Prioridade viram `PillFilter`, Departamento vira `ChipSelect`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Estado `filters` migrado de `{status: string[], dept: string[], priority: string[]}` (multi-select via `toggleFilter`) para `{status: string, dept: string, priority: string}` (single-select, `""` = Todos) — mesma convenção das duas referências. `toggleFilter` removida; `data` useMemo, `totalFilters` e `clearFilters` ajustados para o novo formato.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Cores dos pills fixas (não theme-aware): o pill ativo é sempre fundo cheio + texto branco, e os tokens semânticos do arquivo (ex. `--color-gov-azul-profundo`) clareiam no dark mode — usariam texto branco sobre fundo claro. `STATUS_PILL_COLOR`/`PRIO_PILL_COLOR`/`PILL_PRIMARY` (novo, cor do pill "Todos") usam hex fixo, saturado o bastante para contraste em ambos os temas.',
+      },
+      {
+        type: 'fix',
+        description:
+          'De passagem: o botão "Ver N resultado(s)" do rodapé do drawer tinha o mesmo problema (`background:C.azulProfundo`, clareia pra `#93BDE4` no dark com texto branco em cima) — trocado para `PILL_PRIMARY`. Verificado ao vivo em light e dark: pills, "Todos", dropdown do ChipSelect e badge de contagem funcionando; `tsc` limpo, `eslint` na mesma contagem pré-existente (9).',
+      },
+    ],
+  },
+  {
+    version: '0.11.28',
+    date: '2026-07-28',
+    title: 'Data Listing: Filtros e Buscar alinhados ao ListingToolbar real do QLP',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Botão "Filtros" reconstruído a partir da fonte real (`button-variants.ts` + `ListingToolbar.tsx` do QLP, `variant="outline" size="sm"`): passa a ser sempre azul (borda 1.5px + texto `var(--color-primary)`), não mais condicional a `totalFilters>0` — outline no QLP é intrinsecamente azul, a cor não muda com o estado. `h-30/px-14/radius-6/gap-7/fontSize-12/fontWeight-600`, ícone trocado do glifo custom de 3 linhas (`Ic.filter`) para o `Filter` real do lucide-react. Badge de contagem vira pill 16×16 (`radius-999`) igual ao `min-w-4 h-4 rounded-full` do QLP.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Campo "Buscar" perde dois comportamentos que o `ListingToolbar` do QLP não tem: o realce de foco (borda azul + `box-shadow` de anel) e a restrição `minWidth:200/maxWidth:320`. QLP usa borda estática (`var(--color-border)`, sem mudança) e `flex-1` puro, sem teto de largura — o campo agora preenche de verdade o espaço disponível na toolbar. Altura 32.5px → 34px, ícones `Search`/`X` do lucide 14px no lugar do `Ic.search`/`Ic.x` custom, fonte do input 13px → 14px (`text-sm`).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Estado e token que ficaram órfãos com a remoção do foco visual (`searchFocused`/`setSearchFocused`, `accentRing`) removidos — nada mais os referenciava. Par dark-mode `#93BDE4` aplicado ao botão Filtros pelo motivo já documentado nesta doc: `--color-primary` não muda entre light/dark neste projeto, então qualquer uso dele como acento precisa do substituto manual.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Verificado ao vivo: `getComputedStyle` do botão bate com o alvo (30px/12px/600/6px/7px, cor `rgb(0,75,155)`, fundo transparente) e do campo de busca também (34px/8px/8px, `flex-grow:1`, fonte 14px). Contraste conferido em light e dark. `tsc` limpo e `eslint` na mesma contagem pré-existente (9), nenhum erro novo.',
+      },
+    ],
+  },
+  {
+    version: '0.11.27',
+    date: '2026-07-28',
+    title: 'Modal (Dialog) ganha 10ª variante: Novidades',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Playground de `/docs/components/dialog` ganha o botão "Novidades" (dourado, ícone sparkle) que abre o `ChangelogModal` real (`src/components/layout/ChangelogModal.tsx`) — o MESMO componente acionado pelo item "Versão" do rodapé do sidebar, importado e reutilizado, não uma reimplementação local. Segue a mesma anatomia dos outros 9 triggers do playground (Copyable + Btn + instância do modal fora da grid).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O snippet copy-paste (`CHANGELOG_MODAL_CODE`) documenta a API real: só `{ open, onOpenChange }`. O primeiro rascunho do snippet inventava props `changelog`/`currentVersion` que o componente não tem — corrigido antes de publicar. As versões exibidas vêm de `CHANGELOG` em `docs/data/changelog.ts` (fonte única já usada por toda a documentação), não são configuráveis via prop; o comentário no topo do snippet deixa isso explícito.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Verificado ao vivo: clique em "Novidades" abre o modal com a versão atual (0.11.26 no momento do teste) e o histórico completo, idêntico ao acionado pelo sidebar. Texto da Seção 01 atualizado de "9 variantes" para "10 variantes". `tsc` e `eslint` sem erro novo (os 4 erros pré-existentes de `react-hooks/set-state-in-effect` no arquivo não foram tocados).',
+      },
+    ],
+  },
+  {
+    version: '0.11.26',
+    date: '2026-07-28',
+    title: 'Data Listing: Filtros viram Drawer pela esquerda (padrão QLP)',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'O botão "Filtros" de `/docs/patterns/data-listing` abria um popover ancorado de 280px. Agora abre um **Drawer pela esquerda** (400px, cobre a sidebar), seguindo o `ListingToolbar` do QLP (`client/src/components/composites/ListingToolbar.tsx`) — a mesma anatomia de 3 zonas que o DS já documenta em `/docs/components/drawer` ("Filtros avançados").',
+      },
+      {
+        type: 'feature',
+        description:
+          'Anatomia do drawer: hero institucional no topo (gradiente gov 3-stops + `JunctionLines`, tile âmbar 44px, eyebrow "Requisições", título 21px e descrição que alterna entre "N filtro(s) ativo(s)" e "Refine a listagem pelos campos abaixo", com X próprio em glass); miolo rolável `flex-1` com os 3 grupos (Status/Departamento/Prioridade) preservando a seleção múltipla por checkbox; rodapé fixo com `Limpar tudo` (desabilitado sem filtro) + `Ver N resultado(s)`, que reflete a contagem real da tabela.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O fechamento deixa de ser click-outside (que fazia sentido pro popover, mas fecharia o drawer ao clicar no próprio conteúdo em alguns casos) e passa a ser overlay + botão X + `Escape`. `role="dialog"`/`aria-modal`/`aria-label` adicionados. Duas keyframes novas no bloco `<style>` da página: `dlFade` (overlay) e `dlSlideLeft` (painel).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Campo **Período** mantido na toolbar, conforme pedido — junto com a busca e o par Excel/PDF. A toolbar fica: `Filtros` · busca · `Período: X` · export. Verificado ao vivo: drawer ancora em `x=0` com 400×altura-total, hero e rodapé renderizam corretos, `Escape` fecha, 0 erro de console; `tsc` limpo e `eslint` na mesma contagem pré-existente (9).',
+      },
+    ],
+  },
+  {
+    version: '0.11.25',
+    date: '2026-07-28',
+    title: 'Removido o "Teste ao Vivo" vazio de Data Listing e Form Workspace',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Fecha a limpeza começada na v0.11.18: `CodePlayground`/`PlaygroundProvider` removidos de `/docs/patterns/data-listing` e `/docs/patterns/form-workspace`, as 2 páginas restantes onde o bloco nunca podia sair do estado vazio. No Form Workspace foi efeito da v0.11.13 (que removeu os `Copyable`); no Data Listing o motivo é mais sutil — ela usa `CopyableInline`, que apesar do nome é um passthrough (`return <>{children}</>`) e não envia nada pro playground.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Antes de mexer, levantamento ao vivo das 10 páginas que ainda renderizavam o playground: 8 delas (`header`, `sidebar`, `textarea`, `icons`, `radius`, `shadows`, `spacing`, `typography`) têm produtores reais — de 1 a 60 elementos clicáveis — e o "Nenhum elemento selecionado" ali é só o estado inicial, não um bloco morto. Essas não foram tocadas. `CodeExportSection` mantido nas 2 páginas alteradas.',
+      },
+    ],
+  },
+  {
+    version: '0.11.24',
+    date: '2026-07-28',
+    title: 'Data Listing: removido o bloco "Indicadores rápidos" da toolbar',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Removido o `ListingKpiRow` ("Indicadores rápidos" — 4 StatsCard clicáveis: Total registros, Pendentes, Aprovadas, Recusadas) que ocupava a faixa superior do card da toolbar em `/docs/patterns/data-listing`, junto com o `<div>` de moldura (`borderBottom` + `padding 14px 18px 18px`) que só existia pra ele. A toolbar fica só com o que ela demonstra: filtros/busca/período à esquerda, Excel/PDF à direita.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Limpeza do que ficou órfão: import do `ListingKpiRow`, ícones `Package`/`Clock`/`CheckCircle2` do `lucide-react` (`Ban` permanece, é usado no `RowActionsMenu`) e o estado `kpiFocus`. Este último merece nota: as 3 branches de filtro que ele alimentava (`pendentes`/`aprovadas`/`recusadas` no `useMemo` de `data`) continuariam no arquivo, mas `setKpiFocus` só era chamado de dentro do bloco removido — ou seja, `kpiFocus` seria `""` para sempre e o filtro nunca dispararia. Removidas junto, com a dependência do `useMemo` e a chamada em `clearFilters` ajustadas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Não foram tocados: o composite `ListingKpiRow` e o `StatsCard` (`src/components/composites/`), que seguem exportados pela library e disponíveis para qualquer app consumidor; e o bloco de KPI cards com sparkline (variante separada, logo acima da toolbar), que é outro componente e continua na página. `tsc` limpo e `eslint` com a mesma contagem de erros pré-existentes de antes da mudança (9), nenhum novo.',
+      },
+    ],
+  },
+  {
+    version: '0.11.23',
+    date: '2026-07-28',
+    title: 'Table: header do card alinhado ao padrão do Data Listing',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Direção inversa da v0.11.22 (onde o Data Listing copiou o footer do Table): agora o header do `DSTable` (`/docs/components/table`) passa a seguir o header do card de `/docs/patterns/data-listing` (`DataListingDemo.tsx:593-598`). Padding `16px 20px` → `18px 20px 14px`; ganha `borderBottom` de 1px (não tinha nenhuma, o header e a tabela ficavam colados sem separação); gap 12 → 14.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Tipografia do header: título 15px → 16px com `lineHeight 1.2` (era o default 1.5, que abria 22.5px de altura de linha contra 19.2px da referência); subtítulo 12px → 11px, `margin-top` 2px → 3px e `lineHeight 1.4`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O tile 48×48 do ícone ganha aro, que só o Data Listing tinha: nova prop `iconBorder` no `DSTable`, passada nas 2 chamadas com header (Requisições de compra em azul, Carteira de Fornecedores em verde) como 8% da cor do ícone, com o fundo saindo de 5% para 4% — mesma proporção da referência. Conferido ao vivo via Puppeteer: `getComputedStyle` do header, do tile, do título e do subtítulo bate valor a valor nas duas páginas.',
+      },
+    ],
+  },
+  {
+    version: '0.11.22',
+    date: '2026-07-28',
+    title: 'Data Listing: footer de paginação alinhado ao padrão do Table',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O footer de `/docs/patterns/data-listing` tinha uma paginação própria, divergente do footer do `<Table>` governado (`TableDoc.tsx:320-343`) que ela deveria demonstrar. Alinhado: faixa ganha fundo `--color-surface-muted` (antes transparente), padding `12px 18px` → `10px 16px`, gap 8 → 12, e tipografia base (11px/`--color-fg-muted`) no container.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Botões de página: 28×28 radius 6 → 24×24 radius 5. Inativo passa de fundo branco + borda + texto `--color-fg` + peso 600 para fundo transparente + texto `--color-fg-muted` + peso 400; ativo perde a borda azul redundante (só fundo `--color-primary`) e vai a peso 700. Setas `←`/`→` (que usavam o mesmo estilo dos números) viram `‹`/`›` no formato `pgBtn` do Table: `4px 10px`, borda `#93BDE4`, texto azul — e a anterior renderiza no estado desabilitado, coerente com estar na página 1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Adicionado o seletor "Linhas:" (10/25/50) que existe no footer do Table e que a própria anotação ⑤ da página ("Mostrando X-Y de Z + per-page selector + nav") já descrevia como parte do padrão, mas não estava renderizado. Verificado ao vivo via Puppeteer: `getComputedStyle` do footer e dos 6 botões bate valor a valor com o footer do Table (padding, fundo, gap, dimensões, cores, bordas, radius, peso).',
+      },
+    ],
+  },
+  {
+    version: '0.11.21',
+    date: '2026-07-28',
+    title: 'Badge: removida a função de copiar da Seção 01 (Vitrine de variantes)',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'As 8 variantes da vitrine de `/docs/components/badge` (Padrão, Secundário, Sucesso, Atenção, Crítico, Contorno, Informativo, Destaque) estavam envolvidas em `Copyable` — clique copiava um snippet standalone. Removido: agora são preview puro, sem clique/cursor pointer. Texto da seção ajustado (não menciona mais "clique em qualquer badge para copiar"). As outras 6 faixas da vitrine (dot, ícone, pílula, contador, removíveis, tamanhos) já eram preview puro desde antes.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Removidos o helper `badgeCode` (gerador do snippet) e o mapa `VARIANT_STYLES` que só ele consumia — ficariam mortos no arquivo. `VARIANTS` (usado pelo componente `Badge` local que renderiza a vitrine) é outro objeto e continua intacto.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Removido também o bloco "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem nenhum produtor — mesmo tratamento aplicado a Select/Button/Cores na v0.11.18. `CodeExportSection` mantido: vive em contexto próprio e segue funcionando.',
+      },
+    ],
+  },
+  {
+    version: '0.11.20',
+    date: '2026-07-28',
+    title: 'Removida a página "Switch" do menu Componentes',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'Removida a página `/docs/components/switch` (`SwitchDoc.tsx`): rota e lazy import em `App.tsx`, item "Switch" do sidebar em `routes/nav.ts`, mapeamento `"components/switch": "switch"` em `TutorialContextual.tsx` e o bloco de conteúdo do tutorial (`switch: [...]`) em `data/pageTutorials.ts`. Navegar direto pra rota antiga cai no catch-all e volta pra Home, mesmo comportamento das remoções de página anteriores.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O primitive `Switch` (`src/components/ui/switch.tsx`, Radix, exportado pela library em `components/ui/index.ts`) e o composite `SettingsPreferenceRow` — únicos consumidores reais demonstrados na página removida — não foram alterados nem removidos, seguem funcionando normalmente em qualquer app consumidor. Ficam sem doc dedicada no site, só isso.',
+      },
+    ],
+  },
+  {
+    version: '0.11.19',
+    date: '2026-07-28',
+    title: 'Chip Filtro ganha busca dentro do dropdown',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'O `DSChipFiltro` (`/docs/components/select`) ganha um campo de busca fixo no topo do dropdown, abaixo do botão fechado "Rótulo: Valor". Digitar filtra a lista de opções em tempo real (case-insensitive, substring), igual ao `Autocomplete` — mas mantendo o gatilho fechado e compacto (32.5px) do chip, sem virar um campo de formulário.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Input de busca ganha autofoco ao abrir o dropdown (mesmo padrão do `DSAutocomplete`). Estado vazio quando nada bate com a busca: "Nenhum resultado para \\"X\\"". Lista de opções agora scrolla (`maxHeight: 220, overflowY: auto`) — cap que o `ChipSelect` original (`DrawerDoc.tsx`) já tinha e que se perdeu ao portar o componente pra cá na v0.11.16.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Reset do campo de busca movido de um `useEffect` (disparava `react-hooks/set-state-in-effect`) para o próprio `onClick` do botão gatilho — limpa a busca ao abrir, não ao fechar via effect. `tsc`/`eslint` sem erro novo introduzido.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Card da Guia de uso (Seção 02) atualizado: "abre um dropdown com radio" → "abre um dropdown com busca + radio", e a faixa "2 a 8 opções" relaxada pra "poucas ou muitas — o campo de busca filtra a lista", já que a limitação de tamanho da lista deixou de existir. Nota: isso diverge de propósito do `ChipSelect` real (Governança BI/`DrawerDoc.tsx`), que continua só radio, sem busca — mudança pedida explicitamente pelo usuário e isolada ao tipo novo do DS-FIPS.',
+      },
+    ],
+  },
+  {
+    version: '0.11.18',
+    date: '2026-07-28',
+    title: 'Removido o bloco vazio "Teste ao Vivo" de Select, Button e Cores',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Removido `CodePlayground`/`PlaygroundProvider` de `/docs/components/select`, `/docs/components/button` e `/docs/foundations/colors` — o bloco "Teste ao Vivo" ficou órfão (sem nenhum `Copyable` alimentando) desde a série de remoções de função de copiar (v0.11.7 a v0.11.17) e passou a mostrar sempre o estado vazio. `CodeExportSection` mantido nas 3 páginas — vive em contexto próprio, independente do `PlaygroundProvider`.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`ButtonDoc.tsx`: a descrição do `CodeExportSection` ainda dizia "Para copiar uma variante individual, clique nela acima" — texto órfão desde a v0.11.9, que já tinha removido esse comportamento de clique da Seção 01. Frase removida.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`ColorsPage.tsx`: a remoção do playground mudou o número da linha do bloco `{false && <CodeExportSection items={[...]}/>}` (66 linhas mortas desde a v0.11.8, cujo comentário já dizia "removido" mas o JSX nunca foi de fato apagado) e isso expôs um lint pré-existente (`no-constant-binary-expression`) que nunca tinha sido rodado nesse arquivo nesta sessão. Bloco morto deletado por completo, e o import de `CodeExportSection` — órfão depois disso — removido junto.',
+      },
+    ],
+  },
+  {
+    version: '0.11.17',
+    date: '2026-07-28',
+    title: 'Select: removida a função de copiar da Seção 01 (Tipos de seleção)',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Os 13 exemplos da vitrine de `/docs/components/select` (Select, Autocomplete, Multi-select, Checkbox, Radio, 5 Toggles, Chip Select, Chip Filtro, Segmented) estavam envolvidos em `Copyable` — clique copiava um snippet standalone pro clipboard/playground. Removido: agora são só preview visual, sem clique/cursor pointer. Texto da seção ajustado (não menciona mais "clique para copiar").',
+      },
+      {
+        type: 'fix',
+        description:
+          'Os 9 helpers geradores dos snippets (`selectCode`, `autocompleteCode`, `multiSelectCode`, `checkboxCode`, `radioCode`, `toggleCode`, `chipSelectCode`, `chipFiltroCode`, `segmentedCode`) removidos junto — ficariam mortos no arquivo: 339 linhas a menos. `selectExportCode` foi mantido, é o que alimenta a seção "Exportar código" no fim da página.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Efeito colateral: o bloco "Teste ao Vivo" (`CodePlayground`) fica sem nenhum produtor e passa a exibir só o estado vazio ("Nenhum elemento selecionado"). Mantido por ora para não divergir de `/docs/components/button` e `/docs/foundations/colors`, que ficaram no mesmo estado após as remoções das v0.11.9/v0.11.8.',
+      },
+    ],
+  },
+  {
+    version: '0.11.16',
+    date: '2026-07-28',
+    title: 'Select: novo tipo "Chip Filtro" (dropdown fechado, uso exclusivo em filtros)',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Nova entrada em `/docs/components/select`: "Chip Filtro" — botão fechado "Rótulo: Valor" que abre dropdown com radio, mesmo padrão do `ChipSelect` já usado na toolbar/Filtros avançados (`DrawerDoc.tsx`, exemplo "Departamento"). Visualmente é um chip (32.5px, borda 1px, radius 8px), mas o comportamento é de `Select` — por isso ganhou nome e card próprios, distintos do "Chip Select" existente (pílulas sempre visíveis, sem dropdown).',
+      },
+      {
+        type: 'feature',
+        description:
+          'Componente `DSChipFiltro` adicionado a `SelectDoc.tsx` com o exemplo "Departamento" (ícone prédio, opções Todos/Operações/Logística/TI/SSMA/RH) na vitrine da Seção 01, mais o helper `chipFiltroCode` para o snippet copy-paste do `Copyable`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Guia de uso (Seção 02) ganha o card "Chip Filtro" explicando quando usar (barra de filtros/toolbar) e quando não (formulário → `Select`; múltiplas opções visíveis ao mesmo tempo → `Chip Select`). Resumo "Quando usar" da Seção 01 ganha a linha "Barra de filtros/toolbar → Chip Filtro". Contagem do cabeçalho da Seção 01 atualizada de 8 para 9 tipos de seleção.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Verificado ao vivo via Puppeteer em light e dark: medição da caixa do botão bate exata com o elemento capturado no picker (352×32.5px, padding 7px 12px, borda 1px `#D7E0EA`, radius 8px, fonte 11px/600) e o dropdown abre com os radios corretos. `tsc -b` e `eslint` limpos — nenhum erro novo introduzido (os 4 erros pré-existentes de `react-hooks/set-state-in-effect`/`no-unused-vars` no arquivo não foram tocados, são de outros componentes já presentes antes desta mudança).',
+      },
+    ],
+  },
+  {
+    version: '0.11.15',
+    date: '2026-07-28',
+    title: 'Campos compactos: correção real, alinhados ao QLP (Edição Colaborador)',
+    entries: [
+      { type: 'breaking', description: 'A v0.11.14 corrigiu radius/borda dos campos compactos mas errou a altura: usou 35px, tirado do `DSInput` local de `/docs/components/input` (só uma doc, sem consumidor real). O usuário apontou o campo real de referência — `Field`/`FieldInput`/`Select` de `client/src/components/ui-sup/` no projeto QLP, usados de verdade em `ColaboradorForm.tsx` (tela Edição Colaborador). O comentário do próprio `select.tsx` de lá documenta a cadeia: Governança BI (canônico) → QLP (adaptado, com as diferenças anotadas). Essa é a fonte de verdade — não a doc do próprio DS-FIPS.' },
+      { type: 'fix', description: '`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` (compact/default único, sem tier "dense" separado — a variante `dense` do Select vira sinônimo de compact): `h-9`/`h-[35px]` → `h-8` (32px); `border-[1.5px]` → `border` (1px); `rounded-xl` (`FieldTrigger`/`InputGroup`, ainda não alinhados na v0.11.14) → `rounded-lg`; `hover:border-[...]/80` → `hover:border-[var(--color-border-strong)]` (token que já existia em `globals.css`, só não estava em uso); anel de foco `/20` → `/25`; `shadow-sm` removido de todos.' },
+      { type: 'fix', description: 'Ao remover os `dark:` hardcoded percebi que não eram resíduo: `--color-primary` não muda entre light/dark neste projeto (fica `#004B9B` fixo, diferente de `--color-border`/`--color-surface`/`--color-fg` que redefinem por tema). Todo estado que usa `--color-primary` como acento (borda em foco, anel, Select aberto, borda do dropdown, opção selecionada) ficaria com baixíssimo contraste no escuro sem o par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — restaurado em todos os pontos, com a opacidade nova (25%).' },
+      { type: 'improvement', description: 'Verificado ao vivo via Puppeteer: repouso (32px/8px/1px/sem sombra/13px), foco claro (`#004B9B`, anel 25%) e foco escuro (`#93BDE4`, anel 25%) — todos batendo exato com o alvo. As 4 páginas que usam `density="compact"` (`FormWorkspaceDemo`, `DrawerDoc`, `ModalFormDemo`, `DialogDoc`) revalidadas sem erro de console. Skill `components.md`/`foundations.md` atualizada com a fonte de verdade correta e a explicação do padrão `dark:#93BDE4`.' },
+    ],
+  },
+  {
+    version: '0.11.14',
+    date: '2026-07-28',
+    title: 'Campos de formulário alinhados à referência da página Input',
+    entries: [
+      { type: 'breaking', description: 'Os campos do Form Workspace não batiam com os da página Input: 36px/radius 12px/fonte 14px contra 35px/radius 8px/fonte 13px. O Form Workspace estava usando o `Input` governado corretamente — quem divergia era o próprio primitivo, contra o `DSInput` local que a página `/docs/components/input` usa como referência visual. Não dava pra corrigir no consumidor: a regra `governance/no-visual-overrides` bloqueia `h-`/`rounded-`/`text-` via className em `Input`/`Select` (testado — o lint acusa e manda "promover a necessidade para uma variante oficial"). Corrigido no primitivo, como a própria regra instrui.' },
+      { type: 'improvement', description: '`Input`, `Select` e `Textarea` governados: radius `rounded-xl` (12px) → `rounded-lg` (8px); borda `border` 1px com alpha `/60` → `border-[1.5px]` sólida em `--color-border`; densidade compact `h-9`+`text-sm` → `h-[35px]`+`text-[13px]`. O dropdown do `Select` acompanhou (`rounded-b-xl` → `rounded-b-lg`, borda 1.5px). Densidade `default` (h-12) e `dense` do Select (h-8) mantidas — só radius/borda mudaram nelas.' },
+      { type: 'improvement', description: 'Alcance verificado antes de aplicar: `density="compact"` é usado em 4 arquivos, todos páginas de doc/demo (`DrawerDoc`, `ModalFormDemo`, `FormWorkspaceDemo`, `DialogDoc`) — todas revalidadas sem erro de console. Skill `components.md` atualizada com as métricas novas da caixa do campo.' },
+    ],
+  },
+  {
+    version: '0.11.13',
+    date: '2026-07-28',
+    title: 'Form Workspace: removida a função de copiar',
+    entries: [
+      { type: 'improvement', description: 'Removidos os 3 wrappers `Copyable` de `/docs/patterns/form-workspace` (Hero Header, Seções do Formulário, Footer de Ações) — as seções agora são só preview visual, sem clique/cursor pointer. Junto saíram os helpers `wsCode` (gerava ~115 linhas de snippet copy-paste) e `wsPreview`, que só eles consumiam, e o texto "Clique em qualquer seção para copiar o código" do hero, que ficaria desatualizado.' },
+    ],
+  },
+  {
+    version: '0.11.12',
+    date: '2026-07-28',
+    title: 'Removida a página Modal Radix',
+    entries: [
+      { type: 'improvement', description: 'Removida `/docs/components/modal-radix` do menu Componentes: arquivo `ModalRadixDoc.tsx`, lazy import/rota em `App.tsx`, entrada em `routes/nav.ts` e a referência na skill `components.md`. Rota antiga cai no catch-all e redireciona pra `/docs/home`.' },
+      { type: 'improvement', description: 'A página demonstrava 3 coisas: `ExportPreviewModal` (também documentado em `/docs/patterns/data-listing` e no botão "Exportação" de `/docs/components/dialog` — não ficou órfão), o composite `Modal`/`ModalFooter` (`src/components/ui/Modal.tsx`, que só era usado ali — fica sem doc dedicada, mas o arquivo não foi apagado) e uma lista de tokens/anatomia do Dialog (só texto, sem consumidor de código).' },
+    ],
+  },
+  {
+    version: '0.11.11',
+    date: '2026-07-28',
+    title: 'Sidebar: "Modal (legado)" renomeado para "Modal"',
+    entries: [
+      { type: 'fix', description: 'Item do menu Componentes renomeado de "Modal (legado)" para "Modal" (`routes/nav.ts`) — já batia com o `<h1>` da própria página, só o rótulo do sidebar/breadcrumb estava desatualizado.' },
+    ],
+  },
+  {
+    version: '0.11.10',
+    date: '2026-07-28',
+    title: 'Modal (legado): removida a Seção 11 "Exportar Código"',
+    entries: [
+      { type: 'improvement', description: 'Removida a Seção 11 de `/docs/components/dialog` — três cards (Modal, TutorialModal, PopupModal) com botões "Ver código" (expandia um `<pre>` com o fonte completo) e "Copiar código". Junto saíram o helper local `CodeExport` e as 3 constantes de código copy-paste (`MODAL_CODE`, `TUTORIAL_MODAL_CODE`, `POPUP_MODAL_CODE`), que só essa seção consumia: 500 linhas removidas do arquivo.' },
+      { type: 'improvement', description: 'A constante `EXPORT_MODAL_CODE` foi mantida — é usada pelo `Copyable` do botão "Exportação" (Seção 01), que segue alimentando o playground "Teste ao Vivo" no fim da página.' },
+    ],
+  },
+  {
+    version: '0.11.9',
+    date: '2026-07-28',
+    title: 'Button: removida a função de copiar da Seção 01 (Variantes do sistema)',
+    entries: [
+      { type: 'improvement', description: 'Os 10 botões de exemplo (Primário, Secundário, Contorno, Inverso, Fantasma, Destaque, Realce, Salvar, Perigo, Link) em `/docs/components/button` estavam envolvidos em `Copyable` — clique copiava um snippet standalone (`variantCode`) pro clipboard/playground da página. Removido: os botões agora são só preview visual, sem clique/cursor pointer. Texto da seção ajustado (não menciona mais "clique para copiar").' },
+      { type: 'fix', description: 'Função `variantCode` (gerava o snippet copy-paste, ~50 linhas, sem outros usos) removida junto — ficaria morta no arquivo.' },
+    ],
+  },
+  {
+    version: '0.11.8',
+    date: '2026-07-28',
+    title: 'Cores: removida a função de copiar dos cards da Paleta principal',
+    entries: [
+      { type: 'improvement', description: 'Os cards da seção "Paleta principal" (`/docs/foundations/colors`) tinham dois mecanismos de cópia sobrepostos: o wrapper `Copyable` (card inteiro clicável, alimentava o playground no fim da página) e o botão de ícone `CopyHex` no rodapé do card. Ambos removidos — o card agora é só visual (amostra + nome + hex). As seções 02 (Tokens semânticos) e 03 (Paleta Dark Mode) mantêm o `CopyHex`.' },
+      { type: 'fix', description: 'Efeito colateral positivo da remoção: os cards passam a preencher a largura da célula do grid. O `Copyable` usa `display: inline-flex` sem `width` (a não ser com a prop `fullWidth`), então cada card encolhia até o tamanho do próprio texto — larguras irregulares de 135–189px dentro de células de 329px, deixando buracos visíveis entre as colunas.' },
+    ],
+  },
+  {
+    version: '0.11.7',
+    date: '2026-07-28',
+    title: 'Configurações: removido badge "Preferências" do hero',
+    entries: [
+      { type: 'fix', description: 'Removidas as props `badgePill`/`badge="Preferências"` do `PatternPanelHero` em `ConfiguracoesDemo.tsx` (`/docs/patterns/configuracoes`) — o hero fica só com ícone, título e subtítulo.' },
+    ],
+  },
+  {
+    version: '0.11.6',
+    date: '2026-07-28',
+    title: 'Removidas páginas de padrão: Relatórios operacionais e Export modal',
+    entries: [
+      { type: 'improvement', description: 'Removidas as páginas `/docs/patterns/relatorios-operacionais` e `/docs/patterns/export-modal` do menu Padrões: arquivos `RelatoriosOperacionaisDemo.tsx`/`ExportModalDemo.tsx`, entradas em `routes/nav.ts`, lazy imports/rotas em `App.tsx` e o mapeamento em `TutorialContextual.tsx`. Rotas antigas caem no catch-all e redirecionam pra `/docs/home`, sem erro.' },
+      { type: 'fix', description: 'O parágrafo "também em Padrões → Export modal" em `/docs/components/modal-radix` linkava pra a página removida — removido junto (o link ficaria quebrado). O comentário de referência no code sample de Exportação de `DialogDoc.tsx` e a lista de demos do `ExportPreviewModal` na skill `components.md` também atualizados.' },
+      { type: 'improvement', description: 'Os composites reais `ExportModal` e `ExportPreviewModal` não foram tocados — seguem em uso normal em `/docs/patterns/data-listing`, `/docs/components/modal-radix` e no botão "Exportação" do playground de `/docs/components/dialog`. Só as páginas de demonstração dedicadas saíram do ar.' },
+    ],
+  },
+  {
+    version: '0.11.5',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: pill group Tudo/Tabela/Expandida menor',
+    entries: [
+      { type: 'fix', description: 'Pill group Tudo/Tabela/Expandida reduzido de 264×41 para 216×31: botões `px-3 py-1.5 text-[11px]`→`px-2 py-1 text-[10px]`, ícone `size={12}`→`size={11}`, container `p-1`→`p-0.5`, raios proporcionalmente menores (9/9/9/16 e 7/7/7/12).' },
+    ],
+  },
+  {
+    version: '0.11.4',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: fileira Tudo/Tabela/Expandida mais compacta',
+    entries: [
+      { type: 'fix', description: 'Seção do segmented control (Tudo/Tabela/Expandida + "Colunas visíveis na listagem") ocupava 70px de altura — reduzida para 58px: wrapper `px-6 py-3`→`px-6 py-2`, botões do segmented `px-4 py-2`→`px-3 py-1.5`, ícone `size={13}`→`size={12}`.' },
+    ],
+  },
+  {
+    version: '0.11.3',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: PDF vermelho, Excel verde escuro',
+    entries: [
+      { type: 'fix', description: 'Botão "PDF" do rodapé trocado de `variant="primary"` (azul) para `variant="danger"` (vermelho, `--color-danger`).' },
+      { type: 'feature', description: 'Nova variante `successStrong` no `buttonVariants` governado (`button-variants.ts`) — sólido `--color-success-strong` (verde escuro) com hover pro `--color-success` (verde médio), inverso da variante `success` existente. Botão "Excel" passa a usar essa variante em vez de `success`.' },
+    ],
+  },
+  {
+    version: '0.11.2',
+    date: '2026-07-28',
+    title: 'Fix real: header do ExportPreviewModal cortado pelo overflow-hidden do painel',
+    entries: [
+      { type: 'fix', description: 'A v0.11.0 usava `-mx-6 -mt-6` no header pra cancelar o `p-6` default do `DialogContent` e fazer a faixa gov-gradient sangrar até a borda do painel. Só que o `<DialogContent>` do `ExportPreviewModal` já recebe `className="flex flex-col gap-0 overflow-hidden p-0 sm:p-0"` — zerando o padding via `cn()`/`twMerge` — então não havia `p-6` nenhum a cancelar. A margem negativa empurrava o header ~24px além do painel de verdade, e essa fatia inteira (ícone-tile, eyebrow, parte do título) sumia cortada pelo `overflow-hidden` do `DialogPrimitive.Content`. O fix da v0.11.1 (mover o botão fechar) tratou só um sintoma lateral do mesmo bug. Removida a margem negativa — o header já nasce encostado nos cantos do painel (padding real = 0), sem precisar de bleed.' },
+    ],
+  },
+  {
+    version: '0.11.1',
+    date: '2026-07-28',
+    title: 'Fix: botão de fechar do ExportPreviewModal cortado pelo canto do painel',
+    entries: [
+      { type: 'fix', description: 'O header gov-gradient novo (v0.11.0) posicionava o botão de fechar em `top-3.5 right-3.5` — o mesmo offset do `ChangelogModal`, copiado por analogia. Mas o `DialogContent` usa `rounded-2xl sm:rounded-[20px]`, um raio bem maior que o `rounded-[12px_12px_12px_24px]` do painel hand-rolled do `ChangelogModal`. Nesse offset o botão caía dentro da curva do canto e ficava cortado pelo `overflow-hidden` do painel — só um fragmento arredondado aparecia, sem o ícone X visível. Ajustado para `top-5 right-6`, testado em compacto, tela cheia e dark mode.' },
+    ],
+  },
+  {
+    version: '0.11.0',
+    date: '2026-07-28',
+    title: 'ExportPreviewModal: header canônico DS-FIPS + PDF/Excel juntos no rodapé',
+    entries: [
+      { type: 'fix', description: 'Header do `ExportPreviewModal` usava o header neutro genérico do `DialogContent` (ícone-tile cinza, sem eyebrow, sem gov-gradient) — divergindo do padrão canônico DS-FIPS já usado no `ChangelogModal` ("Novidades do Sistema", modal real de produto): faixa `var(--fips-banner-content-bg)`, ícone-tile 44×44 âmbar, eyebrow "EXPORTAÇÃO", JunctionLines decorativo, título 17px branco, botões Fechar/Tela cheia translúcido-branco. Header reescrito pra bater com essa anatomia — full-bleed via `-mx-6 -mt-6` (cancela o padding do `DialogContent`, clipado pelos cantos arredondados do painel via overflow-hidden do ancestral) + `DialogPrimitive.Title`/`Description` crus no lugar dos wrappers governados (que têm cor fixa incompatível com fundo escuro), mesma técnica do `ChangelogModal`. `DialogContent` ganhou `showCloseButton={false}` — o close agora é próprio, estilizado pro header escuro.' },
+      { type: 'fix', description: 'Rodapé só mostrava Imprimir+Excel(antigo "Planilha") OU PDF, nunca os dois juntos — gate por `intent` (`isExcelIntent && onPrint`, `!isExcelIntent && onExportPdf` etc.), então quem passasse `intent="excel"` nunca via o botão PDF, mesmo passando a callback `onExportPdf`. Gate trocado por presença da própria callback (`onPrint && ...`, `onExportPdf && ...`, `onExportExcel && ...`) — `intent` agora só define o título/ícone default do header. Backward-compatible: quem já passava só 1-2 callbacks continua vendo só esses botões; quem passar as 3 (como o playground de `DialogDoc.tsx`) vê os 4 botões juntos.' },
+      { type: 'fix', description: 'Botão de exportar Excel chamava "Planilha" e usava `variant="primary"` (azul, mesma cor do PDF) — renomeado para "Excel" e trocado para `variant="success"` (verde), diferenciando visualmente das outras ações.' },
+      { type: 'improvement', description: 'Skill `design-system-fips` (`components.md`, repo + `~/.claude/skills/`) atualizada com a nova anatomia do header e a regra de rodapé por callback. Zip de download regenerado.' },
+    ],
+  },
+  {
+    version: '0.10.1',
+    date: '2026-07-28',
+    title: 'Modal (legado): ícones lucide-react + largura pra caber os 9 botões numa linha',
+    entries: [
+      { type: 'fix', description: 'Os 9 botões do playground de `Modal (legado)` (`/docs/components/dialog`, Seção 01) usavam emoji/símbolo Unicode como ícone (✓ ✕ ⚠ ℹ 📝 📋 🖥 ❓ 📤) — trocados por `lucide-react` (Check/X/AlertTriangle/Info/ClipboardEdit/ClipboardList/Maximize2/HelpCircle/Download), todos no mesmo peso visual do ✓ original de Confirmação. `Btn` (helper local da doc) ganhou prop opcional `icon`. Mesma troca replicada nos 2 gatilhos duplicados "Abrir tutorial" e "Abrir popup" das seções de aprofundamento.' },
+      { type: 'fix', description: 'A fileira de 9 botões (~1105px) não cabia dentro da largura de conteúdo padrão (1100px) — "Exportação" quebrava pra uma 2ª linha sozinho. Aumentada para 1280px, só nesta página. De quebra, a página nunca tinha `margin:"0 auto"` no wrapper (única entre as páginas de doc) — conteúdo ficava encostado à esquerda em telas largas; adicionado. Cabe numa linha em 1920px+; em viewports menores (ex. 1440px) ainda quebra normalmente — menos largura de conteúdo disponível, comportamento responsivo esperado.' },
+    ],
+  },
+  {
+    version: '0.10.0',
+    date: '2026-07-28',
+    title: 'Modal (legado): 9ª variante "Exportação" no playground (ExportPreviewModal)',
+    entries: [
+      { type: 'feature', description: 'O playground de `Modal (legado)` (`/docs/components/dialog`, Seção 01) ganha um 9º botão, "Exportação", ao lado de Confirmação/Destrutivo/Alerta/Informativo/Formulário/Lista/Popup/Tutorial. Abre o composite real `ExportPreviewModal` (`src/components/composites/ExportPreviewModal.tsx`, paridade Tecnopano — Dialog Radix, faixa azul institucional, Tudo/Tabela/Expandida, chips com drag, preview e footer Cancelar/Imprimir/Planilha) — o mesmo já usado em `/docs/patterns/export-modal` e nos botões Excel/PDF de `/docs/patterns/data-listing`. Dados mock temáticos ao restante da página (REQ-4000+, "Requisição de compra N"). Não usa o `ExportModal` legado/portal.' },
+    ],
+  },
+  {
+    version: '0.9.2',
+    date: '2026-07-27',
+    title: 'Dialog FIPS + ExportPreviewModal polish',
+    entries: [
+      { type: 'fix', description: 'Faixa do Dialog em azul institucional (#004B9B→#93BDE4); hover do X em primary — sem vermelho Tecnopano.' },
+      { type: 'fix', description: 'CTA Planilha usa Button variant primary (light/dark); Imprimir/Cancelar nas variants padrão.' },
+      { type: 'fix', description: 'Tela cheia = 96dvh (vence sm:max-h do Dialog); Compacto = 85vh; só o preview rola na vertical.' },
+      { type: 'improvement', description: 'ExportPreviewModal documentado em /docs/components/modal-radix (família Modal) além do pattern export-modal.' },
+    ],
+  },
+  {
+    version: '0.9.1',
+    date: '2026-07-27',
+    title: 'ExportPreviewModal (paridade Tecnopano)',
+    entries: [
+      { type: 'feature', description: 'ExportPreviewModal: Tudo/Tabela/Expandida, chips drag, preview, Tela cheia, Cancelar/Imprimir/Planilha|PDF — réplica de client/.../ExportPreviewModal.tsx.' },
+      { type: 'improvement', description: 'DialogIconTile + close no Dialog; Data Listing e /docs/patterns/export-modal abrem o modal pelos botões Excel/PDF.' },
+    ],
+  },
+  {
+    version: '0.9.0',
+    date: '2026-07-27',
+    title: 'Data Listing parity Tecnopano (export, KPIs, menu radial)',
+    entries: [
+      { type: 'feature', description: 'ExportButtons + ExcelIcon/PdfIcon: par 32.5×32.5 Excel/PDF com hover tintado (convenção de extensão).' },
+      { type: 'feature', description: 'StatsCard clicável (onClick/selected) + ListingKpiRow — Indicadores rápidos no panelHeader da toolbar.' },
+      { type: 'feature', description: 'CircularCommandMenu + RowActionsMenu — menu radial de ações da linha (peer framer-motion).' },
+      { type: 'improvement', description: 'Data Listing demo: KPIs no card da toolbar, ExportButtons e radial na coluna Ações.' },
+    ],
+  },
+  {
     version: '0.8.0',
     date: '2026-07-27',
     title: 'StatsCard e HowItWorksCard (Home Suprimentos)',
