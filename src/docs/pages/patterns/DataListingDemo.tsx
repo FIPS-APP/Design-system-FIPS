@@ -164,6 +164,9 @@ const DENSITY={
   comfortable:{rowH:56,fs:13,padX:20},
 };
 
+/* Quantos chips de filtro ativo cabem no header da tabela antes de virar "+N". */
+const MAX_FILTER_CHIPS=4;
+
 /* ── Helper: código copy-paste-ready para o Playground ── */
 function dlCode(part: string) {
   if (part === 'header') return `// DS-FIPS — Data Listing Header Navy — Copy-paste ready
@@ -337,6 +340,17 @@ export default function DataListingDemo() {
 
   const totalFilters=[filters.status,filters.dept,filters.priority].filter(Boolean).length;
   const clearFilters=()=>setFilters({status:"",dept:"",priority:""});
+
+  /* Chips de filtros ativos — um chip por VALOR filtrado, nunca só a contagem.
+     Regra DS: o usuário tem que ler o QUE está filtrando sem reabrir o Drawer,
+     e conseguir remover um valor de cada vez (X no próprio chip). Acima de
+     MAX_FILTER_CHIPS o excedente vira "+N" que reabre o Drawer, e um "Limpar"
+     textual aparece a partir de 2 chips. */
+  const activeFilterChips=useMemo(()=>
+    (["status","dept","priority"] as const)
+      .filter(k=>filters[k])
+      .map(k=>({key:k,label:filters[k],remove:()=>setFilters(p=>({...p,[k]:""}))})),
+  [filters]);
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
 
@@ -674,12 +688,35 @@ export default function DataListingDemo() {
             <div style={{padding:"18px 20px 14px",display:"flex",alignItems:"center",gap:14,borderBottom:`1px solid ${C.cardBorder}`}}>
               <div style={{width:48,height:48,borderRadius:14,background:alpha(C.azulProfundo,0.04),border:`1px solid ${alpha(C.azulProfundo,0.08)}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{Ic.inbox(22,C.azulProfundo)}</div>
               <div style={{flex:1,minWidth:0}}>
-                <h3 style={{fontSize:16,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,margin:0,lineHeight:1.2}}>Requisições</h3>
+                <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:6}}>
+                  <h3 style={{fontSize:16,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,margin:0,lineHeight:1.2}}>Requisições</h3>
+                  {/* CHIPS DE FILTRO ATIVO — obrigatório em toda listagem com botão Filtros.
+                      Um chip por VALOR (não "3 filtros"): o usuário lê o que está
+                      filtrando sem reabrir o Drawer e remove um a um pelo X. */}
+                  {activeFilterChips.length>0&&<span style={{color:C.cinzaChumbo,fontSize:14}}>·</span>}
+                  {activeFilterChips.slice(0,MAX_FILTER_CHIPS).map(c=>(
+                    <button key={c.key} type="button" onClick={c.remove} title={`Remover filtro: ${c.label}`}
+                      style={{display:"inline-flex",alignItems:"center",gap:4,padding:"2px 4px 2px 8px",fontSize:10,fontWeight:600,fontFamily:Fn.body,color:C.cinzaEscuro,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:4,cursor:"pointer",whiteSpace:"nowrap"}}>
+                      {Ic.filter(10,C.cinzaChumbo)}{c.label}{Ic.x(11)}
+                    </button>
+                  ))}
+                  {activeFilterChips.length>MAX_FILTER_CHIPS&&(
+                    <button type="button" onClick={()=>setShowFilters(true)} title="Ver todos os filtros ativos"
+                      style={{padding:"2px 8px",fontSize:10,fontWeight:600,fontFamily:Fn.body,color:C.cinzaChumbo,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:4,cursor:"pointer",whiteSpace:"nowrap"}}>
+                      +{activeFilterChips.length-MAX_FILTER_CHIPS}
+                    </button>
+                  )}
+                  {activeFilterChips.length>1&&(
+                    <button type="button" onClick={clearFilters} title="Limpar todos os filtros"
+                      style={{fontSize:10,fontWeight:600,fontFamily:Fn.body,color:C.cinzaChumbo,background:"none",border:"none",cursor:"pointer",whiteSpace:"nowrap"}}>
+                      Limpar
+                    </button>
+                  )}
+                </div>
                 <p style={{fontSize:11,color:C.cinzaChumbo,fontFamily:Fn.body,margin:"3px 0 0",lineHeight:1.4}}>{data.length} {data.length===1?"registro":"registros"} {(search||totalFilters>0)?"filtrados":"no total"} · Atualizado agora</p>
               </div>
-              {/* Lado direito do header: filtrado + config */}
+              {/* Lado direito do header: config */}
               <div style={{display:"flex",alignItems:"center",gap:12,flexShrink:0}}>
-                {(search||totalFilters>0)&&<span style={{fontSize:10,fontWeight:700,letterSpacing:".5px",textTransform:"uppercase",color:C.cinzaEscuro,background:accentBg,padding:"4px 10px",borderRadius:12,fontFamily:Fn.title}}>Filtrado</span>}
                 {/* Toggle Tabela/Card */}
                 <div style={{display:"flex",gap:3,padding:3,background:C.bg,borderRadius:8,border:`1px solid ${C.cardBorder}`}}>
                   <button onClick={()=>setView("table")} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 10px",fontSize:11,fontWeight:600,color:view==="table"?C.azulProfundo:C.cinzaChumbo,background:view==="table"?C.cardBg:"transparent",border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body,boxShadow:view==="table"?"0 1px 2px rgba(0,42,104,.08)":"none",transition:"all .15s"}}>{Ic.list(12,view==="table"?C.azulProfundo:C.cinzaChumbo)} Tabela</button>
@@ -936,10 +973,10 @@ export default function DataListingDemo() {
         <Section n="04" title="Toolbar" desc="Card próprio entre KPIs e Table. Esquerda agrupa filtros e busca (manipulação de dados). Direita agrupa exportações. Spacer no meio empurra os grupos pras pontas. Card minimal com mesmo borderRadius FIPS.">
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
-              {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (multi-select popover)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
+              {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (Button outline abre Drawer)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
               {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 32.5×32.5, ícone verde)","PDF (botão 32.5×32.5, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados · ExportButtons"]},
               {title:"Padrão visual",icon:Ic.list,color:C.amareloEscuro,items:["Card próprio com borderRadius FIPS","Padding 14px 18px","display:flex flexWrap:wrap","Spacer central com flex:1","marginBottom 14 antes da Table"]},
-              {title:"Filtros oficiais",icon:Ic.calendar,color:C.verdeFloresta,items:["Multi-select (popover com 3 grupos)","Single-select (dropdown com radio)","Período suporta presets + Personalizado","Personalizado abre 2 inputs date","Contador no botão quando há filtros"]},
+              {title:"Filtros oficiais",icon:Ic.calendar,color:C.verdeFloresta,items:["Drawer lateral (nunca popover ancorado)","Pills p/ poucas opções · chip-dropdown p/ muitas","Período suporta presets + Personalizado","Contador no botão quando há filtros","Chips do valor filtrado no header da Table"]},
             ].map((r,i)=>(
               <div key={i} style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:18,boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
@@ -1104,6 +1141,7 @@ export default function DataListingDemo() {
               {t:"Header obrigatório no Card",d:"Toda Table dentro do painel precisa de header próprio com ícone (48×48), título (Saira 16/700) e subtítulo (Open Sans 11). Sem exceções — é a identidade do dataset, distinto do Header navy do painel."},
               {t:"4 KPIs sempre",d:"Bloco de KPIs sempre tem 4 cards (2×2 mobile). Agregados de TODA a base, não da página. Sparkline area chart obrigatório com hover interativo. Sem linha reta — todas as séries com spread visível."},
               {t:"Toolbar separada",d:"Card próprio entre KPIs e Table. Esquerda agrupa Filtros + Busca + Período. Direita agrupa Excel + PDF. Spacer central. Nunca colocar exportação à esquerda nem filtros à direita."},
+              {t:"Chips de filtro ativo",d:"Toda listagem com botão Filtros mostra no header da Table um chip por VALOR filtrado (ex: \"Moderado ×\", \"Guarujá ×\") — nunca só a contagem (\"3 filtros\"). Cada X remove aquele valor; acima de 4 chips o excedente vira \"+N\" que reabre o Drawer; a partir de 2 chips aparece um \"Limpar\" textual. O usuário precisa ler o que está filtrando sem reabrir o Drawer."},
               {t:"Densidade padrão Normal",d:"Tabela inicia em Normal (42px). Compacta só para power users em telas com 1000+ registros. Confortável para apresentações ou acessibilidade."},
               {t:"Colunas fixas",d:"Pelo menos uma coluna identificadora (Código/ID) e a coluna Ações devem ser fixas. Não podem ser desabilitadas pelo usuário no botão Configurar."},
               {t:"Persistência por usuário",d:"Preferências de Colunas, Densidade, Aparência e Filtros devem persistir por usuário (localStorage ou backend), não por sessão."},
