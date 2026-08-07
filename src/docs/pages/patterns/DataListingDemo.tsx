@@ -692,7 +692,13 @@ export default function DataListingDemo() {
                   <h3 style={{fontSize:16,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,margin:0,lineHeight:1.2}}>Requisições</h3>
                   {/* CHIPS DE FILTRO ATIVO — obrigatório em toda listagem com botão Filtros.
                       Um chip por VALOR (não "3 filtros"): o usuário lê o que está
-                      filtrando sem reabrir o Drawer e remove um a um pelo X. */}
+                      filtrando sem reabrir o Drawer e remove um a um pelo X.
+
+                      NO APP, use o componente pronto — não copie estes estilos:
+                        import { ActiveFilterChips } from '@fips-app/ds-fips'
+                        <ActiveFilterChips chips={...} onClearAll={...} onOpenFilters={...} />
+                      O inline aqui existe só porque esta página é copy-paste-ready
+                      e não pode depender do pacote. */}
                   {activeFilterChips.length>0&&<span style={{color:C.cinzaChumbo,fontSize:14}}>·</span>}
                   {activeFilterChips.slice(0,MAX_FILTER_CHIPS).map(c=>(
                     <button key={c.key} type="button" onClick={c.remove} title={`Remover filtro: ${c.label}`}

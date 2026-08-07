@@ -44,4 +44,10 @@ export {
   RowActionsMenu,
   type RowMenuAction,
 } from './components/composites/RowActionsMenu'
+export {
+  ActiveFilterChips,
+  MAX_FILTER_CHIPS,
+  type ActiveFilterChip,
+  type ActiveFilterChipsProps,
+} from './components/composites/ActiveFilterChips'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
