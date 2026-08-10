@@ -1003,7 +1003,7 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 05 — Table ═══ */}
-        <Section n="05" title="Table" desc="Card final do padrão. Header obrigatório com ícone, título e subtítulo à esquerda. À direita: badge Filtrado, toggle Tabela/Card e botão Configurar. Body com tabela densa, footer com paginação completa.">
+        <Section n="05" title="Table" desc="Card final do padrão. Header obrigatório com ícone, título e subtítulo à esquerda — e, colados no título, os chips de filtro ativo (um por VALOR, com X que remove só aquele). À direita: toggle Tabela/Card e botão Configurar. Body com tabela densa, footer com paginação completa.">
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:24,boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
             {/* Toggle Tabela/Card interativo */}
             <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,marginBottom:10}}>Toggle Tabela / Card</div>
@@ -1024,11 +1024,12 @@ export default function DataListingDemo() {
             <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
               {[
                 {n:"①",label:"Header obrigatório",desc:"Ícone 48×48 + título Saira 16/700 + subtítulo Open Sans 11. Sem exceções."},
-                {n:"②",label:"Lado direito do header",desc:"Filtrado badge + Toggle Tabela/Card + botão Configurar."},
-                {n:"③",label:"Body — Tabela densa",desc:"Sortable, zebra, hover, seleção em massa. Densidade ajustável."},
-                {n:"④",label:"Configurar (3 abas)",desc:"Colunas (visível/oculta), Densidade (3 níveis), Aparência (4 toggles)."},
-                {n:"⑤",label:"Footer — Paginação",desc:"Mostrando X-Y de Z + per-page selector + nav (primeira/anterior/páginas/próxima/última)."},
-                {n:"⑥",label:"Estados",desc:"Empty, loading skeleton, erro, selecionado — todos obrigatórios."},
+                {n:"②",label:"Chips de filtro ativo",desc:"À ESQUERDA, colados no título (separados por ·). Um chip por VALOR filtrado — nunca um badge \"Filtrado\" nem a contagem \"3 filtros\", que não dizem O QUE está filtrado. X remove só aquele valor; acima de 4 o excedente vira \"+N\" que reabre o Drawer; a partir de 2 aparece \"Limpar\". Componente: ActiveFilterChips."},
+                {n:"③",label:"Lado direito do header",desc:"Toggle Tabela/Card + botão Configurar. Filtro NÃO entra aqui."},
+                {n:"④",label:"Body — Tabela densa",desc:"Sortable, zebra, hover, seleção em massa. Densidade ajustável."},
+                {n:"⑤",label:"Configurar (3 abas)",desc:"Colunas (visível/oculta), Densidade (3 níveis), Aparência (4 toggles)."},
+                {n:"⑥",label:"Footer — Paginação",desc:"Mostrando X-Y de Z + per-page selector + nav (primeira/anterior/páginas/próxima/última)."},
+                {n:"⑦",label:"Estados",desc:"Empty, loading skeleton, erro, selecionado — todos obrigatórios."},
               ].map((it,i)=>(
                 <div key={i} style={{padding:12,background:C.bg,borderRadius:8,display:"flex",gap:10,alignItems:"flex-start"}}>
                   <span style={{fontSize:14,fontWeight:800,color:C.amareloEscuro,fontFamily:Fn.title}}>{it.n}</span>
