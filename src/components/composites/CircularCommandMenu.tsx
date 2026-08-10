@@ -60,7 +60,10 @@ export function CircularCommandMenu({
   const computeCenter = useCallback(() => {
     const r = triggerRef.current?.getBoundingClientRect()
     if (!r) return
-    const m = radius + 44
+    // Margem = alcance real da órbita (raio + meia-bolinha 18 + 4 de folga).
+    // Antes usava `radius + 44`, que reservava espaço demais e, perto das bordas,
+    // arrastava o centro pra dentro — desencontrando o × central do × do gatilho.
+    const m = radius + 22
     setCenter({
       x: Math.min(Math.max(r.left + r.width / 2, m), window.innerWidth - m),
       y: Math.min(Math.max(r.top + r.height / 2, m), window.innerHeight - m),
