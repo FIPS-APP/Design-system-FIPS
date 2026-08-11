@@ -1,25 +1,36 @@
 # Components
 
+> Cobertura desta referência: **v0.11.33** (2026-08-11). Histórico completo em `src/docs/data/changelog.ts`.
+
 ## Barrel de exportação
 
-Fonte: `src/components/ui/index.ts`
+Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 
-O pacote expõe:
+### `src/index.ts` — entrada pública da library
 
-- `Button`
-- `Badge`
+Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
+
+- `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
+- `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid`
+- `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
+- `CircularCommandMenu` · `RowActionsMenu`
+- `ExcelIcon`, `PdfIcon`
+
+### `src/components/ui/index.ts` — primitives governados
+
+- `Button` + `buttonVariants` · `Badge` + `badgeVariants`
 - `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
-- `Field`, `FieldLabel`, `FieldHint`, `FieldMessage`
-- `Input`
-- `InputGroup`
-- `Select`
-- `Textarea`
-- `Progress`
-- `Table`
-- `Tabs`
-- `Dialog`
-- `Drawer`
-- `Tooltip`
+- `Field`, `FieldLabel`, `FieldHint`, `FieldMessage` · `FieldTrigger`
+- `Input` · `InputGroup`, `InputGroupAddon`, `InputGroupButton`, `InputGroupText`, `InputGroupInput`, `InputGroupTextarea`
+- `Select` · `Textarea` · `Switch` · `Progress`
+- `Table`, `TableHeader`, `TableHead`, `TableBody`, `TableRow`, `TableCell`, `TableEmpty`
+- `AdminTableColumnMenu`, `AdminTablePagination`, `AdminTableSortHeader`, `AdminTableCompanyCell`, `AdminTableStatusDots`
+- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`
+- `Dialog` (+ `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`, `DialogIconTile`, `DIALOG_CONTENT_SCROLL_WRAPPER_CLASS`) · `Modal`, `ModalFooter`
+- `Drawer` (+ `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerClose`)
+- `Tooltip`, `TooltipProvider`, `TooltipTrigger`, `TooltipContent`
+
+**Exportado sem página de doc:** `Switch` (Radix, `src/components/ui/switch.tsx`). A página `/docs/components/switch` foi removida na v0.11.20 — o primitive e o composite `SettingsPreferenceRow` continuam funcionando em qualquer app consumidor, só ficaram sem doc dedicada.
 
 ## Button
 
@@ -194,6 +205,26 @@ Composição recomendada:
 
 Cuidado — o dropdown do `Select` é `absolute` (sem portal). Ancestral com `overflow-hidden` corta a lista "pra dentro". Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. Nunca corrija no `Select` do DS (é sincronizado); corrija no consumidor.
 
+### Tipos de seleção (catálogo — qual usar quando)
+
+Fonte: `src/docs/pages/components/SelectDoc.tsx` (Seção 01, **9 tipos**). Só `Select` é primitive governado; os outros são padrões demonstrados na doc (implementados localmente na página) que os apps replicam.
+
+| Cenário | Tipo |
+| --- | --- |
+| 3–15 opções | `Select` |
+| 15+ opções ou precisa buscar | `Autocomplete` |
+| N opções simultâneas | `Multi-select` |
+| Lista sempre visível, múltipla | `Checkbox` |
+| Lista sempre visível, exclusiva | `Radio` |
+| Sim/Não binário | `Toggle` (5 estilos) |
+| Poucas opções visuais, todas à vista | `Chip Select` (pílulas, sem dropdown) |
+| **Barra de filtros / toolbar** | **`Chip Filtro`** |
+| 2–4 modos de visualização | `Segmented` |
+
+**`Chip Filtro`** (novo na v0.11.16, busca na v0.11.19) — botão fechado `Rótulo: Valor` que abre dropdown com radio. Visualmente é chip (padding `7px 12px`, `32.5px` de altura, borda 1px, `radius 8`, fonte 11px/600); comportamento é de `Select`. Aberto: borda `--color-primary` + `box-shadow 0 0 0 2px {primary}1F`. Dropdown tem **campo de busca fixo no topo** (autofoco ao abrir, filtro case-insensitive por substring, estado vazio `Nenhum resultado para "X"`) e lista com `maxHeight: 220 / overflowY: auto`. Uso exclusivo em filtro/toolbar — em formulário use `Select`; se as opções devem ficar todas visíveis ao mesmo tempo, use `Chip Select`.
+
+> Divergência proposital: o `ChipSelect` real do Governança BI (e o de `DrawerDoc.tsx`) **não** tem busca, só radio. A busca é uma evolução isolada do `Chip Filtro` do DS-FIPS.
+
 ## Tabs, Table, Dialog, Drawer, Tooltip, Progress
 
 Fontes:
@@ -234,7 +265,9 @@ Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal
 | Gov gradient (`GOV_GRAD`) | **âmbar** (`C.amareloOuro` / `--color-accent`) |
 | Cor semântica sólida (verde/vermelho/laranja) | **branco** (`rgba(255,255,255,.9)`) |
 
-8 variantes documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-8`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado) e Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo).
+**10 variantes** documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-8`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado), Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo), **Exportação** (`ExportPreviewModal`, abaixo) e **Novidades** (`ChangelogModal`, abaixo — adicionado na v0.11.27). Todos fecham com `Esc`, clique no overlay ou botão X.
+
+As duas últimas não são exemplos locais do playground: são os componentes reais importados e reutilizados. O trigger "Novidades" abre exatamente o mesmo `ChangelogModal` do item **Versão** do rodapé do sidebar.
 
 ### Modal "Novidades do Sistema" (Changelog)
 
@@ -255,6 +288,7 @@ Anatomia:
   | `breaking` | `Rocket` | Importante | `--color-accent-strong` |
 
 - Só a versão mais recente aparece por padrão; botão texto "Ver versões anteriores" expande o histórico completo.
+- **API real: só `{ open, onOpenChange }`.** Não existem props `changelog`/`currentVersion` — as versões vêm sempre de `CHANGELOG` (`src/docs/data/changelog.ts`), não são configuráveis.
 - **Footer**: `Button variant="primary" size="lg" className="w-full"` — "Entendi, vamos lá!" (fecha o modal).
 - **Largura**: `max-w-xl` (576px) — mais larga que o modal padrão (`max-w-lg`/512px) por ter listas de texto mais longas.
 
@@ -320,13 +354,22 @@ Regras:
 
 Fonte: `src/components/composites/ListingKpiRow.tsx` · `StatsCard` com `onClick` / `selected` / `disabled`
 
-Bloco **Indicadores rápidos** no `panelHeader` da toolbar (borda inferior, acima de filtros/busca/export). Clique no card filtra a tabela; “Limpar filtro” limpa o foco.
+Bloco **Indicadores rápidos**: faixa de `StatsCard` clicáveis no `panelHeader` do card da toolbar (borda inferior, acima de filtros/busca/export). Clique no card filtra a tabela; “Limpar filtro” limpa o foco.
+
+> **v0.11.24 — saiu da demo, continua na library.** O bloco foi removido da toolbar de `/docs/patterns/data-listing` (a toolbar de lá agora demonstra só filtros/busca/período + Excel/PDF). `ListingKpiRow` e `StatsCard` seguem exportados e são o padrão recomendado quando a listagem precisa de KPIs clicáveis — só não há mais demo viva deles nessa página. O bloco de KPI cards com sparkline (acima da toolbar) é outro componente e continua na página.
 
 ## CircularCommandMenu / RowActionsMenu
 
 Fonte: `src/components/composites/CircularCommandMenu.tsx` · `RowActionsMenu.tsx` · CSS `.cmd-glass*` / `.fips-row-action` em `globals.css`
 
-Menu radial por linha (portal + órbita + teclado). **Peer dependency:** `framer-motion` (>=11). Doc: `/docs/components/circular-command-menu`.
+Menu radial (portal + órbita + teclado). **Peer dependency:** `framer-motion` (>=11). Doc: `/docs/components/circular-command-menu` — item do sidebar chamado **"Ações"** (renomeado de "Circular Menu" na v0.11.31).
+
+Um único componente, dois presets:
+
+- **`RowActionsMenu`** — não é componente separado: é o `CircularCommandMenu` com trigger de **28px** pra caber numa célula de tabela (coluna Ações da listagem).
+- **FAB** — o mesmo componente com o trigger padrão de **56px**, para ação isolada de página.
+
+`ariaLabel` (v0.11.31) tem default `"Ações da linha"`, correto pro uso em tabela. **Fora de linha de tabela (FAB), passe `ariaLabel` próprio** — ex.: `ariaLabel="Ações rápidas"`.
 
 ```tsx
 <RowActionsMenu

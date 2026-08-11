@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.11.33',
+    date: '2026-08-11',
+    title: 'Skill portátil ressincronizada com o código (estava na v0.11.15)',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O bundle `skills/design-system-fips` (lido por outras IAs e empacotado por `npm run build:downloads`) estava congelado na v0.11.15 — 17 versões de defasagem. Ressincronizado contra o código: barrel de exportação reescrito a partir de `src/index.ts` + `components/ui/index.ts` (faltavam `Switch`, `Modal`, `FieldTrigger`, `InputGroup*`, `admin-listing`, `TableEmpty`, `DialogIconTile` e todos os composites de `src/index.ts`), Modal de 8 para **10 variantes** (Exportação + Novidades), `CircularCommandMenu` com a prop `ariaLabel` e o item de menu renomeado para "Ações", catálogo dos **9 tipos de seleção** do Select com o novo "Chip Filtro" (dropdown com busca, uso exclusivo em toolbar).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Data Listing reescrito no `patterns.md`: filtros deixaram de ser popover ancorado e viraram **drawer pela esquerda** (400px, hero institucional + miolo `PillFilter`/`ChipSelect` single-select + rodapé), specs exatas de Filtros (outline sempre azul, 30px) e Busca (34px, `flex-1`, borda estática) vindas do `ListingToolbar` do QLP, footer de paginação alinhado ao do Table, e a nota de que `ListingKpiRow` saiu da demo mas segue exportado.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Corrigidas duas divergências que a referência portátil documentava errado: a cadência de linha da tabela é **altura fixa** (`rowH` 30/42/56 + `th` 9px alinhado à esquerda), não padding vertical; e `--shadow-card` é sobrescrito no `@layer base :root` pelo valor azulado `0 1px 3px rgba(0,75,155,.04)…`, que é o que vale em runtime — o `@theme` cinza nunca chega na tela. `foundations.md` ganhou a tabela de tokens dark e a regra de que `--color-primary`/`--color-accent` **não** mudam entre temas (daí o par manual `dark:#93BDE4`), e o `SKILL.md` passou a citar a regra de lint `governance/no-visual-overrides`.',
+      },
+    ],
+  },
+  {
     version: '0.11.32',
     date: '2026-07-28',
     title: 'Table: corpo da tabela alinhado ao padrão do Data Listing',

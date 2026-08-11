@@ -7,6 +7,8 @@ description: Use when building, reviewing, documenting, or briefing another AI a
 
 Use this skill whenever the task involves FIPS interfaces or when another AI needs a portable package of the design rules.
 
+Referências sincronizadas com a **v0.11.33** (2026-08-11) do repositório DS-FIPS.
+
 ## Workflow
 
 1. Read `references/source-of-truth.md`.
@@ -24,6 +26,8 @@ Use this skill whenever the task involves FIPS interfaces or when another AI nee
 - Product UI stays inside the FIPS palette: deep institutional blue for structure, gold/orange for accents, restrained neutrals for surfaces and borders.
 - Use `PageHero` for module headers and `Field` plus `Input`/`Select`/`Textarea` for forms.
 - Do not create one-off local overrides for radius, shadow, border, spacing, or color just to satisfy one screen.
+- **`className` on governed primitives is for external layout only.** The ESLint rule `governance/no-visual-overrides` (`eslint.config.js`) blocks visual Tailwind classes (`bg-`, `text-`, `border`, `rounded`, `shadow`, `h-`/`min-h-`, `p-`/`px-`, `font-`, `leading-`, `tracking-`, `ring-`, `opacity-`) passed to `Button`, `Input`, `Select`, `Textarea`, `TabsList`, `TabsTrigger` anywhere outside `src/components/ui/**`. To change appearance, add a variant in the matching `*-variants.ts` (CVA) — never ad-hoc classes in JSX.
+- `--color-primary` and the other accent tokens are **identical in light and dark**. Any accent usage needs the manual `dark:…-[#93BDE4]` pair — see `references/foundations.md`.
 
 ## Fast repo lookups
 
@@ -34,5 +38,8 @@ Use these searches when the repository is available:
 - `rg -n -- "--color-primary|--color-accent|--shadow-card|--font-heading" src/styles/globals.css`
 - `rg -n "DocPage|PatternGuidelines" src/docs`
 - `rg -n "ExportButtons|ExcelIcon|PdfIcon" src` (toolbar de listagem: par Excel/PDF)
+- `rg -n "DENSITY|rowH" src/docs/pages/patterns/DataListingDemo.tsx` (cadência canônica de linha da tabela)
+- `rg -n "version: '" src/docs/data/changelog.ts | head` (versão atual + histórico; o topo do array é a mais recente)
+- `rg -n "no-visual-overrides" -A 12 eslint.config.js` (regra de governança que roda no lint)
 
 If the repository is not available, treat the portable references bundled with this skill as the source of truth until the codebase is synced.

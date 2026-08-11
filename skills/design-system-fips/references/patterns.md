@@ -181,49 +181,62 @@ Regras:
 ## Data Listing
 
 Fonte: `src/docs/pages/patterns/DataListingDemo.tsx`
-Implementação de referência: `src/components/composites/ExportButtons.tsx` + `ListingKpiRow` + `RowActionsMenu`.
+Implementação de referência: `src/components/composites/ExportButtons.tsx` + `RowActionsMenu` + `ExportPreviewModal`.
+Fonte real de produto para toolbar e filtros: `client/src/components/composites/ListingToolbar.tsx` (**QLP**) e `KpiDashboardPage.tsx` (**Governança BI**) — as duas com a mesma anatomia.
 
 Regras:
 
-- barra de busca e filtros acima da tabela
-- **Indicadores rápidos** (`ListingKpiRow`) no `panelHeader` do mesmo card da toolbar (borda inferior)
-- KPIs sparkline fora do card = variante alternativa documentada
+- barra de busca e filtros acima da tabela, em card próprio
+- **Filtros abrem em Drawer pela esquerda**, não em popover ancorado (mudou na v0.11.26)
+- KPIs sparkline fora do card = variante documentada; `ListingKpiRow` (Indicadores rápidos clicáveis) é opcional e mora no `panelHeader` do card da toolbar quando usado — ver `components.md`
 - tabela dentro de card
 - coluna Ações usa `RowActionsMenu` (menu radial), não kebab genérico
 - detalhes da linha em painel lateral ou modal, não em navegação improvisada
 
 ### Toolbar canônica
 
-Uma única faixa-card (`rounded-[10px_10px_10px_18px] border …`), com:
+Uma única faixa-card (`rounded-[10px_10px_10px_18px]`, borda 1px, `box-shadow: 0 1px 3px rgba(0,75,155,.04)`), miolo `padding 14px 18px`, `display:flex`, `gap:10`, `flexWrap:wrap`. Zonas, nesta ordem: **Filtros** · **Busca** (`flex:1`) · **Período** · spacer · **Excel/PDF**.
 
-0. **panelHeader** (opcional) — `ListingKpiRow` (Indicadores rápidos clicáveis)
-1. **Filtros** (esquerda, `shrink-0`)
-2. **Busca** (centro, `flex-1`)
-3. **Exportar** (direita, `shrink-0`) — `ExportButtons` (par Excel + PDF **32.5×32.5**)
+| Controle | Especificação exata (fonte: `ListingToolbar` do QLP) |
+| --- | --- |
+| **Filtros** | `Button variant="outline" size="sm"`: **sempre azul** (`border 1.5px` + texto `--color-primary`), **não** condicional a ter filtro ativo. `height 30`, `padding 0 14px`, `radius 6`, `gap 7`, `fontSize 12`, `fontWeight 600`. Ícone `Filter` do lucide (14px). Badge de contagem = pill `16×16` `radius 999`, só quando `totalFilters > 0`. Par dark obrigatório: `#93BDE4`. |
+| **Busca** | `height 34`, `padding 0 12px`, `radius 8`, `flex:1` **sem `min/maxWidth`**, borda **estática** `--color-border` (sem realce de foco, sem anel), fonte 14px. Ícones `Search`/`X` do lucide 14px. |
+| **Período** | chip `padding 7px 12px`, `radius 8`, 11px/600, rótulo mudo + valor bold (`Período: Últimos 30 dias`). Dropdown com radio: 6 presets + divisor + **Personalizado** (sub-form com 2 inputs `date` + Cancelar/Aplicar). |
+| **Exportar** | `ExportButtons` — par Excel + PDF **32.5×32.5** só-ícone, sempre à direita. |
 
-Snippet:
+Não faça:
 
-```tsx
-<div className="rounded-[10px_10px_10px_18px] border border-border bg-card shadow-[var(--shadow-card)]">
-  <div className="border-b border-border px-4 py-4">
-    <ListingKpiRow cards={…} focusId={…} onSelect={…} onClear={…} />
-  </div>
-  <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
-    <FiltersPopover />
-    <div className="flex-1">
-      <Input density="compact" leftIcon={<Search />} placeholder="Buscar…" />
-    </div>
-    <ExportButtons onExcel={exportXlsx} onPdf={exportPdf} />
-  </div>
-</div>
-```
+- pintar o botão Filtros condicionalmente (outline no FIPS é intrinsecamente azul — a cor não muda com o estado; só o badge aparece/some)
+- dar realce de foco ou teto de largura ao campo de busca — ele preenche o vão
+- trocar os ícones lucide por glifos SVG custom
+
+### Drawer de Filtros (padrão QLP)
+
+O botão **Filtros** abre um **Drawer pela esquerda** que cobre a sidebar — `position fixed`, `left 0`, `width 400` (`maxWidth 90vw`), `height 100vh`, `box-shadow 4px 0 24px rgba(0,0,0,.12)`, animação `dlSlideLeft .3s cubic-bezier(.4,0,.2,1)` sobre overlay `rgba(0,42,104,.35)` (`dlFade .2s`). Três zonas:
+
+1. **Hero institucional** (`flexShrink:0`, `padding 20px 56px 20px 24px`) — gradiente gov 3-stops + `JunctionLines` (`opacity .06` claro / `.04` escuro), tile âmbar `44×44` `radius 11` (`{amareloOuro}1A` + borda `{amareloOuro}30`), eyebrow uppercase 11px/700 `letter-spacing 1.5px`, título 21px/700 Saira Expanded, descrição 12px `rgba(255,255,255,.65)` que alterna entre `N filtro(s) ativo(s)` e `Refine a listagem pelos campos abaixo`. X próprio `32×32` em `rgba(255,255,255,.08)`.
+2. **Miolo rolável** (`flex:1`, `overflowY:auto`, `padding 20px 24px`, `gap 16`) — **`PillFilter`** para campos de classificação com poucas opções (Status, Prioridade), **divisor**, **`ChipSelect`** (dropdown fechado `Rótulo: Valor` com radio) para campos de muitas opções (Departamento).
+3. **Rodapé fixo** (`padding 16px 24px`, `borderTop`, fundo `surface-muted`) — `Limpar tudo` (desabilitado sem filtro) + `Ver N resultado(s)` refletindo a contagem real.
+
+Fecha por overlay, X ou `Escape` — **não** por click-outside. `role="dialog"` + `aria-modal` + `aria-label`.
+
+**Seleção é single-select** (`"" = Todos`), não multi-select por checkbox: `{status: string, dept: string, priority: string}`. É a convenção das duas referências de produção.
+
+**Cores dos pills são hex fixo, não token** — o pill ativo é fundo cheio + texto branco, e tokens semânticos (`--color-gov-azul-profundo` etc.) **clareiam no dark**, o que poria texto branco sobre fundo claro. Usar hex saturado nos dois temas: `STATUS_PILL_COLOR` (`#00A83E`/`#F6921E`/`#002A68`/`#DC3545`), `PRIO_PILL_COLOR` (`#DC3545`/`#F6921E`/`#0090D0`/`#6B7784`) e `PILL_PRIMARY` `#0057B8` (pill "Todos" **e** botão `Ver N resultado(s)`).
+
+### Footer de paginação
+
+Alinhado ao footer do `<Table>` (v0.11.22): faixa com fundo `--color-surface-muted`, `padding 10px 16px`, `gap 12`, tipografia base 11px `--color-fg-muted`.
+
+- Esquerda: `Mostrando X–Y de Z` + seletor **`Linhas:` (10/25/50)**.
+- Direita: botões de página `24×24` `radius 5` — inativo = fundo transparente, texto `fg-muted`, peso 400; ativo = fundo `--color-primary`, peso 700, **sem borda**. Setas são `‹`/`›` no formato `pgBtn` (`padding 4px 10px`, borda `#93BDE4`, texto azul), desabilitadas nos extremos.
 
 ### Cuidado — clipping do dropdown do Select
 
 O `Select` do DS abre a lista como `absolute top-full` (**sem portal**). Qualquer ancestral com `overflow-hidden`/`overflow-auto` (popover de filtros, `PageHero`/`PageHeader`, card de cantos arredondados) **corta a lista "pra dentro"** — bug já visto em 3 telas (Minha Área, Catálogo, Conformidade).
 
 - não envolva um `Select` em container `overflow-hidden`
-- o popover de filtros usa `z-50` e **não** `overflow-hidden` (os cantos arredondados sobrevivem: nenhum filho preenche o canto)
+- dropdowns ancorados da toolbar (Período, `ChipSelect`) usam `z-50` e **não** `overflow-hidden` — os cantos arredondados sobrevivem, nenhum filho preenche o canto. O card da toolbar do Data Listing é `overflow: visible` justamente por isso.
 - se o `Select` precisa morar dentro do `PageHero`/`PageHeader` (que é `overflow-hidden` pelo gradiente), mova-o para uma toolbar-card abaixo do hero
 - nunca corrija no `Select` do DS (é sincronizado) — corrija no consumidor
 
@@ -256,7 +269,26 @@ Três densidades (`compact | normal | comfortable`, default `comfortable`) + qua
 
 **`TableRow`** — `hover:bg-[var(--color-surface-soft)]`; com `zebra=true` → `even:bg-[var(--color-table-zebra)]` (hover sobrescreve).
 
-**Token zebra** — `--color-table-zebra`: light = `#D3E3F440` (blue-200 @ 25%); dark = `rgba(255,255,255,0.03)`. Declarar em `globals.css` e no bloco `.dark`.
+**Token zebra** — `--color-table-zebra`: light = `#D3E3F440` (blue-200 @ 25%); dark = `rgba(255,255,255,0.03)`. Declarar em `globals.css` e no bloco `.dark`. **Zebra fraca demais é bug conhecido**: `#93BDE4` a 5% fica quase invisível e a tabela parece não-zebrada — o valor certo é o `#D3E3F4` a 25%.
+
+#### Cadência de linha — o alvo visual (`DENSITY`)
+
+O `<Table>` governado expressa densidade como **padding vertical**. A referência visual do sistema (Data Listing e a tabela da doc `/docs/components/table`, alinhadas na v0.11.32) expressa como **altura de linha fixa** — é essa a cadência que uma tela FIPS deve ter:
+
+| densidade | `rowH` | `fs` | `padX` |
+| --- | --- | --- | --- |
+| `compact` | 30px | 11px | 12px |
+| `normal` | 42px | 12px | 16px |
+| `comfortable` | 56px | 13px | 20px |
+
+- Célula: `padding: 0 padX` (a altura vem da linha). **Exceção:** com "quebra de linha" ligada, volta a padding vertical — é o único caso em que a linha precisa crescer.
+- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, Saira Expanded, `borderBottom 2px`, **alinhado à esquerda** (respeita `col.align`). Não centralizar o rótulo: as células são alinhadas à esquerda e centralizar quebra a varredura vertical da coluna.
+- Skeleton de carregamento usa a mesma `rowH`, senão as linhas "pulam" de altura ao sair do loading.
+- Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
+
+#### Header do card da tabela
+
+Padrão vindo do Data Listing (v0.11.23): `padding 18px 20px 14px`, `gap 14`, **`borderBottom` de 1px** separando header e tabela. Título 16px `lineHeight 1.2`; subtítulo 11px, `margin-top 3px`, `lineHeight 1.4`. Tile do ícone `48×48` com **aro**: fundo a 4% da cor do ícone, borda a 8% (`color-mix(in srgb, {cor} 8%, transparent)`).
 
 **`useTableDensity`** — hook exportado; retorna `TableDensity | null` (`null` = fora de `<Table>`). Descendentes como `Badge` usam para ajustar size automaticamente: `compact|normal → sm`, `comfortable → md`, fora de tabela → `sm`.
 
@@ -302,6 +334,8 @@ Não faça:
 Padrão canônico para telas com muitos filtros (dashboards, analytics). Implementação de referência: `Governanca_BI/src/pages/KpiDashboardPage.tsx` (`FilterBar`, `ChipSelect`, `PeriodField`, `PillFilter`, `SearchField`). Evolui a "Toolbar canônica" (Data Listing) quando os filtros passam de ~4.
 
 Demo viva (só o drawer, sem a barra de chips) em `src/docs/pages/components/DrawerDoc.tsx` — variante "Filtros avançados" (`side="left"`). `PillFilter` lá é `PillFilterGroup`; cores semânticas de Status/Prioridade reusam os mesmos tokens hex de `DataListingDemo.tsx` (`PRIO_COLOR`).
+
+Desde a v0.11.26 o **Data Listing usa o mesmo drawer** (sem barra de chips: os filtros vivem só no drawer, com Período mantido na toolbar) — anatomia detalhada em **Data Listing → Drawer de Filtros**. Os dois convergem: hero institucional + miolo `PillFilter`/`ChipSelect` + rodapé `Limpar tudo` / `Ver N …`.
 
 **Divergência conhecida (Departamento/Segmento):** a implementação real (Governança BI) usa `Select` governado (`density="compact"`, 36px) para os campos "de muitas opções" dentro do drawer. Na demo do DS-FIPS, `Select` governado não tem variante de 32.5px e a regra `no-visual-overrides` proíbe forçar `h-` nele — então Departamento/Segmento usam um `ChipSelect` local (mesmo padrão do chip da toolbar: dropdown com radio) só para bater a altura com os campos de data (`FInput`, 32.5px) do mesmo drawer. Ao portar este padrão para uma app real (não a doc), prefira `Select` governado nesses campos, como no Governança BI — o `ChipSelect` aqui é uma acomodação específica do demo, não uma mudança na recomendação.
 

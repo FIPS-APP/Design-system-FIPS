@@ -34,18 +34,18 @@ Se houver conflito:
 
 ### Componentes reutilizáveis
 
-- `src/components/ui/index.ts`
-- `src/components/ui/button.tsx`
-- `src/components/ui/button-variants.ts`
-- `src/components/ui/badge.tsx`
-- `src/components/ui/badge-variants.ts`
+- `src/index.ts` — **entrada pública da library** (tokens, `cn`, primitives, composites)
+- `src/components/ui/index.ts` — barrel dos primitives governados
+- `src/components/ui/button.tsx` + `button-variants.ts`
+- `src/components/ui/badge.tsx` + `badge-variants.ts`
 - `src/components/ui/card.tsx`
-- `src/components/ui/field.tsx`
-- `src/components/ui/input.tsx`
+- `src/components/ui/field.tsx` + `field-trigger.tsx`
+- `src/components/ui/input.tsx` + `input-group.tsx`
 - `src/components/ui/select.tsx`
 - `src/components/ui/textarea.tsx`
-- `src/components/ui/table.tsx`
-- `src/components/ui/dialog.tsx`
+- `src/components/ui/switch.tsx` — exportado, **sem página de doc** (removida na v0.11.20)
+- `src/components/ui/table.tsx` + `admin-listing.tsx` (`AdminTableColumnMenu`/`Pagination`/`SortHeader`)
+- `src/components/ui/dialog.tsx` + `Modal.tsx`
 - `src/components/ui/drawer.tsx`
 - `src/components/ui/progress.tsx`
 - `src/components/ui/tabs.tsx`
@@ -67,9 +67,10 @@ Se houver conflito:
 - `src/composites/PageHero.tsx`
 - `src/docs/pages/patterns/ApplicationShellDemo.tsx`
 - `src/docs/pages/patterns/DashboardDemo.tsx`
-- `src/docs/pages/patterns/DataListingDemo.tsx`
+- `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + tabela + paginação (referência viva do padrão)
 - `src/components/composites/ExportButtons.tsx`
-- `src/components/composites/ListingKpiRow.tsx`
+- `src/components/composites/ExportPreviewModal.tsx`
+- `src/components/composites/ListingKpiRow.tsx` · `StatsCard.tsx` · `HowItWorksCard.tsx`
 - `src/components/composites/CircularCommandMenu.tsx`
 - `src/components/composites/RowActionsMenu.tsx`
 - `src/components/icons/FileIcons.tsx`
@@ -77,6 +78,19 @@ Se houver conflito:
 - `src/docs/pages/patterns/ModalWorkflowDemo.tsx`
 - `src/docs/pages/patterns/HeroHeaderDoc.tsx` (página **Hero** em `/docs/patterns/hero`)
 - `src/docs/pages/GovernancePage.tsx`
+
+### Versão e changelog
+
+- `src/docs/data/changelog.ts` — **fonte única** do histórico (`CHANGELOG: ChangelogVersion[]`), consumida pela timeline `/docs/changelog` e pelo `ChangelogModal`. Nunca duplicar em array local.
+- `src/components/layout/ChangelogModal.tsx` — modal "Novidades do Sistema".
+- Toda alteração faz bump de `package.json#version` + `DOC_VERSION` (`src/app/DocLayout.tsx`) + entrada no `CHANGELOG` + README. SemVer.
+- **Ao mexer em token/componente/padrão, atualize também estas referências portáteis** — `npm run build:downloads` empacota `skills/design-system-fips` em `public/downloads/*.zip`.
+
+### Navegação do site de docs
+
+- `src/routes/nav.ts` (sidebar) + `src/App.tsx` (rotas `lazy`) — toda página nova entra nos dois.
+- Páginas removidas (rota cai no catch-all → Home): `/docs/components/switch` (v0.11.20), Modal Radix (v0.11.12), Relatórios operacionais e Export modal (v0.11.6).
+- `/docs/components/circular-command-menu` aparece no menu como **"Ações"** (v0.11.31).
 
 ### Espelho em produto (Tecnopano 3.0)
 

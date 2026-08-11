@@ -54,27 +54,54 @@ export const semanticColors = {
 
 ## CSS globals
 
-Fonte: `src/styles/globals.css`
+Fonte: `src/styles/globals.css` (`@layer base`)
 
 ```css
 :root {
   --color-primary: var(--color-fips-blue-900);
   --color-primary-hover: var(--color-fips-blue-950);
   --color-secondary: var(--color-fips-sky-600);
+  --color-secondary-hover: #007ab1;
   --color-accent: var(--color-fips-yellow-400);
   --color-accent-strong: var(--color-fips-yellow-600);
   --color-success: var(--color-fips-green-500);
   --color-success-strong: var(--color-fips-green-700);
+  --color-warning: var(--color-fips-yellow-600);
+  --color-danger: var(--color-fips-red-600);
   --color-surface: #ffffff;
   --color-surface-soft: var(--color-fips-neutral-25);
   --color-surface-muted: var(--color-fips-neutral-50);
+  --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
   --color-border: #d7e0ea;
+  --color-border-strong: var(--color-fips-gray-400);
   --color-fg: var(--color-fips-gray-900);
   --color-fg-muted: #6b7784;
   --color-ring: var(--color-fips-sky-600);
   --color-sidebar: var(--color-fips-blue-950);
+  --color-gov-gradient-from: #004B9B;
+  --color-gov-gradient-to: #002A68;
 }
 ```
+
+### Dark mode — o que muda e o que **não** muda
+
+Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `localStorage` chave `fips-theme`). O bloco `.dark` redefine **só a camada de superfície**:
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `--color-surface` | `#ffffff` | `#222222` |
+| `--color-surface-soft` | neutral-25 | `#252525` |
+| `--color-surface-muted` | neutral-50 | `#1A1A1A` |
+| `--color-border` | `#d7e0ea` | `#2E2E2E` |
+| `--color-border-strong` | gray-400 | `#3a3a3a` |
+| `--color-fg` | gray-900 | `#E2E2E8` |
+| `--color-fg-muted` | `#6b7784` | `#A1A1AA` |
+| `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
+| `--color-ring` | sky-600 | yellow-600 |
+
+**Regra crítica:** `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` são **idênticos** nos dois temas. Por isso todo uso de `--color-primary` como **acento** (borda em foco, anel, borda do dropdown aberto, opção selecionada, botão outline) precisa do par manual `dark:…-[#93BDE4]` — sem ele o acento fica com contraste baixo no escuro. Esses `dark:` não são resíduo: são o substituto funcional do token dark que não existe.
+
+Já os tokens `--color-gov-*` (usados em páginas de doc/governança) **invertem** no dark — `--color-gov-azul-profundo` vira `#93BDE4`. Não usá-los como fundo cheio com texto branco por cima: no escuro o fundo clareia e o texto some (foi a causa dos pills do drawer de filtros usarem hex fixo).
 
 ## Tipografia
 
@@ -128,6 +155,14 @@ Fonte: `src/styles/globals.css`
 --shadow-elevated: 0 22px 64px rgb(0 75 155 / 0.18);
 --shadow-float: 0 12px 36px rgb(15 23 42 / 0.12);
 ```
+
+**Atenção — `--shadow-card` é sobrescrito depois.** O bloco `@layer base :root` redefine, mais abaixo no mesmo arquivo, o valor que de fato vale em runtime:
+
+```css
+--shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
+```
+
+É essa sombra azulada e discreta (não a cinza do `@theme`) que aparece nos cards, na toolbar e no card da tabela. Ao replicar um card FIPS fora do repo, use este valor.
 
 Uso prático:
 
