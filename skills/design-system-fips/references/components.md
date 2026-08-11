@@ -418,3 +418,16 @@ Ao lado da marca (só no aberto) vem o **nome do módulo** — não faz parte do
 - Não aplicar distorção, sombra, recoloração ou transparência arbitrária fora das versões aprovadas.
 
 > Marca no **trilho mobile do header** (não a sidebar) é um terceiro asset e comportamento — ver `patterns.md` → Application Shell → Header → `DocHeaderPageTrail`.
+
+## BrandLoader (Motion) — v0.12.0
+
+Loader institucional da marca. A logo FIPS extrudada em 3D nasce **branca** com o contorno já nas cores da marca (símbolo `#7A818B`, wordmark `#004B9B`) e recebe a cor **da esquerda para a direita** conforme a tela carrega.
+
+- Import: `import { BrandLoader } from '@fips-app/ds-fips'`
+- Props: `size` ('sm' 96px | 'md' 180px | 'lg' 280px | 'splash' 420px) · `label` (aria) · `caption` (legenda visível) · `basePath` (default `/motion`)
+- Assets servidos de `/motion`: `fips-brandloader.webm` (VP9 com alfa, 56 KB), `fips-brandloader.apng` (fallback Safari, 165 KB), `fips-brandloader-static.png` (quadro final).
+- Duração 4 s a 24 fps; cor entra em 10% e fecha em 80% do ciclo.
+- `role="status"` + `aria-live="polite"`; sob `prefers-reduced-motion` mostra o quadro final estático.
+- **Não é SVG**: a fidelidade tipográfica do wordmark exige a arte oficial. Renderizado a partir de `Logo FIPS png.png`.
+- Usar em abertura do app, login, ação longa e explícita. **Não** usar em tabela carregando (ali vai skeleton), nem abaixo de 96 px, nem mais de um por tela.
+- Doc: `/docs/motion/brand-loader`

@@ -31,6 +31,7 @@ const SidebarDoc = lazy(() => import('./docs/pages/components/SidebarDoc'))
 const ToastDoc = lazy(() => import('./docs/pages/components/ToastDoc'))
 const TooltipDoc = lazy(() => import('./docs/pages/components/TooltipDoc'))
 const CircularCommandMenuDoc = lazy(() => import('./docs/pages/components/CircularCommandMenuDoc'))
+const BrandLoaderDoc = lazy(() => import('./docs/pages/motion/BrandLoaderDoc'))
 const ApplicationShellDemo = lazy(() => import('./docs/pages/patterns/ApplicationShellDemo'))
 const DashboardDemo = lazy(() => import('./docs/pages/patterns/DashboardDemo'))
 const DataListingDemo = lazy(() => import('./docs/pages/patterns/DataListingDemo'))
@@ -85,6 +86,7 @@ export default function App() {
         <Route path="components/toast" element={renderLazyRoute(<ToastDoc />)} />
         <Route path="components/tooltip" element={renderLazyRoute(<TooltipDoc />)} />
         <Route path="components/circular-command-menu" element={renderLazyRoute(<CircularCommandMenuDoc />)} />
+        <Route path="motion/brand-loader" element={renderLazyRoute(<BrandLoaderDoc />)} />
         <Route path="patterns/application-shell" element={renderLazyRoute(<ApplicationShellDemo />)} />
         <Route path="patterns/dashboard" element={renderLazyRoute(<DashboardDemo />)} />
         <Route path="patterns/data-listing" element={renderLazyRoute(<DataListingDemo />)} />
