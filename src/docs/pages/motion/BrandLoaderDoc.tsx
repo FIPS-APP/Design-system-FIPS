@@ -32,6 +32,102 @@ function Section({n,title,desc,children}:{n:string,title:string,desc:string,chil
 function Card({children,s,mob:m}:{children:React.ReactNode,s?:React.CSSProperties,mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:8,display:"block"};
 
+const ASSETS = [
+  {file:"fips-brandloader.webm", size:"117 KB"},
+  {file:"fips-brandloader.apng", size:"200 KB"},
+  {file:"fips-brandloader-static.png", size:"96 KB"},
+];
+
+const COMPONENT_SRC = `import * as React from 'react'
+import { cn } from '../../lib/cn'
+
+export type BrandLoaderSize = 'sm' | 'md' | 'lg' | 'splash'
+
+export interface BrandLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** sm 96px · md 180px · lg 280px · splash 420px de largura */
+  size?: BrandLoaderSize
+  /** Texto anunciado por leitor de tela. */
+  label?: string
+  /** Legenda visível abaixo da marca (ex.: "Sincronizando QLP"). */
+  caption?: string
+  /** Caminho base dos arquivos de motion, se servidos fora de /motion. */
+  basePath?: string
+}
+
+const SIZE_CLASS: Record<BrandLoaderSize, string> = {
+  sm: 'w-24',
+  md: 'w-[180px]',
+  lg: 'w-[280px]',
+  splash: 'w-[420px]',
+}
+
+/**
+ * BrandLoader — a marca FIPS extrudada em 3D que nasce branca, com contorno nas
+ * cores da marca, e recebe a cor da esquerda para a direita conforme carrega.
+ *
+ * A animação é uma peça de motion da marca (WebM com canal alfa + APNG de
+ * fallback), renderizada a partir da arte oficial. Não é SVG: a fidelidade
+ * tipográfica do wordmark exige o arquivo original.
+ *
+ * Acessibilidade: \`role="status"\` com \`aria-live="polite"\`. Sob
+ * \`prefers-reduced-motion\` exibe o quadro final estático, já colorido.
+ */
+export const BrandLoader = React.forwardRef<HTMLDivElement, BrandLoaderProps>(
+  ({ size = 'md', label = 'Carregando', caption, basePath = '/motion', className, ...props }, ref) => {
+    const [reduced, setReduced] = React.useState(false)
+
+    React.useEffect(() => {
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+      setReduced(mq.matches)
+      const onChange = (e: MediaQueryListEvent) => setReduced(e.matches)
+      mq.addEventListener('change', onChange)
+      return () => mq.removeEventListener('change', onChange)
+    }, [])
+
+    return (
+      <div
+        ref={ref}
+        role="status"
+        aria-live="polite"
+        aria-label={label}
+        className={cn('inline-flex flex-col items-center gap-3', className)}
+        {...props}
+      >
+        {reduced ? (
+          <img
+            src={\`\${basePath}/fips-brandloader-static.png\`}
+            alt=""
+            aria-hidden="true"
+            className={cn(SIZE_CLASS[size], 'h-auto')}
+          />
+        ) : (
+          <video
+            className={cn(SIZE_CLASS[size], 'h-auto')}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            poster={\`\${basePath}/fips-brandloader-static.png\`}
+          >
+            <source src={\`\${basePath}/fips-brandloader.webm\`} type="video/webm" />
+            {/* Safari não toca WebM com alfa: cai no APNG */}
+            <img src={\`\${basePath}/fips-brandloader.apng\`} alt="" />
+          </video>
+        )}
+
+        {caption ? (
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-[var(--color-fg-muted)]">
+            {caption}
+          </p>
+        ) : null}
+      </div>
+    )
+  },
+)
+BrandLoader.displayName = 'BrandLoader'
+`;
+
 const SIZES:{key:BrandLoaderSize,px:string,uso:string}[]=[
   {key:"sm",px:"96 px",uso:"dentro de card, painel lateral ou botão grande"},
   {key:"md",px:"180 px",uso:"overlay de ação, tela de módulo carregando"},
@@ -58,6 +154,7 @@ export default function BrandLoaderDoc(){
 
   const [size,setSize]=useState<BrandLoaderSize>("lg");
   const [dark,setDark]=useState(false);
+  const [copied,setCopied]=useState(false);
 
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
@@ -189,6 +286,55 @@ export default function BrandLoaderDoc(){
               </ul>
             </Card>
           </div>
+        </Section>
+
+        {/* 06 — ASSETS E REPRODUÇÃO */}
+        <Section n="06" title="Assets e reprodução" desc="Tudo que a peça precisa está versionado no repositório. Ninguém precisa recriar a animação no olho — nem pessoa, nem IA.">
+          <Card mob={mob}>
+            <span style={gl}>1. Baixe os três arquivos</span>
+            <p style={{fontSize:13,color:C.cinzaChumbo,lineHeight:1.55,margin:"0 0 14px"}}>
+              Coloque-os em <code style={{fontSize:11,fontFamily:Fn.mono,background:C.neutro,padding:"2px 6px",borderRadius:4}}>public/motion/</code> do projeto que vai consumir. É o caminho que o componente procura por padrão.
+            </p>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:24}}>
+              {ASSETS.map(a=>(
+                <a key={a.file} href={`/motion/${a.file}`} download style={{
+                  display:"inline-flex",alignItems:"center",gap:8,textDecoration:"none",
+                  padding:"9px 14px",borderRadius:"10px 10px 10px 18px",
+                  border:`1px solid ${C.cardBorder}`,background:C.cardBg,
+                }}>
+                  <span style={{fontSize:12.5,fontWeight:600,fontFamily:Fn.title,color:C.azulProfundo}}>{a.file}</span>
+                  <span style={{fontSize:11,fontFamily:Fn.mono,color:C.cinzaChumbo}}>{a.size}</span>
+                </a>
+              ))}
+            </div>
+
+            <span style={gl}>2. Copie o componente</span>
+            <p style={{fontSize:13,color:C.cinzaChumbo,lineHeight:1.55,margin:"0 0 14px"}}>
+              Se o projeto instala a library, basta importar. Se o projeto <strong>porta</strong> os componentes — como o FIPS Suprimentos faz —, copie o arquivo abaixo para <code style={{fontSize:11,fontFamily:Fn.mono,background:C.neutro,padding:"2px 6px",borderRadius:4}}>src/components/brand/BrandLoader.tsx</code>.
+            </p>
+            <div style={{display:"flex",gap:8,marginBottom:24,flexWrap:"wrap"}}>
+              <button type="button" onClick={()=>{navigator.clipboard.writeText(COMPONENT_SRC);setCopied(true);setTimeout(()=>setCopied(false),1800)}} style={{
+                fontFamily:Fn.title,fontSize:12,fontWeight:600,letterSpacing:".5px",cursor:"pointer",
+                padding:"9px 16px",borderRadius:"10px 10px 10px 18px",border:"none",
+                background:copied?C.verdeEscuro:C.azulProfundo,color:C.branco,transition:"background .2s ease",
+              }}>{copied?"Copiado":"Copiar BrandLoader.tsx"}</button>
+            </div>
+            <pre style={{margin:"0 0 24px",padding:16,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",fontSize:12,fontFamily:Fn.mono,color:C.cinzaEscuro,overflowX:"auto",lineHeight:1.65,maxHeight:280}}>
+{COMPONENT_SRC}
+            </pre>
+
+            <span style={gl}>3. Se a marca mudar, regere</span>
+            <p style={{fontSize:13,color:C.cinzaChumbo,lineHeight:1.55,margin:"0 0 14px"}}>
+              A animação não foi desenhada à mão: ela é gerada por um script versionado, a partir do PNG oficial da marca. Rode-o em vez de editar os arquivos.
+            </p>
+            <pre style={{margin:"0 0 14px",padding:16,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",fontSize:12.5,fontFamily:Fn.mono,color:C.cinzaEscuro,overflowX:"auto",lineHeight:1.7}}>
+{`pip install pillow          # e ffmpeg no PATH
+python3 scripts/gen-brandloader-motion.py caminho/logo-fips.png`}
+            </pre>
+            <p style={{fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`}}>
+              O script compõe sobre a arte oficial pixel a pixel — não vetoriza. Qualquer vetorização automática arredonda os cantos do wordmark e deforma o F, o P e o S. Está comentado dentro do arquivo, junto do porquê de cada parâmetro.
+            </p>
+          </Card>
         </Section>
 
       </div>
