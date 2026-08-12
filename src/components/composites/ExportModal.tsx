@@ -33,7 +33,7 @@ export interface ExportModalProps {
   title: string;
   subtitle?: string;
   catalog: ExportCatalog;
-  rows: any[];
+  rows: Record<string, unknown>[];
   filterPills?: string[];
   filename?: string;
 }

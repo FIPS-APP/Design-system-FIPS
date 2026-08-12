@@ -176,7 +176,7 @@ export function Tooltip({
 `;
 
 /* ═══════════════════════════════════════════ COPYABLE HELPERS ═══════════════════════════════════════════ */
-function tooltipCode(variant: string, text: string, position = 'top', extra = '') {
+function tooltipCode(variant: string, text: string, position = 'top') {
   const colorMap: Record<string, { bg: string; color: string; border: string }> = {
     dark: { bg: "#333B41", color: "#FFFFFF", border: "#333B41" },
     light: { bg: "#FFFFFF", color: "#333B41", border: "#E2E8F0" },

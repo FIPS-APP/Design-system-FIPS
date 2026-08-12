@@ -137,7 +137,7 @@ export default function DSFIPSShadows(){
             {componentMap.map((cm,i)=>(
               <div key={i} style={{display:"grid",gridTemplateColumns:mob?"2fr 1fr":"2fr 1fr 3fr",padding:"12px 20px",borderBottom:i<componentMap.length-1?`1px solid ${C.cardBorder}`:"none",alignItems:"center",background:i%2===1?"#f8f9fb":"transparent"}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{width:28,height:28,borderRadius:8,background:alpha(cm.color,0.04),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{(Ic as Record<string,any>)[cm.icon](14,cm.color)}</div>
+                  <div style={{width:28,height:28,borderRadius:8,background:alpha(cm.color,0.04),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{Ic[cm.icon as keyof typeof Ic](14,cm.color)}</div>
                   <span style={{fontSize:13,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}>{cm.component}</span>
                 </div>
                 <code style={{fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro,fontWeight:600}}>{shadows[cm.shadow as keyof typeof shadows].token}</code>

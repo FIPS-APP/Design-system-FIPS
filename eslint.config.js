@@ -81,7 +81,11 @@ const dsGovernancePlugin = {
 }
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // `exports/` são snippets copy-paste (fora do tsconfig.app, nunca compilados) — regras
+  // de app como react-refresh/only-export-components não dizem nada sobre um arquivo que
+  // o usuário cola em OUTRO projeto.
+  // `src/__canvas_*` são gerados pelo Nook Studio Canvas, dev-only e já gitignored.
+  globalIgnores(['dist', 'exports', 'src/__canvas_mount.tsx', 'src/__canvas_providers.tsx']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

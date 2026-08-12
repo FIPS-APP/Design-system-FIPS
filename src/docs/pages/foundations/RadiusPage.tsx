@@ -63,7 +63,7 @@ export default function DSFIPSRadius(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
-  const [hovRadius,setHovRadius]=useState<any>(null);
+  const [hovRadius,setHovRadius]=useState<string|null>(null);
 
   return(
     <PlaygroundProvider>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { CodeExportSection } from '../../components/CodeExport'
 import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown } from "react-icons/lu";
@@ -241,6 +241,7 @@ const STATUS_D_META=[
   {label:"Pendentes",filterKey:"Recusada"},
 ];
 const DAYS_LABELS=["Seg","Ter","Qua","Qui","Sex"];
+const DARK_COLOR_MAP: Record<string,string> = {"#004B9B":"#93BDE4","#002A68":"#658EC9","#00904C":"#8BE5AD"};
 
 function getRowBreakdownValue(row: Row, breakdown: "status" | "dept" | "priority") {
   if (breakdown === "status") return row.status;
@@ -253,7 +254,7 @@ export default function DSFIPSDashboard(){
   const {dark}=useFipsTheme();
   const barColor=dark?"#93BDE4":"#004B9B";
   const barLabelColor=dark?"#E2E2E8":"#002A68";
-  const dkc=(c:string)=>dark?({"#004B9B":"#93BDE4","#002A68":"#658EC9","#00904C":"#8BE5AD"}[c]||c):c;
+  const dkc=useCallback((c:string)=>dark?(DARK_COLOR_MAP[c]||c):c,[dark]);
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
@@ -308,7 +309,7 @@ export default function DSFIPSDashboard(){
     if(hovBar===null)return null;
     const m=MONTHS[hovBar];const mData=allData.filter(r=>r.month===m);
     return{title:m,color:dkc(C.azulProfundo),total:mData.length,rows:STATUSES.map(s=>({label:s,value:mData.filter(r=>r.status===s).length,color:STATUS_COLOR[s]}))};
-  },[hovBar,allData,dark]);
+  },[hovBar,allData,dkc]);
 
   const tipDonutData=useMemo(()=>{
     if(hovDonut===null)return null;
@@ -338,41 +339,43 @@ export default function DSFIPSDashboard(){
     const src=meta.slaFilter?filtered.filter(r=>r.sla<50):meta.statusFilter?filtered.filter(r=>r.status===meta.statusFilter):filtered;
     const keys=lists[meta.breakdown];const clrs=colors[meta.breakdown];
     return{title:meta.label,color:dkc(meta.color),total:src.length,rows:keys.map(k=>({label:k,value:src.filter(r=>getRowBreakdownValue(r,meta.breakdown)===k).length,color:clrs[k]})).filter(r=>r.value>0).sort((a,b)=>b.value-a.value).slice(0,5)};
-  },[hovKpiCard,filtered,dark]);
+  },[hovKpiCard,filtered,dkc]);
 
   const tipStatusD=useMemo(()=>{
     if(hovStatusD<0)return null;
     const meta=STATUS_D_META[hovStatusD];
     const src=meta.filterKey?filtered.filter(r=>r.status===meta.filterKey):filtered;
     return{title:meta.label,color:[dkc(C.azulProfundo),C.verdeFloresta,C.amareloEscuro,C.danger][hovStatusD],total:src.length,rows:DEPTS.map(d=>({label:d,value:src.filter(r=>r.dept===d).length,color:DEPT_COLOR[d]})).filter(r=>r.value>0).sort((a,b)=>b.value-a.value).slice(0,5)};
-  },[hovStatusD,filtered]);
+  },[hovStatusD,filtered,dkc]);
 
   const tipSideLine=useMemo(()=>{
     if(hovSideLine<0)return null;
     const m=MONTHS[hovSideLine];const mData=allData.filter(r=>r.month===m);
     return{title:`${m} — Tendência`,color:dkc(C.azulProfundo),total:mData.length,rows:STATUSES.map(s=>({label:s,value:mData.filter(r=>r.status===s).length,color:STATUS_COLOR[s]}))};
-  },[hovSideLine,allData,dark]);
+  },[hovSideLine,allData,dkc]);
 
-  const sideBarVals=useMemo(()=>DAYS_LABELS.map(()=>Math.round(filtered.length*(0.15+Math.random()*0.12))),[filtered.length]);
+  // Determinístico de propósito: Math.random() no render viola a pureza e fazia as
+  // barras dançarem a cada recálculo. O fator vem do índice do dia.
+  const sideBarVals=useMemo(()=>DAYS_LABELS.map((_,i)=>Math.round(filtered.length*(0.15+((i*97)%13)/100))),[filtered.length]);
   const tipSideBarData=useMemo(()=>{
     if(hovSideBar<0)return null;
     const d=DAYS_LABELS[hovSideBar];
     return{title:`${d} — Requisições`,color:dkc(C.azulProfundo),total:Math.round(filtered.length*0.2),rows:[{label:"Manhã (8h–12h)",value:Math.round(filtered.length*0.09),color:C.azulCeu},{label:"Tarde (13h–17h)",value:Math.round(filtered.length*0.08),color:dkc(C.azulProfundo)},{label:"Noite (18h+)",value:Math.round(filtered.length*0.03),color:dkc(C.azulEscuro)}]};
-  },[hovSideBar,filtered,dark]);
+  },[hovSideBar,filtered,dkc]);
 
   const comboData=useMemo(()=>MONTHS.map(m=>{const mf=filtered.filter(r=>r.month===m);return{l:m,abertas:mf.length,concluidas:mf.filter(r=>r.status==="Finalizada").length,sla:mf.length?Math.round(mf.reduce((a,r)=>a+r.sla,0)/mf.length):0}}),[filtered]);
   const tipCombo=useMemo(()=>{
     if(hovCombo<0)return null;
     const d=comboData[hovCombo];
     return{title:d.l,color:dkc(C.azulProfundo),total:d.abertas,rows:[{label:"Abertas",value:d.abertas,color:dkc(C.azulProfundo)},{label:"Concluídas",value:d.concluidas,color:C.verdeFloresta},{label:"SLA médio",value:d.sla,color:d.sla>=70?C.verdeFloresta:d.sla>=50?C.amareloEscuro:C.danger}]};
-  },[hovCombo,comboData,dark]);
+  },[hovCombo,comboData,dkc]);
 
   const stackedData=useMemo(()=>MONTHS.map(m=>{const mf=filtered.filter(r=>r.month===m);return{l:m,segs:STATUSES.map(s=>({s,v:mf.filter(r=>r.status===s).length,color:STATUS_COLOR[s]}))}}),[filtered]);
   const tipStacked=useMemo(()=>{
     if(hovStacked<0)return null;
     const d=stackedData[hovStacked];const tot=d.segs.reduce((a,s)=>a+s.v,0);
     return{title:d.l,color:dkc(C.azulProfundo),total:tot,rows:d.segs.filter(s=>s.v>0).map(s=>({label:s.s,value:s.v,color:s.color}))};
-  },[hovStacked,stackedData,dark]);
+  },[hovStacked,stackedData,dkc]);
 
   const kpis=[
     {label:"Solicitações",value:total,delta:`${total>150?"+":""}${Math.round((total/allData.length)*100)}%`,up:true,icon:(s:number,c:string)=><LuFileText size={s} color={c}/>,color:C.azulProfundo,spark:sparkByMonth,deltaDesc:"do total filtrado"},
@@ -518,7 +521,7 @@ export default function DSFIPSDashboard(){
           {(()=>{
             const total2=byStatus.reduce((a,s)=>a+s.value,0)||1;
             const size=120,cx=size/2,cy=size/2,r=44,sw=14;
-            let acc=0;const circ=2*Math.PI*r;
+            const circ=2*Math.PI*r;
             return(
               <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${filter.status?STATUS_COLOR[filter.status]:C.cardBorder}`,padding:mob?14:20,boxShadow:"0 1px 3px rgba(0,75,155,.04)",transition:"border-color .15s",position:"relative"}} onMouseMove={trackMouse}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
@@ -528,7 +531,7 @@ export default function DSFIPSDashboard(){
                 <div style={{display:"flex",alignItems:"center",gap:mob?12:20,justifyContent:"center"}}>
                   <div style={{position:"relative"}}>
                     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{transform:"rotate(-90deg)"}}>
-                      {byStatus.map((s,i)=>{const pct=s.value/total2;const dash=pct*circ;const off=acc*circ;acc+=pct;const isActive=filter.status===s.label;const isDimmed=filter.status&&!isActive;return <circle key={`v${i}`} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={hovDonut===i?sw+4:sw} strokeDasharray={`${dash} ${circ-dash}`} strokeDashoffset={-off} strokeLinecap="round" opacity={isDimmed?.2:1} style={{transition:"all .15s",pointerEvents:"none"}}/>})}
+                      {(()=>{let a1=0;return byStatus.map((s,i)=>{const pct=s.value/total2;const dash=pct*circ;const off=a1*circ;a1+=pct;const isActive=filter.status===s.label;const isDimmed=filter.status&&!isActive;return <circle key={`v${i}`} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={hovDonut===i?sw+4:sw} strokeDasharray={`${dash} ${circ-dash}`} strokeDashoffset={-off} strokeLinecap="round" opacity={isDimmed?.2:1} style={{transition:"all .15s",pointerEvents:"none"}}/>})})()}
                       {(()=>{let a2=0;return byStatus.map((s,i)=>{const pct=s.value/total2;const dash=pct*circ;const off=a2*circ;a2+=pct;return <circle key={`h${i}`} cx={cx} cy={cy} r={r} fill="none" stroke="transparent" strokeWidth={30} strokeDasharray={`${dash} ${circ-dash}`} strokeDashoffset={-off} style={{cursor:"pointer"}} onClick={()=>toggle("status",s.label)} onMouseEnter={()=>setHovDonut(i)} onMouseLeave={()=>setHovDonut(null)}/>})})()}
                     </svg>
                     <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",pointerEvents:"none"}}>

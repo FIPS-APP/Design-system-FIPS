@@ -1,5 +1,4 @@
 // DS-FIPS — Tabs (Guia) — Copy-paste ready
-import { useState } from "react";
 const C={azulEscuro:"var(--color-gov-azul-escuro)",azulProfundo:"var(--color-gov-azul-profundo)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",branco:"#FFFFFF",cardBg:"var(--color-surface)",textLight:"var(--color-fg-muted)",verdeFloresta:"#00C64C"};
 const Fn={body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 

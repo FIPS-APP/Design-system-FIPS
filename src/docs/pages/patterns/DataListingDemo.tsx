@@ -294,6 +294,21 @@ function dlPreview(part: string) {
 }
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
+// Fora do render: componente criado a cada render perde estado e quebra reconciliação.
+// `mob` era closure sobre a largura da janela — agora entra como prop.
+function Section({n,title,desc,children,mob}){
+  return(
+  <div style={{marginBottom:mob?32:48}}>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}>
+      <span style={{fontSize:11,fontWeight:700,color:C.amareloOuro,fontFamily:Fn.mono,letterSpacing:"1.5px"}}>{n}</span>
+      <h2 style={{fontSize:mob?17:20,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,margin:0,letterSpacing:"-0.3px"}}>{title}</h2>
+    </div>
+    {desc&&<p style={{fontSize:13,color:C.cinzaChumbo,margin:"0 0 18px 32px",lineHeight:1.55,fontFamily:Fn.body,maxWidth:760}}>{desc}</p>}
+    {children}
+  </div>
+  );
+}
+
 export default function DataListingDemo() {
   const {dark}=useFipsTheme();
   const accentBg=dark?"rgba(147,189,228,0.12)":"#D3E3F4";
@@ -371,23 +386,12 @@ export default function DataListingDemo() {
     return()=>document.removeEventListener("mousedown",h);
   },[showConfigDemo]);
 
-  const toggleSel=id=>{const n=new Set(selected);n.has(id)?n.delete(id):n.add(id);setSelected(n)};
+  const toggleSel=id=>{const n=new Set(selected);if(n.has(id))n.delete(id);else n.add(id);setSelected(n)};
   const toggleAll=()=>{if(selected.size===data.length)setSelected(new Set());else setSelected(new Set(data.map(r=>r.id)))};
-  const toggleCol=id=>{const c=ALL_COLUMNS.find(x=>x.id===id);if(c?.fixed)return;const n=new Set(visibleCols);n.has(id)?n.delete(id):n.add(id);setVisibleCols(n)};
+  const toggleCol=id=>{const c=ALL_COLUMNS.find(x=>x.id===id);if(c?.fixed)return;const n=new Set(visibleCols);if(n.has(id))n.delete(id);else n.add(id);setVisibleCols(n)};
   const restoreCols=()=>setVisibleCols(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
 
   const visibleColumnList=ALL_COLUMNS.filter(c=>visibleCols.has(c.id));
-
-  const Section=({n,title,desc,children})=>(
-    <div style={{marginBottom:mob?32:48}}>
-      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}>
-        <span style={{fontSize:11,fontWeight:700,color:C.amareloOuro,fontFamily:Fn.mono,letterSpacing:"1.5px"}}>{n}</span>
-        <h2 style={{fontSize:mob?17:20,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,margin:0,letterSpacing:"-0.3px"}}>{title}</h2>
-      </div>
-      {desc&&<p style={{fontSize:13,color:C.cinzaChumbo,margin:"0 0 18px 32px",lineHeight:1.55,fontFamily:Fn.body,maxWidth:760}}>{desc}</p>}
-      {children}
-    </div>
-  );
 
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
@@ -414,7 +418,7 @@ export default function DataListingDemo() {
       <div style={{padding:mob?"20px 12px 40px":"32px 40px 60px",maxWidth:1200,margin:"0 auto"}}>
 
         {/* ═══ 01 — Data listing completo ═══ */}
-        <Section n="01" title="Painel de Relatório completo" desc="Padrão completo de Painel de Relatório seguindo a ordem obrigatória: Header → KPIs → Toolbar → Table. Use esse padrão sempre que precisar exibir dados administrativos com ações principais, métricas e listagem.">
+        <Section mob={mob} n="01" title="Painel de Relatório completo" desc="Padrão completo de Painel de Relatório seguindo a ordem obrigatória: Header → KPIs → Toolbar → Table. Use esse padrão sempre que precisar exibir dados administrativos com ações principais, métricas e listagem.">
 
           {/* HEADER DO PAINEL — navy com ícone + título/subtítulo + CTA */}
           <CopyableInline label="Header Navy" code={dlCode('header')} preview={dlPreview('header')}>
@@ -833,7 +837,7 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 02 — Header do Painel ═══ */}
-        <Section n="02" title="Header do Painel" desc="Faixa navy no topo do painel — identidade do sistema. Sempre presente, à esquerda ícone + título + subtítulo, à direita o CTA principal de criação. Usa o gradient navy padrão FIPS com JunctionLines decorativas.">
+        <Section mob={mob} n="02" title="Header do Painel" desc="Faixa navy no topo do painel — identidade do sistema. Sempre presente, à esquerda ícone + título + subtítulo, à direita o CTA principal de criação. Usa o gradient navy padrão FIPS com JunctionLines decorativas.">
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?16:24,boxShadow:"0 1px 3px rgba(0,75,155,.04)"}}>
             {/* Mini exemplo do header */}
             <div style={{background:dark?`linear-gradient(135deg,#1e2a3a 0%,#162030 50%,#1a2840 100%)`:`linear-gradient(135deg,${C.gradFrom} 0%,${C.gradTo} 60%,#001A4A 100%)`,borderRadius:"10px 10px 10px 18px",padding:"18px 22px",position:"relative",overflow:"hidden",marginBottom:18,border:dark?"1px solid rgba(147,189,228,0.08)":"none",boxShadow:dark?"0 4px 16px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04)":"none"}}>
@@ -867,7 +871,7 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 03 — Cards do Painel ═══ */}
-        <Section n="03" title="Cards do Painel" desc="Bloco de cards entre o Header e a Toolbar. Por padrão usa CardKPI com sparkline, mas qualquer card do catálogo de Cards pode ser usado dependendo do contexto: Status, Relatório, Princípio, Resumo, Ação, Lista. Sempre 4 cards (2×2 mobile).">
+        <Section mob={mob} n="03" title="Cards do Painel" desc="Bloco de cards entre o Header e a Toolbar. Por padrão usa CardKPI com sparkline, mas qualquer card do catálogo de Cards pode ser usado dependendo do contexto: Status, Relatório, Princípio, Resumo, Ação, Lista. Sempre 4 cards (2×2 mobile).">
 
           {/* Tipo padrão: KPI explicado */}
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:18,boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
@@ -933,7 +937,7 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 04 — Toolbar ═══ */}
-        <Section n="04" title="Toolbar" desc="Card próprio entre KPIs e Table. Esquerda agrupa filtros e busca (manipulação de dados). Direita agrupa exportações. Spacer no meio empurra os grupos pras pontas. Card minimal com mesmo borderRadius FIPS.">
+        <Section mob={mob} n="04" title="Toolbar" desc="Card próprio entre KPIs e Table. Esquerda agrupa filtros e busca (manipulação de dados). Direita agrupa exportações. Spacer no meio empurra os grupos pras pontas. Card minimal com mesmo borderRadius FIPS.">
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
               {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (multi-select popover)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
@@ -960,7 +964,7 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 05 — Table ═══ */}
-        <Section n="05" title="Table" desc="Card final do padrão. Header obrigatório com ícone, título e subtítulo à esquerda. À direita: badge Filtrado, toggle Tabela/Card e botão Configurar. Body com tabela densa, footer com paginação completa.">
+        <Section mob={mob} n="05" title="Table" desc="Card final do padrão. Header obrigatório com ícone, título e subtítulo à esquerda. À direita: badge Filtrado, toggle Tabela/Card e botão Configurar. Body com tabela densa, footer com paginação completa.">
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:24,boxShadow:"0 1px 3px rgba(0,75,155,.04)",marginBottom:14}}>
             {/* Toggle Tabela/Card interativo */}
             <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,marginBottom:10}}>Toggle Tabela / Card</div>
@@ -1073,7 +1077,7 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 06 — Regras gerais ═══ */}
-        <Section n="06" title="Regras gerais do Painel" desc="Diretrizes obrigatórias para qualquer Painel de Relatório no DS-FIPS. A ordem dos elementos é fixa, não pode ser invertida nem ter elementos pulados.">
+        <Section mob={mob} n="06" title="Regras gerais do Painel" desc="Diretrizes obrigatórias para qualquer Painel de Relatório no DS-FIPS. A ordem dos elementos é fixa, não pode ser invertida nem ter elementos pulados.">
           {/* Card destacado com a ordem obrigatória */}
           <div style={{background:`linear-gradient(135deg,${alpha(C.azulProfundo,0.03)} 0%,${C.amareloOuro}10 100%)`,border:`2px solid ${C.amareloOuro}`,borderRadius:"12px 12px 12px 24px",padding:mob?16:20,marginBottom:14}}>
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>

@@ -1,5 +1,4 @@
 // DS-FIPS — Tabs (Bordered) — Copy-paste ready
-import { useState } from "react";
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",amareloEscuro:"#F6921E",branco:"#FFFFFF",cardBorder:"var(--color-border)",textLight:"var(--color-fg-muted)",verdeFloresta:"#00C64C"};
 const Fn={body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 

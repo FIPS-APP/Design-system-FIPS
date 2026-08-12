@@ -60,7 +60,7 @@ export function formatDateBR(d: string | null | undefined): string {
  * Usa SheetJS (xlsx) \u2014 mais leg\u00EDvel que CSV e sem problema de separador.
  */
 export function exportXLSX(
-  data: any[],
+  data: Record<string, unknown>[],
   columns: { key: string; label: string }[],
   filename: string,
   subtitle?: string,
@@ -122,7 +122,7 @@ export function exportXLSX(
  *                 de CSV padr\u00E3o mas leg\u00EDvel em texto e no Excel se aberto como texto).
  */
 export function exportCSV(
-  data: any[],
+  data: Record<string, unknown>[],
   columns: { key: string; label: string }[],
   filename: string,
   subtitle?: string,
@@ -162,7 +162,7 @@ export function exportCSV(
  * Preview escuro; @media print reverte para branco/papel.
  */
 export function exportPrint(
-  data: any[],
+  data: Record<string, unknown>[],
   columns: { key: string; label: string }[],
   title: string,
   subtitle?: string,
@@ -273,7 +273,7 @@ export function exportPrint(
  *                 impressão respeita o filtro ativo no momento.
  */
 export function exportPDF(
-  data: any[],
+  data: Record<string, unknown>[],
   columns: { key: string; label: string }[],
   title: string,
   subtitle?: string,
@@ -308,7 +308,7 @@ export function exportPDF(
     <div class="sub">Exportado em ${new Date().toLocaleDateString("pt-BR")} — ${data.length} registros</div>
     ${filtrosLine}
     <table><thead><tr>${columns.map(c => `<th>${escape(c.label)}</th>`).join("")}</tr></thead><tbody>${tableRows}</tbody></table>
-    <script>window.onload = function(){ window.focus(); window.print(); };<\/script>
+    <script>window.onload = function(){ window.focus(); window.print(); };</script>
   </body></html>`);
   w.document.close();
 }

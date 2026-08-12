@@ -25,7 +25,7 @@ export function DocLayout() {
   const { dark, toggle } = useFipsTheme()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [_sidebarAutoMenu, setSidebarAutoMenu] = useState(false)
+  const [, setSidebarAutoMenu] = useState(false)
   const [tutorialOpen, setTutorialOpen] = useState(false)
   const [changelogOpen, setChangelogOpen] = useState(false)
   const [isLg, setIsLg] = useState(() =>

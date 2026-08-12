@@ -44,9 +44,9 @@ const VARIANTS = {
 };
 
 function Badge({ variant="default", size="md", children, icon, dot, dotColor, count, onRemove, pill }:{ variant?:string, size?:string, children?:React.ReactNode, icon?:React.ReactNode, dot?:boolean, dotColor?:string, count?:number, onRemove?:()=>void, pill?:boolean }) {
-  const v = (VARIANTS as Record<string,any>)[variant] || VARIANTS.default;
+  const v = VARIANTS[variant as keyof typeof VARIANTS] || VARIANTS.default;
   const sm = { sm:{fs:10,px:6,py:1,gap:4,dotSz:5}, md:{fs:11,px:8,py:2,gap:5,dotSz:6}, lg:{fs:12,px:10,py:3,gap:6,dotSz:7} };
-  const s = (sm as Record<string,any>)[size] || sm.md;
+  const s = sm[size as keyof typeof sm] || sm.md;
 
   return (
     <span style={{

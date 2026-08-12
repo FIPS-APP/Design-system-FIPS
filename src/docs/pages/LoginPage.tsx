@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react'
-import { Eye, EyeOff, ArrowRight, User, CheckCircle2 } from 'lucide-react'
+import { Eye, ArrowRight, User } from 'lucide-react'
 import { CodeExportSection } from '../components/CodeExport'
 import { PlaygroundProvider, Copyable, CopyableInline, CodePlayground } from '../components/CodePlayground'
 import { LoginDsShell } from '../../components/patterns/LoginDsShell'
@@ -28,40 +28,12 @@ const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"1
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
 const gb={padding:"16px 20px 20px"};
 const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase" as const,color:C.azulClaro,fontFamily:Fn.title,marginBottom:4,marginTop:12};
-const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
-
-/* ═══════════════════════════════════════════ SIGNAL DOT ═══════════════════════════════════════════ */
-function SignalDot({ color, active, delay }: { color: string; active: boolean; delay: number }) {
-  return (
-    <div style={{
-      width: 8, height: 8, borderRadius: '50%',
-      background: active ? color : 'rgba(255,255,255,0.08)',
-      boxShadow: active ? `0 0 12px ${color}80, 0 0 4px ${color}` : 'none',
-      transition: 'all 0.6s ease',
-      transitionDelay: `${delay}ms`,
-    }} />
-  )
-}
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function Login(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
-
-  /* ── Login v1 state ── */
-  const [showPw, setShowPw] = useState(false)
-  const [focused, setFocused] = useState<string | null>(null)
-  const [csEmail, setCsEmail] = useState('')
-  const csEmailValid = csEmail.length === 6 || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(csEmail)
-  const [mounted, setMounted] = useState(false)
-  const [signalStep, setSignalStep] = useState(0)
-
-  useEffect(() => {
-    setMounted(true)
-    const t = setInterval(() => setSignalStep(s => (s + 1) % 4), 1200)
-    return () => clearInterval(t)
-  }, [])
 
   /* ── Shared login CSS (used in both playground + mobile) ── */
   const loginStyles = `

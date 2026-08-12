@@ -1,5 +1,5 @@
 // DS-FIPS — Badge — Copy-paste ready
-import { useState, useEffect } from "react";
+import React from "react";
 
 const C = {
   azulProfundo: "var(--color-gov-azul-profundo)",

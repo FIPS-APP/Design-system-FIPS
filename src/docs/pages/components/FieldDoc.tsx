@@ -46,7 +46,7 @@ function JunctionLines({style}:{style?:React.CSSProperties}){return <svg viewBox
 /* ═══════════════════════════════════════════ FIELD INPUT ═══════════════════════════════════════════ */
 function FInput({label,placeholder,icon,iconRight,required,error,errorMsg,disabled,readOnly,helper,compact,value:cv,onChange,onClear,showToggle,size="desktop",cols}:{label?:string,placeholder?:string,icon?:React.ReactNode,iconRight?:React.ReactNode,required?:boolean,error?:boolean,errorMsg?:string,disabled?:boolean,readOnly?:boolean,helper?:string,compact?:boolean,value?:string,onChange?:(v:string)=>void,onClear?:()=>void,showToggle?:boolean,size?:string,cols?:number}){
   const [focused,setFocused]=useState(false);const [val,setVal]=useState(cv||"");const [showPw,setShowPw]=useState(false);const ref=useRef<HTMLInputElement>(null);
-  const sm={desktop:{h:35,fs:13},mobile:{h:42,fs:14},compact:{h:30,fs:12}};const sz=compact?sm.compact:(sm as Record<string,any>)[size]||sm.desktop;
+  const sm={desktop:{h:35,fs:13},mobile:{h:42,fs:14},compact:{h:30,fs:12}};const sz=compact?sm.compact:sm[size as keyof typeof sm]||sm.desktop;
   const dv=cv!==undefined?cv:val;
   const bc=error?C.danger:focused?C.azulProfundo:C.inputBorder;
   const bg=disabled?C.inputBgDisabled:C.inputBg;
