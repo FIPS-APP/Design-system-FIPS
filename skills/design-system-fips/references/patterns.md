@@ -283,7 +283,7 @@ O `<Table>` governado expressa densidade como **padding vertical**. A referênci
 | `comfortable` | 56px | 13px | 20px |
 
 - Célula: `padding: 0 padX` (a altura vem da linha). **Exceção:** com "quebra de linha" ligada, volta a padding vertical — é o único caso em que a linha precisa crescer.
-- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, Saira Expanded, `borderBottom 2px`, **alinhado à esquerda** (respeita `col.align`). Não centralizar o rótulo: as células são alinhadas à esquerda e centralizar quebra a varredura vertical da coluna.
+- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, Saira Expanded, `borderBottom 2px`, **sempre centralizado** — o `th` **não** segue `col.align`, ao contrário da célula (`td`), que continua respeitando (`left` por padrão, `right` em valor monetário). Cabeçalho centralizado é o padrão do DS desde a v0.12.3; a v0.11.32 tinha feito o caminho inverso (centro → esquerda) e foi revertida.
 - Skeleton de carregamento usa a mesma `rowH`, senão as linhas "pulam" de altura ao sair do loading.
 - Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
 

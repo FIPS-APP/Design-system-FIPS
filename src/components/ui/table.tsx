@@ -140,7 +140,7 @@ const TableHead = React.forwardRef<
     <th
       ref={ref}
       className={cn(
-        'px-4 text-left align-middle text-[var(--color-fg-muted)]',
+        'px-4 text-center align-middle text-[var(--color-fg-muted)]',
         density === 'compact' ? 'py-2' : density === 'normal' ? 'py-2.5' : 'h-14',
         dense
           ? 'text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]'

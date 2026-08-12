@@ -256,7 +256,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             <tr style={{background:C.bg}}>
               {selectable&&<th style={{padding:`${py}px ${D.padX}px`,width:36,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={allSelected} onChange={toggleAll} style={{cursor:"pointer",}}/></th>}
               {visibleCols.map((col,ci)=>(
-                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:col.align||"left",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortable?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
+                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortable?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
                   <span style={{display:"inline-flex",alignItems:"center",gap:4}}>
                     {col.label}
                     {sortable&&col.sortable!==false&&(sortCol===col.key?sortDir==="asc"?Ic.sortAsc(12,C.azulProfundo):Ic.sortDesc(12,C.azulProfundo):Ic.sortNone(12))}
@@ -524,7 +524,7 @@ export function DSTable({
             <tr style={{ background: C.bg, borderBottom: \`2px solid \${C.cardBorder}\` }}>
               {columns.map((col) => (
                 <th key={col.key} onClick={() => sortable && toggleSort(col.key)}
-                  style={{ padding: \`\${py}px 16px\`, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: C.cinzaChumbo, fontFamily: Fn.title, textAlign: col.align || "left", cursor: sortable ? "pointer" : "default", whiteSpace: "nowrap", width: col.width, userSelect: "none" }}>
+                  style={{ padding: \`\${py}px 16px\`, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: C.cinzaChumbo, fontFamily: Fn.title, textAlign: "center", cursor: sortable ? "pointer" : "default", whiteSpace: "nowrap", width: col.width, userSelect: "none" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                     {col.label}{sortable && <SortIcon col={col.key} />}
                   </span>
@@ -862,7 +862,7 @@ export default function TableDoc() {
                   <thead>
                     <tr style={{background:C.bg}}>
                       {["Código","Solicitante","Depto","Valor","Status"].map(h=>(
-                        <th key={h} style={{padding:"10px 16px",textAlign:h==="Valor"?"right":"left",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`1px solid ${C.cardBorder}`}}>{h}</th>
+                        <th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`1px solid ${C.cardBorder}`}}>{h}</th>
                       ))}
                     </tr>
                   </thead>
