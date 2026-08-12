@@ -247,7 +247,6 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                 )}
               </div>
             )}
-            {perPage>0&&<span style={{fontSize:11,color:C.textMuted,fontFamily:Fn.body,whiteSpace:"nowrap"}}>Mostrando {startIdx}–{endIdx} de {sorted.length}</span>}
           </div>
         </div>
       )}

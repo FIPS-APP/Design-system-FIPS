@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles } from "lucide-react";
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
@@ -288,208 +287,6 @@ function TokenRow({label,value,color}){return(<div style={{display:"flex",alignI
 function Kbd({children}){return <kbd style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:26,height:24,padding:"0 7px",background:C.branco,border:`1px solid ${C.cardBorder}`,borderBottom:`2px solid ${C.cinzaClaro}`,borderRadius:5,fontSize:11,fontWeight:600,fontFamily:Fn.mono,color:C.cinzaEscuro,boxShadow:"0 1px 2px rgba(0,0,0,.06)"}}>{children}</kbd>}
 
 
-/* ═══════════════════════════════════════════ COPYABLE HELPERS ═══════════════════════════════════════════ */
-function modalCode(variant: string, title: string, subtitle: string, width: number) {
-  const headerMap: Record<string,string> = {
-    confirm: '#00904C',
-    delete: '#B91C1C',
-    alert: '#C2410C',
-    info: '#002A68',
-    form: '#002A68',
-    list: '#002A68',
-    popup: '#002A68',
-    tutorial: '#002A68',
-  };
-  const headerBg = headerMap[variant] || '#002A68';
-
-  if (variant === 'popup') {
-    return `// DS-FIPS — Popup Modal "${title}" — Copy-paste ready
-import { useState, useEffect } from "react";
-
-export function PopupModalExample() {
-  const [open, setOpen] = useState(false);
-  const [vis, setVis] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-
-  useEffect(() => {
-    if (open) { setVis(true); requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true))); }
-    else { setAnimIn(false); const t = setTimeout(() => setVis(false), 280); return () => clearTimeout(t); }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open]);
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)}
-        style={{ padding: "8px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "'Open Sans', sans-serif" }}>
-        Abrir Popup
-      </button>
-      {vis && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div onClick={() => setOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.45)", backdropFilter: "blur(2px)", opacity: animIn ? 1 : 0, transition: "opacity .28s", cursor: "pointer" }} />
-          <div style={{ position: "relative", zIndex: 1, width: ${width}, maxWidth: "95vw", maxHeight: "90vh", background: "#FFFFFF", borderRadius: "12px 12px 12px 24px", boxShadow: "0 12px 48px rgba(0,42,104,.2)", display: "flex", flexDirection: "column", transform: animIn ? "scale(1)" : "scale(.96)", opacity: animIn ? 1 : 0, transition: "all .28s cubic-bezier(.32,.72,.37,1.1)", overflow: "hidden" }}>
-            <div style={{ padding: "20px 24px", paddingRight: 56, background: "${headerBg}", display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
-              <div>
-                <h2 style={{ fontSize: 17, fontWeight: 700, color: "#FFFFFF", margin: 0, fontFamily: "'Saira Expanded', sans-serif" }}>${title}</h2>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.65)", margin: "3px 0 0", fontFamily: "'Open Sans', sans-serif" }}>${subtitle}</p>
-              </div>
-            </div>
-            <div onClick={() => setOpen(false)} style={{ position: "absolute", top: 14, right: 14, zIndex: 2, width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", background: "rgba(255,255,255,0.08)" }}>
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="rgba(255,255,255,0.75)" strokeWidth="1.8" strokeLinecap="round"/></svg>
-            </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                <input placeholder="Campo 1" style={{ height: 35, padding: "0 12px", border: "1.5px solid #CBD5E1", borderRadius: 8, fontFamily: "'Open Sans', sans-serif", fontSize: 13 }} />
-                <input placeholder="Campo 2" style={{ height: 35, padding: "0 12px", border: "1.5px solid #CBD5E1", borderRadius: 8, fontFamily: "'Open Sans', sans-serif", fontSize: 13 }} />
-              </div>
-            </div>
-            <div style={{ padding: "14px 24px", borderTop: "1px solid #E2E8F0", background: "#F2F4F8", display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <button onClick={() => setOpen(false)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "transparent", color: "#7B8C96", border: "1.5px solid #C0CCD2", borderRadius: 6, cursor: "pointer" }}>Cancelar</button>
-              <button onClick={() => setOpen(false)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer" }}>Salvar</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}`;
-  }
-  if (variant === 'tutorial') {
-    return `// DS-FIPS — Tutorial Modal "${title}" — Copy-paste ready
-import { useState, useEffect } from "react";
-
-export function TutorialModalExample() {
-  const [open, setOpen] = useState(false);
-  const [vis, setVis] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-  const [step, setStep] = useState(0);
-
-  const steps = [
-    { title: "Passo 1", description: "Descricao do primeiro passo.", tips: ["Dica 1"] },
-    { title: "Passo 2", description: "Descricao do segundo passo." },
-  ];
-
-  useEffect(() => {
-    if (open) { setStep(0); setVis(true); requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true))); }
-    else { setAnimIn(false); const t = setTimeout(() => setVis(false), 280); return () => clearTimeout(t); }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => {
-      if (e.key === "Escape") setOpen(false);
-      if (e.key === "ArrowRight" && step < steps.length - 1) setStep((s) => s + 1);
-      if (e.key === "ArrowLeft" && step > 0) setStep((s) => s - 1);
-    };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open, step]);
-
-  const cur = steps[step];
-  const total = steps.length;
-  const pct = ((step + 1) / total) * 100;
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)}
-        style={{ padding: "8px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "'Open Sans', sans-serif" }}>
-        Abrir Tutorial
-      </button>
-      {vis && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div onClick={() => setOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.50)", backdropFilter: "blur(3px)", opacity: animIn ? 1 : 0, transition: "opacity .28s", cursor: "pointer" }} />
-          <div style={{ position: "relative", zIndex: 1, width: 540, maxWidth: "95vw", maxHeight: "90vh", background: "#FFFFFF", borderRadius: "12px 12px 12px 24px", boxShadow: "0 12px 48px rgba(0,42,104,.22)", display: "flex", flexDirection: "column", transform: animIn ? "scale(1)" : "scale(.96)", opacity: animIn ? 1 : 0, transition: "all .28s cubic-bezier(.32,.72,.37,1.1)", overflow: "hidden" }}>
-            <div style={{ padding: "20px 24px", borderBottom: "1px solid #E2E8F0", display: "flex", alignItems: "center", gap: 16 }}>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: "#002A68", margin: 0, fontFamily: "'Saira Expanded', sans-serif", flex: 1 }}>${title}</h2>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#004B9B", fontFamily: "'Fira Code', monospace" }}>{step + 1}/{total}</span>
-              <span onClick={() => setOpen(false)} style={{ cursor: "pointer", opacity: 0.5 }}>
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#7B8C96" strokeWidth="1.8" strokeLinecap="round"/></svg>
-              </span>
-            </div>
-            <div style={{ height: 3, background: "#F2F4F8" }}>
-              <div style={{ height: "100%", width: pct + "%", background: "linear-gradient(90deg,#004B9B,#93BDE4)", borderRadius: 2, transition: "width .35s" }} />
-            </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px" }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#002A68", margin: "0 0 12px", fontFamily: "'Saira Expanded', sans-serif" }}>{cur.title}</h3>
-              <p style={{ fontSize: 13, color: "#333B41", lineHeight: 1.7, margin: "0 0 16px", fontFamily: "'Open Sans', sans-serif" }}>{cur.description}</p>
-              {cur.tips && cur.tips.map((t, i) => (
-                <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}>
-                  <span style={{ color: "#004B9B", fontSize: 12 }}>→</span>
-                  <span style={{ fontSize: 12, color: "#333B41", lineHeight: 1.5 }}>{t}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ padding: "14px 24px", borderTop: "1px solid #E2E8F0", background: "#F2F4F8", display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              {step > 0 && <button onClick={() => setStep((s) => s - 1)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "transparent", color: "#7B8C96", border: "1.5px solid #C0CCD2", borderRadius: 6, cursor: "pointer" }}>Anterior</button>}
-              {step < total - 1
-                ? <button onClick={() => setStep((s) => s + 1)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer" }}>Próximo</button>
-                : <button onClick={() => setOpen(false)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "#00C64C", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer" }}>Concluir</button>}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}`;
-  }
-  return `// DS-FIPS — Modal "${title}" — Copy-paste ready
-import { useState, useEffect } from "react";
-
-export function ModalExample() {
-  const [open, setOpen] = useState(false);
-  const [vis, setVis] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-
-  useEffect(() => {
-    if (open) { setVis(true); requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true))); }
-    else { setAnimIn(false); const t = setTimeout(() => setVis(false), 280); return () => clearTimeout(t); }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open]);
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)}
-        style={{ padding: "8px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "'Open Sans', sans-serif" }}>
-        Abrir Modal
-      </button>
-      {vis && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div onClick={() => setOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.45)", backdropFilter: "blur(2px)", opacity: animIn ? 1 : 0, transition: "opacity .28s", cursor: "pointer" }} />
-          <div style={{ position: "relative", zIndex: 1, width: ${width}, maxWidth: "95vw", maxHeight: "90vh", background: "#FFFFFF", borderRadius: "12px 12px 12px 24px", boxShadow: "0 12px 48px rgba(0,42,104,.2)", display: "flex", flexDirection: "column", transform: animIn ? "scale(1)" : "scale(.96)", opacity: animIn ? 1 : 0, transition: "all .28s cubic-bezier(.32,.72,.37,1.1)", overflow: "hidden" }}>
-            <div style={{ padding: "20px 24px", paddingRight: 56, background: "${headerBg}", display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
-              <div>
-                <h2 style={{ fontSize: 17, fontWeight: 700, color: "#FFFFFF", margin: 0, fontFamily: "'Saira Expanded', sans-serif" }}>${title}</h2>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.65)", margin: "3px 0 0", fontFamily: "'Open Sans', sans-serif" }}>${subtitle}</p>
-              </div>
-            </div>
-            <div onClick={() => setOpen(false)} style={{ position: "absolute", top: 14, right: 14, zIndex: 2, width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", background: "rgba(255,255,255,0.08)" }}>
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="rgba(255,255,255,0.75)" strokeWidth="1.8" strokeLinecap="round"/></svg>
-            </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
-              <p style={{ fontSize: 13, color: "#333B41", fontFamily: "'Open Sans', sans-serif" }}>Conteudo do modal aqui.</p>
-            </div>
-            <div style={{ padding: "14px 24px", borderTop: "1px solid #E2E8F0", background: "#F2F4F8", display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <button onClick={() => setOpen(false)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "transparent", color: "#7B8C96", border: "1.5px solid #C0CCD2", borderRadius: 6, cursor: "pointer" }}>Cancelar</button>
-              <button onClick={() => setOpen(false)} style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer" }}>Confirmar</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}`;
-}
 
 /* ═══════════════════════════════════════════ EXPORTAÇÃO ═══════════════════════════════════════════ */
 const EXPORT_COLUMNS = [
@@ -506,57 +303,6 @@ const EXPORT_ROWS = Array.from({ length: 24 }, (_, i) => ({
   area: 'Suprimentos',
   detalhe: `Linha ${i + 1}`,
 }));
-const EXPORT_MODAL_CODE = `// DS-FIPS — ExportPreviewModal "Exportar planilha" — composite completo (paridade Tecnopano)
-// Fonte: src/components/composites/ExportPreviewModal.tsx
-
-import { useState } from "react";
-import { ExportPreviewModal } from "../components/composites/ExportPreviewModal";
-
-const COLUMNS = [
-  { key: "codigo", label: "Código" },
-  { key: "titulo", label: "Título" },
-  { key: "status", label: "Status" },
-  { key: "area", label: "Área" },
-  { key: "detalhe", label: "Detalhe expandido" },
-];
-
-export function ExportExample({ rows }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button onClick={() => setOpen(true)}>Exportar</button>
-      <ExportPreviewModal
-        open={open}
-        onOpenChange={setOpen}
-        filename="requisicoes"
-        columns={COLUMNS}
-        data={rows}
-        onPrint={() => window.print()}
-        onExportPdf={() => {/* gerar PDF */}}
-        onExportExcel={() => {/* gerar XLSX */}}
-      />
-    </>
-  );
-}`;
-const CHANGELOG_MODAL_CODE = `// DS-FIPS — ChangelogModal "Novidades do Sistema" — composite reutilizável
-// Fonte: src/components/layout/ChangelogModal.tsx
-// Props: apenas { open, onOpenChange } — as versões vêm de CHANGELOG em
-// src/docs/data/changelog.ts (fonte única do changelog, 1 entrada por release,
-// tipos feature | improvement | fix | breaking). Edite esse arquivo para
-// publicar uma versão nova; o modal lê CHANGELOG[0] como a versão atual.
-
-import { useState } from "react";
-import { ChangelogModal } from "../components/layout/ChangelogModal";
-
-export function NovidadesTrigger() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button onClick={() => setOpen(true)}>Ver novidades</button>
-      <ChangelogModal open={open} onOpenChange={setOpen} />
-    </>
-  );
-}`;
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DialogDoc(){
@@ -589,7 +335,6 @@ export default function DialogDoc(){
   ];
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');`}</style>
 
@@ -780,39 +525,19 @@ export default function DialogDoc(){
       <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1280,margin:"0 auto"}}>
 
         {/* ═══════════════════ 01 — PLAYGROUND ═══════════════════ */}
-        <Section n="01" title="Playground interativo" desc="Clique em qualquer botão para abrir o modal e copiar o código correspondente. ESC ou overlay para fechar. Hover nos botões para ver feedback visual.">
+        <Section n="01" title="Playground interativo" desc="Clique em qualquer botão para abrir o modal correspondente. ESC ou overlay para fechar. Hover nos botões para ver feedback visual.">
           <DSCard mob={mob}>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <Copyable label="Modal Confirmação" code={modalCode("confirm","Aprovar requisição?","Encaminhará REQ-4025 para o departamento de compras.",440)} preview={<Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>}>
-                <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
-              </Copyable>
-              <Copyable label="Modal Destrutivo" code={modalCode("delete","Excluir fornecedor?","Esta ação é irreversível e afetará contratos ativos.",420)} preview={<Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>}>
-                <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
-              </Copyable>
-              <Copyable label="Modal Alerta" code={modalCode("alert","Sessão expirando","Sessões inativas são encerradas por segurança.",400)} preview={<Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>}>
-                <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
-              </Copyable>
-              <Copyable label="Modal Informativo" code={modalCode("info","Movimentação de Pátio","Detalhe de artefato BI — somente leitura",680)} preview={<Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>}>
-                <Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>
-              </Copyable>
-              <Copyable label="Modal Formulário" code={modalCode("form","Atribuir responsável","Selecione o colaborador e tipo de atribuição.",480)} preview={<Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>}>
-                <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>
-              </Copyable>
-              <Copyable label="Modal Lista" code={modalCode("list","Itens da requisição","REQ-4025 · 3 itens · R$ 2.450,00",520)} preview={<Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>}>
-                <Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>
-              </Copyable>
-              <Copyable label="Modal Popup" code={modalCode("popup","Atribuir responsável","Selecione o colaborador e tipo de atribuição para a tarefa.",480)} preview={<Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>}>
-                <Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>
-              </Copyable>
-              <Copyable label="Modal Tutorial" code={modalCode("tutorial","Como usar esta página","Tour guiado pelos recursos do Modal (Dialog)",540)} preview={<Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>}>
-                <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
-              </Copyable>
-              <Copyable label="Modal Exportação" code={EXPORT_MODAL_CODE} preview={<Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>}>
-                <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
-              </Copyable>
-              <Copyable label="Modal Novidades" code={CHANGELOG_MODAL_CODE} preview={<Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>}>
-                <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
-              </Copyable>
+              <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
+              <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
+              <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
+              <Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>
+              <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>
+              <Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>
+              <Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>
+              <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
+              <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
+              <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
             </div>
             <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>10 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha) e novidades (ChangelogModal — header gov, versão atual + histórico expansível). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
@@ -1418,13 +1143,10 @@ export default function DialogDoc(){
           </div>
         </Section>
 
-        <CodePlayground />
-
         <div style={{textAlign:"center",padding:"20px 0 0",borderTop:`1px solid ${C.cardBorder}`,marginTop:20}}>
           <span style={{fontSize:12,color:C.cinzaChumbo,letterSpacing:".5px",fontFamily:Fn.title,fontWeight:400}}>DS-FIPS v2.0 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
