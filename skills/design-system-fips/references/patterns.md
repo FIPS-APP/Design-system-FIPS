@@ -181,13 +181,14 @@ Regras:
 ## Data Listing
 
 Fonte: `src/docs/pages/patterns/DataListingDemo.tsx`
-Implementação de referência: `src/components/composites/ExportButtons.tsx` + `RowActionsMenu` + `ExportPreviewModal`.
+Implementação de referência: `src/components/composites/ExportButtons.tsx` + `RowActionsMenu` + `ExportPreviewModal` + `ActiveFilterChips`.
 Fonte real de produto para toolbar e filtros: `client/src/components/composites/ListingToolbar.tsx` (**QLP**) e `KpiDashboardPage.tsx` (**Governança BI**) — as duas com a mesma anatomia.
 
 Regras:
 
 - barra de busca e filtros acima da tabela, em card próprio
 - **Filtros abrem em Drawer pela esquerda**, não em popover ancorado (mudou na v0.11.26)
+- **Chips de filtro ativo** (`ActiveFilterChips`) colados no título do header da Table — um chip por VALOR filtrado, nunca um badge de contagem; ver `components.md`
 - KPIs sparkline fora do card = variante documentada; `ListingKpiRow` (Indicadores rápidos clicáveis) é opcional e mora no `panelHeader` do card da toolbar quando usado — ver `components.md`
 - tabela dentro de card
 - coluna Ações usa `RowActionsMenu` (menu radial), não kebab genérico

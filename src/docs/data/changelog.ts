@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.0',
+    date: '2026-08-11',
+    title: 'Categoria Motion no sidebar com o BrandLoader',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo composite `BrandLoader` (`src/components/brand/BrandLoader.tsx`) — a marca FIPS extrudada em 3D nasce branca, com o contorno já nas cores da marca, e recebe a cor da esquerda para a direita conforme a tela carrega. 4 tamanhos (`sm` 96px, `md` 180px, `lg` 280px, `splash` 420px), prop `caption` e `role="status"`/`aria-live="polite"`; sob `prefers-reduced-motion` cai no quadro final estático já colorido. Documentado em `/docs/motion/brand-loader`, nova categoria "Motion" no sidebar (`nav.ts`).',
+      },
+      {
+        type: 'feature',
+        description:
+          'Peça de motion renderizada a partir da arte oficial da marca (não é SVG — a fidelidade tipográfica do wordmark exige o arquivo original): WebM VP9 com canal alfa e compressão lossless, APNG de fallback para navegadores sem suporte a WebM alfa (Safari) e PNG estático para o caso `prefers-reduced-motion`, os 3 em `public/motion/`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Asset re-renderizado com o quadro colado na marca (1200×363, era 1280×720 com ~70% de área vazia) e supersampling 3×; a primeira versão do WebM com compressão VP9 padrão comia a borda da marca — trocado para lossless.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Pipeline de geração versionado em `scripts/gen-brandloader-motion.py` (comentado, com a justificativa de compor pixel a pixel em vez de vetorizar — potrace deforma o F, o P e o S do wordmark). A doc ganhou a seção "06 — Assets e reprodução": download dos 3 arquivos, botão que copia o `BrandLoader.tsx` inteiro (para projetos que só espelham o componente, como o Suprimentos) e o comando para regerar os assets se a marca mudar.',
+      },
+    ],
+  },
+  {
     version: '0.11.33',
     date: '2026-08-11',
     title: 'Skill portátil ressincronizada com o código (estava na v0.11.15)',

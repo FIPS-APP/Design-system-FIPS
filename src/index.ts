@@ -4,6 +4,8 @@ export * from './tokens'
 export { cn } from './lib/cn'
 export * from './components/ui'
 export { FipsLogo } from './components/brand/FipsLogo'
+export { BrandLoader } from './components/brand/BrandLoader'
+export type { BrandLoaderProps, BrandLoaderSize } from './components/brand/BrandLoader'
 export { PageHero, PAGE_HERO_DEFAULT_DECORATION, type PageHeroProps } from './composites'
 export {
   StatsCard,
@@ -44,4 +46,10 @@ export {
   RowActionsMenu,
   type RowMenuAction,
 } from './components/composites/RowActionsMenu'
+export {
+  ActiveFilterChips,
+  MAX_FILTER_CHIPS,
+  type ActiveFilterChip,
+  type ActiveFilterChipsProps,
+} from './components/composites/ActiveFilterChips'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'

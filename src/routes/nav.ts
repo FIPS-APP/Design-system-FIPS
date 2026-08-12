@@ -13,6 +13,7 @@ import {
   LogIn,
   MousePointer2,
   Palette,
+  Play,
   PanelLeft,
   PanelTop,
   Settings,
@@ -108,6 +109,12 @@ export const navGroups: NavGroup[] = [
       { label: 'Tooltip', to: '/docs/components/tooltip', icon: MousePointer2 },
       { label: 'Ações', to: '/docs/components/circular-command-menu', icon: CircleDot },
     ],
+  },
+  {
+    id: 'motion',
+    label: 'Motion',
+    icon: Play,
+    items: [{ label: 'BrandLoader', to: '/docs/motion/brand-loader', icon: Play }],
   },
 ]
 

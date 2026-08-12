@@ -67,12 +67,14 @@ Se houver conflito:
 - `src/composites/PageHero.tsx`
 - `src/docs/pages/patterns/ApplicationShellDemo.tsx`
 - `src/docs/pages/patterns/DashboardDemo.tsx`
-- `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + tabela + paginação (referência viva do padrão)
+- `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + **chips de filtro ativo** + tabela + paginação (referência viva do padrão)
 - `src/components/composites/ExportButtons.tsx`
 - `src/components/composites/ExportPreviewModal.tsx`
 - `src/components/composites/ListingKpiRow.tsx` · `StatsCard.tsx` · `HowItWorksCard.tsx`
+- `src/components/composites/ActiveFilterChips.tsx` — chip por VALOR filtrado (não badge de contagem), usado no header da Table do Data Listing
 - `src/components/composites/CircularCommandMenu.tsx`
 - `src/components/composites/RowActionsMenu.tsx`
+- `src/components/brand/BrandLoader.tsx` — categoria **Motion**, marca 3D animada (WebM alfa + APNG fallback)
 - `src/components/icons/FileIcons.tsx`
 - `src/docs/pages/patterns/FormWorkspaceDemo.tsx`
 - `src/docs/pages/patterns/ModalWorkflowDemo.tsx`
