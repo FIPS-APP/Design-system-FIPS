@@ -25,6 +25,38 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.3',
+    date: '2026-08-12',
+    title: 'Table e Data Listing: aba Ordenação, vista Cards no DSTable, header centralizado',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Nova aba **Ordenação** no Configurar do `DSTable` (`/docs/components/table`) e do Data Listing (`/docs/patterns/data-listing`): toggle Sim/Não pra habilitar/desabilitar a ordenação por coluna (desligado, o ícone some do header e o clique não reordena), e "Coluna padrão" — lista rádio das colunas visíveis + botão Crescente/Decrescente, define `sortCol`/`sortDir` (ou `sortBy`, no Data Listing) iniciais. De passagem, achado um bug real no Data Listing: `sortBy` só trocava o ícone do header, nunca reordenava as linhas — `data` (useMemo) agora aplica a ordenação de fato (número vs string, mesma lógica do `DSTable`) antes de fatiar os 10 registros exibidos.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Nova prop `viewToggle` no `DSTable` (`/docs/components/table`) — segmented Tabela/Cards idêntico ao do header do Data Listing (mesmo estilo, ícones `list`/`grid`), à esquerda do botão Configurar. A vista Cards é genérica: monta o card a partir das `columns` visíveis (primeira vira título do card, as demais viram pares label/valor, respeitando `col.render`), com skeleton de loading e empty state. Ativado nas 2 tabelas com header (Requisições de compra, Carteira de Fornecedores).',
+      },
+      {
+        type: 'breaking',
+        description:
+          'Cabeçalho de tabela (`<th>`) passa de alinhado à esquerda para **centralizado** — no primitive governado `Table` (`src/components/ui/table.tsx`, `text-left`→`text-center`, afeta qualquer app consumidor da library), no `DSTable` (`TableDoc.tsx`) e na tabela real do Data Listing. A célula (`<td>`) não muda — continua respeitando `col.align` (esquerda por padrão, direita em coluna de valor monetário); só o rótulo do cabeçalho foi centralizado. Reverte o sentido da v0.11.32, que tinha alinhado o cabeçalho à esquerda.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Removida a função de copiar (`Copyable`/`CodePlayground`/`InlineCodeCopy`) das últimas páginas que ainda tinham: `/docs/components/tabs` (4 variantes + os geradores `TABS_*_CODE`), `/docs/components/table` (4 variantes + `tableVariantCode`), `/docs/components/drawer` (5 variantes + `drawerCode`), `/docs/components/header` (preview do header completo) e `/docs/components/sidebar` (claro + dark mode + `sidebarCode`, 113 linhas). `InlineCodeCopy` e o helper `ExportBtn` saíram de `CodeExport.tsx` por ficarem sem nenhum consumidor no projeto — mesmo tratamento das v0.11.18/0.11.21/0.11.25/0.11.30/0.12.1. `CodeExportSection` mantido em todas (contexto próprio, independente do playground).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Removido texto duplicado "Mostrando X–Y de Z" do header do `DSTable` (`/docs/components/table`) — a mesma informação já existe corretamente no footer, junto do seletor "Linhas:" e da navegação de página.',
+      },
+    ],
+  },
+  {
     version: '0.12.2',
     date: '2026-08-12',
     title: 'Card: sparkline preta no card "Solicitações"',
