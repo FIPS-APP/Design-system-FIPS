@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.2',
+    date: '2026-08-12',
+    title: 'Card: sparkline preta no card "Solicitações"',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Área do sparkline do card "Solicitações" (`/docs/components/card`, Seção 01) renderizava preta em vez do gradiente azul. Causa: `SparkArea` gerava o id do `<linearGradient>` com `color.replace(\'#\',\'\')` — funciona para hex (`#00C64C`), mas não faz nada quando `color` é um token CSS (`C.azulProfundo = \'var(--color-gov-azul-profundo)\'`, único caso entre os 4 KPIs). O id resultante (`gavar(--color-gov-azul-profundo)334`) tem parênteses, inválido como id de SVG — o `fill="url(#...)"` não resolvia e caía no preto padrão do elemento. Trocado por `useId()` do React: id único por instância, independente do formato da cor. Verificado ao vivo (Playwright + Chrome): gradiente resolve nos 4 cards, área azul preenchida corretamente.',
+      },
+    ],
+  },
+  {
     version: '0.12.1',
     date: '2026-08-12',
     title: 'Card: removida a função de copiar da Seção 01',

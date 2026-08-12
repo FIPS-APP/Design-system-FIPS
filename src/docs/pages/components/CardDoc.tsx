@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import {
   ClipboardList,
   CheckCircle2,
@@ -115,7 +115,7 @@ function CardLista({title,items=[]}:{title?:string,items?:{icon?:React.ReactNode
 function SparkArea({data,color,w=130,h=30}:{data:number[],color:string,w?:number,h?:number}){
   const max=Math.max(...data),min=Math.min(...data);
   const pts=data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-min)/(max-min||1))*(h-4)+2}`);
-  const uid=color.replace('#','')+(w+h);
+  const uid=useId().replace(/:/g,'');
   return <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%"}}><defs><linearGradient id={`ga${uid}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity=".18"/><stop offset="100%" stopColor={color} stopOpacity="0"/></linearGradient></defs><polygon points={`0,${h} ${pts.join(" ")} ${w},${h}`} fill={`url(#ga${uid})`}/><polyline points={pts.join(" ")} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 }
 
