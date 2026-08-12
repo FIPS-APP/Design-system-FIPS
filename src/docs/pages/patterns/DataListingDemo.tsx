@@ -336,7 +336,7 @@ export default function DataListingDemo() {
   const [search,setSearch]=useState("");
   const [exportOpen,setExportOpen]=useState(false);
   const [exportIntent,setExportIntent]=useState<ExportIntent>("excel");
-  const [configTab,setConfigTab]=useState("colunas");
+  const [configTab,setConfigTab]=useState("visualizacao");
   const [density,setDensity]=useState("normal");
   const [visibleCols,setVisibleCols]=useState(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
   const [appearance,setAppearance]=useState({zebra:true,verticalBorders:false,stickyHeader:true,wrapText:false});
@@ -734,17 +734,30 @@ export default function DataListingDemo() {
                 </div>
                 <div ref={configRef} style={{position:"relative"}}>
                   <button onClick={()=>setShowConfig(!showConfig)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:showConfig?C.azulProfundo:C.cinzaEscuro,background:showConfig?accentBg:C.cardBg,border:`1px solid ${showConfig?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}} title="Configurações da tabela">{Ic.settings(14,showConfig?C.azulProfundo:C.cinzaChumbo)} Configurar</button>
-                  {showConfig&&<div style={{position:"absolute",top:"calc(100% + 6px)",right:0,zIndex:50,width:300,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden"}}>
+                  {showConfig&&<div style={{position:"absolute",top:"calc(100% + 6px)",right:0,zIndex:50,width:340,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden"}}>
                     <div style={{padding:"12px 16px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                       <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Configurações</span>
                       <button onClick={()=>setShowConfig(false)} style={{width:22,height:22,background:"transparent",border:"none",cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center"}}>{Ic.x(12)}</button>
                     </div>
                     <div style={{display:"flex",borderBottom:`1px solid ${C.cardBorder}`,background:C.bg}}>
-                      {[{id:"colunas",label:"Colunas",icon:Ic.columns},{id:"densidade",label:"Densidade",icon:Ic.density},{id:"aparencia",label:"Aparência",icon:Ic.grid}].map(t=>(
-                        <button key={t.id} onClick={()=>setConfigTab(t.id)} style={{flex:1,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:5,padding:"9px 8px",fontSize:11,fontWeight:600,color:configTab===t.id?C.azulProfundo:C.cinzaChumbo,background:configTab===t.id?C.cardBg:"transparent",border:"none",borderBottom:`2px solid ${configTab===t.id?C.azulProfundo:"transparent"}`,cursor:"pointer",fontFamily:Fn.body,transition:"all .12s"}}>{t.icon(12,configTab===t.id?C.azulProfundo:C.cinzaChumbo)} {t.label}</button>
+                      {[{id:"visualizacao",label:"Visualização",icon:Ic.list},{id:"colunas",label:"Colunas",icon:Ic.columns},{id:"densidade",label:"Densidade",icon:Ic.density},{id:"aparencia",label:"Aparência",icon:Ic.grid}].map(t=>(
+                        <button key={t.id} onClick={()=>setConfigTab(t.id)} style={{flex:1,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:4,padding:"9px 4px",fontSize:10,fontWeight:600,color:configTab===t.id?C.azulProfundo:C.cinzaChumbo,background:configTab===t.id?C.cardBg:"transparent",border:"none",borderBottom:`2px solid ${configTab===t.id?C.azulProfundo:"transparent"}`,cursor:"pointer",fontFamily:Fn.body,transition:"all .12s",whiteSpace:"nowrap"}}>{t.icon(12,configTab===t.id?C.azulProfundo:C.cinzaChumbo)} {t.label}</button>
                       ))}
                     </div>
                     <div style={{padding:"12px 16px",maxHeight:320,overflowY:"auto"}}>
+                      {configTab==="visualizacao"&&<div style={{display:"flex",flexDirection:"column",gap:6}}>
+                        <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,marginBottom:6,marginLeft:4}}>Modo de exibição</span>
+                        {[{id:"table",label:"Tabela",desc:"Linhas e colunas densas",icon:Ic.list},{id:"cards",label:"Cards",desc:"Grade de cartões",icon:Ic.grid}].map(opt=>{const isA=view===opt.id;return(
+                          <div key={opt.id} onClick={()=>setView(opt.id)} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",borderRadius:8,border:`1px solid ${isA?C.azulProfundo:C.cardBorder}`,background:isA?accentBg:C.cardBg,cursor:"pointer",transition:"all .12s"}}>
+                            <div style={{width:18,height:18,borderRadius:"50%",border:`2px solid ${isA?C.azulProfundo:C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{isA&&<div style={{width:8,height:8,borderRadius:"50%",background:C.azulProfundo}}/>}</div>
+                            <div style={{flex:1}}>
+                              <div style={{fontSize:12,fontWeight:600,color:isA?C.azulProfundo:C.cinzaEscuro}}>{opt.label}</div>
+                              <div style={{fontSize:10,color:C.cinzaChumbo}}>{opt.desc}</div>
+                            </div>
+                            {opt.icon(16,isA?C.azulProfundo:C.cinzaClaro)}
+                          </div>
+                        )})}
+                      </div>}
                       {configTab==="colunas"&&<div style={{display:"flex",flexDirection:"column",gap:2}}>
                         <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,marginBottom:6,marginLeft:4}}>Visíveis ({visibleCols.size})</span>
                         {ALL_COLUMNS.map(col=>{const isVisible=visibleCols.has(col.id);return(
@@ -785,7 +798,7 @@ export default function DataListingDemo() {
                       </div>}
                     </div>
                     <div style={{padding:"10px 14px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
-                      <button onClick={configTab==="colunas"?restoreCols:()=>{setDensity("normal");setAppearance({zebra:true,verticalBorders:false,stickyHeader:true,wrapText:false})}} style={{fontSize:10,color:C.cinzaChumbo,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body,fontWeight:600}}>Restaurar padrão</button>
+                      <button onClick={configTab==="visualizacao"?()=>setView("table"):configTab==="colunas"?restoreCols:()=>{setDensity("normal");setAppearance({zebra:true,verticalBorders:false,stickyHeader:true,wrapText:false})}} style={{fontSize:10,color:C.cinzaChumbo,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body,fontWeight:600}}>Restaurar padrão</button>
                       <button onClick={()=>setShowConfig(false)} style={{padding:"6px 12px",fontSize:11,fontWeight:700,color:C.branco,background:C.azulProfundo,border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>Aplicar</button>
                     </div>
                   </div>}
@@ -1031,7 +1044,7 @@ export default function DataListingDemo() {
                 {n:"②",label:"Chips de filtro ativo",desc:"À ESQUERDA, colados no título (separados por ·). Um chip por VALOR filtrado — nunca um badge \"Filtrado\" nem a contagem \"3 filtros\", que não dizem O QUE está filtrado. X remove só aquele valor; acima de 4 o excedente vira \"+N\" que reabre o Drawer; a partir de 2 aparece \"Limpar\". Componente: ActiveFilterChips."},
                 {n:"③",label:"Lado direito do header",desc:"Toggle Tabela/Card + botão Configurar. Filtro NÃO entra aqui."},
                 {n:"④",label:"Body — Tabela densa",desc:"Sortable, zebra, hover, seleção em massa. Densidade ajustável."},
-                {n:"⑤",label:"Configurar (3 abas)",desc:"Colunas (visível/oculta), Densidade (3 níveis), Aparência (4 toggles)."},
+                {n:"⑤",label:"Configurar (4 abas)",desc:"Visualização (Tabela/Cards), Colunas (visível/oculta), Densidade (3 níveis), Aparência (4 toggles)."},
                 {n:"⑥",label:"Footer — Paginação",desc:"Mostrando X-Y de Z + per-page selector + nav (primeira/anterior/páginas/próxima/última)."},
                 {n:"⑦",label:"Estados",desc:"Empty, loading skeleton, erro, selecionado — todos obrigatórios."},
               ].map((it,i)=>(
@@ -1048,21 +1061,21 @@ export default function DataListingDemo() {
             <div style={{display:"flex",justifyContent:"center",marginBottom:16}}>
               <div ref={configDemoRef} style={{position:"relative"}}>
                 <button onClick={()=>setShowConfigDemo(!showConfigDemo)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:showConfigDemo?C.azulProfundo:C.cinzaEscuro,background:showConfigDemo?accentBg:C.cardBg,border:`1px solid ${showConfigDemo?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}}>{Ic.settings(14,showConfigDemo?C.azulProfundo:C.cinzaChumbo)} Configurar</button>
-                {showConfigDemo&&<div style={{position:"absolute",top:"calc(100% + 6px)",left:"50%",transform:"translateX(-50%)",zIndex:50,width:300,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden"}}>
+                {showConfigDemo&&<div style={{position:"absolute",top:"calc(100% + 6px)",left:"50%",transform:"translateX(-50%)",zIndex:50,width:340,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                     <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Configurações</span>
                     <button onClick={()=>setShowConfigDemo(false)} style={{width:22,height:22,background:"transparent",border:"none",cursor:"pointer",borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center"}}>{Ic.x(12)}</button>
                   </div>
                   <div style={{display:"flex",borderBottom:`1px solid ${C.cardBorder}`,background:C.bg}}>
-                    {[{id:"colunas",label:"Colunas",icon:Ic.columns},{id:"densidade",label:"Densidade",icon:Ic.density},{id:"aparencia",label:"Aparência",icon:Ic.grid}].map(t=>(
-                      <button key={t.id} onClick={()=>setConfigTab(t.id)} style={{flex:1,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:5,padding:"9px 8px",fontSize:11,fontWeight:600,color:configTab===t.id?C.azulProfundo:C.cinzaChumbo,background:configTab===t.id?C.cardBg:"transparent",border:"none",borderBottom:`2px solid ${configTab===t.id?C.azulProfundo:"transparent"}`,cursor:"pointer",fontFamily:Fn.body,transition:"all .12s"}}>{t.icon(12,configTab===t.id?C.azulProfundo:C.cinzaChumbo)} {t.label}</button>
+                    {[{id:"visualizacao",label:"Visualização",icon:Ic.list},{id:"colunas",label:"Colunas",icon:Ic.columns},{id:"densidade",label:"Densidade",icon:Ic.density},{id:"aparencia",label:"Aparência",icon:Ic.grid}].map(t=>(
+                      <button key={t.id} onClick={()=>setConfigTab(t.id)} style={{flex:1,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:4,padding:"9px 4px",fontSize:10,fontWeight:600,color:configTab===t.id?C.azulProfundo:C.cinzaChumbo,background:configTab===t.id?C.cardBg:"transparent",border:"none",borderBottom:`2px solid ${configTab===t.id?C.azulProfundo:"transparent"}`,cursor:"pointer",fontFamily:Fn.body,transition:"all .12s",whiteSpace:"nowrap"}}>{t.icon(12,configTab===t.id?C.azulProfundo:C.cinzaChumbo)} {t.label}</button>
                     ))}
                   </div>
                   <div style={{padding:"14px 16px",minHeight:120,display:"flex",alignItems:"center",justifyContent:"center"}}>
                     <div style={{textAlign:"center"}}>
-                      <div style={{width:36,height:36,borderRadius:9,background:alpha(C.azulProfundo,0.06),display:"inline-flex",alignItems:"center",justifyContent:"center",marginBottom:8}}>{configTab==="colunas"?Ic.columns(18,C.azulProfundo):configTab==="densidade"?Ic.density(18,C.azulProfundo):Ic.grid(18,C.azulProfundo)}</div>
-                      <div style={{fontSize:11,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Aba {configTab==="colunas"?"Colunas":configTab==="densidade"?"Densidade":"Aparência"}</div>
-                      <div style={{fontSize:10,color:C.cinzaChumbo,marginTop:2,maxWidth:220}}>{configTab==="colunas"?"Visibilidade e ordem das colunas":configTab==="densidade"?"Altura das linhas (3 níveis)":"Zebra, bordas, header fixo, wrap"}</div>
+                      <div style={{width:36,height:36,borderRadius:9,background:alpha(C.azulProfundo,0.06),display:"inline-flex",alignItems:"center",justifyContent:"center",marginBottom:8}}>{configTab==="visualizacao"?Ic.list(18,C.azulProfundo):configTab==="colunas"?Ic.columns(18,C.azulProfundo):configTab==="densidade"?Ic.density(18,C.azulProfundo):Ic.grid(18,C.azulProfundo)}</div>
+                      <div style={{fontSize:11,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Aba {configTab==="visualizacao"?"Visualização":configTab==="colunas"?"Colunas":configTab==="densidade"?"Densidade":"Aparência"}</div>
+                      <div style={{fontSize:10,color:C.cinzaChumbo,marginTop:2,maxWidth:220}}>{configTab==="visualizacao"?"Alternar entre Tabela e Cards":configTab==="colunas"?"Visibilidade e ordem das colunas":configTab==="densidade"?"Altura das linhas (3 níveis)":"Zebra, bordas, header fixo, wrap"}</div>
                     </div>
                   </div>
                   <div style={{padding:"10px 14px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -1075,8 +1088,8 @@ export default function DataListingDemo() {
             <div style={{padding:"12px 14px",background:C.bg,borderRadius:8,marginBottom:18,display:"flex",alignItems:"center",gap:12}}>
               <div style={{width:32,height:32,borderRadius:8,background:alpha(C.azulProfundo,0.06),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{Ic.settings(16,C.azulProfundo)}</div>
               <div style={{flex:1}}>
-                <div style={{fontSize:11,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>{showConfigDemo?<>Popover aberto · Aba <span style={{color:C.cinzaEscuro}}>{configTab==="colunas"?"Colunas":configTab==="densidade"?"Densidade":"Aparência"}</span></>:"Clique no botão acima para abrir o popover"}</div>
-                <div style={{fontSize:10,color:C.cinzaChumbo,marginTop:2}}>Popover ancorado no botão · 3 abas (Colunas, Densidade, Aparência) · Footer com Restaurar padrão e Aplicar · Fecha ao clicar fora</div>
+                <div style={{fontSize:11,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>{showConfigDemo?<>Popover aberto · Aba <span style={{color:C.cinzaEscuro}}>{configTab==="visualizacao"?"Visualização":configTab==="colunas"?"Colunas":configTab==="densidade"?"Densidade":"Aparência"}</span></>:"Clique no botão acima para abrir o popover"}</div>
+                <div style={{fontSize:10,color:C.cinzaChumbo,marginTop:2}}>Popover ancorado no botão · 4 abas (Visualização, Colunas, Densidade, Aparência) · Footer com Restaurar padrão e Aplicar · Fecha ao clicar fora</div>
               </div>
             </div>
             <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
@@ -1084,7 +1097,7 @@ export default function DataListingDemo() {
                 {n:"①",label:"Botão (estado normal)",desc:"Ícone sliders + label 'Configurar'. Border cardBorder, background branco, color cinzaEscuro. Padding 7×12, fontSize 11."},
                 {n:"②",label:"Botão (estado ativo)",desc:"Quando o popover está aberto: border azulProfundo, background azulCeuClaro, ícone e texto em azulProfundo."},
                 {n:"③",label:"Popover anchored",desc:"Position absolute top:calc(100% + 6px), right:0 (alinhado pela direita). Width 300, borderRadius FIPS, shadow elevada."},
-                {n:"④",label:"3 abas no header",desc:"Tabs com ícone + label, ativa em azulProfundo com border-bottom 2px. Conteúdo trocado conforme aba selecionada."},
+                {n:"④",label:"4 abas no header",desc:"Tabs com ícone + label, ativa em azulProfundo com border-bottom 2px. Conteúdo trocado conforme aba selecionada."},
                 {n:"⑤",label:"Footer com 2 ações",desc:"Restaurar padrão (link cinza à esquerda) + Aplicar (botão azulProfundo à direita). Aplicar fecha o popover."},
                 {n:"⑥",label:"Click outside",desc:"Listener no document.mousedown verifica se o clique foi fora do ref do popover. Se sim, fecha automaticamente."},
               ].map((it,i)=>(
@@ -1095,9 +1108,10 @@ export default function DataListingDemo() {
               ))}
             </div>
           </div>
-          {/* Configurar — 3 abas explicativas */}
-          <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr 1fr",gap:12}}>
+          {/* Configurar — 4 abas explicativas */}
+          <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
+              {title:"Aba Visualização",icon:Ic.list,color:C.azulCeu,items:["Alterna entre Tabela e Cards","Radio-card — mesmo padrão da aba Densidade","Sincroniza com o toggle do header","Primeira aba: é o modo mais trocado"]},
               {title:"Aba Colunas",icon:Ic.columns,color:C.azulProfundo,items:["Lista todas as colunas disponíveis","Drag handle pra reordenar","Checkbox visível/oculta","Colunas fixas não podem ser ocultadas"]},
               {title:"Aba Densidade",icon:Ic.density,color:C.amareloEscuro,items:["Compacta (30px)","Normal (42px) — padrão","Confortável (56px)","Ajusta altura, fontSize e padding"]},
               {title:"Aba Aparência",icon:Ic.grid,color:C.verdeFloresta,items:["Linhas zebradas","Bordas verticais","Header fixo","Quebra de linha em texto longo"]},
