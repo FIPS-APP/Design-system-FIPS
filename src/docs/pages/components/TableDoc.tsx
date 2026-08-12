@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
@@ -525,73 +524,6 @@ export function DSTable({
 // />
 `;
 
-/* ═══════════════════════════════════════════ TABLE VARIANT CODE HELPER ═══════════════════════════════════════════ */
-function tableVariantCode(variant: string, props: string): string {
-  const labels: Record<string, string> = {
-    striped: 'Striped (zebrada)',
-    compact: 'Compacta',
-    clean: 'Limpa (sem zebra)',
-    bordered: 'Bordered',
-  };
-  const label = labels[variant] || variant;
-  const isStriped = props.includes('striped={true}') || (!props.includes('striped={false}'));
-  const isCompact = props.includes('compact={true}');
-  const isBordered = props.includes('bordered={true}');
-  const py = isCompact ? 6 : 10;
-  const fs = isCompact ? 11 : 12;
-  return `// DS-FIPS — Table "${label}" — Copy-paste ready
-import { useState } from "react";
-
-const columns = [
-  { key: "id", label: "Código" },
-  { key: "dept", label: "Depto" },
-  { key: "status", label: "Status" },
-];
-
-const data = [
-  { id: "REQ-4025", dept: "SSMA", status: "Pendente" },
-  { id: "REQ-4024", dept: "Operações", status: "Aprovada" },
-  { id: "REQ-4023", dept: "Logística", status: "Aprovada" },
-];
-
-export function Table${label.replace(/[^a-zA-Z]/g, '')}() {
-  const [hoverRow, setHoverRow] = useState(-1);
-
-  return (
-    <div style={{ border: "1px solid #E2E8F0", borderRadius: "12px 12px 12px 24px", overflow: "hidden", background: "#FFFFFF" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "'Open Sans', sans-serif" }}>
-        <thead>
-          <tr style={{ background: "#F2F4F8", borderBottom: "2px solid #E2E8F0" }}>
-            {columns.map((col${isBordered ? ', ci' : ''}) => (
-              <th key={col.key}
-                style={{ padding: "${py + 2}px 16px", textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", color: "#7B8C96", fontFamily: "'Saira Expanded', sans-serif", whiteSpace: "nowrap"${isBordered ? ', borderRight: ci < columns.length - 1 ? "1px solid #E2E8F0" : "none"' : ''} }}>
-                {col.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, ri) => (
-            <tr key={ri}
-              onMouseEnter={() => setHoverRow(ri)}
-              onMouseLeave={() => setHoverRow(-1)}
-              style={{ borderBottom: ri < data.length - 1 ? "1px solid #E2E8F0" : "none", background: hoverRow === ri ? "rgba(253,194,78,0.09)" : ${isStriped && !props.includes('striped={false}') ? 'ri % 2 === 1 ? "rgba(147,189,228,0.05)" : "transparent"' : '"transparent"'}, transition: "background .12s" }}>
-              {columns.map((col${isBordered ? ', ci' : ''}) => (
-                <td key={col.key}
-                  style={{ padding: "${py}px 16px", fontSize: ${fs}, color: "#333B41", textAlign: "left"${isBordered ? ', borderRight: ci < columns.length - 1 ? "1px solid #E2E8F0" : "none"' : ''} }}>
-                  {row[col.key]}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-`;
-}
-
 export default function TableDoc() {
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
@@ -617,7 +549,6 @@ export default function TableDoc() {
   ];
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
@@ -652,7 +583,7 @@ export default function TableDoc() {
         </Section>
 
         {/* 02 — VARIANTES */}
-        <Section n="02" title="Variantes visuais" desc="Quatro estilos de tabela para diferentes densidades e contextos. Clique em qualquer variante para copiar o codigo.">
+        <Section n="02" title="Variantes visuais" desc="Quatro estilos de tabela para diferentes densidades e contextos.">
           <div style={{display:"flex",flexDirection:"column",gap:24}}>
             {/* Striped (padrão) */}
             <div>
@@ -660,9 +591,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Striped (zebrada) ★</span>
                 <code style={gk}>padrão</code>
               </div>
-              <Copyable label="Table Striped" code={tableVariantCode("striped","striped={true}")} preview={<DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status"}]} data={reqData.slice(0,3)} sortable={false}/>}>
                 <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status",render:v=><Badge variant={statusMap[v]} dot>{v}</Badge>}]} data={reqData.slice(0,3)} sortable={false}/>
-              </Copyable>
             </div>
 
             {/* Compacta */}
@@ -671,9 +600,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Compacta</span>
                 <code style={gk}>dense</code>
               </div>
-              <Copyable label="Table Compacta" code={tableVariantCode("compact","compact={true}")} preview={<DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"valor",label:"Valor"}]} data={reqData.slice(0,4)} compact sortable={false}/>}>
                 <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"valor",label:"Valor",align:"right",render:v=><span style={{fontFamily:Fn.mono}}>R$ {v.toLocaleString("pt-BR")}</span>}]} data={reqData.slice(0,4)} compact sortable={false}/>
-              </Copyable>
             </div>
 
             {/* Limpa */}
@@ -682,9 +609,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Limpa</span>
                 <code style={gk}>sem zebra</code>
               </div>
-              <Copyable label="Table Limpa" code={tableVariantCode("clean","striped={false}")} preview={<DSTable columns={[{key:"id",label:"Código"},{key:"solicitante",label:"Solicitante"},{key:"sla",label:"SLA"}]} data={reqData.slice(0,3)} striped={false} sortable={false}/>}>
                 <DSTable columns={[{key:"id",label:"Código"},{key:"solicitante",label:"Solicitante"},{key:"sla",label:"SLA",render:v=><MiniProgress value={v}/>}]} data={reqData.slice(0,3)} striped={false} sortable={false}/>
-              </Copyable>
             </div>
 
             {/* Bordered */}
@@ -693,9 +618,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Bordered</span>
                 <code style={gk}>todas as bordas</code>
               </div>
-              <Copyable label="Table Bordered" code={tableVariantCode("bordered","bordered={true}")} preview={<DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status"},{key:"valor",label:"Valor"}]} data={reqData.slice(0,3)} bordered sortable={false}/>}>
                 <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status",render:v=><Badge variant={statusMap[v]} dot>{v}</Badge>},{key:"valor",label:"Valor",align:"right",render:v=><span style={{fontFamily:Fn.mono}}>R$ {v.toLocaleString("pt-BR")}</span>}]} data={reqData.slice(0,3)} bordered sortable={false}/>
-              </Copyable>
             </div>
           </div>
         </Section>
@@ -1150,8 +1073,6 @@ export default function TableDoc() {
           </div>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Table",
           description: "Tabela com sorting por coluna, paginacao, striped rows, hover e footer customizavel.",
@@ -1163,6 +1084,5 @@ export default function TableDoc() {
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
