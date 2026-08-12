@@ -68,6 +68,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   const [densityS,setDensityS]=useState(compact?"compact":"normal");
   const [stripedS,setStripedS]=useState(striped);
   const [borderedS,setBorderedS]=useState(!!bordered);
+  const [sortableS,setSortableS]=useState(sortable);
   const [stickyHS,setStickyHS]=useState(false);
   const [wrapTextS,setWrapTextS]=useState(false);
   const configRef=useRef(null);
@@ -96,7 +97,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   const handleDragEnd=()=>{setDragIdx(null);setDragOverIdx(null)};
 
   const toggleSort=(key)=>{
-    if(!sortable)return;
+    if(!sortableS)return;
     if(sortCol===key){setSortDir(d=>d==="asc"?"desc":"asc")}
     else{setSortCol(key);setSortDir("asc")}
   };
@@ -157,7 +158,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                   Configurar
                 </button>
                 {showColMenu&&(
-                  <div style={{position:"absolute",top:"calc(100% + 6px)",right:0,zIndex:50,width:300,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",overflow:"hidden"}}>
+                  <div style={{position:"absolute",top:"calc(100% + 6px)",right:0,zIndex:50,width:340,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 16px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",overflow:"hidden"}}>
                     {/* Header */}
                     <div style={{padding:"12px 16px",borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                       <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Configurações</span>
@@ -170,9 +171,10 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                       {[
                         {id:"colunas",label:"Colunas"},
                         {id:"densidade",label:"Densidade"},
+                        {id:"ordenacao",label:"Ordenação"},
                         {id:"aparencia",label:"Aparência"},
                       ].map(t=>(
-                        <button key={t.id} onClick={()=>setConfigTab(t.id)} style={{flex:1,padding:"9px 8px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:configTab===t.id?C.azulProfundo:C.cinzaChumbo,background:configTab===t.id?C.cardBg:"transparent",border:"none",borderBottom:`2px solid ${configTab===t.id?C.azulProfundo:"transparent"}`,cursor:"pointer",transition:"all .12s"}}>{t.label}</button>
+                        <button key={t.id} onClick={()=>setConfigTab(t.id)} style={{flex:1,padding:"9px 4px",fontSize:10,fontWeight:600,fontFamily:Fn.body,color:configTab===t.id?C.azulProfundo:C.cinzaChumbo,background:configTab===t.id?C.cardBg:"transparent",border:"none",borderBottom:`2px solid ${configTab===t.id?C.azulProfundo:"transparent"}`,cursor:"pointer",transition:"all .12s",whiteSpace:"nowrap"}}>{t.label}</button>
                       ))}
                     </div>
                     {/* Body */}
@@ -220,6 +222,20 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                           ))}
                         </div>
                       )}
+                      {configTab==="ordenacao"&&(
+                        <div style={{padding:"4px 14px",display:"flex",flexDirection:"column",gap:2}}>
+                          <div onClick={()=>setSortableS(v=>!v)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 10px",borderRadius:6,cursor:"pointer",transition:"background .1s"}} onMouseEnter={e=>{e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
+                            <div>
+                              <div style={{fontSize:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}>Ordenar por coluna</div>
+                              <div style={{fontSize:10,color:C.cinzaChumbo,marginTop:1}}>Padrão: {sortableS?"Sim":"Não"} — clique no header ordena</div>
+                            </div>
+                            <div style={{width:30,height:16,borderRadius:8,background:sortableS?C.azulProfundo:C.cardBorder,position:"relative",transition:"background .15s",flexShrink:0}}>
+                              <div style={{position:"absolute",top:2,left:sortableS?16:2,width:12,height:12,borderRadius:"50%",background:C.branco,boxShadow:"0 1px 2px rgba(0,0,0,.2)",transition:"left .15s"}}/>
+                            </div>
+                          </div>
+                          <div style={{padding:"6px 10px 2px",fontSize:10,color:C.textLight,lineHeight:1.5}}>Desligado, o ícone de ordenação some do header e o clique não reordena — útil pra listas já pré-ordenadas pelo backend.</div>
+                        </div>
+                      )}
                       {configTab==="aparencia"&&(
                         <div style={{padding:"4px 14px",display:"flex",flexDirection:"column",gap:2}}>
                           {[
@@ -240,7 +256,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                     </div>
                     {/* Footer */}
                     <div style={{padding:"10px 14px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                      <button onClick={()=>{setHiddenCols([]);setColOrder(columns.map(c=>c.key));setDensityS(compact?"compact":"normal");setStripedS(striped);setBorderedS(!!bordered);setStickyHS(false);setWrapTextS(false)}} style={{fontSize:10,color:C.cinzaChumbo,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body,fontWeight:600}}>Restaurar padrão</button>
+                      <button onClick={()=>{setHiddenCols([]);setColOrder(columns.map(c=>c.key));setDensityS(compact?"compact":"normal");setSortableS(sortable);setStripedS(striped);setBorderedS(!!bordered);setStickyHS(false);setWrapTextS(false)}} style={{fontSize:10,color:C.cinzaChumbo,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body,fontWeight:600}}>Restaurar padrão</button>
                       <button onClick={()=>setShowColMenu(false)} style={{padding:"6px 12px",fontSize:11,fontWeight:700,color:C.branco,background:C.azulProfundo,border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>Aplicar</button>
                     </div>
                   </div>
@@ -256,10 +272,10 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             <tr style={{background:C.bg}}>
               {selectable&&<th style={{padding:`${py}px ${D.padX}px`,width:36,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={allSelected} onChange={toggleAll} style={{cursor:"pointer",}}/></th>}
               {visibleCols.map((col,ci)=>(
-                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortable?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
+                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortableS?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
                   <span style={{display:"inline-flex",alignItems:"center",gap:4}}>
                     {col.label}
-                    {sortable&&col.sortable!==false&&(sortCol===col.key?sortDir==="asc"?Ic.sortAsc(12,C.azulProfundo):Ic.sortDesc(12,C.azulProfundo):Ic.sortNone(12))}
+                    {sortableS&&col.sortable!==false&&(sortCol===col.key?sortDir==="asc"?Ic.sortAsc(12,C.azulProfundo):Ic.sortDesc(12,C.azulProfundo):Ic.sortNone(12))}
                   </span>
                 </th>
               ))}
@@ -1009,7 +1025,7 @@ export default function TableDoc() {
                 {prop:"compact",type:"boolean",def:"false",desc:"Padding reduzido (6px) e font 11px. Para dashboards densos e listagens longas."},
                 {prop:"bordered",type:"boolean",def:"false",desc:"Borda em todas as células. Para dados financeiros e planilhas."},
                 {prop:"selectable",type:"boolean",def:"false",desc:"Checkbox por linha + select all no header. Retorna índices selecionados."},
-                {prop:"sortable",type:"boolean",def:"true",desc:"Habilita ordenação ao clicar no header. Pode ser desativado por coluna (sortable: false)."},
+                {prop:"sortable",type:"boolean",def:"true",desc:"Habilita ordenação ao clicar no header. Valor inicial — com configurable, o usuário troca ao vivo na aba 'Ordenação' do Configurar. Pode ser desativado por coluna (sortable: false), inclusive com o padrão geral ligado."},
                 {prop:"paginate",type:"number",def:"0",desc:"Linhas por página. 0 = sem paginação. Exibe controles de página no footer."},
                 {prop:"perPageOptions",type:"number[]",def:"—",desc:"Array de opções para selector de linhas/página. Ex: [5, 10, 25]. Exibe dropdown no footer."},
                 {prop:"loading",type:"boolean",def:"false",desc:"Exibe 5 linhas de skeleton com animação shimmer (gradiente deslizante). Para estados de carregamento."},
