@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import { Bell, Database, HardDrive } from "lucide-react";
-import { InlineCodeCopy } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { FipsTabBar } from '../../../components/composites/FipsTabBar';
 
@@ -183,177 +182,6 @@ const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.
 const gk={fontSize:11,fontFamily:Fn.mono,color:C.cinzaChumbo,background:C.cardBg,padding:"2px 8px",borderRadius:4,border:`1px solid ${C.cardBorder}`};
 function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
 
-/* ═══════════════════════════════════════════ EXPORT CODE ═══════════════════════════════════════════ */
-const TABS_UNDERLINE_CODE = `// DS-FIPS — Tabs (Underline) — Copy-paste ready
-import { useState, useEffect, useRef } from "react";
-
-const C = {
-  azulProfundo: "#004B9B",
-  azulEscuro: "#002A68",
-  cinzaChumbo: "#7B8C96",
-  cinzaEscuro: "#333B41",
-  amareloEscuro: "#F6921E",
-  branco: "#FFFFFF",
-  cardBorder: "#E2E8F0",
-  textLight: "#7B8C96",
-};
-
-const Fn = {
-  body: "'Open Sans', sans-serif",
-  mono: "'Fira Code', monospace",
-};
-
-interface Tab {
-  label: string;
-  icon?: (color: string) => React.ReactNode;
-  count?: number;
-  disabled?: boolean;
-}
-
-export function TabsUnderline({
-  tabs = [], active = 0, onChange, size = "md",
-}: {
-  tabs: Tab[]; active?: number;
-  onChange?: (i: number) => void; size?: "sm" | "md" | "lg";
-}) {
-  const sz = { sm: { fs: 12, py: 8, px: 16 }, md: { fs: 13, py: 10, px: 20 }, lg: { fs: 14, py: 12, px: 24 } };
-  const s = sz[size] || sz.md;
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
-  const [line, setLine] = useState({ left: 0, width: 0 });
-
-  useEffect(() => {
-    const el = refs.current[active];
-    if (el) setLine({ left: el.offsetLeft, width: el.offsetWidth });
-  }, [active, tabs.length]);
-
-  return (
-    <div style={{ position: "relative", display: "flex", borderBottom: \`2px solid \${C.cardBorder}\`, overflow: "hidden" }}>
-      {tabs.map((t, i) => {
-        const isA = active === i;
-        const dis = t.disabled;
-        const ic = isA ? C.amareloEscuro : C.cinzaChumbo;
-        return (
-          <div key={i} ref={(el) => (refs.current[i] = el)}
-            onClick={() => !dis && onChange?.(i)}
-            style={{
-              padding: \`\${s.py}px \${s.px}px\`, fontSize: s.fs,
-              fontWeight: isA ? 600 : 400, fontFamily: Fn.body,
-              color: dis ? C.textLight : isA ? C.azulEscuro : C.cinzaChumbo,
-              cursor: dis ? "not-allowed" : "pointer",
-              display: "flex", alignItems: "center", gap: 7,
-              whiteSpace: "nowrap", transition: "all .2s",
-              opacity: dis ? 0.45 : 1,
-            }}
-          >
-            {t.icon && <span style={{ display: "flex" }}>{t.icon(ic)}</span>}
-            {t.label}
-            {t.count !== undefined && (
-              <span style={{
-                minWidth: 18, height: 18, borderRadius: 999,
-                background: isA ? C.azulProfundo : "#C0CCD2",
-                color: isA ? C.branco : C.cinzaChumbo,
-                fontSize: 10, fontWeight: 700,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                padding: "0 5px", fontFamily: Fn.mono,
-              }}>{t.count}</span>
-            )}
-          </div>
-        );
-      })}
-      <div style={{
-        position: "absolute", bottom: -2, left: line.left, width: line.width,
-        height: 3, background: C.amareloEscuro, borderRadius: "3px 3px 0 0",
-        transition: "left .3s cubic-bezier(.4,0,.2,1), width .3s cubic-bezier(.4,0,.2,1)",
-      }} />
-    </div>
-  );
-}
-
-// Usage:
-// const [active, setActive] = useState(0);
-// <TabsUnderline tabs={[{label:"Home"},{label:"Docs"},{label:"Off",disabled:true}]} active={active} onChange={setActive} />
-`;
-
-const TABS_FILLED_CODE = `// DS-FIPS — Tabs (Filled) — Copy-paste ready
-import { useState } from "react";
-const C={azulProfundo:"#004B9B",cinzaChumbo:"#7B8C96",cinzaEscuro:"#333B41",cinzaClaro:"#C0CCD2",branco:"#FFFFFF",bg:"#F8FAFC",textLight:"#7B8C96"};
-const Fn={body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
-
-export function TabsFilled({tabs=[],active=0,onChange,size="md"}){
-  const sz={sm:{fs:12,py:7,px:14},md:{fs:13,py:9,px:18},lg:{fs:14,py:11,px:22}};
-  const s=sz[size]||sz.md;
-  return(
-    <div style={{display:"flex",gap:6,background:C.bg,padding:4,borderRadius:10,flexWrap:"wrap"}}>
-      {tabs.map((t,i)=>{
-        const isA=active===i; const dis=t.disabled;
-        return(
-          <div key={i} onClick={()=>!dis&&onChange?.(i)} style={{padding:\`\${s.py}px \${s.px}px\`,fontSize:s.fs,fontWeight:isA?700:500,fontFamily:Fn.body,color:dis?C.textLight:isA?C.branco:C.cinzaEscuro,background:isA?C.azulProfundo:"transparent",borderRadius:7,cursor:dis?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:6,whiteSpace:"nowrap",transition:"all .25s",opacity:dis?.45:1,boxShadow:isA?"0 2px 8px rgba(0,75,155,.25)":"none"}}>
-            {t.icon&&<span style={{display:"flex"}}>{typeof t.icon==="function"?t.icon(isA?C.branco:C.cinzaEscuro):t.icon}</span>}
-            {t.label}
-            {t.count!==undefined&&<span style={{minWidth:18,height:18,borderRadius:999,background:isA?\`\${C.branco}30\`:C.cinzaClaro,color:isA?C.branco:C.cinzaChumbo,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 5px",fontFamily:Fn.mono}}>{t.count}</span>}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-// USO: <TabsFilled tabs={[{label:"Todas",count:23},{label:"Ativas",count:8}]} active={0} onChange={setActive} />
-`;
-
-const TABS_GUIA_CODE = `// DS-FIPS — Tabs (Guia) — Copy-paste ready
-import { useState } from "react";
-const C={azulEscuro:"#002A68",azulProfundo:"#004B9B",cinzaChumbo:"#7B8C96",cinzaEscuro:"#333B41",branco:"#FFFFFF",cardBg:"#FFFFFF",textLight:"#7B8C96",verdeFloresta:"#00C64C"};
-const Fn={body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
-
-export function TabsGuia({tabs=[],active=0,onChange,size="md"}){
-  const sz={sm:{fs:11,py:8,px:18},md:{fs:12,py:10,px:20},lg:{fs:13,py:12,px:24}};
-  const s=sz[size]||sz.md;
-  return(
-    <div style={{display:"flex",gap:0,alignItems:"flex-end",position:"relative"}}>
-      {tabs.map((t,i)=>{
-        const isA=active===i; const dis=t.disabled;
-        return(
-          <div key={i} onClick={()=>!dis&&onChange?.(i)} style={{padding:\`\${s.py}px \${s.px}px\`,fontSize:s.fs,fontWeight:isA?700:500,fontFamily:Fn.body,color:dis?C.textLight:isA?C.azulEscuro:C.cinzaChumbo,background:C.cardBg,borderRadius:"10px 10px 0 0",border:"none",cursor:dis?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:7,whiteSpace:"nowrap",transition:"all .2s",opacity:dis?.45:1,position:"relative",zIndex:isA?3:1,boxShadow:isA?"0 -4px 12px rgba(0,42,104,.1)":"none"}}>
-            {t.icon&&<span style={{display:"flex"}}>{typeof t.icon==="function"?t.icon(isA?C.azulEscuro:C.cinzaChumbo):t.icon}</span>}
-            {t.label}
-            {t.count!==undefined&&<span style={{minWidth:20,height:20,borderRadius:999,background:isA?(t.color||C.azulProfundo):\`\${C.cinzaChumbo}18\`,color:isA?C.branco:C.cinzaChumbo,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 6px",fontFamily:Fn.mono}}>{t.count}</span>}
-            {t.dot&&<span style={{width:7,height:7,borderRadius:"50%",background:t.dotColor||C.verdeFloresta}}/>}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-// USO: <TabsGuia tabs={[{label:"Todos"},{label:"Pendentes"},{label:"Aprovados"}]} active={0} onChange={setActive} />
-`;
-
-const TABS_BORDERED_CODE = `// DS-FIPS — Tabs (Bordered) — Copy-paste ready
-import { useState } from "react";
-const C={azulProfundo:"#004B9B",azulEscuro:"#002A68",cinzaChumbo:"#7B8C96",cinzaEscuro:"#333B41",cinzaClaro:"#C0CCD2",amareloEscuro:"#F6921E",branco:"#FFFFFF",cardBorder:"#E2E8F0",textLight:"#7B8C96",verdeFloresta:"#00C64C"};
-const Fn={body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
-
-export function TabsBordered({tabs=[],active=0,onChange,size="md",vertical=false}){
-  const sz={sm:{fs:12,py:7,px:14},md:{fs:13,py:9,px:16},lg:{fs:14,py:11,px:20}};
-  const s=sz[size]||sz.md;
-  return(
-    <div style={{display:"flex",flexDirection:vertical?"column":"row",gap:vertical?1:4,flexWrap:vertical?"nowrap":"wrap"}}>
-      {tabs.map((t,i)=>{
-        const isA=active===i; const dis=t.disabled;
-        return(
-          <div key={i} onClick={()=>!dis&&onChange?.(i)} style={{padding:\`\${s.py}px \${s.px}px\`,fontSize:s.fs,fontWeight:isA?600:400,fontFamily:Fn.body,color:dis?C.textLight:isA?C.azulProfundo:C.cinzaChumbo,background:isA?"rgba(0,75,155,0.02)":"transparent",border:vertical?"none":\`1px solid \${isA?"rgba(0,75,155,0.19)":C.cardBorder}\`,borderLeft:vertical?\`2px solid \${isA?C.amareloEscuro:"transparent"}\`:undefined,borderRadius:vertical?"0 6px 6px 0":6,cursor:dis?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:7,whiteSpace:"nowrap",transition:"all .2s",opacity:dis?.45:1}}>
-            {t.icon&&<span style={{display:"flex",color:isA?C.amareloEscuro:C.cinzaChumbo}}>{typeof t.icon==="function"?t.icon(isA?C.azulProfundo:C.cinzaChumbo):t.icon}</span>}
-            {t.label}
-            {t.count!==undefined&&<span style={{minWidth:18,height:18,borderRadius:999,background:isA?C.azulProfundo:\`\${C.cinzaChumbo}15\`,color:isA?C.branco:C.cinzaChumbo,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 5px",fontFamily:Fn.mono,marginLeft:vertical?"auto":0}}>{t.count}</span>}
-            {t.dot&&<span style={{width:6,height:6,borderRadius:"50%",background:t.dotColor||C.verdeFloresta,marginLeft:vertical?"auto":0}}/>}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-// USO: <TabsBordered tabs={[{label:"Perfil"},{label:"Segurança"},{label:"Notificações",count:3}]} active={0} onChange={setActive} vertical />
-`;
-
 /* ═══════════════════════════════════════════ COPYABLE HELPERS ═══════════════════════════════════════════ */
 function tabsCopyCode(variant: string, tabs: string) {
   const styles: Record<string, { bg: string; activeBg: string; activeColor: string; inactiveColor: string; border: string; indicator: string }> = {
@@ -513,7 +341,6 @@ export default function TabsDoc(){
                 <p style={gt}>Navegação principal, tabs de detalhe, qualquer contexto padrão.</p>
                 <div style={gl}>Exemplo FIPS</div>
                 <p style={ge}>Tabs do App Suprimentos; seções de detalhe; App Visitante.</p>
-                <InlineCodeCopy label="Underline" code={TABS_UNDERLINE_CODE}/>
               </div>
             </div>
             </Copyable>
@@ -530,7 +357,6 @@ export default function TabsDoc(){
                 <p style={gt}>Filtros de categoria, toolbar, modos de visualização.</p>
                 <div style={gl}>Exemplo FIPS</div>
                 <p style={ge}>Categorias no App Ideias; filtros rápidos em dashboards.</p>
-                <InlineCodeCopy label="Filled" code={TABS_FILLED_CODE}/>
               </div>
             </div>
             </Copyable>
@@ -547,7 +373,6 @@ export default function TabsDoc(){
                 <p style={gt}>Sempre acima de tabelas para filtrar registros por categoria, status ou período. O padrão "Guia + Tabela" é o uso canônico.</p>
                 <div style={gl}>Exemplo FIPS</div>
                 <p style={ge}>Guia + Tabela de fornecedores no App Suprimentos; filtro de período no Dashboard Power BI; abas de status em listagens.</p>
-                <InlineCodeCopy label="Guia" code={TABS_GUIA_CODE}/>
               </div>
             </div>
             </Copyable>
@@ -564,7 +389,6 @@ export default function TabsDoc(){
                 <p style={gt}>Configurações, formulários multi-parte, sidebar de navegação vertical.</p>
                 <div style={gl}>Exemplo FIPS</div>
                 <p style={ge}>Seções de configuração; sidebar do App Acesso; formulários multi-step.</p>
-                <InlineCodeCopy label="Bordered" code={TABS_BORDERED_CODE}/>
               </div>
             </div>
             </Copyable>
