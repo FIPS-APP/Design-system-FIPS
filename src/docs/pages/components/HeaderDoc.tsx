@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react'
 import { BookOpen, Component, Home, LayoutDashboard, Palette } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import { DocHeaderSectionNavDemo } from '../../../components/layout/DocHeaderSectionNav'
 import { DocHeaderStandardPreview } from '../../../components/layout/DocHeaderStandard'
 import { SHELL_HERO_ART_SRC } from '../../../lib/shellHeroArt'
@@ -251,7 +250,6 @@ export default function HeaderDoc() {
   const mob = w < 640
 
   return (
-    <PlaygroundProvider>
     <div
       style={{
         minHeight: '100vh',
@@ -317,33 +315,20 @@ export default function HeaderDoc() {
         <Section
           n="02"
           title="Anatomia"
-          desc="Da esquerda para a direita: controle de menu (mobile), ícone de painel, coluna de título (eyebrow + badge opcional + H2), busca (md+), botões neumórficos (notificações, tutorial) e chip de conta (sm+). Clique em qualquer variante para copiar o código."
+          desc="Da esquerda para a direita: controle de menu (mobile), ícone de painel, coluna de título (eyebrow + badge opcional + H2), busca (md+), botões neumórficos (notificações, tutorial) e chip de conta (sm+)."
         >
           <DSCard mob={mob}>
             <div style={gl}>Header completo</div>
             <p style={{ ...gt, marginBottom: 16 }}>
-              Preview real do header padrão DS-FIPS com breadcrumb, busca, notificações, dark mode e avatar. Clique para copiar o código pronto para uso.
+              Preview real do header padrão DS-FIPS com breadcrumb, busca, notificações, dark mode e avatar.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <Copyable
-                label="DocHeader completo"
-                code={HEADER_FULL_CODE}
-                preview={
-                  <DocHeaderStandardPreview
-                    groupLabel="Componentes"
-                    pageTitle="Header"
-                    sectionNav={<DocHeaderSectionNavDemo tabs={HEADER_DOC_DEMO_TABS} />}
-                    withCardChrome={false}
-                  />
-                }
-              >
-                <DocHeaderStandardPreview
-                  groupLabel="Componentes"
-                  pageTitle="Header"
-                  sectionNav={<DocHeaderSectionNavDemo tabs={HEADER_DOC_DEMO_TABS} />}
-                  withCardChrome={false}
-                />
-              </Copyable>
+              <DocHeaderStandardPreview
+                groupLabel="Componentes"
+                pageTitle="Header"
+                sectionNav={<DocHeaderSectionNavDemo tabs={HEADER_DOC_DEMO_TABS} />}
+                withCardChrome={false}
+              />
             </div>
           </DSCard>
         </Section>
@@ -456,8 +441,6 @@ export default function HeaderDoc() {
           </div>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label:"DocHeader",
           description:"Header padrão DS-FIPS com breadcrumb, busca, notificações, dark mode toggle e user chip. Clique no header acima para copiar.",
@@ -465,6 +448,5 @@ export default function HeaderDoc() {
         }]}/>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }
