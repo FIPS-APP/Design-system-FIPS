@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import {
   AppWindow,
   Blocks,
@@ -1062,119 +1061,6 @@ function SidebarDemo({
   )
 }
 
-/* ── Helper: código copy-paste por variante do Sidebar ── */
-function sidebarCode(variant: 'light' | 'dark'): string {
-  const bg = variant === 'dark' ? '#1A1A1A' : '#002A68';
-  const borderIdle = variant === 'dark' ? '#3f3f46' : '#1a3d6e';
-  const tileBg = variant === 'dark'
-    ? 'linear-gradient(160deg, #303036 0%, #222226 55%, #1c1c20 100%)'
-    : 'linear-gradient(160deg, #0e4d8a 0%, #0a3a6e 55%, #072d58 100%)';
-  const label = variant === 'dark' ? 'Sidebar Dark Mode' : 'Sidebar DS-FIPS (azul)';
-  return `// DS-FIPS — ${label} — Copy-paste ready
-// Requer: React 18+, lucide-react, Saira Expanded + Open Sans
-// CSS vars: --color-surface, --color-fg, --color-border, --color-fg-muted
-import { useState, type ReactNode } from "react";
-
-const SIDEBAR_WIDTH = 256;
-const SIDEBAR_COLLAPSED_WIDTH = 68;
-
-const theme = {
-  bg: "${bg}",
-  border: "rgba(255,255,255,0.06)",
-  iconBgIdle: "rgba(255,255,255,0.08)",
-  iconBorderIdle: "${borderIdle}",
-  textMuted: "rgba(255,255,255,0.75)",
-  textHover: "rgba(255,255,255,0.92)",
-  textActive: "#fafafa",
-  accentFrom: "#F6921E",
-  accentTo: "#FFD37B",
-  accentBorderStrong: "rgba(246,146,30,0.58)",
-  iconActive: "${bg}",
-  chevron: "rgba(255,255,255,0.55)",
-};
-
-function SidebarNeuIcon({ children, isActive = false, hovered = false }: { children: ReactNode; isActive?: boolean; hovered?: boolean }) {
-  const lit = isActive || (hovered && !isActive);
-  return (
-    <div style={{
-      width: 36, height: 36, borderRadius: 10, position: "relative", overflow: "hidden",
-      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-      border: \`1px solid \${lit ? theme.accentBorderStrong : theme.iconBorderIdle}\`,
-      background: lit
-        ? \`linear-gradient(145deg, \${theme.accentTo} 0%, #f7ad45 34%, \${theme.accentFrom} 64%, #cf730d 100%)\`
-        : "${tileBg}",
-      boxShadow: isActive
-        ? "0 12px 24px -12px rgba(246,146,30,0.62), 0 2px 4px rgba(0,42,104,0.38)"
-        : "0 1px 2px rgba(0,42,104,0.3)",
-      transform: hovered && !isActive ? "translateY(-1px)" : "none",
-      transition: "all 0.25s ease",
-    }}>
-      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>{children}</div>
-    </div>
-  );
-}
-
-export function Sidebar({ items = [], activeHref = "/", collapsed = false, onNavigate, logo }: {
-  items: { label: string; emoji?: string; href?: string; icon?: ReactNode }[];
-  activeHref: string;
-  collapsed?: boolean;
-  onNavigate?: (href: string) => void;
-  logo?: ReactNode;
-}) {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  return (
-    <aside style={{
-      width: collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH,
-      height: "100vh", background: theme.bg, display: "flex", flexDirection: "column",
-      borderRight: \`1px solid \${theme.border}\`, transition: "width 0.25s ease", overflow: "hidden",
-    }}>
-      {logo && <div style={{ padding: collapsed ? "16px 0" : "16px 20px", display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "flex-start", gap: 10, borderBottom: \`1px solid \${theme.border}\` }}>{logo}</div>}
-      <nav style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
-        {items.map((item, i) => {
-          const isActive = item.href === activeHref;
-          const hovered = hoveredIdx === i;
-          return (
-            <div key={i}
-              onClick={() => item.href && onNavigate?.(item.href)}
-              onMouseEnter={() => setHoveredIdx(i)}
-              onMouseLeave={() => setHoveredIdx(null)}
-              style={{
-                display: "flex", alignItems: "center", gap: collapsed ? 0 : 12,
-                padding: collapsed ? "6px 0" : "6px 12px",
-                margin: collapsed ? "1px auto" : "1px 8px",
-                borderRadius: 8, cursor: "pointer",
-                justifyContent: collapsed ? "center" : "flex-start",
-                width: collapsed ? 52 : undefined,
-              }}
-            >
-              <SidebarNeuIcon isActive={isActive} hovered={hovered}>
-                {item.icon || <span style={{ color: isActive ? theme.iconActive : theme.textMuted, fontSize: 17 }}>{item.emoji || "📄"}</span>}
-              </SidebarNeuIcon>
-              {!collapsed && (
-                <span style={{
-                  fontSize: 13, fontWeight: isActive ? 600 : 400,
-                  color: isActive ? theme.textActive : hovered ? theme.textHover : theme.textMuted,
-                  fontFamily: "'Open Sans', sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                }}>{item.label}</span>
-              )}
-            </div>
-          );
-        })}
-      </nav>
-    </aside>
-  );
-}
-
-// Uso:
-// const items = [
-//   { label: "Dashboard", emoji: "📊", href: "/dashboard" },
-//   { label: "Coleta", emoji: "🚚", href: "/coleta" },
-//   { label: "Produção", emoji: "🏭", href: "/producao" },
-// ];
-// <Sidebar items={items} activeHref="/dashboard" onNavigate={(href) => navigate(href)} />
-`;
-}
-
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 function SidebarDarkPlayground({ mob }: { mob: boolean }) {
   const [demoPath2, setDemoPath2] = useState('/')
@@ -1219,30 +1105,9 @@ function SidebarDarkPlayground({ mob }: { mob: boolean }) {
     <Section
       n="02"
       title="Playground interativo — Dark Mode"
-      desc="Mesma sidebar com tema escuro: fundo #1A1A1A, tiles neumórficos adaptados, accent laranja mantido. Clique para copiar o código dark."
+      desc="Mesma sidebar com tema escuro: fundo #1A1A1A, tiles neumórficos adaptados, accent laranja mantido."
     >
       <Card mob={mob}>
-        <Copyable
-          label="Sidebar Dark Mode"
-          code={sidebarCode('dark')}
-          preview={
-            <div style={{ height: 300, overflow: 'hidden', borderRadius: 10, border: '1px solid #3f3f46' }}>
-              <SidebarDemo
-                location="/"
-                onNavigate={() => {}}
-                themeOverride={TN_DARKMODE}
-                autoCollapse={false}
-                collapseSeconds={5}
-                onAutoCollapseChange={() => {}}
-                onCollapseSecondsChange={() => {}}
-                menuBehaviorOpen={false}
-                onMenuBehaviorOpenChange={() => {}}
-                onSidebarPointerEnter={() => {}}
-                onSidebarPointerLeave={() => {}}
-              />
-            </div>
-          }
-        >
         <SidebarCtx.Provider value={{ collapsed: collapsed2 }}>
           <div
             style={{
@@ -1281,7 +1146,6 @@ function SidebarDarkPlayground({ mob }: { mob: boolean }) {
             </div>
           </div>
         </SidebarCtx.Provider>
-        </Copyable>
       </Card>
     </Section>
   )
@@ -1375,7 +1239,6 @@ export default function SidebarDoc() {
   }, [autoCollapse, clearCollapseTimer])
 
   return (
-    <PlaygroundProvider>
     <div
       style={{
         minHeight: '100vh',
@@ -1501,29 +1364,9 @@ export default function SidebarDoc() {
         <Section
           n="01"
           title="Playground interativo"
-          desc="Navegue pelos itens: rota ativa simulada, submenus, badges, tooltip no colapsado e Modo menu. Clique em qualquer sidebar para copiar o código."
+          desc="Navegue pelos itens: rota ativa simulada, submenus, badges, tooltip no colapsado e Modo menu."
         >
           <Card mob={mob}>
-            <Copyable
-              label="Sidebar DS-FIPS (azul)"
-              code={sidebarCode('light')}
-              preview={
-                <div style={{ height: 300, overflow: 'hidden', borderRadius: 10, border: `1px solid ${C.cardBorder}` }}>
-                  <SidebarDemo
-                    location="/"
-                    onNavigate={() => {}}
-                    autoCollapse={false}
-                    collapseSeconds={5}
-                    onAutoCollapseChange={() => {}}
-                    onCollapseSecondsChange={() => {}}
-                    menuBehaviorOpen={false}
-                    onMenuBehaviorOpenChange={() => {}}
-                    onSidebarPointerEnter={() => {}}
-                    onSidebarPointerLeave={() => {}}
-                  />
-                </div>
-              }
-            >
             <SidebarCtx.Provider value={{ collapsed }}>
               <div
                 style={{
@@ -1569,7 +1412,6 @@ export default function SidebarDoc() {
                 </div>
               </div>
             </SidebarCtx.Provider>
-            </Copyable>
           </Card>
         </Section>
 
@@ -1853,8 +1695,6 @@ export default function SidebarDoc() {
           </Card>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label:"Sidebar Neumorphic",
           description:"Sidebar DS-FIPS com ícones neumorphic, shimmer sweep, submenus, badges e tooltips",
@@ -1972,6 +1812,5 @@ export function Sidebar({ items = [], activeHref = "/", collapsed = false, onNav
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }
