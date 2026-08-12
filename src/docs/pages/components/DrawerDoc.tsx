@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { Select } from '../../../components/ui/select';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
@@ -294,73 +293,6 @@ export function Drawer({
 // </Drawer>
 `;
 
-/* ═══════════════════════════════════════════ COPYABLE HELPERS ═══════════════════════════════════════════ */
-function drawerCode(side: string, width: number, title: string, subtitle: string) {
-  const isH = side === 'left' || side === 'right';
-  return `// DS-FIPS — Drawer "${title}" (${side} ${width}px) — Copy-paste ready
-import { useState, useEffect } from "react";
-
-export function DrawerExample() {
-  const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [animIn, setAnimIn] = useState(false);
-
-  useEffect(() => {
-    if (open) { setVisible(true); requestAnimationFrame(() => requestAnimationFrame(() => setAnimIn(true))); }
-    else { setAnimIn(false); const t = setTimeout(() => setVisible(false), 300); return () => clearTimeout(t); }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const h = (e) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [open]);
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)}
-        style={{ padding: "8px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "'Open Sans', sans-serif" }}>
-        Abrir Drawer
-      </button>
-      {visible && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
-          <div onClick={() => setOpen(false)}
-            style={{ position: "absolute", inset: 0, background: "rgba(0,42,104,.35)", opacity: animIn ? 1 : 0, transition: "opacity .3s", cursor: "pointer" }} />
-          <div style={{ position: "fixed", top: 0, ${side}: 0, width: ${width}, maxWidth: "90vw", height: "100vh", zIndex: 1001, background: "#FFFFFF", boxShadow: "-4px 0 24px rgba(0,0,0,.12)", display: "flex", flexDirection: "column", transform: animIn ? "${isH ? 'translateX(0)' : 'translateY(0)'}" : "${side === 'right' ? 'translateX(100%)' : side === 'left' ? 'translateX(-100%)' : side === 'bottom' ? 'translateY(100%)' : 'translateY(-100%)'}", transition: "transform .3s cubic-bezier(.4,0,.2,1)" }}>
-            {/* Header */}
-            <div style={{ padding: "18px 24px", borderBottom: "1px solid #E2E8F0", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-              <div>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: "#333B41", margin: 0, fontFamily: "'Saira Expanded', sans-serif" }}>${title}</h2>
-                <p style={{ fontSize: 12, color: "#7B8C96", margin: "2px 0 0", fontFamily: "'Open Sans', sans-serif" }}>${subtitle}</p>
-              </div>
-              <span onClick={() => setOpen(false)} style={{ display: "flex", cursor: "pointer", opacity: 0.5, padding: 4, borderRadius: 4 }}>
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#7B8C96" strokeWidth="1.8" strokeLinecap="round"/></svg>
-              </span>
-            </div>
-            {/* Body */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
-              <p style={{ fontSize: 13, color: "#333B41", fontFamily: "'Open Sans', sans-serif" }}>Conteudo do drawer aqui.</p>
-            </div>
-            {/* Footer */}
-            <div style={{ padding: "14px 24px", borderTop: "1px solid #E2E8F0", background: "#F2F4F8", display: "flex", gap: 10, justifyContent: "flex-end", flexShrink: 0 }}>
-              <button onClick={() => setOpen(false)}
-                style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "transparent", color: "#7B8C96", border: "1.5px solid #C0CCD2", borderRadius: 6, cursor: "pointer", fontFamily: "'Open Sans', sans-serif" }}>
-                Cancelar
-              </button>
-              <button onClick={() => setOpen(false)}
-                style={{ padding: "7px 18px", fontSize: 12, fontWeight: 600, background: "#004B9B", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "'Open Sans', sans-serif" }}>
-                Salvar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}`;
-}
-
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DrawerDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
@@ -380,7 +312,6 @@ export default function DrawerDoc(){
   const limparFiltros=()=>{setFiltroStatus(null);setFiltroPrioridade(null);setFiltroDepto("Todos");setFiltroSegmento("Todos")};
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');`}</style>
 
@@ -503,24 +434,14 @@ export default function DrawerDoc(){
       <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1100,margin:"0 auto"}}>
 
         {/* 01 — PLAYGROUND */}
-        <Section n="01" title="Playground interativo" desc="Clique nos botões para abrir drawers reais. Clique para copiar o código de cada variante. ESC ou overlay para fechar.">
+        <Section n="01" title="Playground interativo" desc="Clique nos botões para abrir drawers reais. ESC ou overlay para fechar.">
           <DSCard mob={mob}>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <Copyable label="Drawer Right 420" code={drawerCode("right",420,"Detalhe da requisição","REQ-4025 · Equipamento SSMA")} preview={<Btn label="→ Detalhe (right 420px)" color={C.azulProfundo} onClick={()=>open("right")}/>}>
-                <Btn label="→ Detalhe (right 420px)" color={C.azulProfundo} onClick={()=>open("right")}/>
-              </Copyable>
-              <Copyable label="Drawer Left 400" code={drawerCode("left",400,"Filtros avançados","Refine a listagem de resultados")} preview={<Btn label="← Filtros (left 400px)" color={C.azulCeu} onClick={()=>open("left")}/>}>
-                <Btn label="← Filtros (left 400px)" color={C.azulCeu} onClick={()=>open("left")}/>
-              </Copyable>
-              <Copyable label="Drawer Bottom 280" code={drawerCode("bottom",280,"Ação rápida","Atribuir responsável")} preview={<Btn label="↑ Ação rápida (bottom 280px)" color={C.amareloEscuro} onClick={()=>open("bottom")}/>}>
-                <Btn label="↑ Ação rápida (bottom 280px)" color={C.amareloEscuro} onClick={()=>open("bottom")}/>
-              </Copyable>
-              <Copyable label="Drawer Right 560" code={drawerCode("right",560,"Editar fornecedor","MRS Logística S.A.")} preview={<Btn label="→ Edição larga (right 560px)" color={C.verdeFloresta} onClick={()=>open("wide")}/>}>
-                <Btn label="→ Edição larga (right 560px)" color={C.verdeFloresta} onClick={()=>open("wide")}/>
-              </Copyable>
-              <Copyable label="Drawer Right 340" code={drawerCode("right",340,"Ocorrência #OC-2041","Vazamento pátio 47-B")} preview={<Btn label="→ Ocorrência (right 340px)" color={C.danger} onClick={()=>open("narrow")}/>}>
-                <Btn label="→ Ocorrência (right 340px)" color={C.danger} onClick={()=>open("narrow")}/>
-              </Copyable>
+              <Btn label="→ Detalhe (right 420px)" color={C.azulProfundo} onClick={()=>open("right")}/>
+              <Btn label="← Filtros (left 400px)" color={C.azulCeu} onClick={()=>open("left")}/>
+              <Btn label="↑ Ação rápida (bottom 280px)" color={C.amareloEscuro} onClick={()=>open("bottom")}/>
+              <Btn label="→ Edição larga (right 560px)" color={C.verdeFloresta} onClick={()=>open("wide")}/>
+              <Btn label="→ Ocorrência (right 340px)" color={C.danger} onClick={()=>open("narrow")}/>
             </div>
             <p style={{fontSize:11,color:C.textMuted,marginTop:12}}>Drawers abrem com slide animation .3s. Overlay clica para fechar. ESC também fecha. Body com scroll interno.</p>
           </DSCard>
@@ -714,8 +635,6 @@ export default function DrawerDoc(){
           </div>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Drawer (Slide Panel)",
           description: "Painel lateral deslizante com overlay, header fixo, body scrollavel e footer com acoes. Suporta right/left/bottom/top.",
@@ -727,6 +646,5 @@ export default function DrawerDoc(){
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
