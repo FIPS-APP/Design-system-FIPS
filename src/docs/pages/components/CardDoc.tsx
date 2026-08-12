@@ -16,7 +16,6 @@ import {
   CircleCheckBig,
 } from "lucide-react";
 import { CodeExportSection } from '../../components/CodeExport';
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 import { StatsCard, StatsCardGrid } from '../../../components/composites/StatsCard';
 import { HowItWorksCard, HowItWorksGrid } from '../../../components/composites/HowItWorksCard';
 
@@ -327,55 +326,6 @@ export function CardAcao({ title, desc, primary, secondary, children }: CardAcao
 // <CardAcao title="Proxima acao" desc="Descricao" primary="Confirmar" secondary="Cancelar" />
 `;
 
-/* ═══════════════════════════════════════════ CODE SNIPPETS ═══════════════════════════════════════════ */
-function kpiCode(label:string,value:string,delta:string,up:boolean,color:string,sparkArr:string){
-  return `// DS-FIPS — Card KPI com area chart
-import React from "react";
-
-const C = {
-  surface: "#FFFFFF",
-  border: "#E2E8F0",
-  fg: "#333B41",
-  fgMuted: "#7B8C96",
-};
-const Fn = { title: "'Saira Expanded', sans-serif", body: "'Open Sans', sans-serif", mono: "'Fira Code', monospace" };
-
-function SparkArea({ data, color, w = 130, h = 30 }: { data: number[]; color: string; w?: number; h?: number }) {
-  const max = Math.max(...data), min = Math.min(...data);
-  const pts = data.map((v, i) => \`\${(i / (data.length - 1)) * w},\${h - ((v - min) / (max - min || 1)) * (h - 4) + 2}\`);
-  return (
-    <svg width={w} height={h} viewBox={\`0 0 \${w} \${h}\`} style={{ display: "block", width: "100%" }}>
-      <defs>
-        <linearGradient id="ga" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity=".18" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <polygon points={\`0,\${h} \${pts.join(" ")} \${w},\${h}\`} fill="url(#ga)" />
-      <polyline points={pts.join(" ")} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-export function CardKPI() {
-  const up = ${up};
-  const deltaColor = up ? "#00C64C" : "#DC3545";
-  const color = "${color}";
-  return (
-    <div style={{ background: C.surface, borderRadius: "10px 10px 10px 18px", border: \`1px solid \${C.border}\`, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,75,155,.04)" }}>
-      <div style={{ padding: "18px 20px 10px", position: "relative" }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: C.fgMuted, display: "block", marginBottom: 8 }}>${label}</span>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 28, fontWeight: 800, fontFamily: Fn.title, color: C.fg, lineHeight: 1 }}>${value}</span>
-          <span style={{ fontSize: 10, fontWeight: 600, fontFamily: Fn.mono, color: deltaColor }}>{up ? "↑" : "↓"} ${delta}</span>
-        </div>
-      </div>
-      <SparkArea data={[${sparkArr}]} color={color} w={300} h={34} />
-    </div>
-  );
-}`;
-}
-
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function CardDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
@@ -383,7 +333,6 @@ export default function CardDoc(){
   const mob=w<640;
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');`}</style>
 
@@ -405,20 +354,12 @@ export default function CardDoc(){
         <FamilyLabel icon={Ic.chart(18,C.azulProfundo)} label="FAMÍLIA 1 — DASHBOARD" color={C.azulProfundo} />
 
         {/* 01 — KPI E2 com area chart */}
-        <Section n="01" title="Card KPI com area chart" desc="Ícone padrão DS no canto superior direito + gráfico de tendência no rodapé. Para dashboards operacionais com visão de tendência. Clique em qualquer card para copiar o código.">
+        <Section n="01" title="Card KPI com area chart" desc="Ícone padrão DS no canto superior direito + gráfico de tendência no rodapé. Para dashboards operacionais com visão de tendência.">
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr 1fr":"repeat(4, 1fr)",gap:12}}>
-            <Copyable label="KPI Solicitações" code={kpiCode("Solicitações","247","+12%",true,"#004B9B","10,14,12,18,16,22,20,25,24,28")} preview={<CardKPIE2 label="Solicitações" value="247" delta="+12%" up={true} icon={Ic.doc(20,C.azulProfundo)} color={C.azulProfundo} spark={[10,14,12,18,16,22,20,25,24,28]}/>}>
-              <CardKPIE2 label="Solicitações" value="247" delta="+12%" up={true} icon={Ic.doc(20,C.azulProfundo)} color={C.azulProfundo} spark={[10,14,12,18,16,22,20,25,24,28]}/>
-            </Copyable>
-            <Copyable label="KPI Finalizadas" code={kpiCode("Finalizadas","189","+8%",true,"#00C64C","6,8,10,9,14,16,15,18,20,19")} preview={<CardKPIE2 label="Finalizadas" value="189" delta="+8%" up={true} icon={Ic.check(18,C.verdeFloresta)} color={C.verdeFloresta} spark={[6,8,10,9,14,16,15,18,20,19]}/>}>
-              <CardKPIE2 label="Finalizadas" value="189" delta="+8%" up={true} icon={Ic.check(18,C.verdeFloresta)} color={C.verdeFloresta} spark={[6,8,10,9,14,16,15,18,20,19]}/>
-            </Copyable>
-            <Copyable label="KPI Aguardando" code={kpiCode("Aguardando","38","-4%",false,"#F6921E","18,16,17,14,15,12,13,10,11,9")} preview={<CardKPIE2 label="Aguardando" value="38" delta="-4%" up={false} icon={Ic.clock(18,C.amareloEscuro)} color={C.amareloEscuro} spark={[18,16,17,14,15,12,13,10,11,9]}/>}>
-              <CardKPIE2 label="Aguardando" value="38" delta="-4%" up={false} icon={Ic.clock(18,C.amareloEscuro)} color={C.amareloEscuro} spark={[18,16,17,14,15,12,13,10,11,9]}/>
-            </Copyable>
-            <Copyable label="KPI Atrasadas" code={kpiCode("Atrasadas","5","+2",true,"#DC3545","1,2,1,3,2,4,3,5,4,5")} preview={<CardKPIE2 label="Atrasadas" value="5" delta="+2" up={true} icon={Ic.alert(20,C.danger)} color={C.danger} spark={[1,2,1,3,2,4,3,5,4,5]}/>}>
-              <CardKPIE2 label="Atrasadas" value="5" delta="+2" up={true} icon={Ic.alert(20,C.danger)} color={C.danger} spark={[1,2,1,3,2,4,3,5,4,5]}/>
-            </Copyable>
+            <CardKPIE2 label="Solicitações" value="247" delta="+12%" up={true} icon={Ic.doc(20,C.azulProfundo)} color={C.azulProfundo} spark={[10,14,12,18,16,22,20,25,24,28]}/>
+            <CardKPIE2 label="Finalizadas" value="189" delta="+8%" up={true} icon={Ic.check(18,C.verdeFloresta)} color={C.verdeFloresta} spark={[6,8,10,9,14,16,15,18,20,19]}/>
+            <CardKPIE2 label="Aguardando" value="38" delta="-4%" up={false} icon={Ic.clock(18,C.amareloEscuro)} color={C.amareloEscuro} spark={[18,16,17,14,15,12,13,10,11,9]}/>
+            <CardKPIE2 label="Atrasadas" value="5" delta="+2" up={true} icon={Ic.alert(20,C.danger)} color={C.danger} spark={[1,2,1,3,2,4,3,5,4,5]}/>
           </div>
         </Section>
 
@@ -735,8 +676,6 @@ export default function CardDoc(){
           </DSCard>
         </Section>
 
-        <CodePlayground />
-
         <CodeExportSection items={[{
           label: "Card",
           description: "Card base, CardResumo (com badges e footer) e CardAcao (com botoes CTA).",
@@ -754,6 +693,5 @@ export default function CardDoc(){
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }

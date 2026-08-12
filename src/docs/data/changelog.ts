@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.1',
+    date: '2026-08-12',
+    title: 'Card: removida a função de copiar da Seção 01',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Os 4 cards da Seção 01 (Card KPI com area chart) de `/docs/components/card` estavam envolvidos em `Copyable` — clique em qualquer um copiava um snippet standalone. Removido: agora são preview puro. Junto saiu o "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem nenhum produtor — a Seção 01 era a única da página que alimentava o playground. Mesmo tratamento das v0.11.18/0.11.21/0.11.25/0.11.30.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Removido o gerador `kpiCode` (47 linhas de snippet copy-paste com `SparkArea` + `CardKPI` standalone), usado só pelos 4 `Copyable` removidos. O `desc` da seção ainda terminava em "Clique em qualquer card para copiar o código" — frase que passou a ser falsa com a remoção. Corrigida. `CodeExportSection` mantido (contexto próprio, independente do `PlaygroundProvider`).',
+      },
+    ],
+  },
+  {
     version: '0.12.0',
     date: '2026-08-11',
     title: 'Categoria Motion no sidebar com o BrandLoader',

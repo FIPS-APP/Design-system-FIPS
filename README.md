@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.12.0`
+## Versão atual: `v0.12.1`
 
 ## Consumindo a biblioteca
 
@@ -76,6 +76,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.12.1 | 2026-08-12 | Removida a função de copiar da Seção 01 (Card KPI com area chart) de `/docs/components/card` — os 4 cards viram preview puro. Junto saíram o gerador `kpiCode` (só eles usavam) e o bloco "Teste ao Vivo" (`CodePlayground`/`PlaygroundProvider`), que ficaria sem produtor — mesmo tratamento das v0.11.18/0.11.21/0.11.25/0.11.30. Corrigida a frase órfã "Clique em qualquer card para copiar o código" no `desc` da seção. `CodeExportSection` mantido (contexto próprio) |
 | 0.12.0 | 2026-08-11 | Categoria **Motion** no sidebar com o **BrandLoader** — a marca extrudada em 3D nasce branca, com contorno nas cores da marca, e recebe a cor da esquerda para a direita. WebM com canal alfa (56 KB) + APNG de fallback, renderizados da arte oficial |
 | 0.11.33 | 2026-08-11 | Bundle portátil `skills/design-system-fips` (lido por outras IAs) ressincronizado com o código — estava congelado na v0.11.15, 17 versões atrás. Barrel de exportação reescrito a partir de `src/index.ts`+`components/ui/index.ts` (faltavam `Switch`, `Modal`, `FieldTrigger`, `InputGroup*`, `admin-listing` e todos os composites), Modal de 8 para 10 variantes, `ariaLabel` do `CircularCommandMenu`, catálogo dos 9 tipos de seleção com o "Chip Filtro", Data Listing com drawer de filtros + specs exatas de toolbar/paginação, cadência de linha da tabela (`rowH` 30/42/56) e tokens de dark mode. Corrigido de passagem: `--shadow-card` documentado com o valor do `@theme`, quando o que vale em runtime é a sobrescrita azulada do `@layer base` |
 | 0.11.32 | 2026-07-28 | Corpo do `DSTable` (`/docs/components/table`) alinhado à tabela do Data Listing: cabeçalho passa de centralizado/10px para **alinhado à esquerda**/9px (o dado é lido da esquerda; centralizar quebra a varredura vertical), padding `12px`→`8px`; densidade migra de padding vertical (`py`) para **altura de linha fixa** (`rowH` 30/42/56 por densidade, igual ao `DENSITY` da referência) — linha normal cai de 54px para 42px; zebra de `#93BDE4`@5% para `#D3E3F4`@25%, que é o tom real da referência; card ganha a `box-shadow` sutil que faltava. Skeleton de loading alinhado à mesma altura |
