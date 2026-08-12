@@ -234,6 +234,28 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                             </div>
                           </div>
                           <div style={{padding:"6px 10px 2px",fontSize:10,color:C.textLight,lineHeight:1.5}}>Desligado, o ícone de ordenação some do header e o clique não reordena — útil pra listas já pré-ordenadas pelo backend.</div>
+                          <div style={{padding:"12px 10px 6px",fontSize:9,fontWeight:700,letterSpacing:".5px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderTop:`1px solid ${C.cardBorder}`,marginTop:6}}>Coluna padrão</div>
+                          <div onClick={()=>setSortCol(null)} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 10px",borderRadius:6,cursor:"pointer",background:sortCol===null?C.azulCeuClaro:"transparent",transition:"background .1s"}} onMouseEnter={e=>{if(sortCol!==null)e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{if(sortCol!==null)e.currentTarget.style.background="transparent"}}>
+                            <div style={{width:14,height:14,borderRadius:"50%",border:`1.5px solid ${sortCol===null?C.azulProfundo:C.cardBorder}`,background:sortCol===null?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{sortCol===null&&<div style={{width:5,height:5,borderRadius:"50%",background:C.branco}}/>}</div>
+                            <span style={{fontSize:12,color:C.cinzaEscuro,fontFamily:Fn.body}}>Nenhuma (ordem original)</span>
+                          </div>
+                          {visibleCols.filter(col=>col.sortable!==false&&col.label).map(col=>{
+                            const isA=sortCol===col.key;
+                            return(
+                              <div key={col.key} style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,padding:"8px 10px",borderRadius:6,background:isA?C.azulCeuClaro:"transparent",transition:"background .1s"}} onMouseEnter={e=>{if(!isA)e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{if(!isA)e.currentTarget.style.background="transparent"}}>
+                                <div onClick={()=>{setSortCol(col.key);if(!isA)setSortDir("asc")}} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",flex:1}}>
+                                  <div style={{width:14,height:14,borderRadius:"50%",border:`1.5px solid ${isA?C.azulProfundo:C.cardBorder}`,background:isA?C.azulProfundo:C.branco,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{isA&&<div style={{width:5,height:5,borderRadius:"50%",background:C.branco}}/>}</div>
+                                  <span style={{fontSize:12,color:C.cinzaEscuro,fontFamily:Fn.body}}>{col.label}</span>
+                                </div>
+                                {isA&&(
+                                  <button onClick={()=>setSortDir(d=>d==="asc"?"desc":"asc")} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"3px 8px",fontSize:10,fontWeight:600,color:C.azulProfundo,background:C.cardBg,border:`1px solid ${C.azulCeu}`,borderRadius:5,cursor:"pointer",fontFamily:Fn.body,flexShrink:0}}>
+                                    {sortDir==="asc"?Ic.sortAsc(10,C.azulProfundo):Ic.sortDesc(10,C.azulProfundo)}
+                                    {sortDir==="asc"?"Crescente":"Decrescente"}
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                       {configTab==="aparencia"&&(
@@ -256,7 +278,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
                     </div>
                     {/* Footer */}
                     <div style={{padding:"10px 14px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                      <button onClick={()=>{setHiddenCols([]);setColOrder(columns.map(c=>c.key));setDensityS(compact?"compact":"normal");setSortableS(sortable);setStripedS(striped);setBorderedS(!!bordered);setStickyHS(false);setWrapTextS(false)}} style={{fontSize:10,color:C.cinzaChumbo,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body,fontWeight:600}}>Restaurar padrão</button>
+                      <button onClick={()=>{setHiddenCols([]);setColOrder(columns.map(c=>c.key));setDensityS(compact?"compact":"normal");setSortableS(sortable);setSortCol(null);setSortDir("asc");setStripedS(striped);setBorderedS(!!bordered);setStickyHS(false);setWrapTextS(false)}} style={{fontSize:10,color:C.cinzaChumbo,background:"transparent",border:"none",cursor:"pointer",fontFamily:Fn.body,fontWeight:600}}>Restaurar padrão</button>
                       <button onClick={()=>setShowColMenu(false)} style={{padding:"6px 12px",fontSize:11,fontWeight:700,color:C.branco,background:C.azulProfundo,border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>Aplicar</button>
                     </div>
                   </div>
