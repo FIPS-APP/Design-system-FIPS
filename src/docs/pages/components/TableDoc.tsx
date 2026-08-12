@@ -11,6 +11,7 @@ const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono
 /* ═══════════════════════════════════════════ ICONS ═══════════════════════════════════════════ */
 const Ic={
   grid:(s=14,c=C.amareloOuro)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/></svg>,
+  list:(s=14,c=C.azulProfundo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke={c} strokeWidth="1.6" strokeLinecap="round"/></svg>,
   sortAsc:(s=12,c=C.azulProfundo)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M8 3v10M5 6l3-3 3 3" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   sortDesc:(s=12,c=C.azulProfundo)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M8 13V3M5 10l3 3 3-3" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   sortNone:(s=12,c=C.cinzaClaro)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3M5 10l3 3 3-3" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
@@ -50,7 +51,7 @@ function Avatar({name,photo}){
 /* ═══════════════════════════════════════════
    TABLE COMPONENT
    ═══════════════════════════════════════════ */
-function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,sortable=true,emptyText,loading,footer,paginate,perPageOptions,title,subtitle,icon,iconBg,iconBorder,configurable}){
+function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,sortable=true,emptyText,loading,footer,paginate,perPageOptions,title,subtitle,icon,iconBg,iconBorder,configurable,viewToggle}){
   const [sortCol,setSortCol]=useState(null);
   const [sortDir,setSortDir]=useState("asc");
   const [selected,setSelected]=useState([]);
@@ -63,6 +64,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   const [dragIdx,setDragIdx]=useState(null);
   const [dragOverIdx,setDragOverIdx]=useState(null);
   const [configTab,setConfigTab]=useState("colunas");
+  const [view,setView]=useState("table");
   const [densityS,setDensityS]=useState(compact?"compact":"normal");
   const [stripedS,setStripedS]=useState(striped);
   const [borderedS,setBorderedS]=useState(!!bordered);
@@ -139,6 +141,15 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:12}}>
+            {/* Toggle Tabela/Cards — mesma anatomia do header do Data Listing
+                (DataListingDemo.tsx): segmented 3/3, pill ativa em cardBg com sombra
+                sutil, ícone list/grid 12px. Sempre à esquerda do botão Configurar. */}
+            {viewToggle&&(
+              <div style={{display:"flex",gap:3,padding:3,background:C.bg,borderRadius:8,border:`1px solid ${C.cardBorder}`}}>
+                <button onClick={()=>setView("table")} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 10px",fontSize:11,fontWeight:600,color:view==="table"?C.azulProfundo:C.cinzaChumbo,background:view==="table"?C.cardBg:"transparent",border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body,boxShadow:view==="table"?"0 1px 2px rgba(0,42,104,.08)":"none",transition:"all .15s"}}>{Ic.list(12,view==="table"?C.azulProfundo:C.cinzaChumbo)} Tabela</button>
+                <button onClick={()=>setView("cards")} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 10px",fontSize:11,fontWeight:600,color:view==="cards"?C.azulProfundo:C.cinzaChumbo,background:view==="cards"?C.cardBg:"transparent",border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body,boxShadow:view==="cards"?"0 1px 2px rgba(0,42,104,.08)":"none",transition:"all .15s"}}>{Ic.grid(12,view==="cards"?C.azulProfundo:C.cinzaChumbo)} Cards</button>
+              </div>
+            )}
             {configurable&&(
               <div ref={configRef} style={{position:"relative"}}>
                 <button onClick={()=>setShowColMenu(v=>!v)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:showColMenu?C.azulProfundo:C.cinzaEscuro,background:showColMenu?C.azulCeuClaro:C.cardBg,border:`1px solid ${showColMenu?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",transition:"all .15s"}}>
@@ -240,7 +251,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
           </div>
         </div>
       )}
-      <div style={{overflowX:"auto",...(stickyHS?{maxHeight:420,overflowY:"auto"}:{})}}>
+      {view==="table"&&<div style={{overflowX:"auto",...(stickyHS?{maxHeight:420,overflowY:"auto"}:{})}}>
         <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
           <thead style={stickyHS?{position:"sticky",top:0,zIndex:2,background:C.bg,boxShadow:`0 1px 0 ${C.cardBorder}`}:undefined}>
             <tr style={{background:C.bg}}>
@@ -318,7 +329,49 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             })}
           </tbody>
         </table>
-      </div>
+      </div>}
+
+      {/* Vista Cards — mesma moldura do Data Listing (grid auto-fill 280px, gap 12,
+          card radius assimétrico 8/8/8/14, seleção pinta borda + fundo). O conteúdo
+          é montado a partir das colunas visíveis, porque o DSTable é genérico: a
+          primeira coluna vira o título do card e as demais viram pares label/valor,
+          sempre respeitando `col.render`. */}
+      {view==="cards"&&<div style={{padding:16,display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12}}>
+        {loading&&Array.from({length:4}).map((_,i)=>(
+          <div key={i} style={{padding:14,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"8px 8px 8px 14px"}}>
+            <div style={{height:12,width:"40%",borderRadius:4,background:C.bg,marginBottom:12}}/>
+            <div style={{height:10,width:"75%",borderRadius:4,background:C.bg,marginBottom:8}}/>
+            <div style={{height:10,width:"60%",borderRadius:4,background:C.bg}}/>
+          </div>
+        ))}
+        {!loading&&paged.length===0&&(
+          <div style={{gridColumn:"1 / -1",padding:"40px 20px",textAlign:"center",fontSize:13,color:C.cinzaChumbo,fontFamily:Fn.body}}>{emptyText||"Nenhum registro encontrado"}</div>
+        )}
+        {!loading&&paged.map((row,i)=>{
+          const isSelected=selected.includes(i);
+          const [head,...rest]=visibleCols;
+          return(
+            <div key={i} onClick={()=>selectable&&toggleRow(i)} style={{padding:14,background:isSelected?`${C.azulCeu}20`:C.cardBg,border:`1px solid ${isSelected?C.azulProfundo:C.cardBorder}`,borderRadius:"8px 8px 8px 14px",cursor:selectable?"pointer":"default",transition:"all .15s"}}>
+              {head&&(
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${C.cardBorder}`}}>
+                  <span style={{fontSize:12,fontFamily:Fn.mono,fontWeight:700,color:C.cinzaEscuro}}>{head.render?head.render(row[head.key],row):row[head.key]}</span>
+                  {selectable&&<input type="checkbox" checked={isSelected} onChange={()=>toggleRow(i)} onClick={e=>e.stopPropagation()} style={{cursor:"pointer"}}/>}
+                </div>
+              )}
+              <div style={{display:"flex",flexDirection:"column",gap:7}}>
+                {rest.map(col=>(
+                  <div key={col.key} style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,fontSize:11}}>
+                    <span style={{color:C.cinzaChumbo,fontFamily:Fn.body,flexShrink:0}}>{col.label}</span>
+                    {/* flex:1 no valor (não width automática): renders com barra interna
+                        — MiniProgress usa flex:1 — colapsariam a 0 num span encolhido. */}
+                    <span style={{color:C.cinzaEscuro,fontFamily:Fn.body,textAlign:"right",flex:1,minWidth:0}}>{col.render?col.render(row[col.key],row):row[col.key]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>}
       {/* Footer: pagination + custom content */}
       {(footer||perPage>0)&&(
         <div style={{padding:"10px 16px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap",fontSize:11,color:C.cinzaChumbo,fontFamily:Fn.body}}>
@@ -572,7 +625,7 @@ export default function TableDoc() {
 
         {/* 01 — PLAYGROUND */}
         <Section n="01" title="Playground interativo" desc="Tabela completa com título, botão Colunas, paginação, ordenação e seleção. Oculte colunas pelo dropdown. Hover azul suave.">
-          <DSTable columns={reqCols} data={reqData} selectable paginate={5} perPageOptions={[3,5,10]} configurable
+          <DSTable columns={reqCols} data={reqData} selectable paginate={5} perPageOptions={[3,5,10]} configurable viewToggle
             title="Requisições de compra"
             subtitle="Lista de requisições do módulo Suprimentos."
             icon={<svg width="28" height="28" viewBox="0 0 48 48" fill="none"><path d="M14 6h14l10 10v24a2 2 0 01-2 2H14a2 2 0 01-2-2V8a2 2 0 012-2z" stroke={C.azulProfundo} strokeWidth="2.5" strokeLinejoin="round"/><path d="M28 6v10h10M20 24h8M20 30h12M20 36h6" stroke={C.azulProfundo} strokeWidth="2" strokeLinecap="round"/></svg>}
@@ -740,7 +793,7 @@ export default function TableDoc() {
             <div style={{background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 20px",padding:mob?16:24}}>
               <h3 style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title}}>App Suprimentos — Fornecedores</h3>
               <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 16px"}}>Com título, botão Colunas e paginação</p>
-              <DSTable columns={fornCols} data={fornData} selectable configurable paginate={3}
+              <DSTable columns={fornCols} data={fornData} selectable configurable viewToggle paginate={3}
                 title="Carteira de Fornecedores"
                 subtitle="Fornecedores cadastrados no sistema."
                 icon={<svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect x="8" y="6" width="32" height="36" rx="3" stroke={C.verdeFloresta} strokeWidth="2.5"/><path d="M18 16h4M26 16h4M18 24h4M26 24h4M20 32h8v10H20z" stroke={C.verdeFloresta} strokeWidth="2" strokeLinecap="round"/></svg>}
@@ -966,6 +1019,7 @@ export default function TableDoc() {
                 {prop:"title",type:"string",def:"—",desc:"Título da tabela exibido no header bar acima das colunas."},
                 {prop:"subtitle",type:"string",def:"—",desc:"Subtítulo descritivo abaixo do título. Contexto da listagem."},
                 {prop:"configurable",type:"boolean",def:"false",desc:"Exibe botão 'Colunas' com dropdown para ocultar/exibir e reordenar colunas. Usar apenas com 5+ colunas — tabelas com poucas colunas não precisam de configuração."},
+                {prop:"viewToggle",type:"boolean",def:"false",desc:"Exibe o segmented Tabela/Cards à esquerda do botão Configurar, igual ao header do Data Listing. Na vista Cards a primeira coluna vira o título do card e as demais viram pares label/valor. Requer título no header."},
               ].map((p,i)=>(
                 <div key={p.prop} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"10px 0",borderBottom:i<14?`1px solid ${C.cardBorder}`:"none"}}>
                   <code style={{fontFamily:Fn.mono,fontSize:12,fontWeight:700,color:C.cinzaEscuro,minWidth:110}}>{p.prop}</code>
