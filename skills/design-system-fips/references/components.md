@@ -473,4 +473,5 @@ Loader institucional da marca. A logo FIPS extrudada em 3D nasce **branca** com 
 - `role="status"` + `aria-live="polite"`; sob `prefers-reduced-motion` mostra o quadro final estático.
 - **Não é SVG**: a fidelidade tipográfica do wordmark exige a arte oficial. Renderizado a partir de `Logo FIPS png.png`.
 - Usar em abertura do app, login, ação longa e explícita. **Não** usar em tabela carregando (ali vai skeleton), nem abaixo de 96 px, nem mais de um por tela.
+- **Padrão de uso** (abertura pós-login que pré-carrega os dados + loader em tabela pesada): ver `patterns.md` → "Loading — Abertura da marca (BrandLoader)".
 - Doc: `/docs/motion/brand-loader`

@@ -404,6 +404,60 @@ Regras:
 - home pode usar hero mais editorial
 - manter trilhos/trem como textura secundária, nunca como ruído dominante
 
+## Loading — Abertura da marca (BrandLoader)
+
+Fonte: `FIPS-APP/fips-qlp` — `client/src/App.tsx` (`AberturaGate`/`LoadingScreen`) e `client/src/components/brand/BrandLoader.tsx`. Componente e API: ver `components.md` ("BrandLoader (Motion)").
+
+O BrandLoader é **assinatura**, não decoração. Aparece em 3 situações e nada mais:
+
+- **abertura/login**, **tela pesada carregando**, **ação longa** (>1s: gerar PDF, sincronizar, importar lote)
+- **nunca** dentro de tabela leve (lá é **skeleton**), **nunca** em botão (ilegível <96px), **1 por tela**
+
+### Abertura pós-login (preload)
+
+Ao logar, segure o splash da marca enquanto pré-carrega as bases pesadas — com as **mesmas query keys** das telas, pra tudo abrir quente — e só então revele o app. Fecha em **~3,0s** (a cor do logo completa ~80% do loop de 4s; não chegar em 4s exatos pra não piscar o branco do reinício); teto de segurança 12s. No topo da árvore já autenticada:
+
+```tsx
+function LoadingScreen({ caption }: { caption?: string }) {
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-[var(--color-surface)]">
+      <BrandLoader size="splash" caption={caption} />
+    </div>
+  )
+}
+
+function AberturaGate({ children }: { children: React.ReactNode }) {
+  const queryClient = useQueryClient()
+  const [pronto, setPronto] = React.useState(false)
+  React.useEffect(() => {
+    let vivo = true
+    const espera = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+    const preload = Promise.allSettled([
+      // as query keys + fns das SUAS telas pesadas (as MESMAS do useQuery de cada página):
+      queryClient.prefetchQuery({ queryKey: ['SUA_KEY'], queryFn: () => suaApi() }),
+    ])
+    Promise.all([Promise.race([preload, espera(12000)]), espera(3000)]).then(() => { if (vivo) setPronto(true) })
+    return () => { vivo = false }
+  }, [queryClient])
+  if (!pronto) return <LoadingScreen caption="Carregando…" />
+  return <>{children}</>
+}
+// Ligação: if (auth.loading) return <LoadingScreen/>; if (!logado) return <Login/>;
+//          return <AberturaGate>{/* shell + rotas */}</AberturaGate>
+```
+
+Ajuste fino do tempo é só o número em `espera(3000)`.
+
+### Loader em tabela/card pesado (fallback)
+
+Fora da abertura (navegação direta, refetch, invalidação), no `isLoading` de uma tela **pesada** troque o spinner pelo BrandLoader `md` centralizado:
+
+```tsx
+if (query.isLoading) return <div className="flex items-center justify-center py-16"><BrandLoader size="md" /></div>
+```
+
+Critério: **só telas pesadas** (endpoint >~1s: listas grandes, dashboard, organograma). Tela leve (<~0,3s) fica **skeleton/spinner** — o BrandLoader "pisca" em load rápido.
+
 ## Governança
 
 Fonte: `src/docs/pages/GovernancePage.tsx`
