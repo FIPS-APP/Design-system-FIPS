@@ -4,6 +4,7 @@ import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, M
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
+import { TutorialOverlay } from '../../../components/domain/TutorialContextual';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
@@ -85,99 +86,6 @@ function Modal({open,onClose,title,subtitle,eyebrow,eyebrowColor,children,footer
         </div>
         <div style={{flex:1,overflowY:"auto",padding:noPadBody?0:"20px 24px",background:bodyBg||"transparent"}}>{children}</div>
         {footer&&<div style={{padding:"14px 24px",borderTop:`1px solid ${C.cardBorder}`,background:footerBg||C.bg,display:"flex",gap:10,justifyContent:"flex-end",alignItems:"center",flexShrink:0}}>{footer}</div>}
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   TUTORIAL MODAL — Step-by-step contextual walkthrough
-   ═══════════════════════════════════════════ */
-function TutorialModal({open,onClose,title,subtitle,steps=[]}){
-  const [vis,setVis]=useState(false);
-  const [animIn,setAnimIn]=useState(false);
-  const [step,setStep]=useState(0);
-  const bodyRef=useRef(null);
-  useEffect(()=>{if(open){setStep(0);setVis(true);requestAnimationFrame(()=>requestAnimationFrame(()=>setAnimIn(true)))}else{setAnimIn(false);const t=setTimeout(()=>setVis(false),280);return()=>clearTimeout(t)}},[open]);
-  useEffect(()=>{if(!open)return;const h=e=>{if(e.key==="Escape")onClose();if(e.key==="ArrowRight"&&step<steps.length-1)setStep(s=>s+1);if(e.key==="ArrowLeft"&&step>0)setStep(s=>s-1)};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose,step,steps.length]);
-  useEffect(()=>{if(bodyRef.current)bodyRef.current.scrollTo({top:0,behavior:"smooth"})},[step]);
-  if(!vis||!steps.length)return null;
-  const cur=steps[step];const total=steps.length;const pct=((step+1)/total)*100;
-  return(
-    <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
-      <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.50)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",opacity:animIn?1:0,transition:"opacity .28s",cursor:"pointer"}}/>
-      <div role="dialog" aria-modal="true" aria-labelledby="tutorial-title" style={{position:"relative",zIndex:1,width:540,maxWidth:"95vw",maxHeight:"90vh",background:C.cardBg,borderRadius:"12px 12px 12px 24px",boxShadow:"0 12px 48px rgba(0,42,104,.22), 0 2px 8px rgba(0,42,104,.08)",display:"flex",flexDirection:"column",transform:animIn?"scale(1) translateY(0)":"scale(.96) translateY(10px)",opacity:animIn?1:0,transition:"all .28s cubic-bezier(.32,.72,.37,1.1)",overflow:"hidden"}}>
-        {/* Header */}
-        <div style={{padding:"20px 24px",paddingRight:50,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:16,flexShrink:0,background:`linear-gradient(135deg,${C.azulProfundo}08 0%,${C.azulCeuClaro}20 100%)`}}>
-          <div style={{width:48,height:48,borderRadius:14,background:`${C.azulProfundo}10`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${C.azulCeu}30`}}>{Ic.helpCircle(28,C.azulProfundo)}</div>
-          <div style={{minWidth:0,flex:1}}>
-            <h2 id="tutorial-title" style={{fontSize:17,fontWeight:700,color:C.azulEscuro,margin:0,fontFamily:Fn.title,lineHeight:1.3}}>{title}</h2>
-            {subtitle&&<p style={{fontSize:12,color:C.cinzaChumbo,margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
-            <span style={{fontSize:11,fontWeight:700,color:C.azulProfundo,fontFamily:Fn.mono}}>{step+1}/{total}</span>
-          </div>
-        </div>
-        {/* Close */}
-        <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar tutorial" style={{position:"absolute",top:10,right:10,zIndex:2,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all .15s",background:"transparent"}} onMouseEnter={e=>{e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}} onKeyDown={e=>{if(e.key==="Enter")onClose()}}>{Ic.x(16,C.cinzaChumbo)}</div>
-
-        {/* Progress bar */}
-        <div style={{height:3,background:C.bg,flexShrink:0}}>
-          <div style={{height:"100%",width:`${pct}%`,background:`linear-gradient(90deg,${C.azulProfundo},${C.azulCeu})`,borderRadius:2,transition:"width .35s cubic-bezier(.4,0,.2,1)"}}/>
-        </div>
-
-        {/* Body — current step */}
-        <div ref={bodyRef} style={{flex:1,overflowY:"auto",padding:"24px 28px",background:"#fafafa"}}>
-          {/* Step number + title */}
-          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-            <div style={{width:36,height:36,borderRadius:10,background:`linear-gradient(135deg,${C.azulProfundo},${C.azulCeu})`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 4px 12px ${C.azulProfundo}30`}}>
-              <span style={{color:C.branco,fontSize:15,fontWeight:700,fontFamily:Fn.mono}}>{step+1}</span>
-            </div>
-            <div>
-              <h3 style={{fontSize:16,fontWeight:700,color:C.azulEscuro,margin:0,fontFamily:Fn.title}}>{cur.title}</h3>
-              {cur.ref&&<span style={{fontSize:11,color:C.azulClaro,fontFamily:Fn.mono,display:"flex",alignItems:"center",gap:4,marginTop:2}}>{Ic.target(12,C.azulClaro)} {cur.ref}</span>}
-            </div>
-          </div>
-
-          {/* Description */}
-          <p style={{fontSize:13,color:C.cinzaEscuro,lineHeight:1.7,margin:"0 0 16px",fontFamily:Fn.body}}>{cur.description}</p>
-
-          {/* Visual hint / card */}
-          {cur.visual&&(
-            <div style={{background:C.cardBg,borderRadius:10,border:`1px solid ${C.cardBorder}`,padding:16,marginBottom:16}}>
-              {cur.visual}
-            </div>
-          )}
-
-          {/* Tips */}
-          {cur.tips&&cur.tips.length>0&&(
-            <div style={{background:`${C.azulCeuClaro}30`,border:`1px solid ${C.azulCeuClaro}`,borderRadius:10,padding:"14px 18px"}}>
-              <span style={{fontSize:11,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.azulProfundo,fontFamily:Fn.title,display:"block",marginBottom:8}}>Dica</span>
-              {cur.tips.map((t,i)=>(
-                <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:i<cur.tips.length-1?6:0}}>
-                  <span style={{color:C.azulProfundo,fontSize:12,marginTop:1,flexShrink:0}}>→</span>
-                  <span style={{fontSize:12,color:C.cinzaEscuro,lineHeight:1.5}}>{t}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Footer — navigation */}
-        <div style={{padding:"14px 24px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",gap:10,justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
-          <div style={{display:"flex",alignItems:"center",gap:6}}>
-            {steps.map((_,i)=>(
-              <div key={i} onClick={()=>setStep(i)} style={{width:i===step?20:8,height:8,borderRadius:4,background:i===step?C.azulProfundo:i<step?C.azulCeu:`${C.cinzaClaro}`,cursor:"pointer",transition:"all .25s"}}/>
-            ))}
-          </div>
-          <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            <div style={{display:"flex",gap:4,marginRight:8}}>
-              <Kbd>←</Kbd><Kbd>→</Kbd>
-            </div>
-            {step>0&&<Btn label="Anterior" outline onClick={()=>setStep(s=>s-1)}/>}
-            {step<total-1?<Btn label="Próximo" color={C.azulProfundo} onClick={()=>setStep(s=>s+1)}/>:<Btn label="Concluir" color={C.verdeFloresta} onClick={onClose}/>}
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -311,28 +219,6 @@ export default function DialogDoc(){
   const mob=w<640;
   const [m,setM]=useState(null);
   const open=id=>setM(id);const close=()=>setM(null);
-
-  const tutorialSteps=[
-    {title:"Playground interativo",ref:"Seção 01 — Topo da página",description:"O playground permite testar cada tipo de modal em tempo real. Clique nos botões coloridos para abrir os 6 tipos de modal disponíveis no DS-FIPS. Cada variante tem cor, ícone e comportamento específico para seu contexto de uso.",tips:["Todos os modais fecham com ESC, clique no overlay ou botão X","Teste no mobile — os modais adaptam para 95vw automaticamente"],visual:(
-      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-        {[{l:"✓ Confirm.",c:C.verdeFloresta},{l:"✕ Destrutivo",c:C.danger},{l:"⚠ Alerta",c:C.amareloEscuro},{l:"ℹ Info",c:C.azulProfundo},{l:"📝 Form",c:C.azulCeu},{l:"📋 Lista",c:C.cinzaChumbo}].map(b=>(
-          <span key={b.l} style={{padding:"4px 12px",fontSize:11,borderRadius:6,background:`${b.c}15`,color:b.c,fontWeight:600,fontFamily:Fn.body,border:`1px solid ${b.c}30`}}>{b.l}</span>
-        ))}
-      </div>
-    )},
-    {title:"Guia de uso por tipo",ref:"Seção 02 — Regras de cada variante",description:"Cada tipo de modal tem regras claras de CTA (botões), cor dominante e quando usar. O card azul abaixo dos tipos mostra a hierarquia: Modal para decisões rápidas, Drawer para visualização lateral, Tela para cadastros complexos.",tips:["NUNCA use botão verde para ação de exclusão","Modal informativo tem apenas 1 botão ('Entendi'), sem cancelar","Formulários no modal devem ter no máximo 6 campos — mais que isso, use Drawer ou tela dedicada"]},
-    {title:"Anatomia do modal",ref:"Seção 03 — Estrutura em 5 camadas",description:"O modal DS-FIPS segue uma estrutura rigorosa de 5 camadas: Overlay → Panel → Header → Body → Footer. O diagrama interativo mostra a composição visual de cada camada com seus tokens de design exatos.",tips:["O border-radius assimétrico (12 12 12 24) é padrão do Brandbook FIPS","O ícone no Header usa container 48×48 com radius 14px e cor contextual"],visual:(
-      <div style={{display:"flex",gap:8}}>
-        {[{n:"①",nm:"Overlay",c:C.azulEscuro},{n:"②",nm:"Panel",c:C.cinzaChumbo},{n:"③",nm:"Header",c:C.verdeFloresta},{n:"④",nm:"Body",c:C.amareloEscuro},{n:"⑤",nm:"Footer",c:C.azulCeu}].map(l=>(
-          <div key={l.n} style={{flex:1,textAlign:"center",padding:"8px 4px",borderRadius:6,background:`${l.c}10`,borderBottom:`2px solid ${l.c}`}}>
-            <span style={{fontSize:14,fontWeight:700,color:l.c,fontFamily:Fn.mono,display:"block"}}>{l.n}</span>
-            <span style={{fontSize:10,color:C.cinzaChumbo}}>{l.nm}</span>
-          </div>
-        ))}
-      </div>
-    )},
-    {title:"Acessibilidade e tokens",ref:"Seções 04–08 — Referência completa",description:"As seções finais cobrem atalhos de teclado (ESC, Tab, Enter), atributos ARIA obrigatórios, regras de Faça/Evite, três tamanhos padrão (Compacto, Padrão, Largo), micro-interações de UX (blur, spring animation, glow) e todos os tokens de design.",tips:["Sempre conecte o título via aria-labelledby","Ao fechar, retorne o foco ao elemento que abriu o modal","Use cubic-bezier(.32,.72,.37,1.1) para animação de entrada — leve overshoot orgânico","Body backgrounds: transparente (padrão), #fafafa (formulário), #f5f6f8 (lista)"]},
-  ];
 
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
@@ -491,7 +377,11 @@ export default function DialogDoc(){
       </PopupModal>
 
       {/* 8. TUTORIAL CONTEXTUAL */}
-      <TutorialModal open={m==="tutorial"} onClose={close} title="Como usar esta página" subtitle="Tour guiado pelos recursos do Modal (Dialog)" steps={tutorialSteps}/>
+      {/* Tutorial — componente REAL de produção (`TutorialOverlay`), o mesmo que o ícone
+          de capelo do header abre. Não é um modal local: o padrão do tutorial é o overlay
+          contextual com spotlight, que lê os passos de `PAGE_TUTORIALS[pageName]`. Mesmo
+          tratamento de "Exportação" (ExportPreviewModal) e "Novidades" (ChangelogModal). */}
+      <TutorialOverlay open={m==="tutorial"} onClose={close} pageName="dialog"/>
 
       {/* 9. EXPORTAÇÃO — composite real ExportPreviewModal (paridade Tecnopano), não o ExportModal legado */}
       <ExportPreviewModal
