@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { CodeExportSection } from '../../components/CodeExport'
+import { ExportButtons } from '../../../components/composites/ExportButtons'
 import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown, LuFilter, LuSearch } from "react-icons/lu";
 import * as echarts from "echarts/core";
 import { PieChart } from "echarts/charts";
@@ -151,6 +152,18 @@ function ChipSelect({label,value,onChange,options,placeholder="Todos",icon}:{lab
 function ChipRadioDot({active,color}:{active:boolean,color:string}){
   return <span style={{display:"flex",flexShrink:0,alignItems:"center",justifyContent:"center",width:14,height:14,borderRadius:"50%",border:`1.5px solid ${active?color:C.cardBorder}`}}>{active&&<span style={{width:6,height:6,borderRadius:"50%",background:color}}/>}</span>;
 }
+
+/* Colunas do export — mesmas do PDF (exportPDF abaixo), pra Excel e PDF saírem iguais. */
+const EXPORT_COLUMNS=[
+  {key:"id",label:"Código"},
+  {key:"sol",label:"Solicitante"},
+  {key:"dept",label:"Depto"},
+  {key:"status",label:"Status"},
+  {key:"priority",label:"Prioridade"},
+  {key:"sla",label:"SLA (%)"},
+  {key:"valor",label:"Valor (R$)"},
+  {key:"data",label:"Data"},
+];
 
 /* ═══════════════════ PDF Export ═══════════════════ */
 function exportPDF(data: Row[], filters: Record<string,string|null>, totals: {valor:string}){
@@ -480,8 +493,18 @@ export default function DSFIPSDashboard(){
           {w>=1700&&<ChipSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>}
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
             {hasFilter&&<span style={{fontSize:10,color:C.textMuted,fontFamily:Fn.body,whiteSpace:"nowrap"}}>{filtered.length} de {allData.length}</span>}
-            <button onClick={()=>exportPDF(filtered,filter,{valor:filtered.reduce((a,r)=>a+r.valor,0).toLocaleString("pt-BR")})} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.danger,background:`${C.danger}12`,border:`1px solid ${C.danger}30`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}} title="Gerar relatório PDF"><LuFileDown size={12} color={C.danger}/> Relatório</button>
             {hasFilter&&<button onClick={clearAll} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.cinzaChumbo,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}><LuX size={10} color={C.cinzaChumbo}/> Limpar</button>}
+            {/* Par Excel + PDF (32.5×32.5, só-ícone com tooltip) — padrão de saída de
+                dados da toolbar canônica. Substituiu o botão "Relatório" com label. */}
+            <ExportButtons
+              /* `xlsx` entra por import dinâmico: estático, ele soma ~284 kB ao chunk
+                 desta página (435→719 kB) só pra um clique que quase ninguém dá aqui. */
+              onExcel={async()=>{
+                const {exportXLSX}=await import('../../../utils/exportData');
+                exportXLSX(filtered as unknown as Record<string,unknown>[],EXPORT_COLUMNS,"painel-requisicoes");
+              }}
+              onPdf={()=>exportPDF(filtered,filter,{valor:filtered.reduce((a,r)=>a+r.valor,0).toLocaleString("pt-BR")})}
+            />
           </div>
         </div>
 
