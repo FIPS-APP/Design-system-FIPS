@@ -613,8 +613,6 @@ export default function DataListingDemo() {
                 </div>}
               </div>
 
-              <div style={{flex:1}}/>
-
               <ExportButtons
                 onExcel={()=>{setExportIntent("excel");setExportOpen(true)}}
                 onPdf={()=>{setExportIntent("pdf");setExportOpen(true)}}
