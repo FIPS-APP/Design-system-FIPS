@@ -408,11 +408,19 @@ export default function DSFIPSDashboard(){
         {/* ═══ BARRA DE FILTROS ═══ */}
         {/* Faixa única, mesma anatomia da toolbar canônica do Data Listing
             (DataListingDemo.tsx): padding 14px 18px, display:flex, gap 10, flexWrap:wrap.
-            Ordem: rótulo → chips → ações, tudo na mesma linha (antes eram dois blocos
-            empilhados com `justifyContent:space-between`, o que forçava 2 linhas sempre).
-            Sem `marginLeft:auto` nas ações de propósito: são 6 chips e eles estouram a
-            coluna de 1120px, então o auto-margin jogava o "Relatório" sozinho numa 2ª
-            linha com um vão vazio — fluindo junto, o wrap fica contínuo. */}
+            Ordem: rótulo → chips → ações, tudo na mesma linha.
+            Recolhimento progressivo (patterns.md § Filtros avançados, padrão Governança
+            BI): os chips somem um a um da direita conforme a coluna estreita, do menos
+            pro mais essencial (Status → Prioridade → Solicitante).
+            Medido ao vivo: a coluna real disponível pra faixa é 1084px (1120 de largura
+            máxima − 36 de padding interno) e NÃO cresce além disso em telas mais largas
+            (o conteúdo da página trava em maxWidth:1200). Os 6 chips + rótulo + Relatório
+            juntos pedem 1112px — 28px a mais do que cabe em QUALQUER largura de tela.
+            Por isso "Mês" fica fora do recolhimento (não tem breakpoint que o encaixe);
+            os outros 5 (Área/Processo, Ano, Solicitante, Prioridade, Status) cabem numa
+            única linha do jeito que estão. Mesma razão pela qual a referência canônica
+            (Governança BI) só tem 3 chips recolhíveis, não 6 — e usa Drawer pro resto,
+            que esta página não tem. */}
         <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?"12px":"14px 18px",marginBottom:mob?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04)",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
           <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <LuLayoutGrid size={16} color={dark?"#93BDE4":C.azulProfundo}/>
@@ -421,10 +429,9 @@ export default function DSFIPSDashboard(){
           </div>
           <ChipSelect label="Área / Processo" value={filter.dept} onChange={v=>setF("dept",v)} options={DEPTS} icon={<LuBuilding2 size={14} color={C.cinzaChumbo}/>}/>
           <ChipSelect label="Ano" value={filter.year} onChange={v=>setF("year",v)} options={YEARS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
-          <ChipSelect label="Mês" value={filter.month} onChange={v=>setF("month",v)} options={MONTHS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
-          <ChipSelect label="Solicitante" value={filter.sol} onChange={v=>setF("sol",v)} options={NAMES} icon={<LuUser size={14} color={C.cinzaChumbo}/>}/>
-          <ChipSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>
-          <ChipSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>
+          {w>=1620&&<ChipSelect label="Solicitante" value={filter.sol} onChange={v=>setF("sol",v)} options={NAMES} icon={<LuUser size={14} color={C.cinzaChumbo}/>}/>}
+          {w>=1460&&<ChipSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>}
+          {w>=1300&&<ChipSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>}
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
             <button onClick={()=>exportPDF(filtered,filter,{valor:filtered.reduce((a,r)=>a+r.valor,0).toLocaleString("pt-BR")})} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.danger,background:`${C.danger}12`,border:`1px solid ${C.danger}30`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}} title="Gerar relatório PDF"><LuFileDown size={12} color={C.danger}/> Relatório</button>
             {hasFilter&&<button onClick={clearAll} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.cinzaChumbo,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}><LuX size={10} color={C.cinzaChumbo}/> Limpar</button>}
