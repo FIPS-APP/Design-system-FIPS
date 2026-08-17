@@ -292,9 +292,36 @@ O `<Table>` governado expressa densidade como **padding vertical**. A referênci
 - Skeleton de carregamento usa a mesma `rowH`, senão as linhas "pulam" de altura ao sair do loading.
 - Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
 
-#### Header do card da tabela
+#### Anatomia obrigatória — a ordem não muda
 
-Padrão vindo do Data Listing (v0.11.23): `padding 18px 20px 14px`, `gap 14`, **`borderBottom` de 1px** separando header e tabela. Título 16px `lineHeight 1.2`; subtítulo 11px, `margin-top 3px`, `lineHeight 1.4`. Tile do ícone `48×48` com **aro**: fundo a 4% da cor do ícone, borda a 8% (`color-mix(in srgb, {cor} 8%, transparent)`).
+Uma tabela FIPS completa é sempre este empilhamento. Implementar parcialmente é o erro mais comum:
+
+```
+┌─ CARD (rounded-[10px_10px_10px_18px], border 1px, shadow 0 1px 3px rgba(0,75,155,.04))
+│  ① HEADER            ícone 48 + título + subtítulo  ·  [chips de filtro ativo]   →  [Tabela|Cards] [Configurar]
+│  ─────────────────────────────────────────────────────────────────── borderBottom 1px
+│  ② THEAD             checkbox? + th centralizado + ícone de sort
+│  ③ TBODY             linhas com rowH fixo, zebra, hover, seleção
+│  ─────────────────────────────────────────────────────────────────── borderTop 1px
+│  ④ FOOTER            [conteúdo custom / totais]      →  Linhas: [10▾]  ‹ 1 2 3 ›
+└─
+```
+
+**① Header do card** — `padding 18px 20px 14px`, `gap 14`, **`borderBottom` de 1px** separando header e tabela. Título 16px `lineHeight 1.2`; subtítulo 11px, `margin-top 3px`, `lineHeight 1.4`. Tile do ícone `48×48` com **aro**: fundo a 4% da cor do ícone, borda a 8% (`color-mix(in srgb, {cor} 8%, transparent)`).
+
+- **Esquerda:** ícone → título → subtítulo. Colados no título (separados por `·`), os **chips de filtro ativo** (`ActiveFilterChips`) — um chip por VALOR filtrado, nunca um badge "Filtrado" nem contagem "3 filtros".
+- **Direita, nesta ordem:** segmented **Tabela | Cards** → botão **Configurar**. Nada mais.
+- **Não** repetir "Mostrando X–Y de Z" aqui — esse texto é do footer (④). Ter nos dois lugares é duplicação (corrigido na v0.12.3).
+
+#### Vista Cards (`viewToggle`)
+
+O segmented Tabela/Cards alterna a mesma listagem entre grade e tabela. Segmented: container `gap 3`, `padding 3`, `radius 8`, borda 1px; pill ativa em `--color-surface` com `box-shadow 0 1px 2px rgba(0,42,104,.08)`; ícones `list`/`grid` 12px.
+
+Grade de cards: `padding 16`, `grid`, `repeat(auto-fill,minmax(280px,1fr))`, `gap 12`. Card: `padding 14`, `radius 8px 8px 8px 14px`, borda 1px; selecionado = borda `--color-primary` + fundo `azulCeu20`.
+
+Conteúdo do card **derivado das colunas visíveis** (não hardcode): a 1ª coluna vira o título (mono, 12px/700, com `borderBottom` separando), as demais viram pares `label → valor` alinhados nas pontas. Sempre respeitar `col.render`. O valor precisa de `flex:1` — renders com barra interna (progress) colapsam a 0 num span encolhido.
+
+A vista Cards tem os mesmos estados da tabela: skeleton no loading e empty state ocupando a grade inteira (`gridColumn: 1 / -1`).
 
 **`useTableDensity`** — hook exportado; retorna `TableDensity | null` (`null` = fora de `<Table>`). Descendentes como `Badge` usam para ajustar size automaticamente: `compact|normal → sm`, `comfortable → md`, fora de tabela → `sm`.
 
@@ -304,13 +331,16 @@ Padrão vindo do Data Listing (v0.11.23): `padding 18px 20px 14px`, `gap 14`, **
 
 Botão `<Settings2>` `variant="secondary"` (ativo: `variant="primary"`), abre popover `absolute top-full right-0 z-30 w-[300px] rounded-2xl border shadow-float` em `surface`.
 
-Três abas (`Colunas / Densidade / Aparência`), tabs só aparecem se as props respectivas forem passadas:
+**Quatro abas** (`Colunas / Densidade / Ordenação / Aparência`), tabs só aparecem se as props respectivas forem passadas. Com 4 abas o popover precisa de **340px** (não 300px): em 300px o rótulo "Aparência" é cortado, porque o container é `overflow:hidden` pelo radius. Botões de aba: `flex:1`, `padding 9px 4px`, `fontSize 10`, `whiteSpace:nowrap`.
 
 1. **Colunas** — lista `grip + checkbox + label`; coluna fixa tem badge `fixa` mono 9px e drag desabilitado; colunas ocultas por padrão vêm com `visibleColumns[id] = false`; draggable (HTML5 DnD) reordena via `onReorderColumn(sourceId, targetId)`.
 2. **Densidade** — 3 radio-cards (`compact / normal / comfortable`); cada um com indicador de barrinhas à direita (alturas proporcionais).
-3. **Aparência** — 4 toggles (`ConfigToggle`): zebra / bordas verticais / cabeçalho fixo / quebra de linha. Toggle pill 30×18px, ativo = `primary`, inativo = `border-strong`.
+3. **Ordenação** (v0.12.3) — duas partes:
+   - toggle **Ordenar por coluna** (Sim/Não). Desligado, o ícone de sort some do `th` **e** o clique para de reordenar — é o caso de lista já pré-ordenada pelo backend. A prop `sortable` do componente é só o **valor inicial**; aqui o usuário troca ao vivo.
+   - **Coluna padrão** — lista rádio com "Nenhuma (ordem original)" + uma linha por coluna visível e ordenável. A coluna ativa ganha um botão inline **Crescente/Decrescente** que alterna a direção. Define o `sortCol`/`sortDir` iniciais, os mesmos estados que o clique no `th` usa.
+4. **Aparência** — 4 toggles (`ConfigToggle`): zebra / bordas verticais / cabeçalho fixo / quebra de linha. Toggle pill 30×18px, ativo = `primary`, inativo = `border-strong`.
 
-Footer: `Restaurar padrão` (texto 10px fg-muted, hover=fg) + `Aplicar` (`variant="primary" size="sm"`).
+Footer: `Restaurar padrão` (texto 10px fg-muted, hover=fg) + `Aplicar` (`variant="primary" size="sm"`). **`Restaurar padrão` reseta só a aba aberta** — cada aba tem seu branch (visualização → tabela; colunas → ordem/visibilidade originais; densidade → normal; ordenação → prop inicial + coluna nenhuma; aparência → os 4 defaults). Compartilhar um reset único entre abas é bug.
 
 **Persistência em `localStorage`** — chave `<app>-inventory-prefs`; salva `colOrder`, `hiddenCols`, `density`, `appearance`. Lazy-init no `useState`, `useEffect` grava em cada mudança. `try/catch` (modo privado não quebra). `Restaurar padrão` limpa a chave e reseta os estados.
 
@@ -325,12 +355,68 @@ Footer da listagem (fora do `<Table>`, abaixo do card):
 
 `<button>` inline-flex com ícone de caret: ativo = `ArrowUp / ArrowDown` 12px `secondary`; inativo = `ArrowUpDown` 12px `border-strong`.
 
+#### Coluna Ações — sempre `RowActionsMenu`
+
+A última coluna (`key:"_actions"`, `label:"Ações"`, `width 80`, `align:"center"`, `sortable:false`) renderiza **um** gatilho: o menu radial `RowActionsMenu` (`rowId`, `radius={56}`, `actions[]`). Ver `components.md` → CircularCommandMenu / RowActionsMenu.
+
+- **Nunca** um par de ícones soltos (olho/lápis) na célula — foi o padrão antigo, removido na v0.13.0.
+- A `<td>` precisa de `onClick={e => e.stopPropagation()}`, senão o clique no menu dispara também o `onClick` da linha (seleção/detalhe).
+- Ações `danger: true` (Excluir, Cancelar) saem em vermelho no menu.
+
+#### Seleção em massa (`selectable`)
+
+Checkbox no `th` (select-all da página corrente, `width 36`) + checkbox por linha. Linha selecionada pinta com `azulCeu20` — precedência: **selecionado > hover > zebra**. O estado é índice/id das linhas visíveis, não do dataset inteiro. Na vista Cards o checkbox vai no topo do card, com `stopPropagation` pra não conflitar com o clique do card.
+
+#### Estados obrigatórios — os quatro
+
+Uma tabela sem estes quatro está incompleta:
+
+| estado | como | detalhe |
+|---|---|---|
+| **loading** | `loading` → 5 linhas de skeleton com shimmer | usar a **mesma `rowH`** da densidade, senão a linha "pula" ao sair do loading |
+| **vazio** | `emptyText` centralizado, `--color-fg-muted` | título 15px/700 + linha de apoio ("Tente ajustar os filtros…") |
+| **erro** | ícone + "Erro ao carregar dados" + descrição + botão **Tentar novamente** (outline azul) | não silenciar falha de fetch |
+| **selecionado** | fundo `azulCeu20` na linha | ver seleção em massa acima |
+
+#### Footer da tabela
+
+Faixa `--color-surface-muted`, `padding 10px 16px`, `gap 12`, base 11px `--color-fg-muted`, `borderTop` 1px.
+
+- **Esquerda:** conteúdo custom (`footer` — totais, contadores tipo "12 requisições · 4 pendentes · Total: R$ 75.930") e/ou `Mostrando X–Y de Z`.
+- **Direita:** seletor **`Linhas:`** (`perPageOptions`, ex. `[5,10,25]`) + navegação `‹ 1 2 3 ›`. Botões de página `24×24` `radius 5` — inativo = transparente/`fg-muted`/400; ativo = fundo `--color-primary`, 700, **sem borda**. Setas `‹`/`›` no formato `pgBtn` (`padding 4px 10px`, borda `#93BDE4`, texto azul), desabilitadas nos extremos.
+
+#### Props do padrão de referência (`DSTable`)
+
+| prop | tipo | default | efeito |
+|---|---|---|---|
+| `columns` | `Column[]` | — | `key`, `label`, `align`, `width`, `sortable`, `render(value, row)` |
+| `data` | `Object[]` | `[]` | chaves batem com `column.key` |
+| `title` / `subtitle` / `icon` | `string` / `ReactNode` | — | header do card; `iconBg`/`iconBorder` fazem o aro |
+| `striped` | `boolean` | `true` | desligar só em tabela curta (< 5 linhas) |
+| `compact` | `boolean` | `false` | densidade inicial |
+| `bordered` | `boolean` | `false` | bordas verticais — dados financeiros/planilha |
+| `selectable` | `boolean` | `false` | checkbox por linha + select-all |
+| `sortable` | `boolean` | `true` | **valor inicial**; com `configurable`, muda na aba Ordenação. `sortable:false` por coluna funciona mesmo com o geral ligado |
+| `paginate` | `number` | `0` | linhas por página; `0` = sem paginação |
+| `perPageOptions` | `number[]` | — | ex. `[5,10,25]` → dropdown "Linhas:" no footer |
+| `loading` | `boolean` | `false` | skeleton shimmer |
+| `emptyText` | `string` | `"Nenhum registro"` | estado vazio |
+| `footer` | `ReactNode` | — | conteúdo à esquerda do footer |
+| `configurable` | `boolean` | `false` | botão Configurar (4 abas). Usar só com 5+ colunas |
+| `viewToggle` | `boolean` | `false` | segmented Tabela/Cards. Requer `title` |
+
 #### Row clicável → Dialog de detalhe
 
 Ao converter tela sem coluna de ações: `<TableRow onClick={() => setSelected(row)} className="cursor-pointer">`. Células que ainda têm ação própria (ex.: dropdown) usam `e.stopPropagation()` no onClick para não abrir o dialog junto.
 
 Não faça:
 
+- **tabela "pelada"**: sem header de card, sem footer de paginação ou sem os 4 estados — é o erro mais comum ao portar o padrão
+- par de ícones (olho/lápis) na coluna Ações em vez do `RowActionsMenu`
+- `th` alinhado à esquerda ou seguindo `col.align` — o cabeçalho é **sempre centralizado**; só o `td` respeita `align`
+- repetir "Mostrando X–Y de Z" no header do card (é do footer)
+- densidade como padding vertical em vez de `rowH` fixo
+- popover Configurar com 300px tendo 4 abas (corta "Aparência")
 - filtros como tabs planas coloridas soltas
 - export como botão genérico de texto em vez do par de ícones Excel/PDF
 - faixa-stripe lateral colorida em cards (padrão proibido)
