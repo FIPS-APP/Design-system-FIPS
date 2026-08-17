@@ -213,7 +213,10 @@
     );
     --fips-banner-content-shadow: 0 4px 20px rgba(0, 42, 104, 0.12);
     --fips-banner-content-border-color: transparent;
+    /* Faixa de página (alta, full-bleed) aguenta trilho mais visível… */
     --fips-banner-junction-opacity: 0.12;
+    /* …a faixa de conteúdo é baixa: 0.12 vira ruído atrás do título. Valor da doc do Banner. */
+    --fips-banner-junction-content-opacity: 0.06;
   }
 
   .dark {
@@ -222,6 +225,7 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
     --fips-banner-content-border-color: rgba(147, 189, 228, 0.08);
     --fips-banner-junction-opacity: 0.04;
+    --fips-banner-junction-content-opacity: 0.04;
   }
 
   .fips-banner-shell--page {
@@ -243,6 +247,10 @@
 
   .fips-banner-junction {
     opacity: var(--fips-banner-junction-opacity);
+  }
+
+  .fips-banner-shell--content .fips-banner-junction {
+    opacity: var(--fips-banner-junction-content-opacity);
   }
 
   /* ─── Dark mode: hero banner das doc pages ─── */

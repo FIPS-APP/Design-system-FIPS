@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.12.4`
+## Versão atual: `v0.13.0`
 
 ## Consumindo a biblioteca
 
@@ -57,6 +57,8 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Tipo de alteração | Incremento | Exemplo |
 |---|---|---|
+| 0.13.0 | 2026-08-17 | Novo composite **`PageHeader`** — a faixa de módulo (Banner de Conteúdo) promovida do `PageHeader` do Governança BI, que 14 telas usavam como componente local. API: `title`/`description`/`eyebrow`/`icon`/`info`/`badge`/`actions`/`stats`/`compact`/`as`. `PatternPanelHero` virou adaptador `@deprecated` sobre ele (uma implementação só). **`PageHero` alinhado** com a versão que o fips-suprimentos já rodava: fundo `--fips-banner-page-bg`, trilhos de junção, prop `compact` e **padding embutido** (breaking: filho com `px/py` próprio dobra o respiro). Doc do Banner (§ 03/§ 04) passou a renderizar o componente real em vez de réplica com hex fixo, e a função de copiar saiu das páginas Banner, Raios, Sombras e Textarea (como já tinha saído de Tabs/Table/Drawer/Header/Sidebar/Hero). Fixes de token: tile âmbar volta a 10%/19% (o `#FDC24E18`/`30` do banner é alfa hex, estava lido como 18%/30%) e trilho da faixa de conteúdo ganha opacidade própria (0.06 claro), separada da faixa de página (0.12) |
+| 0.12.5 | 2026-08-17 | Documentação do padrão **Hero** (`/docs/patterns/hero`) sincronizada com o hero real: a página ainda ensinava o header *glass-to-white* (transparente no topo, branco após `scrollTop > 60`) e um hero em degradê diagonal `118deg` sem foto — padrão aposentado na v0.6.3. Agora documenta as **três camadas** do hero da Home (arte `app-shell-home-trains.png` + overlay azul `#002A68` 60→45→60 + vinheta preta 35→15), o conteúdo canônico (badge laranja, título com termo em `--color-accent`, subtítulo `white/80`, par `ouro` + `inverseOutline`) e o straddle `-mt-7` dos indicadores. Preview passou a montar o header real (`DocHeaderStandardPreview`, com dark mode) em vez da simulação de scroll. Skill `design-system-fips` (`patterns.md` § Hero) atualizada junto |
 | **Correção / patch** (bugfix, ajuste visual, refactor) | `+0.0.1` | 0.4.0 → 0.4.1 |
 | **Nova feature / tela** | `+0.1.0` | 0.4.0 → 0.5.0 |
 | **Breaking change** (mudança incompatível) | `+1.0.0` | 0.4.0 → 1.0.0 |

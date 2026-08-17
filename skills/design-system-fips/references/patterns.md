@@ -401,12 +401,36 @@ Implementação de referência REAL (copiar verbatim, não improvisar): `Governa
 Fontes:
 
 - `src/docs/pages/patterns/HeroHeaderDoc.tsx` (página **Hero** na doc; rota `/docs/patterns/hero`)
+- `src/docs/pages/HomePage.tsx` — hero real da Home (implementação de referência)
+- `src/docs/pages/patterns/ApplicationShellDemo.tsx` — mesmo hero dentro do shell, com indicadores em straddle
 - `src/composites/PageHero.tsx`
+
+### Hero da Home — três camadas (copiar verbatim)
+
+Container `relative isolate overflow-hidden text-white`, e dentro dele, nesta ordem:
+
+1. **Arte** — `<img src="/backgrounds/app-shell-home-trains.png" className="absolute inset-0 h-full w-full object-cover object-center">` (`aria-hidden`, `decoding="async"`).
+2. **Overlay azul** — `bg-gradient-to-b from-[#002A68]/60 via-[#002A68]/45 to-[#002A68]/60`.
+3. **Vinheta** — `bg-gradient-to-t from-black/35 via-transparent to-black/15`. Não é enfeite: é ela que segura o contraste onde a foto clareia. As três camadas andam juntas — degradê puro (sem foto) ou foto sem overlay estão fora do padrão.
+4. **Conteúdo** — `relative z-10 mx-auto max-w-6xl px-4 py-12 text-center sm:px-6 sm:py-16`: badge pill laranja (`bg-[rgba(246,146,30,0.95)]` + `shadow-[0_12px_28px_rgba(246,146,30,0.28)]`), título `font-heading text-3xl sm:text-5xl font-bold` branco com um termo em `text-[var(--color-accent)]`, subtítulo `text-white/80 max-w-2xl leading-7`, e par de botões `size="sm"`: `variant="ouro"` (ou `accent`) + `variant="inverseOutline"`.
+
+Indicadores/KPIs, quando houver, montam sobre a borda do hero com straddle `-mt-7` (desktop) / `-mt-6` (tablet) / `-mt-3` (mobile).
+
+### O header acima do hero NÃO é glass
+
+O header é o padrão sólido (`DocHeaderStandard`: toolbar `--color-surface-soft` + arte lavada + faixa de abas), sticky e opaco em **todas** as rotas, inclusive a Home. O antigo padrão *glass-to-white* (header transparente com `backdrop-filter` no topo, virando branco após `scrollTop > 60`) foi **aposentado na v0.6.3** — nenhum app FIPS usa listener de scroll no header. Código com `scrollTop > 60` trocando o fundo do header é resíduo.
+
+### Faixa de módulo ≠ hero da Home
+
+Módulo, listagem e formulário **não** abrem com o hero com foto. A faixa dessas telas é o **Banner de Conteúdo** (doc: página **Banner**, `HeroBannerDoc.tsx` § 03): faixa-card `rounded-[12px_12px_12px_24px]`, `padding 22px 26px`, gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`, `JunctionLines` à direita (`opacity .06` claro / `.04` escuro), tile âmbar `44×44` `radius 11`, eyebrow uppercase `--color-accent-strong`, título Saira 21px, descrição 12px `white/67`, ações `Button variant="accent"` + `inverseOutline`, sombra `0 4px 20px rgba(0,42,104,.12)`. Implementação de referência real: `Governanca_BI/src/components/PageHeader.tsx` (usado nas 14 páginas do módulo).
+
+Desde a **v0.13.0** isso é um composite governado: `import { PageHeader } from 'ds-fips'` — promovido a partir do `PageHeader` do Governança BI. API e anatomia em `components.md` § PageHeader. Não recriar a faixa por tela nem copiar markup; `PatternPanelHero` virou adaptador `@deprecated` do mesmo componente.
+
+`PageHero` (`src/composites/PageHero.tsx`) é outra coisa: faixa **full-bleed** `min-h-[200px]` com a arte em `mix-blend-soft-light` à direita, para visão geral/edição. Na v0.13.0 foi alinhado com a versão que o fips-suprimentos já rodava — fundo `--fips-banner-page-bg`, trilhos de junção, prop `compact` — e **passou a embutir o padding** (filho com `px/py` próprio dobra o respiro).
 
 Regras:
 
-- módulos de produto usam `PageHero`
-- home pode usar hero mais editorial
+- o hero com foto é exclusivo da Home; módulo usa Banner de Conteúdo; `PageHero` só para faixa alta de visão geral/edição
 - manter trilhos/trem como textura secundária, nunca como ruído dominante
 
 ## Governança

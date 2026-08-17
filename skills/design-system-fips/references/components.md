@@ -11,6 +11,8 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
+- `PageHeader` (faixa de módulo — Banner de Conteúdo) · `PatternPanelHero` (deprecated, adaptador)
+- `BannerJunctionLines`, `BannerIconBox`, `FIPS_BANNER_CONTENT_CLASS`, `FIPS_BANNER_PAGE_CLASS`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
 - `CircularCommandMenu` · `RowActionsMenu`
@@ -382,11 +384,36 @@ Um único componente, dois presets:
 />
 ```
 
+## PageHeader (faixa de módulo — v0.13.0)
+
+Fonte: `src/components/composites/PageHeader.tsx`. Promovido do `PageHeader` do Governança BI (14 telas) — é o **Banner de Conteúdo** da doc `/docs/patterns/hero-banner`, agora governado.
+
+Abre módulo, listagem e formulário. **Não** é o hero da Home (foto + overlay azul) nem o `PageHero` (faixa full-bleed).
+
+```tsx
+import { PageHeader, Button } from 'ds-fips'
+import { FileDown, Plus } from 'lucide-react'
+
+<PageHeader
+  eyebrow="Suprimentos"
+  title="Sistema de Requisições"
+  description="Gestão de compras e requisições do módulo"
+  icon={<FileDown size={20} color="var(--color-accent)" aria-hidden />}
+  actions={<Button variant="accent" size="sm"><Plus size={13} strokeWidth={2.5} /> Nova Solicitação</Button>}
+/>
+```
+
+Props: `title` · `description` · `eyebrow` · `icon` · `info` (slot ao lado do título) · `badge` + `badgePill` · `actions` · `stats` (chips de KPI = variante **Banner de Fluxo**) · `compact` · `as` (`h1`/`h2`, default `h2`) · `className` (layout externo).
+
+Anatomia: `.fips-banner-shell--content` (raio `12px 12px 12px 24px`, gradiente gov 3 stops → `#001A4A`, sombra `0 4px 20px rgba(0,42,104,.12)`; dark navy `#1e2a3a→#162030→#1a2840` — tudo por token `--fips-banner-*`), `padding 22px 26px` (`18px` em `compact`), `BannerJunctionLines` à direita, tile âmbar `44×44` `radius 11` (`accent` 10%/19%), eyebrow 11px uppercase `tracking .14em` em `--color-accent-strong`, título Saira 21px (17px compact), descrição 12px `white/67`, ações `Button variant="accent"` + `inverseOutline`.
+
+**Não** sobrescreva fundo/sombra/raio por `className` — o dark sai dos tokens. `PatternPanelHero` continua exportado como adaptador `@deprecated` (mapeia `subtitle`→`description`, `action`→`actions`); código novo usa `PageHeader`.
+
 ## PageHero
 
 Fonte: `src/composites/PageHero.tsx`
 
-Header oficial para páginas de módulo:
+Faixa **full-bleed** de visão geral/edição — não é o cabeçalho padrão de módulo (esse é o `PageHeader` acima). Alinhado na v0.13.0 com a versão que o fips-suprimentos já rodava.
 
 ```ts
 export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.png'
@@ -398,17 +425,15 @@ Uso:
 import { PageHero } from 'ds-fips'
 
 <PageHero>
-  <div className="px-8 py-10">
-    <h1>Governanca</h1>
-  </div>
+  <h1>Governanca</h1>
 </PageHero>
 ```
 
 Comportamento:
 
-- gradiente azul institucional
-- foto/trilho sutil à direita por padrão
-- fallback opcional para `showTrainSilhouette`
+- fundo `--fips-banner-page-bg` (gradiente do Banner de Página; dark já resolvido) + `BannerJunctionLines`
+- foto/trilho sutil à direita por padrão (`mix-blend-soft-light`), fallback opcional `showTrainSilhouette`
+- **padding é do componente** (`px-8 py-10 md:px-10 md:py-12`; `compact` → `px-6 py-6 md:px-8 md:py-8` + `rounded-2xl`). Filho com `px/py` próprio dobra o respiro — mudança da v0.13.0
 
 ## FipsLogo e marca do menu (sidebar header)
 

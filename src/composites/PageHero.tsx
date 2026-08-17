@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '../lib/cn'
+import { BannerJunctionLines, FIPS_BANNER_PAGE_CLASS } from '../components/composites/banner-shared'
 
 /** Arte de trem/fundo usada nos produtos FIPS (public/). */
 export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.png'
@@ -14,17 +15,25 @@ export type PageHeroProps = {
   decorationSrc?: string | null
   /** Silhueta SVG leve (fallback ou reforço). Por padrão fica desligada se houver foto. */
   showTrainSilhouette?: boolean
+  /** Faixa reduzida com cantos arredondados — para painel embutido em vez de full-bleed. */
+  compact?: boolean
 }
 
 /**
- * Faixa hero padrão dos módulos FIPS: gradiente azul institucional + trem/trilhos sutis à direita.
- * Usar abaixo da topbar em todas as páginas de módulo (ex.: Produção, Governança).
+ * Faixa hero **full-bleed** dos produtos FIPS: gradiente do Banner de Página
+ * (`--fips-banner-page-bg`, que já resolve claro/escuro) + trilhos de junção + foto sutil à direita.
+ *
+ * Use em páginas de visão geral e edição que pedem faixa alta. Para cabeçalho de tela operacional,
+ * o padrão é o `PageHeader` (Banner de Conteúdo); para a Home, o hero com foto + overlay azul.
+ *
+ * O padding é do componente (`compact` reduz) — não embrulhe os filhos em outro `px/py`.
  */
 export function PageHero({
   children,
   className,
   decorationSrc = PAGE_HERO_DEFAULT_DECORATION,
   showTrainSilhouette,
+  compact = false,
 }: PageHeroProps) {
   const hasPhoto = Boolean(decorationSrc)
   const showSvg = showTrainSilhouette ?? !hasPhoto
@@ -33,19 +42,22 @@ export function PageHero({
     <section
       className={cn(
         'relative isolate min-h-[200px] overflow-hidden text-white',
+        compact && 'rounded-2xl',
         className,
       )}
     >
+      <div className={cn('absolute inset-0', FIPS_BANNER_PAGE_CLASS)} aria-hidden />
+
+      <BannerJunctionLines
+        style={{ position: 'absolute', top: -10, right: -20, width: 400, height: 250 }}
+      />
+
       <div
-        className="absolute inset-0 bg-gradient-to-br from-[#031a3d] via-[var(--color-fips-blue-900)] to-[#1b6fd4] dark:bg-[#333B41] dark:bg-none"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-white/[0.03]"
         aria-hidden
       />
       <div
-        className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-white/[0.03]"
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"
         aria-hidden
       />
 
@@ -77,7 +89,14 @@ export function PageHero({
         </div>
       ) : null}
 
-      <div className="relative z-10">{children}</div>
+      <div
+        className={cn(
+          'relative z-10',
+          compact ? 'px-6 py-6 md:px-8 md:py-8' : 'px-8 py-10 md:px-10 md:py-12',
+        )}
+      >
+        {children}
+      </div>
     </section>
   )
 }

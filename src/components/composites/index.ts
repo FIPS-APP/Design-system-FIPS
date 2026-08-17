@@ -1,6 +1,8 @@
 export { FipsTabBar } from './FipsTabBar'
 export type { FipsTabItem } from './FipsTabBar'
 export { SettingsPreferenceRow } from './SettingsPreferenceRow'
+export { PageHeader } from './PageHeader'
+export type { PageHeaderProps, PageHeaderStat } from './PageHeader'
 export { PatternPanelHero } from './PatternPanelHero'
 export type { PatternPanelHeroProps, PatternPanelHeroStat } from './PatternPanelHero'
 export {

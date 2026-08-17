@@ -1,196 +1,74 @@
-import { useState, useRef, useEffect } from 'react'
-import { ShieldCheck, AlertTriangle, ArrowUpFromLine, LayoutGrid } from 'lucide-react'
-import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
+import type { CSSProperties } from 'react'
+import { ShieldCheck, AlertTriangle, Layers, Ban, LayoutGrid, Home, LayoutDashboard, Palette, Component, BookOpen, FileText } from 'lucide-react'
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { Button } from '../../../components/ui/button'
-import { PageHero, PAGE_HERO_DEFAULT_DECORATION } from '../../../composites/PageHero'
-import { cn } from '../../../lib/cn'
+import { PageHeader } from '../../../components/composites/PageHeader'
+import { DocHeaderStandardPreview } from '../../../components/layout/DocHeaderStandard'
+import { DocHeaderSectionNavDemo } from '../../../components/layout/DocHeaderSectionNav'
+import { useFipsTheme } from '../../../hooks/useFipsTheme'
 
 const HOME_BACKGROUND = '/backgrounds/app-shell-home-trains.png'
 
-// ─── Mini demo interativa ────────────────────────────────────────────────────
+const HOME_TABS = [
+  { id: 'start', label: 'Início', active: true, icon: Home },
+  { id: 'patterns', label: 'Padrões', active: false, icon: LayoutDashboard },
+  { id: 'foundations', label: 'Fundamentos', active: false, icon: Palette },
+  { id: 'components', label: 'Componentes', active: false, icon: Component },
+  { id: 'meta', label: 'Projeto', active: false, icon: BookOpen },
+]
 
-function HeroHeaderDemo() {
-  const [scrolled, setScrolled] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
+// ─── Hero da Home ────────────────────────────────────────────────────────────
+// Cópia fiel do hero real: `src/docs/pages/HomePage.tsx`, o mockup de
+// `ApplicationShellDemo.tsx` e a Home do fips-suprimentos usam exatamente estas
+// três camadas (arte → overlay azul → vinheta) com as mesmas classes.
 
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    const onScroll = () => setScrolled(el.scrollTop > 60)
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [])
-
-  const glass = !scrolled
-
+function HomeHeroPreview() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
-      {/* Frame do app */}
-      <div className="relative h-[420px]">
-        {/* Scrollable content */}
-        <div ref={scrollRef} className="h-full overflow-y-auto overscroll-contain">
+    <section className="relative isolate overflow-hidden text-white">
+      <img
+        src={HOME_BACKGROUND}
+        alt=""
+        aria-hidden
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+        draggable={false}
+      />
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-[#002A68]/60 via-[#002A68]/45 to-[#002A68]/60" />
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15" />
 
-          {/* Hero com fundo */}
-          <div className="relative overflow-hidden">
-            <div className="absolute inset-0">
-              <img
-                src={HOME_BACKGROUND}
-                alt=""
-                className="h-full w-full object-cover object-center"
-                draggable={false}
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(0,19,56,0.94)_0%,rgba(0,63,138,0.84)_44%,rgba(0,144,208,0.60)_100%)]" />
-            </div>
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-12 text-center sm:px-6 sm:py-16">
+        <Badge className="mb-5 rounded-full border-0 bg-[rgba(246,146,30,0.95)] text-white shadow-[0_12px_28px_rgba(246,146,30,0.28)]">
+          Padrão Home
+        </Badge>
 
-            <div className="relative z-10 px-6 pt-10 pb-14 text-center">
-              <Badge className="mb-4 border-0 bg-[rgba(246,146,30,0.95)] text-white shadow-[0_8px_20px_rgba(246,146,30,0.28)]">
-                Sistema de Exemplo
-              </Badge>
-              <h2 className="text-2xl font-bold text-white">
-                Hero com <span className="text-[#fdc24e]">Header Adaptativo</span>
-              </h2>
-              <p className="mt-3 text-sm text-white/75 max-w-xs mx-auto">
-                Role a página para ver o cabeçalho transicionar de vidro para branco.
-              </p>
-              <div className="mt-6 flex gap-3 justify-center">
-                <Button variant="accent" size="sm">Ação Primária</Button>
-                <Button variant="inverseOutline" size="sm">
-                  Secundária
-                </Button>
-              </div>
-            </div>
-          </div>
+        <h2 className="font-heading text-3xl font-bold leading-tight text-white sm:text-5xl">
+          Home do <span className="text-[var(--color-accent)]">Aplicativo FIPS</span>
+        </h2>
 
-          {/* Conteúdo branco abaixo do hero */}
-          <div className="space-y-4 bg-[#f3f6fb] p-6 min-h-[300px]">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="rounded-2xl bg-white p-4 shadow-sm">
-                <div className="h-3 w-1/3 rounded bg-gray-200 mb-2" />
-                <div className="h-2 w-2/3 rounded bg-gray-100" />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Badge de estado */}
-        <div className="pointer-events-none absolute bottom-4 right-4 z-30">
-          <span className={cn(
-            'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold shadow-lg transition-all duration-300',
-            glass
-              ? 'bg-[#002a68] text-white'
-              : 'bg-white text-[#002a68] border border-gray-200',
-          )}>
-            <span className={cn('h-2 w-2 rounded-full', glass ? 'bg-[#fdc24e]' : 'bg-[#00c64c]')} />
-            {glass ? 'Glass (topo)' : 'Branco (rolado)'}
-          </span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ─── Copyable code helpers (hardcoded hex, self-contained) ──────────────────
-
-function codeHeroHeaderGlass() {
-  return `// DS-FIPS — Hero Header Glass-to-White — Copy-paste ready
-import { useState, useRef, useEffect } from 'react'
-
-export function HeroWithAdaptiveHeader() {
-  const [scrolled, setScrolled] = useState(false)
-  const scrollRef = useRef(null)
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    const onScroll = () => setScrolled(el.scrollTop > 60)
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [])
-
-  return (
-    <div ref={scrollRef} style={{ height: '100vh', overflowY: 'auto' }}>
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        height: 56, padding: '0 24px',
-        display: 'flex', alignItems: 'center',
-        transition: 'all 300ms ease',
-        ...(scrolled ? {
-          background: 'rgba(255,255,255,0.95)',
-          backdropFilter: 'blur(4px)',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-          color: '#333B41',
-        } : {
-          background: 'rgba(255,255,255,0.07)',
-          backdropFilter: 'blur(12px)',
-          color: '#fff',
-        }),
-      }}>
-        <span style={{ fontFamily: "'Saira Expanded', sans-serif", fontWeight: 700, fontSize: 14 }}>App FIPS</span>
-      </header>
-
-      <div style={{ position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(118deg, rgba(0,19,56,0.94) 0%, rgba(0,63,138,0.84) 44%, rgba(0,144,208,0.60) 100%)' }} />
-        <div style={{ position: 'relative', zIndex: 10, padding: '40px 24px 56px', textAlign: 'center' }}>
-          <span style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, background: 'rgba(246,146,30,0.95)', color: '#fff', fontSize: 12, fontWeight: 600 }}>
-            Sistema de Exemplo
-          </span>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginTop: 16, fontFamily: "'Saira Expanded', sans-serif" }}>
-            Hero com <span style={{ color: '#FDC24E' }}>Header Adaptativo</span>
-          </h2>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', marginTop: 12, maxWidth: 320, margin: '12px auto 0' }}>
-            Role a pagina para ver o cabecalho transicionar de vidro para branco.
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 24 }}>
-            <button style={{ background: '#F6921E', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Acao Primaria</button>
-            <button style={{ background: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Secundaria</button>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ background: '#f3f6fb', padding: 24, minHeight: 300 }}>
-        <div style={{ background: '#fff', borderRadius: 16, padding: 16, marginBottom: 12, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ height: 12, width: '33%', borderRadius: 6, background: '#E2E8F0', marginBottom: 8 }} />
-          <div style={{ height: 8, width: '66%', borderRadius: 6, background: '#F1F5F9' }} />
-        </div>
-        <div style={{ background: '#fff', borderRadius: 16, padding: 16, marginBottom: 12, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ height: 12, width: '40%', borderRadius: 6, background: '#E2E8F0', marginBottom: 8 }} />
-          <div style={{ height: 8, width: '55%', borderRadius: 6, background: '#F1F5F9' }} />
-        </div>
-      </div>
-    </div>
-  )
-}`
-}
-
-function codePageHeroFaixa() {
-  return `// DS-FIPS — PageHero Faixa de Modulo — Copy-paste ready
-
-export function PageHeroFaixa() {
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #002A68 0%, #004B9B 100%)',
-      position: 'relative', overflow: 'hidden', borderRadius: 12,
-    }}>
-      <div style={{ padding: '32px 24px' }}>
-        <p style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.5px', color: 'rgba(255,255,255,0.70)', margin: 0 }}>Exemplo</p>
-        <h3 style={{ fontSize: 20, fontWeight: 600, color: '#fff', marginTop: 4, fontFamily: "'Saira Expanded', sans-serif", margin: '4px 0 0' }}>Faixa de modulo (PageHero)</h3>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.80)', marginTop: 8, maxWidth: 448, margin: '8px 0 0' }}>
-          Gradiente institucional + imagem sutil a direita.
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/80 sm:text-lg">
+          Arte institucional, degradê azul e vinheta — leitura clara mesmo com imagem forte no fundo.
         </p>
+
+        <div className="flex flex-wrap justify-center gap-2 pt-1">
+          <Button variant="ouro" size="sm">Ação Primária</Button>
+          <Button variant="inverseOutline" size="sm">Ação Secundária</Button>
+        </div>
       </div>
-    </div>
-  );
-}`
+    </section>
+  )
 }
 
 // ─── Página ──────────────────────────────────────────────────────────────────
 
 export default function HeroHeaderDoc() {
+  const { dark } = useFipsTheme()
+
+  const h2: CSSProperties = { fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }
+  const lead: CSSProperties = { fontSize: 14, color: 'var(--color-fg-muted)', marginBottom: 16, lineHeight: 1.55 }
+  const code: CSSProperties = { fontFamily: "'Fira Code', monospace", fontSize: 11 }
+
   return (
-    <PlaygroundProvider>
     <div style={{ minHeight: '100vh', background: 'var(--color-surface-muted)', fontFamily: "'Open Sans', sans-serif", color: 'var(--color-fg)' }}>
       {/* HEADER HERO */}
       <header style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 100%)', padding: '48px 40px 44px', position: 'relative', overflow: 'hidden' }}>
@@ -206,7 +84,9 @@ export default function HeroHeaderDoc() {
           </div>
           <h1 style={{ fontSize: 44, fontWeight: 700, color: '#fff', margin: '0 0 10px', fontFamily: "'Saira Expanded', sans-serif" }}>Hero</h1>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.69)', lineHeight: 1.6, maxWidth: 700, margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
-            Padrão da Home: barra superior da aplicação sobre o hero com vidro (glass) e transição para branco ao rolar — não confundir com o header da documentação (DocLayout). Nas demais rotas (módulos), use PageHero com faixa azul e trem sutil.
+            Padrão da Home: arte institucional full-bleed + overlay azul vertical + vinheta, abaixo do header padrão
+            sólido (o mesmo de todas as rotas). Nas demais telas — módulos, formulários, listagens — a faixa é o
+            Banner de Conteúdo, não este hero.
           </p>
         </div>
       </header>
@@ -214,84 +94,59 @@ export default function HeroHeaderDoc() {
       <div style={{ padding: '36px 40px 60px', maxWidth: 1100, margin: '0 auto' }}>
 
       <RuleCards cards={[
-        { icon: <ShieldCheck size={20} color="var(--color-gov-azul-profundo)" />, color: 'var(--color-gov-azul-profundo)', bg: 'color-mix(in srgb, var(--color-gov-azul-profundo) 3%, transparent)', tag: 'REGRA 1', title: 'Header adaptativo glass-to-white', desc: 'Na Home, o header começa transparente com efeito vidro (glass) sobre a imagem do hero, criando imersão visual. Ao rolar a página, ele transiciona suavemente para fundo branco sólido com sombra.' },
-        { icon: <AlertTriangle size={20} color="#F6921E" />, color: '#F6921E', bg: '#F6921E08', tag: 'REGRA 2', title: 'Exclusivo da página Home', desc: 'Este padrão de header glass só deve ser usado na Home do aplicativo. Todas as outras rotas (módulos, formulários, listagens) usam o header branco estático padrão — nunca aplique glass fora da Home.' },
-        { icon: <ArrowUpFromLine size={20} color="var(--color-gov-azul-escuro)" />, color: 'var(--color-gov-azul-escuro)', bg: 'color-mix(in srgb, var(--color-gov-azul-escuro) 3%, transparent)', tag: 'REGRA 3', title: 'Transição suave ao rolar', desc: 'A mudança de glass para branco acontece quando o usuário rola além de 60px. A animação dura 300ms e é fluida. Isso garante que o header fique legível tanto sobre a imagem do hero quanto sobre o conteúdo claro abaixo.' },
+        { icon: <Layers size={20} color="var(--color-gov-azul-profundo)" />, color: 'var(--color-gov-azul-profundo)', bg: 'color-mix(in srgb, var(--color-gov-azul-profundo) 3%, transparent)', tag: 'REGRA 1', title: 'Três camadas, sempre as três', desc: 'Arte ferroviária full-bleed (object-cover, object-center) + overlay azul vertical #002A68 60→45→60 + vinheta preta 35→transparente→15. A vinheta não é enfeite: é ela que segura o contraste do texto nas faixas em que a foto clareia. Nunca troque o conjunto por um degradê puro nem use a foto sem overlay.' },
+        { icon: <Ban size={20} color="#DC3545" />, color: '#DC3545', bg: '#DC354508', tag: 'REGRA 2', title: 'O header não é mais glass', desc: 'O header acima do hero é o padrão sólido (DocHeaderStandard: toolbar --color-surface-soft com a arte lavada + faixa de abas), sticky e opaco em todas as rotas, inclusive a Home. O antigo header glass-to-white — transparente sobre o hero e branco ao rolar 60px — foi aposentado na v0.6.3; não reintroduza.' },
+        { icon: <ShieldCheck size={20} color="var(--color-gov-azul-escuro)" />, color: 'var(--color-gov-azul-escuro)', bg: 'color-mix(in srgb, var(--color-gov-azul-escuro) 3%, transparent)', tag: 'REGRA 3', title: 'Hero é exclusivo da Home', desc: 'Só a Home de cada produto usa este hero com foto. Módulos, formulários e listagens abrem com o Banner de Conteúdo (faixa-card compacta: tile âmbar + eyebrow + título 21px + ações) — trocar um pelo outro quebra a hierarquia entre entrada do produto e telas de trabalho.' },
       ]} />
 
-      {/* PageHero — faixa de módulo */}
+      {/* Preview real — header padrão + hero */}
       <section style={{ marginTop: 36 }}>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>PageHero — faixa de módulo (não é este padrão)</h2>
-        <p style={{ fontSize: 14, color: '#7B8C96', marginBottom: 16, lineHeight: 1.55 }}>
-          Produção, Governança e demais telas internas usam esta faixa azul padrão — não o header glass da
-          Home. O trem/trilhos vêm da mesma arte base ({PAGE_HERO_DEFAULT_DECORATION}). Clique para copiar o código.
+        <h2 style={h2}>Header padrão + hero da Home</h2>
+        <p style={lead}>
+          Montagem real: <code style={code}>DocHeaderStandardPreview</code> (o mesmo componente do header de produção)
+          com o hero logo abaixo. O header é opaco e não muda de aparência ao rolar — o contraste do hero vem das
+          camadas dele, não da transparência do cabeçalho.
         </p>
-        <Copyable label="PageHero Faixa" code={codePageHeroFaixa()} preview={
-          <div style={{ background: 'linear-gradient(135deg, #002A68 0%, #004B9B 100%)', borderRadius: 12, padding: '24px 20px', color: '#fff', fontFamily: "'Saira Expanded', sans-serif", fontSize: 14 }}>
-            Faixa de Modulo (PageHero)
-          </div>
-        }>
-          <div className="max-w-3xl overflow-hidden rounded-xl border border-[var(--color-border)] shadow-sm">
-            <PageHero>
-              <div className="px-6 py-8">
-                <p className="text-xs font-medium uppercase tracking-wide text-white/70">Exemplo</p>
-                <h3 className="mt-1 font-heading text-xl font-semibold text-white">Faixa de módulo (PageHero)</h3>
-                <p className="mt-2 max-w-md text-sm text-white/80">
-                  Gradiente institucional + imagem sutil à direita. Detalhes em Padrão: Dashboard.
-                </p>
-              </div>
-            </PageHero>
-          </div>
-        </Copyable>
-      </section>
-
-      {/* Demo interativa */}
-      <section style={{ marginTop: 36 }}>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>Demo interativa — role o conteúdo. Clique para copiar o código.</h2>
-        <Copyable label="Hero Header Glass" code={codeHeroHeaderGlass()} preview={
-          <div style={{ background: 'linear-gradient(135deg, #002A68, #004B9B)', borderRadius: 12, padding: '20px 16px', color: '#fff', fontFamily: "'Saira Expanded', sans-serif", fontSize: 13, textAlign: 'center' }}>
-            <span style={{ color: '#FDC24E' }}>Glass-to-White</span> Header
-          </div>
-        }>
-          <HeroHeaderDemo />
-        </Copyable>
-      </section>
-
-
-      {/* Implementação */}
-      <section style={{ marginTop: 36 }}>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>Implementação</h2>
-        <p style={{ fontSize: 14, color: '#7B8C96', lineHeight: 1.55 }}>
-          O padrão está implementado no <strong>fips-suprimentos</strong> (App.tsx + Home.tsx)
-          e segue o mesmo layout do <strong>ApplicationShell</strong>.
-          Copie o bloco acima como ponto de partida para novos produtos FIPS.
+        <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
+          <DocHeaderStandardPreview
+            groupLabel="Padrões"
+            pageTitle="Home"
+            dark={dark}
+            sectionNav={<DocHeaderSectionNavDemo tabs={HOME_TABS} dark={dark} />}
+            withCardChrome={false}
+            footer={<HomeHeroPreview />}
+          />
+        </div>
+        <p style={{ ...lead, marginTop: 12, marginBottom: 0 }}>
+          Quando a Home tem indicadores, eles montam em cima da borda do hero com <code style={code}>-mt-7</code> (desktop)
+          — anatomia completa em <strong>Padrão: Application Shell</strong>.
         </p>
       </section>
 
-      {/* Regra de cores por fundo */}
+      {/* Anatomia — camadas */}
       <section style={{ marginTop: 36 }}>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>Regra de cores por fundo</h2>
+        <h2 style={h2}>Anatomia — camadas do hero</h2>
         <div className="overflow-hidden rounded-2xl border border-[var(--color-border)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Contexto</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Background do header</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Texto / ícones</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Logo</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Camada</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Classe / valor</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Papel</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {[
-                ['Home (topo, hero visível)', 'bg-white/7 + backdrop-blur-md', 'Branco (inverted)', 'Container branco'],
-                ['Home (rolado, fundo branco)', 'bg-white/95 + backdrop-blur-sm', 'Cinza / azul normal', 'Container branco'],
-                ['Outras páginas', 'bg-white sólido', 'Cinza / azul normal', 'Container branco'],
-              ].map(([ctx, bg, text, logo]) => (
-                <tr key={ctx} className="bg-[var(--color-surface)]">
-                  <td className="px-4 py-3 font-medium text-[var(--color-fg)]">{ctx}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-[var(--color-fg-muted)]">{bg}</td>
-                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{text}</td>
-                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{logo}</td>
+                ['Container', 'relative isolate overflow-hidden text-white', 'Isola o empilhamento e corta as camadas no formato do hero'],
+                ['1. Arte', `<img src="${HOME_BACKGROUND}"> · absolute inset-0 h-full w-full object-cover object-center`, 'Identidade ferroviária FIPS — mesma arte usada nos banners'],
+                ['2. Overlay azul', 'bg-gradient-to-b from-[#002A68]/60 via-[#002A68]/45 to-[#002A68]/60', 'Institucionaliza a foto e baixa o ruído no miolo'],
+                ['3. Vinheta', 'bg-gradient-to-t from-black/35 via-transparent to-black/15', 'Escurece topo e base — é o que garante o contraste do texto'],
+                ['4. Conteúdo', 'relative z-10 mx-auto max-w-6xl px-4 py-12 text-center sm:px-6 sm:py-16', 'Badge, título, subtítulo e ações, centralizados'],
+              ].map(([camada, cls, papel]) => (
+                <tr key={camada} className="bg-[var(--color-surface)]">
+                  <td className="px-4 py-3 font-medium whitespace-nowrap text-[var(--color-fg)]">{camada}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-[var(--color-fg-muted)]">{cls}</td>
+                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{papel}</td>
                 </tr>
               ))}
             </tbody>
@@ -299,69 +154,125 @@ export default function HeroHeaderDoc() {
         </div>
       </section>
 
-        <CodePlayground />
+      {/* Conteúdo do hero */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={h2}>Conteúdo do hero</h2>
+        <div className="overflow-hidden rounded-2xl border border-[var(--color-border)]">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Elemento</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Especificação</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {[
+                ['Badge', 'Pill laranja bg-[rgba(246,146,30,0.95)] + shadow-[0_12px_28px_rgba(246,146,30,0.28)], texto branco. Nomeia o produto/contexto ("FIPS Suprimentos", "Design System FIPS").'],
+                ['Título', 'font-heading (Saira Expanded) text-3xl sm:text-5xl font-bold branco, com um termo destacado em <span className="text-[var(--color-accent)]">.'],
+                ['Subtítulo', 'text-white/80 max-w-2xl leading-7 (text-base sm:text-lg) — uma frase sobre o que o produto resolve.'],
+                ['Ações', 'Par de botões size="sm": variant="ouro" (ou "accent") para a ação primária + variant="inverseOutline" para a secundária. Nunca botão claro chapado sobre o hero.'],
+                ['Indicadores', 'Opcionais, em grid abaixo do hero com straddle -mt-7 (desktop) / -mt-6 (tablet) / -mt-3 (mobile).'],
+              ].map(([el, spec]) => (
+                <tr key={el} className="bg-[var(--color-surface)]">
+                  <td className="px-4 py-3 font-medium whitespace-nowrap text-[var(--color-fg)]">{el}</td>
+                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{spec}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        <CodeExportSection items={[
-          {
-            label: 'Hero Header Glass-to-White',
-            description: 'Header adaptativo que transiciona de glass transparente para branco solido ao rolar.',
-            code: `/* Hero Header — DS-FIPS
-   Exclusivo da pagina Home. Transiciona de glass para branco ao rolar.
-   Threshold: 60px de scroll.
+      {/* Faixa de módulo */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={h2}>Faixa de módulo — não é este padrão</h2>
+        <p style={lead}>
+          Módulos, listagens e formulários não abrem com o hero da Home. A faixa dessas telas é o
+          <strong> Banner de Conteúdo</strong> (menu <strong>Padrões → Banner</strong>): faixa-card compacta,
+          gradiente gov de 3 stops terminando em <span style={code}>#001A4A</span>, raio assimétrico
+          <span style={code}> 12px 12px 12px 24px</span>, trilhos sutis à direita, tile âmbar 44×44, eyebrow
+          <span style={code}> accent-strong</span>, título Saira 21px e ações <span style={code}>accent</span> +
+          <span style={code}> inverseOutline</span>. Desde a v0.13.0 é um composite governado da library
+          — <span style={code}>import {'{'} PageHeader {'}'} from '@fips-app/ds-fips'</span> — promovido a partir
+          do <span style={code}>PageHeader</span> que o Governança BI usa nas 14 telas dele. Não recrie a faixa
+          por tela.
+        </p>
+        <PageHeader
+          eyebrow="Suprimentos"
+          title="Sistema de Requisições"
+          description="Gestão de compras e requisições do módulo · FIPS"
+          icon={<FileText size={20} color="var(--color-accent)" aria-hidden />}
+          actions={<Button variant="accent" size="sm">Nova requisição</Button>}
+        />
+        <p style={{ ...lead, marginTop: 12, marginBottom: 0 }}>
+          Variante <strong>Banner de Fluxo</strong> (mesma faixa com chips de KPI) e o Banner de Página estão em
+          <strong> Padrões → Banner</strong>.
+        </p>
+      </section>
 
-   CSS vars: --color-border, --color-fg, --color-fg-muted
-*/
+      {/* Regra de cores por fundo */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={h2}>Regra de cores por fundo</h2>
+        <div className="overflow-hidden rounded-2xl border border-[var(--color-border)]">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Contexto</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Fundo</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Texto / ícones</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Destaque</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {[
+                ['Header (todas as rotas, inclusive Home)', '--color-surface-soft sólido + arte lavada (dark: #1A1A1A)', 'Cinza / azul normal — nunca invertido', 'Hover dourado dos botões neumorphic'],
+                ['Home — sobre o hero', 'Foto + overlay azul + vinheta', 'Branco / white-80', '--color-accent no termo do título'],
+                ['Home — conteúdo abaixo do hero', '--color-surface-muted', 'Cinza / azul normal', 'Cards em --color-surface'],
+                ['Módulos internos', 'Banner de Conteúdo — gradiente gov 3 stops → #001A4A', 'Branco / white-67', 'Tile e eyebrow em --color-accent'],
+              ].map(([ctx, bg, text, destaque]) => (
+                <tr key={ctx} className="bg-[var(--color-surface)]">
+                  <td className="px-4 py-3 font-medium text-[var(--color-fg)]">{ctx}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-[var(--color-fg-muted)]">{bg}</td>
+                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{text}</td>
+                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{destaque}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-import { useState, useEffect, useRef } from 'react'
+      {/* Aposentado */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={h2}>Aposentado — header glass-to-white</h2>
+        <div className="flex gap-3 rounded-2xl border border-[#DC3545]/25 bg-[#DC3545]/[0.04] p-4">
+          <AlertTriangle size={20} color="#DC3545" style={{ flexShrink: 0, marginTop: 2 }} />
+          <p style={{ ...lead, margin: 0 }}>
+            Até a v0.6.2 o produto usava um cabeçalho que começava transparente com <em>backdrop-filter</em> sobre
+            o hero e virava branco ao passar de 60px de scroll, com o hero em degradê diagonal
+            (<span style={code}>118deg</span>, sem foto). Esse padrão saiu do produto: nem a Home do DS, nem o mockup do
+            Application Shell, nem o fips-suprimentos usam listener de scroll no header. Se encontrar código com
+            <span style={code}> scrollTop &gt; 60</span> trocando o fundo do header, é resíduo — migre para o header
+            padrão + as três camadas do hero acima.
+          </p>
+        </div>
+      </section>
 
-function AdaptiveHeader() {
-  const [scrolled, setScrolled] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
+      {/* Implementação */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={h2}>Implementação</h2>
+        <p style={{ ...lead, marginBottom: 0 }}>
+          Referências reais, na ordem: <strong>src/docs/pages/HomePage.tsx</strong> (Home do próprio DS),
+          <strong> ApplicationShellDemo.tsx</strong> (mockup do shell, com os indicadores em straddle) e a
+          <strong> Home.tsx do fips-suprimentos</strong> — as três usam as mesmas classes. Copie de lá em vez de
+          reescrever o empilhamento.
+        </p>
+      </section>
 
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    const onScroll = () => setScrolled(el.scrollTop > 60)
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [])
-
-  return (
-    <header style={{
-      position: 'sticky', top: 0, zIndex: 50,
-      height: 56, padding: '0 24px',
-      display: 'flex', alignItems: 'center',
-      transition: 'all 300ms ease',
-      // Glass state (topo, hero visivel)
-      ...(scrolled ? {
-        background: 'rgba(255,255,255,0.95)',
-        backdropFilter: 'blur(4px)',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-        color: '#333B41',
-      } : {
-        background: 'rgba(255,255,255,0.07)',
-        backdropFilter: 'blur(12px)',
-        color: '#fff',
-      }),
-    }}>
-      {/* Logo + Nav + Actions */}
-    </header>
-  )
-}
-
-/* Regra de cores por fundo:
-   Home (topo):    bg-white/7 + blur-md  -> textos brancos
-   Home (rolado):  bg-white/95 + blur-sm -> textos cinza/azul
-   Outras paginas: bg-white solido       -> textos cinza/azul
-*/`,
-          },
-        ]} />
-
-        <div style={{ textAlign: 'center', padding: '20px 0 0', borderTop: '1px solid #E2E8F0', marginTop: 20 }}>
-          <span style={{ fontSize: 12, color: '#7B8C96', letterSpacing: '0.5px', fontFamily: "'Saira Expanded', sans-serif", fontWeight: 400 }}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
+        <div style={{ textAlign: 'center', padding: '20px 0 0', borderTop: '1px solid var(--color-border)', marginTop: 36 }}>
+          <span style={{ fontSize: 12, color: '#7B8C96', letterSpacing: '0.5px', fontFamily: "'Saira Expanded', sans-serif", fontWeight: 400 }}>DS-FIPS · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }

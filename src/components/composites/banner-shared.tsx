@@ -4,9 +4,14 @@ import { cn } from '../../lib/cn'
 export const FIPS_BANNER_PAGE_CLASS = 'fips-banner-shell--page'
 export const FIPS_BANNER_CONTENT_CLASS = 'fips-banner-shell--content'
 
+/**
+ * Tile âmbar do banner. As percentagens vêm do `#FDC24E18` / `#FDC24E30` do HeroBannerDoc —
+ * que são alfas hexadecimais (0x18 ≈ 10%, 0x30 ≈ 19%), não 18%/30%. Lidos como percentagem,
+ * o tile saía com o dobro do preenchimento do banner documentado e do `PageHeader` do Governança BI.
+ */
 export const FIPS_BANNER_ICON_BOX_STYLE: CSSProperties = {
-  background: 'color-mix(in srgb, var(--color-accent) 18%, transparent)',
-  border: '1px solid color-mix(in srgb, var(--color-accent) 30%, transparent)',
+  background: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
+  border: '1px solid color-mix(in srgb, var(--color-accent) 19%, transparent)',
 }
 
 export const FIPS_BANNER_PILL_STYLE: CSSProperties = {

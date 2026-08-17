@@ -19,7 +19,7 @@ import { GuidedTour } from '../components/domain/GuidedTour'
 import { useTour } from '../hooks/useTour'
 import { DS_TOUR_STEPS, DS_TOUR_STORAGE_KEY } from '../data/tourSteps'
 
-const DOC_VERSION = 'v0.12.4'
+const DOC_VERSION = 'v0.13.0'
 
 export function DocLayout() {
   const { dark, toggle } = useFipsTheme()

@@ -1,9 +1,8 @@
 import { useState, useEffect, type ReactNode } from 'react'
 import { LayoutGrid, FileDown, Send, Plus, ShieldCheck, AlertTriangle, ArrowUpFromLine } from 'lucide-react'
-import { CodeExportSection } from '../../components/CodeExport'
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import { RuleCards } from '../../components/RuleCards'
-import { useFipsTheme } from '../../../hooks/useFipsTheme'
+import { PageHeader } from '../../../components/composites/PageHeader'
+import { Button } from '../../../components/ui/button'
 
 const C = { azulProfundo: 'var(--color-gov-azul-profundo)', azulEscuro: 'var(--color-gov-azul-escuro)', azulClaro: 'var(--color-gov-azul-claro)', cinzaChumbo: 'var(--color-fg-muted)', cinzaEscuro: 'var(--color-fg)', amareloOuro: '#FDC24E', amareloEscuro: '#F6921E', verdeFloresta: '#00C64C', verdeEscuro: 'var(--color-gov-verde-escuro)', danger: '#DC3545', branco: '#FFFFFF', bg: 'var(--color-surface-muted)', cardBg: 'var(--color-surface)', cardBorder: 'var(--color-border)', azulCeuClaro: '#D3E3F4', textLight: 'var(--color-fg-muted)', neutro: 'var(--color-surface-soft)', gradFrom: 'var(--color-gov-gradient-from)', gradTo: 'var(--color-gov-gradient-to)' }
 const Fn = { title: "'Saira Expanded', sans-serif", body: "'Open Sans', sans-serif", mono: "'Fira Code', monospace" }
@@ -104,226 +103,50 @@ function BannerPaginaComBadges() {
 }
 
 /* ─── Banner de Conteúdo — Opção 1 (compacto, CTA à direita) ─── */
+/* Renderiza o composite governado: a doc mostra o componente real, não uma réplica. */
 function BannerConteudo1() {
-  const { dark } = useFipsTheme()
   return (
-    <div style={{ background: dark ? 'linear-gradient(135deg, #1e2a3a 0%, #162030 50%, #1a2840 100%)' : `linear-gradient(135deg, ${C.gradFrom} 0%, ${C.gradTo} 60%, #001A4A 100%)`, borderRadius: '12px 12px 12px 24px', padding: '22px 26px', position: 'relative', overflow: 'hidden', boxShadow: dark ? '0 4px 20px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04)' : '0 4px 20px rgba(0,42,104,.12)', border: dark ? '1px solid rgba(147,189,228,0.08)' : 'none' }}>
-      <JunctionLines style={{ position: 'absolute', top: -10, right: -20, width: 360, height: 200, opacity: dark ? 0.04 : 0.06 }} />
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ width: 44, height: 44, borderRadius: 11, background: `${C.amareloOuro}18`, border: `1px solid ${C.amareloOuro}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <FileDown size={20} color={C.amareloOuro} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={{ fontSize: 21, fontWeight: 700, color: '#fff', fontFamily: Fn.title, margin: 0, lineHeight: 1.15, letterSpacing: '-0.2px' }}>Sistema de Requisições</h2>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.67)', fontFamily: Fn.body, margin: '4px 0 0', lineHeight: 1.4 }}>Gestão de compras e requisições do módulo Suprimentos · FIPS</p>
-        </div>
-        <button style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, padding: '6px 14px', height: 30, fontSize: 12, fontWeight: 600, fontFamily: Fn.body, borderRadius: 6, border: '1.5px solid transparent', background: C.amareloEscuro, color: C.branco, cursor: 'pointer', letterSpacing: '0.01em', whiteSpace: 'nowrap', flexShrink: 0 }}>
-          <Plus size={13} strokeWidth={2.5} /> Nova Solicitação
-        </button>
-      </div>
-    </div>
+    <PageHeader
+      title="Sistema de Requisições"
+      description="Gestão de compras e requisições do módulo Suprimentos · FIPS"
+      icon={<FileDown size={20} color="var(--color-accent)" aria-hidden />}
+      actions={
+        <Button variant="accent" size="sm">
+          <Plus size={13} strokeWidth={2.5} aria-hidden /> Nova Solicitação
+        </Button>
+      }
+    />
   )
 }
 
 /* ─── Banner de Conteúdo — Opção 2 (fluxo com status badges) ─── */
 function BannerConteudo2() {
-  const { dark } = useFipsTheme()
-  const stats = [
-    { label: 'TOTAL', value: '1012', color: C.verdeFloresta },
-    { label: 'AGUARDANDO', value: '1004', color: C.amareloEscuro },
-    { label: 'APROVADOS', value: '8', color: C.verdeFloresta },
-    { label: 'ENTREGUES', value: '2', color: C.danger },
-  ]
   return (
-    <div style={{ background: dark ? 'linear-gradient(135deg, #1e2a3a 0%, #162030 50%, #1a2840 100%)' : `linear-gradient(135deg, ${C.gradFrom} 0%, ${C.gradTo} 60%, #001A4A 100%)`, borderRadius: '12px 12px 12px 24px', padding: '22px 26px', position: 'relative', overflow: 'hidden', boxShadow: dark ? '0 4px 20px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04)' : '0 4px 20px rgba(0,42,104,.12)', border: dark ? '1px solid rgba(147,189,228,0.08)' : 'none' }}>
-      <JunctionLines style={{ position: 'absolute', top: -10, right: -20, width: 360, height: 200, opacity: dark ? 0.04 : 0.06 }} />
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 11, background: `${C.amareloOuro}18`, border: `1px solid ${C.amareloOuro}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Send size={20} color={C.amareloOuro} />
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <h2 style={{ fontSize: 21, fontWeight: 700, color: '#fff', fontFamily: Fn.title, margin: 0, lineHeight: 1.15, letterSpacing: '-0.2px' }}>Pedidos</h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.67)', fontFamily: Fn.body, margin: '4px 0 0', lineHeight: 1.4 }}>Solicitação → Análise → Aprovação → Execução → Entrega</p>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingLeft: 58 }}>
-            {stats.map(s => (
-              <span key={s.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 6, fontFamily: Fn.body }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.color }} />
-                {s.label} <strong style={{ color: '#fff', fontWeight: 700 }}>{s.value}</strong>
-              </span>
-            ))}
-          </div>
-        </div>
-        <button style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, padding: '6px 14px', height: 30, fontSize: 12, fontWeight: 600, fontFamily: Fn.body, borderRadius: 6, border: '1.5px solid transparent', background: C.amareloEscuro, color: C.branco, cursor: 'pointer', letterSpacing: '0.01em', whiteSpace: 'nowrap', flexShrink: 0 }}>
-          <Plus size={13} strokeWidth={2.5} /> Novo pedido
-        </button>
-      </div>
-    </div>
+    <PageHeader
+      title="Pedidos"
+      description="Solicitação → Análise → Aprovação → Execução → Entrega"
+      icon={<Send size={20} color="var(--color-accent)" aria-hidden />}
+      stats={[
+        { label: 'TOTAL', value: '1012', dotColor: C.verdeFloresta },
+        { label: 'AGUARDANDO', value: '1004', dotColor: C.amareloEscuro },
+        { label: 'APROVADOS', value: '8', dotColor: C.verdeFloresta },
+        { label: 'ENTREGUES', value: '2', dotColor: C.danger },
+      ]}
+      actions={
+        <Button variant="accent" size="sm">
+          <Plus size={13} strokeWidth={2.5} aria-hidden /> Novo pedido
+        </Button>
+      }
+    />
   )
 }
 
-/* ─── Copyable code helpers (hardcoded hex, self-contained) ─── */
-
-function codeBannerPagina() {
-  return `// DS-FIPS — Banner de Pagina — Copy-paste ready
-
-export function BannerDePagina() {
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #002A68 0%, #004B9B 100%)',
-      padding: '48px 40px 44px',
-      position: 'relative', overflow: 'hidden', borderRadius: 12,
-    }}>
-      <svg viewBox="0 0 320 200" fill="none" style={{ opacity: 0.12, position: 'absolute', top: -10, right: -20, width: 400, height: 250 }}>
-        <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-      </svg>
-      <div style={{ position: 'relative' }}>
-        <h1 style={{ fontSize: 44, fontWeight: 700, color: '#fff', fontFamily: "'Saira Expanded', sans-serif", margin: '0 0 10px' }}>
-          Design System <span style={{ color: '#FDC24E' }}>FIPS</span>
-        </h1>
-        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.69)', maxWidth: 700, lineHeight: 1.6, fontFamily: "'Open Sans', sans-serif", margin: 0 }}>
-          Sistema de design unificado da Ferrovia Interna do Porto de Santos.
-        </p>
-      </div>
-    </div>
-  );
-}`
-}
-
-function codeBannerPaginaBadges() {
-  return `// DS-FIPS — Banner de Pagina com Badges — Copy-paste ready
-
-export function BannerPaginaComBadges() {
-  const badges = [
-    { label: 'primario', hex: '#004B9B' },
-    { label: 'destaque', hex: '#F6921E' },
-    { label: 'sucesso', hex: '#00C64C' },
-    { label: 'perigo', hex: '#DC3545' },
-  ];
-
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #002A68 0%, #004B9B 100%)',
-      padding: '48px 40px 44px',
-      position: 'relative', overflow: 'hidden', borderRadius: 12,
-    }}>
-      <svg viewBox="0 0 320 200" fill="none" style={{ opacity: 0.12, position: 'absolute', top: -10, right: -20, width: 400, height: 250 }}>
-        <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-      </svg>
-      <div style={{ position: 'relative' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 20, padding: '5px 14px', fontSize: 11, fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#FDC24E', fontFamily: "'Saira Expanded', sans-serif", marginBottom: 16 }}>
-          Modulo Suprimentos
-        </div>
-        <h1 style={{ fontSize: 44, fontWeight: 700, color: '#fff', fontFamily: "'Saira Expanded', sans-serif", margin: '0 0 10px' }}>
-          Painel de <span style={{ color: '#FDC24E' }}>Requisicoes</span>
-        </h1>
-        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.69)', maxWidth: 700, lineHeight: 1.6, fontFamily: "'Open Sans', sans-serif", margin: '0 0 16px' }}>
-          Gestao completa de compras e requisicoes do modulo Suprimentos FIPS.
-        </p>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {badges.map(b => (
-            <span key={b.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.85)', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 20, fontFamily: "'Open Sans', sans-serif" }}>
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: b.hex }} />
-              {b.label} <span style={{ fontFamily: "'Fira Code', monospace", fontSize: 10, color: 'rgba(255,255,255,0.50)' }}>{b.hex}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}`
-}
-
-function codeBannerConteudo() {
-  return `// DS-FIPS — Banner de Conteudo Compacto — Copy-paste ready
-
-export function BannerConteudo() {
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #002A68 0%, #004B9B 60%, #001A4A 100%)',
-      borderRadius: '12px 12px 12px 24px',
-      padding: '22px 26px',
-      position: 'relative', overflow: 'hidden',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ width: 44, height: 44, borderRadius: 11, background: 'rgba(253,194,78,0.18)', border: '1px solid rgba(253,194,78,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FDC24E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </div>
-        <div style={{ flex: 1 }}>
-          <h2 style={{ fontSize: 21, fontWeight: 700, color: '#fff', fontFamily: "'Saira Expanded', sans-serif", margin: 0 }}>Sistema de Requisicoes</h2>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.67)', margin: '4px 0 0', fontFamily: "'Open Sans', sans-serif" }}>Gestao de compras e requisicoes</p>
-        </div>
-        <button style={{ background: '#F6921E', color: '#fff', border: 'none', borderRadius: 6, padding: '6px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-          + Nova Solicitacao
-        </button>
-      </div>
-    </div>
-  );
-}`
-}
-
-function codeBannerFluxo() {
-  return `// DS-FIPS — Banner de Fluxo com Status — Copy-paste ready
-
-export function BannerFluxo() {
-  const stats = [
-    { label: 'TOTAL', value: '1012', color: '#00C64C' },
-    { label: 'AGUARDANDO', value: '1004', color: '#F6921E' },
-    { label: 'APROVADOS', value: '8', color: '#00C64C' },
-    { label: 'ENTREGUES', value: '2', color: '#DC3545' },
-  ];
-
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, #002A68 0%, #004B9B 60%, #001A4A 100%)',
-      borderRadius: '12px 12px 12px 24px',
-      padding: '22px 26px',
-      position: 'relative', overflow: 'hidden',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 11, background: 'rgba(253,194,78,0.18)', border: '1px solid rgba(253,194,78,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FDC24E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </div>
-            <div>
-              <h2 style={{ fontSize: 21, fontWeight: 700, color: '#fff', fontFamily: "'Saira Expanded', sans-serif", margin: 0 }}>Pedidos</h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.67)', margin: '4px 0 0' }}>Solicitacao &rarr; Analise &rarr; Aprovacao &rarr; Execucao &rarr; Entrega</p>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingLeft: 58 }}>
-            {stats.map(s => (
-              <span key={s.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.color }} />
-                {s.label} <strong style={{ color: '#fff' }}>{s.value}</strong>
-              </span>
-            ))}
-          </div>
-        </div>
-        <button style={{ background: '#F6921E', color: '#fff', border: 'none', borderRadius: 6, padding: '6px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-          + Novo pedido
-        </button>
-      </div>
-    </div>
-  );
-}`
-}
-
-/* ─── Página ─── */
 export default function HeroBannerDoc() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
   useEffect(() => { const h = () => setW(window.innerWidth); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h) }, [])
   const mob = w < 640
 
   return (
-    <PlaygroundProvider>
     <div style={{ minHeight: '100vh', background: "var(--color-surface-muted)", fontFamily: Fn.body, color: C.cinzaEscuro }}>
 
       {/* HEADER HERO */}
@@ -351,143 +174,37 @@ export default function HeroBannerDoc() {
         </div>
 
         {/* 01 — Banner de Página (sem badges) */}
-        <Section n="01" title="Banner de Página" desc="Versão limpa do hero principal. Badge de seção no topo, título em Saira Expanded 44px, descrição em Open Sans e junction lines decorativas. Clique no banner para copiar o código.">
-          <Copyable label="Banner de Página" code={codeBannerPagina()} preview={<BannerPadrao />}>
-            <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
-              <BannerPadrao />
-            </DSCard>
-          </Copyable>
+        <Section n="01" title="Banner de Página" desc="Versão limpa do hero principal. Badge de seção no topo, título em Saira Expanded 44px, descrição em Open Sans e junction lines decorativas.">
+          <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
+            <BannerPadrao />
+          </DSCard>
         </Section>
 
         {/* 02 — Banner de Página com Badges */}
-        <Section n="02" title="Banner de Página com Badges" desc="Variante do hero com badges informativos no rodapé (versão, contagem, stack, cores). Clique no banner para copiar o código.">
-          <Copyable label="Banner com Badges" code={codeBannerPaginaBadges()} preview={<BannerPaginaComBadges />}>
-            <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
-              <BannerPaginaComBadges />
-            </DSCard>
-          </Copyable>
+        <Section n="02" title="Banner de Página com Badges" desc="Variante do hero com badges informativos no rodapé (versão, contagem, stack, cores).">
+          <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
+            <BannerPaginaComBadges />
+          </DSCard>
         </Section>
 
         {/* 03 — Banner de Conteúdo */}
-        <Section n="03" title="Banner de Conteúdo" desc="Faixa compacta para cabeçalhos de módulos operacionais. Ícone 44x44, título Saira 21px e botão CTA accent (#F6921E). Clique para copiar o código.">
-          <Copyable label="Banner de Conteúdo" code={codeBannerConteudo()} preview={<BannerConteudo1 />}>
-            <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
-              <BannerConteudo1 />
-            </DSCard>
-          </Copyable>
+        <Section n="03" title="Banner de Conteúdo" desc="Faixa compacta para cabeçalhos de módulos operacionais. Ícone 44x44, título Saira 21px e botão CTA accent (#F6921E).">
+          <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
+            <BannerConteudo1 />
+          </DSCard>
         </Section>
 
         {/* 04 — Banner de Fluxo */}
-        <Section n="04" title="Banner de Fluxo" desc="Variante com cadeia de etapas visível e badges de status com KPIs por etapa. Clique para copiar o código.">
-          <Copyable label="Banner de Fluxo" code={codeBannerFluxo()} preview={<BannerConteudo2 />}>
-            <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
-              <BannerConteudo2 />
-            </DSCard>
-          </Copyable>
+        <Section n="04" title="Banner de Fluxo" desc="Variante com cadeia de etapas visível e badges de status com KPIs por etapa.">
+          <DSCard mob={mob} s={{ padding: 0, overflow: 'hidden' }}>
+            <BannerConteudo2 />
+          </DSCard>
         </Section>
-
-        <CodePlayground />
-
-        <CodeExportSection items={[
-          {
-            label: 'Banner de Pagina',
-            description: 'Hero completo com titulo grande, descricao e junction lines decorativas.',
-            code: `/* Banner de Pagina — DS-FIPS
-   Hero principal para landing pages e visoes gerais de modulo.
-   Degradê azul institucional obrigatorio.
-
-   CSS vars:
-   --color-gov-gradient-from: #002A68
-   --color-gov-gradient-to: #004B9B
-   Fontes: Saira Expanded 44px 700 (titulo), Open Sans 16px (descricao)
-*/
-
-function BannerPagina({ title, description, badges }: {
-  title: React.ReactNode
-  description: string
-  badges?: { label: string; color: string }[]
-}) {
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 100%)',
-      padding: '48px 40px 44px',
-      position: 'relative', overflow: 'hidden', borderRadius: 12,
-    }}>
-      {/* Junction Lines SVG decorativas (opacity 0.12) */}
-      <svg viewBox="0 0 320 200" fill="none" style={{ opacity: 0.12, position: 'absolute', top: -10, right: -20, width: 400, height: 250 }}>
-        <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-        <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-      </svg>
-      <div style={{ position: 'relative' }}>
-        <h1 style={{ fontSize: 44, fontWeight: 700, color: '#fff', fontFamily: "'Saira Expanded', sans-serif" }}>
-          {title}
-        </h1>
-        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.69)', maxWidth: 700 }}>
-          {description}
-        </p>
-      </div>
-    </div>
-  )
-}`,
-          },
-          {
-            label: 'Banner de Conteudo (compacto)',
-            description: 'Faixa compacta com icone + titulo + CTA para cabecalhos de modulos operacionais.',
-            code: `/* Banner de Conteudo — DS-FIPS
-   Faixa compacta para modulos operacionais.
-   Icone 44x44 r11 + titulo Saira 21px + CTA accent.
-
-   CSS vars:
-   --color-gov-gradient-from / --color-gov-gradient-to
-   Dark mode: usa #1e2a3a -> #162030 -> #1a2840
-*/
-
-function BannerConteudo({ icon, title, subtitle, ctaLabel, onCta }: {
-  icon: React.ReactNode
-  title: string
-  subtitle: string
-  ctaLabel: string
-  onCta: () => void
-}) {
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)',
-      borderRadius: '12px 12px 12px 24px',
-      padding: '22px 26px',
-      display: 'flex', alignItems: 'center', gap: 16,
-    }}>
-      <div style={{
-        width: 44, height: 44, borderRadius: 11,
-        background: 'rgba(253,194,78,0.18)', border: '1px solid rgba(253,194,78,0.19)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        {icon}
-      </div>
-      <div style={{ flex: 1 }}>
-        <h2 style={{ fontSize: 21, fontWeight: 700, color: '#fff', fontFamily: "'Saira Expanded',sans-serif", margin: 0 }}>
-          {title}
-        </h2>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.67)', margin: '4px 0 0' }}>{subtitle}</p>
-      </div>
-      <button onClick={onCta} style={{
-        background: '#F6921E', color: '#fff', border: 'none',
-        borderRadius: 6, padding: '6px 14px', fontSize: 12, fontWeight: 600,
-      }}>
-        {ctaLabel}
-      </button>
-    </div>
-  )
-}`,
-          },
-        ]} />
 
         <div style={{ textAlign: 'center', padding: '20px 0 0', borderTop: `1px solid ${C.cardBorder}`, marginTop: 20 }}>
           <span style={{ fontSize: 12, color: C.cinzaChumbo, letterSpacing: '0.5px', fontFamily: Fn.title, fontWeight: 400 }}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   )
 }

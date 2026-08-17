@@ -25,6 +25,80 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.13.0',
+    date: '2026-08-17',
+    title: 'PageHeader entra na library e PageHero é alinhado com o produto',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo composite **`PageHeader`** — a faixa de módulo (**Banner de Conteúdo**) promovida a partir do `PageHeader` que o Governança BI mantinha local e usava em 14 telas. `import { PageHeader } from \'@fips-app/ds-fips\'`. Props: `title`, `description`, `eyebrow`, `icon`, `info` (slot ao lado do título), `badge`/`badgePill`, `actions`, `stats` (chips de KPI = variante Banner de Fluxo), `compact`, `as` (`h1`/`h2`) e `className` só para layout externo. Fundo, sombra, borda e raio saem de `.fips-banner-shell--content` (tokens `--fips-banner-*`), então claro/escuro já vêm resolvidos — era justamente o que faltava na versão do GovBI, que fixava o gradiente inline e não tinha dark.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`PatternPanelHero` deixou de ter implementação própria: virou adaptador `@deprecated` sobre `PageHeader` (`subtitle`→`description`, `action`→`actions`), mantendo a API para os consumidores atuais. As duas faixas eram quase a mesma coisa em arquivos separados — agora é uma implementação só. Código novo usa `PageHeader`.',
+      },
+      {
+        type: 'breaking',
+        description:
+          '`PageHero` foi alinhado com a versão que o fips-suprimentos já rodava (a cópia de lá tinha divergido): fundo `--fips-banner-page-bg` (gradiente do Banner de Página, com dark resolvido) no lugar do gradiente fixo `#031a3d → #1b6fd4`, `BannerJunctionLines` à direita e nova prop `compact` (raio 2xl + respiro menor). **Breaking:** o padding agora é do componente (`px-8 py-10 md:px-10 md:py-12`; `compact` → `px-6 py-6 md:px-8 md:py-8`) — filhos que traziam `px/py` próprios passam a dobrar o respiro e devem largar o wrapper.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Tile âmbar do banner (`FIPS_BANNER_ICON_BOX_STYLE`) estava com **o dobro** do preenchimento: os valores `#FDC24E18` / `#FDC24E30` da doc do Banner são alfas **hexadecimais** (0x18 ≈ 10%, 0x30 ≈ 19%) e foram transcritos como `18%` / `30%` no `color-mix`. Voltou para 10%/19%, batendo com a doc e com o `PageHeader` do Governança BI.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O trilho de junção usava a mesma opacidade nas duas faixas (`--fips-banner-junction-opacity: 0.12`), calibrada para o Banner de Página. Numa faixa baixa como a de módulo isso vira ruído atrás do título — a faixa de conteúdo ganhou `--fips-banner-junction-content-opacity` (0.06 claro / 0.04 escuro, valores da própria doc do Banner).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Doc do Banner (`/docs/patterns/hero-banner`): as seções **Banner de Conteúdo** e **Banner de Fluxo** deixaram de ser réplicas em hex fixo e passaram a renderizar o `PageHeader` real (em largura total, como em produção). A página **Hero** também mostra o componente na seção de faixa de módulo. Skill atualizada (`components.md` § PageHeader + `patterns.md` § Hero).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Removida a função de copiar das páginas **Banner**, **Raios**, **Sombras** e **Textarea** (mesma limpeza já feita em Tabs, Table, Drawer, Header, Sidebar e Hero): saíram o `PlaygroundProvider`/`Copyable`, a seção "Teste ao Vivo" (`CodePlayground`), a seção inerte de "Ver código" e os geradores de snippet com hex fixo. No Banner, com o Banner de Conteúdo virando componente, o caminho é importar `PageHeader` — não colar markup; os textos das seções não mandam mais "clicar para copiar". Nas escalas de Raios e Sombras, o `key` do item migrou do `Copyable` para o tile (era o React key da lista). A seção **Playground** da página Sombras não tem relação com o copy — é a demo interativa de elevação e continua lá. No Textarea saíram também os dois geradores de snippet (`textareaExportCode` e `textareaVariantCode`, ~170 linhas), sem consumidor depois da limpeza.',
+      },
+    ],
+  },
+  {
+    version: '0.12.5',
+    date: '2026-08-17',
+    title: 'Doc do padrão Hero sincronizada com o hero real da Home',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'A página **Hero** (`/docs/patterns/hero`) estava parada em abril: ensinava o header *glass-to-white* — transparente com `backdrop-filter` sobre o hero, virando branco depois de `scrollTop > 60` — e um hero em degradê diagonal `118deg` **sem foto**. Esse padrão saiu do produto na v0.6.3: nem a Home do DS, nem o mockup do Application Shell, nem o fips-suprimentos têm listener de scroll no header. A doc agora afirma o contrário do que dizia: o header acima do hero é o **padrão sólido** (`DocHeaderStandard`, toolbar `--color-surface-soft` + faixa de abas), opaco em todas as rotas, inclusive a Home. Uma seção "Aposentado" explica o padrão antigo para quem encontrar resíduo em código.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Documentadas as **três camadas** do hero da Home, na ordem e com as classes exatas usadas em `HomePage.tsx` / `ApplicationShellDemo.tsx` / `Home.tsx` do Suprimentos: arte `app-shell-home-trains.png` (`object-cover object-center`) → overlay azul `bg-gradient-to-b from-[#002A68]/60 via-[#002A68]/45 to-[#002A68]/60` → vinheta `bg-gradient-to-t from-black/35 via-transparent to-black/15`. Nova tabela de **conteúdo do hero** (badge pill laranja, título `font-heading` com um termo em `--color-accent`, subtítulo `text-white/80 max-w-2xl`, par de botões `ouro` + `inverseOutline` em `size="sm"`) e a regra do straddle dos indicadores (`-mt-7` desktop / `-mt-6` tablet / `-mt-3` mobile).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O preview da página deixou de ser uma simulação de scroll com markup próprio e passou a montar o **header real** — `DocHeaderStandardPreview` + `DocHeaderSectionNavDemo`, agora com `dark` ligado ao tema — servindo o hero como `footer`. Sem cópia manual de header para manter em sincronia. A tabela "Regra de cores por fundo" foi refeita (header sólido / hero / conteúdo abaixo / módulos com `PageHero`) e a seção morta de "Ver código" (inerte desde a remoção do copy) saiu da página.',
+      },
+      {
+        type: 'fix',
+        description:
+          'A seção "faixa de módulo" da mesma página afirmava que "Produção, Governança e demais telas internas usam esta faixa azul padrão", apontando para o composite `PageHero`. Levantamento nos produtos: `PageHero` tem **2 consumidores no total** (Banco de Projetos e Escopo Editar, no fips-suprimentos — e lá a cópia já divergiu, com gradiente do Banner, junction lines e prop `compact`); Governança BI, QLP e Gestão OPA carregam o arquivo e nunca usam. A faixa real de módulo é o **Banner de Conteúdo** (página Banner § 03), que o Governança BI implementa como `PageHeader` local nas 14 telas. A doc da página Hero agora aponta o Banner de Conteúdo como padrão de módulo (`PageHero` é assunto da doc do próprio composite, não desta página).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Skill `design-system-fips` (`references/patterns.md` § Hero) recebeu as mesmas três camadas, o conteúdo canônico, o aviso de que o header não é glass e a nova subseção "Faixa de módulo ≠ hero da Home" com a anatomia do Banner de Conteúdo — antes a seção tinha só três linhas genéricas ("home pode usar hero mais editorial").',
+      },
+    ],
+  },
+  {
     version: '0.12.4',
     date: '2026-08-17',
     title: 'Dashboard: barra de filtros migrada para a toolbar canônica (com Drawer)',

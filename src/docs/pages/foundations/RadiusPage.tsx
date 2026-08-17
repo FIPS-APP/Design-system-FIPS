@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
-import { CodeExportSection } from '../../components/CodeExport'
 
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"var(--color-gov-verde-escuro)",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
@@ -66,7 +64,6 @@ export default function DSFIPSRadius(){
   const [hovRadius,setHovRadius]=useState<string|null>(null);
 
   return(
-    <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
 
@@ -82,26 +79,14 @@ export default function DSFIPSRadius(){
       <div style={{padding:mob?"24px 16px 40px":"36px 40px 60px",maxWidth:1100,margin:"0 auto"}}>
         <Section n="01" title="Escala simétrica" desc="Raios uniformes para elementos menores. Do zero ao circular.">
           <div style={{display:"grid",gridTemplateColumns:mob?"repeat(2,1fr)":w<900?"repeat(4,1fr)":"repeat(8,1fr)",gap:mob?10:14}}>
-            {symmetricScale.map((r,i)=>{const isHov=hovRadius===r.token;const isCircle=r.px==="50%";const radiusVal=typeof r.px==="number"?r.px+"px":r.px;return(
-              <Copyable
-                key={r.token}
-                label={`radius-${r.label}`}
-                code={`// DS-FIPS — Radius ${r.label}\nborderRadius: ${typeof r.px==="number"?r.px:'"'+r.px+'"'} // or "${radiusVal}"\n// Token: --${r.token}`}
-                preview={
-                  <div style={{display:"flex",alignItems:"center",gap:14}}>
-                    <div style={{width:56,height:56,background:"#004B9B",borderRadius:typeof r.px==="number"?r.px:r.px,transition:"all .3s"}}/>
-                    <div style={{fontSize:12,fontFamily:"'Fira Code',monospace",color:"#1B2A4A"}}>{r.label} — {r.token}</div>
-                  </div>
-                }
-              >
-              <div onMouseEnter={()=>setHovRadius(r.token)} onMouseLeave={()=>setHovRadius(null)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,animation:`fadeUp .35s ease ${i*0.04}s both`}}>
+            {symmetricScale.map((r,i)=>{const isHov=hovRadius===r.token;const isCircle=r.px==="50%";return(
+              <div key={r.token} onMouseEnter={()=>setHovRadius(r.token)} onMouseLeave={()=>setHovRadius(null)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,animation:`fadeUp .35s ease ${i*0.04}s both`}}>
                 <div style={{width:isCircle?72:80,height:isCircle?72:56,background:C.cardBg,borderRadius:typeof r.px==="number"?r.px:r.px,border:`2px solid ${isHov?C.azulProfundo:C.cardBorder}`,boxShadow:isHov?"0 4px 12px rgba(0,75,155,.08)":"none",transition:"all .2s",display:"flex",alignItems:"center",justifyContent:"center"}}>
                   <code style={{fontSize:isCircle?11:13,fontWeight:700,fontFamily:Fn.mono,color:isHov?C.azulProfundo:C.cinzaChumbo,transition:"color .2s"}}>{r.label}</code>
                 </div>
                 <span style={{fontSize:10,color:C.cinzaChumbo,fontFamily:Fn.body,textAlign:"center",lineHeight:1.3}}>{r.use}</span>
                 <code style={{fontSize:9,fontFamily:Fn.mono,color:C.textLight}}>{r.token}</code>
               </div>
-              </Copyable>
             )})}
           </div>
         </Section>
@@ -257,56 +242,10 @@ export default function DSFIPSRadius(){
           </div>
         </Section>
 
-        <CodePlayground />
-
-        <CodeExportSection items={[
-          {
-            label: 'Border Radius Tokens FIPS',
-            description: 'Escala completa de border-radius incluindo o padrao Caixa assimetrico.',
-            code: `/* ═══════════════════════════════════════════
-   Border Radius Tokens — DS-FIPS
-   Inclui simetricos e o padrao Caixa assimetrico
-   ═══════════════════════════════════════════ */
-
-:root {
-  /* ── Simetricos ── */
-  --radius-none: 0;
-  --radius-xs:   4px;   /* Badges, chips, tags */
-  --radius-sm:   6px;   /* Botoes sm, inputs compactos */
-  --radius-md:   8px;   /* Botoes, inputs, selects, dropdowns */
-  --radius-lg:   10px;  /* Cards internos, containers */
-  --radius-xl:   14px;  /* Icon containers (modal/drawer) */
-  --radius-pill:  20px; /* Pills, badges grandes */
-  --radius-full: 50%;   /* Avatares, dots */
-
-  /* ── Elemento Caixa (assimetrico — identidade FIPS) ── */
-  --radius-caixa-lg: 12px 12px 12px 24px;  /* Cards principais, Modal, Table */
-  --radius-caixa-md: 10px 10px 10px 18px;  /* Cards internos, cenarios */
-  --radius-caixa-sm: 10px 10px 10px 20px;  /* Cards de cenario menores */
-
-  /* ── Especiais ── */
-  /* Tab Guia ativa: 10px 10px 0 0 */
-  /* Drawer: 0 (full height) */
-}
-
-/* ── Referencia por componente ──
-   Card/DSCard:     12px 12px 12px 24px (caixa-lg)
-   Modal:           12px 12px 12px 24px (caixa-lg)
-   Table:           12px 12px 12px 24px (caixa-lg)
-   Card interno:    10px 10px 10px 18px (caixa-md)
-   Button:          8px (simetrico)
-   Input/Select:    8px (simetrico)
-   Badge:           4px (simetrico)
-   Avatar:          50% (circular)
-*/`,
-          },
-        ]} />
-
         <div style={{textAlign:"center",padding:"20px 0 0",borderTop:`1px solid ${C.cardBorder}`,marginTop:20}}>
           <span style={{fontSize:12,color:C.cinzaChumbo,letterSpacing:".5px",fontFamily:Fn.title,fontWeight:400}}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
         </div>
       </div>
     </div>
-    </PlaygroundProvider>
   );
 }
