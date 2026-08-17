@@ -550,8 +550,11 @@ export default function DataListingDemo() {
                 {totalFilters>0&&<span style={{marginLeft:2,height:16,minWidth:16,padding:"0 4px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,fontFamily:Fn.body,background:dark?"#93BDE4":C.azulProfundo,color:dark?"#002A68":C.branco,borderRadius:999}}>{totalFilters}</span>}
               </button>
               {/* Buscar — mesma anatomia do campo do QLP (ListingToolbar.tsx): flex-1 sem
-                  min/maxWidth, borda estática (sem realce de foco), h-34, ícones lucide 14px. */}
-              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:1}}>
+                  maxWidth, borda estática (sem realce de foco), h-34, ícones lucide 14px.
+                  minWidth:180 evita que os irmãos (Filtros/Período/Excel/PDF, todos com
+                  largura de conteúdo) espremam a busca até cortar o placeholder — abaixo
+                  disso ela quebra pra própria linha (o container já é flexWrap:wrap). */}
+              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:1,minWidth:180}}>
                 <Search size={14} style={{flexShrink:0,color:C.cinzaChumbo}}/>
                 <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}}/>
                 {search&&<X size={14} onClick={e=>{e.stopPropagation();setSearch("")}} style={{flexShrink:0,cursor:"pointer",opacity:.5,color:C.cinzaChumbo}}/>}
