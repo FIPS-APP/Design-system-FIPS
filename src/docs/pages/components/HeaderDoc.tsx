@@ -294,7 +294,7 @@ export default function HeaderDoc() {
           </div>
           <h1 style={{ fontSize: mob ? 30 : 44, fontWeight: 700, color: C.branco, margin: '0 0 10px', fontFamily: Fn.title }}>Header</h1>
           <p style={{ fontSize: 16, color: `${C.branco}B0`, lineHeight: 1.6, maxWidth: 720, margin: 0, fontFamily: Fn.body }}>
-            Barra superior do shell de documentação: contexto da seção, título da página, busca e ações. Fundo com imagem + gradientes (mesmo padrão do Application Shell), faixas em vidro e tipografia clara sobre o hero.
+            Barra superior do shell de documentação: contexto da seção, título da página e ações. Fundo com imagem + gradientes (mesmo padrão do Application Shell), faixas em vidro e tipografia clara sobre o hero.
           </p>
         </div>
       </header>
@@ -303,7 +303,7 @@ export default function HeaderDoc() {
         <Section
           n="01"
           title="Finalidade"
-          desc="O header ancora o usuário na hierarquia (grupo → página), oferece atalho de busca quando houver e mantém navegação rápida entre grandes áreas do DS. O conteúdo do header permanece legível sobre imagem e overlays; em viewport estreita o menu mobile substitui parte da linha de utilitários."
+          desc="O header ancora o usuário na hierarquia (grupo → página) e mantém navegação rápida entre grandes áreas do DS. O conteúdo do header permanece legível sobre imagem e overlays; em viewport estreita o menu mobile substitui parte da linha de utilitários."
         >
           <DSCard mob={mob}>
             <p style={gt}>
@@ -315,12 +315,12 @@ export default function HeaderDoc() {
         <Section
           n="02"
           title="Anatomia"
-          desc="Da esquerda para a direita: controle de menu (mobile), ícone de painel, coluna de título (eyebrow + badge opcional + H2), busca (md+), botões neumórficos (notificações, tutorial) e chip de conta (sm+)."
+          desc="Da esquerda para a direita: controle de menu (mobile), ícone de painel, coluna de título (eyebrow + badge opcional + H2), botões neumórficos (notificações, tutorial) e chip de conta (sm+)."
         >
           <DSCard mob={mob}>
             <div style={gl}>Header completo</div>
             <p style={{ ...gt, marginBottom: 16 }}>
-              Preview real do header padrão DS-FIPS com breadcrumb, busca, notificações, dark mode e avatar.
+              Preview real do header padrão DS-FIPS com breadcrumb, notificações, dark mode e avatar.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <DocHeaderStandardPreview
@@ -443,7 +443,7 @@ export default function HeaderDoc() {
 
         <CodeExportSection items={[{
           label:"DocHeader",
-          description:"Header padrão DS-FIPS com breadcrumb, busca, notificações, dark mode toggle e user chip. Clique no header acima para copiar.",
+          description:"Header padrão DS-FIPS com breadcrumb, notificações, dark mode toggle e user chip.",
           code: HEADER_FULL_CODE,
         }]}/>
       </div>

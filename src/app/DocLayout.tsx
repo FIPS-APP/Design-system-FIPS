@@ -8,7 +8,6 @@ import { DocHeaderPageTrail } from '../components/layout/DocHeaderPageTrail'
 import { DocHeaderSectionNav } from '../components/layout/DocHeaderSectionNav'
 import { DocsNeuSidebar } from '../components/layout/DocsNeuSidebar'
 import { ChangelogModal } from '../components/layout/ChangelogModal'
-import { SearchPill } from '../components/layout/SearchPill'
 import { TutorialOverlay, routeToPageName } from '../components/domain/TutorialContextual'
 import { UserChip } from '../components/layout/UserChip'
 import { Button } from '../components/ui/button'
@@ -192,9 +191,6 @@ export function DocLayout() {
                   />
                 </DocHeaderNeuIconButton>
                 <DocHeaderPageTrail groupLabel={currentGroupLabel} pageTitle={title} dark={dark} />
-              </div>
-              <div className="hidden w-full max-w-xs md:block" data-tour-step="busca">
-                <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 <div className="flex shrink-0 items-center gap-2">

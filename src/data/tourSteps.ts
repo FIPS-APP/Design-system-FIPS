@@ -26,14 +26,6 @@ export const DS_TOUR_STEPS: TourStep[] = [
     requiresSidebar: true,
   },
   {
-    id: 'busca',
-    target: 'busca',
-    title: 'Busca rápida',
-    content:
-      'Encontre qualquer token, componente ou página direto pela busca, sem precisar rolar o menu.',
-    placement: 'bottom',
-  },
-  {
     id: 'menu-auto',
     target: 'menu-auto',
     title: 'Comportamento do menu',

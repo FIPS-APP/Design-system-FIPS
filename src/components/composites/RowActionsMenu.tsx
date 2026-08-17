@@ -15,10 +15,13 @@ export function RowActionsMenu({
   rowId,
   actions,
   radius = 56,
+  ariaLabel,
 }: {
   rowId: string
   actions: RowMenuAction[]
   radius?: number
+  /** Sobrescreve o `aria-label` do gatilho. Default do menu: "Ações da linha". */
+  ariaLabel?: string
 }) {
   const items: CommandItem[] = actions.map((action) => ({
     id: `${rowId}-${action.key}`,
@@ -37,6 +40,7 @@ export function RowActionsMenu({
     <CircularCommandMenu
       items={items}
       radius={radius}
+      ariaLabel={ariaLabel}
       triggerClassName="fips-row-action inline-flex size-7 items-center justify-center rounded-md"
     />
   )

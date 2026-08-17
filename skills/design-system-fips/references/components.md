@@ -360,29 +360,67 @@ Bloco **Indicadores rápidos**: faixa de `StatsCard` clicáveis no `panelHeader`
 
 > **v0.11.24 — saiu da demo, continua na library.** O bloco foi removido da toolbar de `/docs/patterns/data-listing` (a toolbar de lá agora demonstra só filtros/busca/período + Excel/PDF). `ListingKpiRow` e `StatsCard` seguem exportados e são o padrão recomendado quando a listagem precisa de KPIs clicáveis — só não há mais demo viva deles nessa página. O bloco de KPI cards com sparkline (acima da toolbar) é outro componente e continua na página.
 
-## CircularCommandMenu / RowActionsMenu
+## CircularCommandMenu / RowActionsMenu (menu "Ações")
 
-Fonte: `src/components/composites/CircularCommandMenu.tsx` · `RowActionsMenu.tsx` · CSS `.cmd-glass*` / `.fips-row-action` em `globals.css`
+Fonte: `src/components/composites/CircularCommandMenu.tsx` · `RowActionsMenu.tsx` · CSS `.cmd-glass`, `.cmd-glass-center`, `.fips-row-action` em `globals.css`. Doc: `/docs/components/circular-command-menu` — item do sidebar chamado **"Ações"** (renomeado de "Circular Menu" na v0.11.31). **Peer dependency: `framer-motion` (>=11).**
 
-Menu radial (portal + órbita + teclado). **Peer dependency:** `framer-motion` (>=11). Doc: `/docs/components/circular-command-menu` — item do sidebar chamado **"Ações"** (renomeado de "Circular Menu" na v0.11.31).
+Menu radial: o gatilho abre uma órbita de ações ao redor de um centro, em portal. Um componente, dois presets.
 
-Um único componente, dois presets:
+### Presets
 
-- **`RowActionsMenu`** — não é componente separado: é o `CircularCommandMenu` com trigger de **28px** pra caber numa célula de tabela (coluna Ações da listagem).
-- **FAB** — o mesmo componente com o trigger padrão de **56px**, para ação isolada de página.
+| | `RowActionsMenu` | `CircularCommandMenu` (FAB) |
+|---|---|---|
+| uso | coluna **Ações** de listagem | ação isolada de página |
+| gatilho | `size-7` (**28px**), `.fips-row-action` (fantasma, hover azul 12%) | `h-14 w-14` (**56px**), `--color-primary`, sombra |
+| `radius` default | **56** | **120** |
+| ícone do gatilho | `+` que rotaciona 45° ao abrir (mesmo nos dois) | idem |
 
-`ariaLabel` (v0.11.31) tem default `"Ações da linha"`, correto pro uso em tabela. **Fora de linha de tabela (FAB), passe `ariaLabel` próprio** — ex.: `ariaLabel="Ações rápidas"`.
+`RowActionsMenu` não é componente separado — é o mesmo menu com outro trigger. Expõe só `rowId`, `actions`, `radius` e `ariaLabel` (v0.13.0); para `onSelect`, `trigger`, `className` ou `items` com `shortcut`, use o `CircularCommandMenu` direto.
+
+### API
+
+`CircularCommandMenuProps`: `items` (`CommandItem[]`) · `trigger` (nó do gatilho) · `triggerClassName` (substitui a classe padrão inteira, não faz merge) · `className` · `radius` · `onSelect(item)` · `ariaLabel` (default `"Ações da linha"`).
+
+`CommandItem`: `id` · `icon` · `label` · `shortcut?` · `danger?` · `disabled?` · `onClick?`.
+
+`RowMenuAction` (do `RowActionsMenu`): `key` · `label` · `icon` · `danger?` · `disabled?` · `onClick` (obrigatório). O `id` sai de `` `${rowId}-${key}` `` — daí o `rowId`.
+
+### Geometria e comportamento
+
+- **Distribuição**: primeiro item às 12h (`startAngle -90°`), os demais em sentido horário a cada `360/N`. Com 2 itens eles ficam em oposição (12h/6h) — para leque curto, prefira 3–5 ações.
+- **Centro clampado**: o centro é o do gatilho, preso à viewport com margem `radius + 44`. Menu em linha no rodapé da tabela não vaza para fora da tela; recalcula em `resize` e `scroll` (captura).
+- **Portal** em `document.body` — overlay de fechar em `z-[200]`, órbita em `z-[210]`. Passa por cima de qualquer `overflow-hidden` de card/tabela.
+- **Itens `disabled` são filtrados**, não aparecem esmaecidos. Se a ação precisa ser vista mas bloqueada, não use `disabled` — mostre e trate no `onClick`.
+- **Teclado**: ←/↑ e →/↓ giram o foco, `Enter` executa, `Esc` fecha. `hover` sincroniza o item ativo.
+- **Tooltip do item**: aparece só no ativo, com `shortcut` opcional em `opacity-60`; vai para a **esquerda** quando o menu está na metade direita da tela.
+- **`danger`**: ícone em `--color-danger` e ring da mesma cor quando ativo (os demais usam `--color-primary`).
+- **Vidro**: `.cmd-glass` (superfície 88% + `blur(13px) saturate(1.5)` + `--shadow-float`) nos itens e `.cmd-glass-center` (94%, borda azul 40%) no botão central, que vira **X** ao abrir. Claro/escuro saem dos tokens — não pintar por className.
+- O gatilho já faz `stopPropagation` no clique, então funciona dentro de `<TableRow onClick>` sem abrir o detalhe da linha junto.
 
 ```tsx
+// Coluna Ações da listagem
 <RowActionsMenu
   rowId={row.id}
-  radius={56}
   actions={[
-    { key: 'edit', label: 'Editar pedido', icon: <Pencil />, onClick: () => {} },
-    { key: 'delete', label: 'Excluir', icon: <Trash2 />, danger: true, onClick: () => {} },
+    { key: 'edit', label: 'Editar pedido', icon: <Pencil />, onClick: () => edit(row) },
+    { key: 'delete', label: 'Excluir', icon: <Trash2 />, danger: true, onClick: () => remove(row) },
   ]}
 />
+
+// FAB de página — passe ariaLabel próprio (o default fala em "linha")
+<CircularCommandMenu
+  ariaLabel="Ações rápidas"
+  radius={120}
+  items={[{ id: 'new', label: 'Nova requisição', shortcut: '⌘N', icon: <Plus />, onClick: novo }]}
+/>
 ```
+
+Não faça:
+
+- kebab genérico (`⋮` com dropdown) na coluna Ações — o padrão da listagem FIPS é este menu radial
+- passar mais de ~6 ações: a órbita fica ilegível e os rótulos colidem
+- reaproveitar o `ariaLabel` default fora de tabela (vira "Ações da linha" num FAB)
+- estilizar o gatilho por `className` — `triggerClassName` **substitui** a classe padrão inteira; para variar aparência, passe a classe completa
 
 ## PageHeader (faixa de módulo — v0.13.0)
 

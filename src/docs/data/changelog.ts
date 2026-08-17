@@ -62,7 +62,22 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          'Removida a função de copiar das páginas **Banner**, **Raios**, **Sombras** e **Textarea** (mesma limpeza já feita em Tabs, Table, Drawer, Header, Sidebar e Hero): saíram o `PlaygroundProvider`/`Copyable`, a seção "Teste ao Vivo" (`CodePlayground`), a seção inerte de "Ver código" e os geradores de snippet com hex fixo. No Banner, com o Banner de Conteúdo virando componente, o caminho é importar `PageHeader` — não colar markup; os textos das seções não mandam mais "clicar para copiar". Nas escalas de Raios e Sombras, o `key` do item migrou do `Copyable` para o tile (era o React key da lista). A seção **Playground** da página Sombras não tem relação com o copy — é a demo interativa de elevação e continua lá. No Textarea saíram também os dois geradores de snippet (`textareaExportCode` e `textareaVariantCode`, ~170 linhas), sem consumidor depois da limpeza.',
+          'Skill do menu **Ações** (`CircularCommandMenu`/`RowActionsMenu`) reescrita em `components.md`: eram ~15 linhas sem API nem anatomia. Agora traz a tabela dos dois presets (trigger 28px/`radius 56` na coluna Ações × FAB 56px/`radius 120`), a API completa dos três tipos, a geometria real (primeiro item às 12h e passo `360/N`; centro clampado à viewport com margem `radius + 44`, recalculado em resize/scroll; portal com overlay `z-[200]` e órbita `z-[210]`), o modelo de teclado (setas/Enter/Esc + hover sincronizado), os tokens de vidro (`.cmd-glass` 88% + `blur(13px)`, `.cmd-glass-center` 94% com borda azul) e 4 "não faça". Documentados dois comportamentos que mordem: item `disabled` **some** em vez de aparecer esmaecido, e `triggerClassName` **substitui** a classe padrão inteira (não faz merge).',
+      },
+      {
+        type: 'fix',
+        description:
+          'A skill mandava passar `ariaLabel` próprio ao usar o menu fora de linha de tabela, mas `RowActionsMenu` não repassava a prop — só `CircularCommandMenu` aceitava, então a instrução era impossível de seguir por quem usava o preset de linha. `RowActionsMenu` agora aceita e repassa `ariaLabel`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'As superfícies de tutorial não seguiam o padrão de modal do DS: `rounded-[20px]` simétrico em vez do Elemento Caixa (`12px 12px 12px 24px`), fundo cinza neutro `#fafafa→#e8e8ec` fora da paleta, faixa azul de 3px no topo, tile neumórfico e botões com hex cravado (`#004B9B`), sem header hero. O **card de boas-vindas do tour** (`GuidedTour`) e o **balão do botão Tutorial** (`TutorialContextual`) passaram a usar a anatomia canônica — faixa gradiente gov de 3 stops, tile âmbar 44×44, eyebrow dourado, título Saira 21px branco, X próprio, corpo e rodapé `surface-muted/70` com `Button` governado (`ghost`/`secondary` + `accent`). Os dois compartilham o novo `TutorialHero`, então não voltam a divergir. Comportamento intacto: seguem não bloqueantes, sem `Dialog`/focus trap — é só a casca que virou padrão. A seta do balão contextual acompanha: aponta para o hero (azul) em cima e para o rodapé embaixo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Removida a função de copiar das páginas **Banner**, **Raios**, **Sombras**, **Textarea** e **Tooltip** (mesma limpeza já feita em Tabs, Table, Drawer, Header, Sidebar e Hero): saíram o `PlaygroundProvider`/`Copyable`, a seção "Teste ao Vivo" (`CodePlayground`), a seção inerte de "Ver código" e os geradores de snippet com hex fixo. No Banner, com o Banner de Conteúdo virando componente, o caminho é importar `PageHeader` — não colar markup; os textos das seções não mandam mais "clicar para copiar". Nas escalas de Raios e Sombras, o `key` do item migrou do `Copyable` para o tile (era o React key da lista). A seção **Playground** da página Sombras não tem relação com o copy — é a demo interativa de elevação e continua lá. No Textarea e no Tooltip saíram também os geradores de snippet que ficaram órfãos (`textareaExportCode`/`textareaVariantCode`, `tooltipExportCode`/`tooltipCode`).',
       },
     ],
   },

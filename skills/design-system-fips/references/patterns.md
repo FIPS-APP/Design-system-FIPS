@@ -25,11 +25,11 @@ Não faça:
 
 ### Header
 
-Fontes: `src/components/layout/DocHeaderStandard.tsx` (`DocHeaderStandardPreview`), `DocHeaderPageTrail.tsx`, `DocHeaderNeuIconButton.tsx`, `UserChip.tsx`, `UserAccountMenu.tsx`, `src/lib/docHeaderChrome.ts`. Header real: `src/app/DocLayout.tsx` (monta os mesmos módulos + tema/busca/notificações). A doc do componente (`HeaderDoc.tsx`) e a do padrão (`HeroHeaderDoc.tsx`) renderizam `DocHeaderStandardPreview` diretamente — não há cópia manual para manter em sincronia.
+Fontes: `src/components/layout/DocHeaderStandard.tsx` (`DocHeaderStandardPreview`), `DocHeaderPageTrail.tsx`, `DocHeaderNeuIconButton.tsx`, `UserChip.tsx`, `UserAccountMenu.tsx`, `src/lib/docHeaderChrome.ts`. Header real: `src/app/DocLayout.tsx` (monta os mesmos módulos + tema/notificações). A doc do componente (`HeaderDoc.tsx`) e a do padrão (`HeroHeaderDoc.tsx`) renderizam `DocHeaderStandardPreview` diretamente — não há cópia manual para manter em sincronia.
 
 Duas faixas empilhadas num único `<header overflow-hidden>` (o `overflow-hidden` clipa o art decorativo de fundo — mesmo motivo pelo qual o painel do `UserAccountMenu` precisa de portal, ver abaixo):
 
-1. **Faixa superior** (`docHeaderBarTop`, sempre visível) — `flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6` (padding direito um degrau menor que o esquerdo, decisão intencional). Da esquerda pra direita: botão hambúrguer (`lg:hidden`, abre a sidebar mobile) → `DocHeaderNeuIconButton` recolher/expandir sidebar (`hidden sm:inline-flex`) → `DocHeaderPageTrail` (`flex-1`) → `SearchPill` (`hidden md:block`) → cluster de ações (ícones + divisor `h-6 w-px` `hidden sm:block` + `UserChip variant="docHeader"`).
+1. **Faixa superior** (`docHeaderBarTop`, sempre visível) — `flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6` (padding direito um degrau menor que o esquerdo, decisão intencional). Da esquerda pra direita: botão hambúrguer (`lg:hidden`, abre a sidebar mobile) → `DocHeaderNeuIconButton` recolher/expandir sidebar (`hidden sm:inline-flex`) → `DocHeaderPageTrail` (`flex-1`) → cluster de ações (ícones + divisor `h-6 w-px` `hidden sm:block` + `UserChip variant="docHeader"`). **Sem campo de busca** — o `SearchPill` foi removido do header na v0.12.5 (componente deletado, sem consumidor); a navegação é pelo menu lateral.
 2. **Faixa de tabs** (`docHeaderBarTabs`, `hidden lg:block`) — `DocHeaderSectionNav`; some completamente abaixo de `lg` (navegação mobile vive só na sidebar).
 
 Não faça:

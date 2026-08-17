@@ -14,7 +14,6 @@ import { DocHeaderNeuIconButton } from './DocHeaderNeuIconButton'
 
 export { DocHeaderNeuIconButton } from './DocHeaderNeuIconButton'
 import { DocHeaderPageTrail } from './DocHeaderPageTrail'
-import { SearchPill } from './SearchPill'
 import { UserChip } from './UserChip'
 
 /** Camada de arte + gradientes (light mode — hero com lavagem clara). */
@@ -109,9 +108,6 @@ export function DocHeaderStandardPreview({
               <PanelLeft className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
             </DocHeaderNeuIconButton>
             <DocHeaderPageTrail groupLabel={groupLabel} pageTitle={pageTitle} dark={dark} />
-          </div>
-          <div className="hidden w-full max-w-xs md:block">
-            <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <div className="flex shrink-0 items-center gap-2">

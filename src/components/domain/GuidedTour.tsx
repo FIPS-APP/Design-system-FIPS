@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
 import { ChevronRight, ChevronLeft, X, Sparkles } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { Button } from '../ui/button'
+import { TutorialHero } from './TutorialHero'
 import type { TourStep } from '../../hooks/useTour'
 
 const FIPS_ORANGE = '#F6921E'
@@ -304,68 +306,42 @@ export function GuidedTour({
         {/* Dim overlay (visual only — não captura cliques) */}
         <div className="pointer-events-none absolute inset-0 bg-slate-950/35" aria-hidden />
 
-        {/* Centered card */}
+        {/* Card central — modal canônico do DS: header hero + corpo + rodapé.
+            Anatomia igual à do `Modal hero` / WorkspaceFormDialog; o que muda é só
+            o comportamento (não bloqueante, sem Dialog/focus trap). */}
         <motion.div
           className={cn(
-            'pointer-events-auto relative z-10 mx-4 w-full max-w-sm overflow-hidden rounded-[20px] border',
-            'border-black/10 bg-gradient-to-br from-[#fafafa] via-[#f0f0f2] to-[#e8e8ec]',
-            'shadow-[0_24px_48px_-12px_rgba(0,0,0,0.22),0_0_0_1px_rgba(255,255,255,0.8)_inset]',
-            'dark:border-white/[0.08] dark:from-[#232328] dark:via-[#1a1a1e] dark:to-[#151518]',
-            'dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.04)_inset]',
+            'pointer-events-auto relative z-10 mx-4 w-full max-w-md overflow-hidden',
+            'rounded-[12px_12px_12px_24px] border border-[var(--color-border)]',
+            'bg-[var(--color-surface)] shadow-[var(--shadow-elevated)]',
           )}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
-          {/* Grão + faixa azul no topo */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.025] mix-blend-multiply dark:opacity-[0.03] dark:mix-blend-overlay"
-            style={{ backgroundImage: TUTORIAL_GRAIN_BG }}
+          <TutorialHero
+            eyebrow="Primeiro acesso"
+            title={currentStep.title}
+            icon={<Sparkles className="h-5 w-5" aria-hidden strokeWidth={1.8} />}
+            onClose={skip}
+            closeLabel="Pular tour"
           />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-0 right-0 top-0 h-[3px] bg-gradient-to-r from-[#004B9B] via-[#93BDE4] to-transparent"
-          />
-
-          {/* Header com ícone neumórfico */}
-          <div className="relative z-[1] flex items-center gap-2.5 px-6 pb-2 pt-4">
-            <div
-              className={cn(
-                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-black/10',
-                'bg-gradient-to-br from-white via-[#ebebeb] to-[#e0e0e0] text-[#004B9B]',
-                'shadow-[0_1px_2px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.85)]',
-                'dark:border-[#3f3f46] dark:from-[#303036] dark:via-[#222226] dark:to-[#1c1c20] dark:text-[#93BDE4]',
-              )}
-            >
-              <Sparkles className="h-4 w-4" aria-hidden strokeWidth={2} />
-            </div>
-            <h2 className="font-heading text-[15px] font-bold text-[#18181b] dark:text-[#fafafa]">
-              {currentStep.title}
-            </h2>
-          </div>
 
           {/* Body */}
-          <div className="relative z-[1] px-6 pb-4">
-            <p className="text-[13px] leading-[1.65] text-zinc-600 dark:text-zinc-400">
+          <div className="px-6 py-5">
+            <p className="text-[13px] leading-[1.65] text-[var(--color-fg-muted)]">
               {currentStep.content}
             </p>
-            <div className="mt-5 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={skip}
-                className="text-[12px] font-semibold text-zinc-500 transition-colors hover:text-[#004B9B] dark:text-zinc-400 dark:hover:text-[#93BDE4]"
-              >
-                Pular
-              </button>
-              <button
-                type="button"
-                onClick={next}
-                className="flex min-h-[34px] items-center gap-1 rounded-[10px] bg-[#004B9B] px-4 py-1.5 text-[12px] font-bold text-white shadow-[0_2px_12px_rgba(0,75,155,0.35)] transition-all hover:bg-[#003d82]"
-              >
-                Começar <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              </button>
-            </div>
+          </div>
+
+          {/* Rodapé */}
+          <div className="flex items-center justify-between gap-2 border-t border-[var(--color-border)] bg-[var(--color-surface-muted)]/70 px-6 py-4">
+            <Button type="button" variant="ghost" size="sm" onClick={skip}>
+              Pular
+            </Button>
+            <Button type="button" variant="accent" size="sm" onClick={next}>
+              Começar <ChevronRight aria-hidden />
+            </Button>
           </div>
         </motion.div>
       </motion.div>,
