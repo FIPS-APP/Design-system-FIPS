@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+# Um push novo na mesma branch cancela a execução anterior — evita fila de jobs
+# obsoletos quando os checkpoints do Studio empurram vários commits seguidos.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build e lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+
+      # Gates que bloqueiam: os dois builds passam hoje, então qualquer vermelho
+      # aqui é regressão de verdade — não dívida herdada.
+      - name: Build da library (vite lib + declarations)
+        run: npm run build
+
+      - name: Build do site de documentação (tsc -b + vite)
+        run: npm run build:site
+
+      # O bundle portátil de skills/ já ficou 17 versões defasado do código uma
+      # vez. Este passo detecta quem editou skills/** sem rodar
+      # `npm run build:downloads`.
+      #
+      # Compara CONTEÚDO, não bytes: `zip` grava o mtime de cada arquivo e o
+      # actions/checkout gera mtimes novos a cada clone, então o zip regerado
+      # nunca bate byte a byte com o commitado — um `git diff` aqui ficaria
+      # vermelho pra sempre.
+      - name: Skill bundle está sincronizado?
+        run: |
+          unzip -q public/downloads/design-system-fips-skill.zip -d /tmp/skill-committed
+          if ! diff -r skills/design-system-fips /tmp/skill-committed/design-system-fips; then
+            echo "::error::public/downloads está defasado de skills/. Rode 'npm run build:downloads' e commite o zip."
+            exit 1
+          fi
+
+      # INFORMATIVO por enquanto (não bloqueia). Em 2026-08-17 o repo tem 41
+      # erros herdados — 18 react-hooks/set-state-in-effect, 8 ban-ts-comment
+      # (@ts-nocheck em 9 doc pages), 8 governance/no-visual-overrides,
+      # 6 react-refresh/only-export-components, 1 no-unused-vars.
+      # Um gate vermelho no dia 1 seria ignorado; a ideia é zerar por regra e
+      # então trocar este passo por `npm run lint` bloqueante.
+      - name: Lint (informativo — dívida herdada)
+        continue-on-error: true
+        run: npm run lint
