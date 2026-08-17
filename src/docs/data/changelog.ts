@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.4',
+    date: '2026-08-17',
+    title: 'Dashboard: barra de filtros migrada para a toolbar canônica (com Drawer)',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'A barra de filtros de `/docs/patterns/dashboard` era um bloco próprio — duas linhas empilhadas (rótulo "Filtros" + ações em cima, 6 chips embaixo), sem busca e com um botão "Relatório" rotulado. Passou a seguir a **toolbar canônica** do Data Listing: faixa única (`padding 14px 18px`, `gap 10`, `flexWrap:wrap`) com as zonas na ordem oficial — **Filtros** (botão outline azul + badge de contagem) → **Busca** (`flex:1`) → chips → contador `N de M` → **`ExportButtons`** (par Excel/PDF 32.5×32.5, só-ícone). O botão "Relatório" com label saiu da toolbar; o par de ícones é o padrão de saída de dados.',
+      },
+      {
+        type: 'feature',
+        description:
+          'O Dashboard ganhou o **Drawer de Filtros** que não tinha (mesma anatomia do Data Listing: abre pela esquerda 400px, hero institucional, miolo `PillFilter` para Status/Prioridade + `ChipSelect` para Área/Solicitante/Ano/Mês, rodapé `Limpar tudo` / `Ver N resultado(s)`; fecha por overlay, X ou Esc). Isso é o que torna o **recolhimento progressivo** legítimo: os chips somem um a um da direita conforme a coluna estreita (Prioridade < 1700px, Status < 1500px) e continuam alcançáveis no Drawer, que tem sempre os 6 campos. Sem o Drawer, recolher chip deixava o filtro inacessível. Nova **Busca** filtra por código ou solicitante.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Toolbar do Data Listing: removido um `<div style={{flex:1}}/>` invisível entre o Período e o par de export. Dois irmãos com `flex:1` dividem o espaço sobrando ao meio, então metade virava vão vazio depois do Período em vez da busca crescer até lá. Agora só a busca é `flex:1`. Junto, a busca ganhou `minWidth:180` — sem o piso, os irmãos de largura fixa (Filtros/Período/Excel/PDF) a espremiam até 205px e cortavam o placeholder; abaixo de 180px ela quebra pra própria linha.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`exportXLSX` entra no Dashboard por **import dinâmico** (`await import()`) dentro do `onExcel`, não por import estático: a lib `xlsx` somava ~284 kB ao chunk da página (435 → 719 kB) só para um clique. Com o import sob demanda o chunk voltou a 435 kB e o download segue funcionando.',
+      },
+    ],
+  },
+  {
     version: '0.12.3',
     date: '2026-08-12',
     title: 'Table e Data Listing: aba Ordenação, vista Cards no DSTable, header centralizado',

@@ -177,6 +177,9 @@ Regras:
 - títulos fortes e métricas legíveis
 - hero com contexto do módulo
 - ações primárias agrupadas no topo
+- **a barra de filtros do dashboard usa a mesma toolbar canônica do Data Listing** (v0.12.4): faixa única `padding 14px 18px` / `gap 10` / `flexWrap:wrap`, zonas na ordem **Filtros** (outline azul + badge de contagem, abre o Drawer) → **Busca** (`flex:1`, `minWidth 180`) → chips → contador `N de M` → `ExportButtons` (par Excel/PDF 32.5×32.5). Não usar rótulo "Filtros" como texto solto nem botão de export com label ("Relatório") — é o par de ícones.
+- com mais de ~4 filtros, os chips **recolhem progressivamente** e os campos escondidos vivem no **Drawer**, que tem sempre o conjunto completo. O Drawer é obrigatório nesse caso: recolher chip sem destino deixa o filtro inalcançável. Anatomia do Drawer = a mesma do Data Listing (ver abaixo).
+- medição que motiva o recolhimento: a coluna de conteúdo trava em `maxWidth:1200` (≈1084px úteis dentro da faixa). 6 chips + Filtros + Busca + ações não cabem em uma linha em nenhuma largura de tela.
 
 ## Data Listing
 
@@ -196,12 +199,14 @@ Regras:
 
 ### Toolbar canônica
 
-Uma única faixa-card (`rounded-[10px_10px_10px_18px]`, borda 1px, `box-shadow: 0 1px 3px rgba(0,75,155,.04)`), miolo `padding 14px 18px`, `display:flex`, `gap:10`, `flexWrap:wrap`. Zonas, nesta ordem: **Filtros** · **Busca** (`flex:1`) · **Período** · spacer · **Excel/PDF**.
+Uma única faixa-card (`rounded-[10px_10px_10px_18px]`, borda 1px, `box-shadow: 0 1px 3px rgba(0,75,155,.04)`), miolo `padding 14px 18px`, `display:flex`, `gap:10`, `flexWrap:wrap`. Zonas, nesta ordem: **Filtros** · **Busca** (`flex:1`) · **Período** · **Excel/PDF**.
+
+**Não colocar spacer (`<div style={{flex:1}}/>`) entre o Período e o par de export** (corrigido na v0.12.4): dois irmãos com `flex:1` dividem o espaço sobrando ao meio, então metade virava vão vazio depois do Período em vez da Busca crescer. Só a Busca é `flex:1`; o resto tem largura de conteúdo e fica colado à direita.
 
 | Controle | Especificação exata (fonte: `ListingToolbar` do QLP) |
 | --- | --- |
 | **Filtros** | `Button variant="outline" size="sm"`: **sempre azul** (`border 1.5px` + texto `--color-primary`), **não** condicional a ter filtro ativo. `height 30`, `padding 0 14px`, `radius 6`, `gap 7`, `fontSize 12`, `fontWeight 600`. Ícone `Filter` do lucide (14px). Badge de contagem = pill `16×16` `radius 999`, só quando `totalFilters > 0`. Par dark obrigatório: `#93BDE4`. |
-| **Busca** | `height 34`, `padding 0 12px`, `radius 8`, `flex:1` **sem `min/maxWidth`**, borda **estática** `--color-border` (sem realce de foco, sem anel), fonte 14px. Ícones `Search`/`X` do lucide 14px. |
+| **Busca** | `height 34`, `padding 0 12px`, `radius 8`, `flex:1` **sem `maxWidth`** mas com **`minWidth:180`** (v0.12.4 — sem o piso, os irmãos de largura fixa espremiam a busca até cortar o placeholder; abaixo de 180px ela quebra pra própria linha), borda **estática** `--color-border` (sem realce de foco, sem anel), fonte 14px. Ícones `Search`/`X` do lucide 14px. |
 | **Período** | chip `padding 7px 12px`, `radius 8`, 11px/600, rótulo mudo + valor bold (`Período: Últimos 30 dias`). Dropdown com radio: 6 presets + divisor + **Personalizado** (sub-form com 2 inputs `date` + Cancelar/Aplicar). |
 | **Exportar** | `ExportButtons` — par Excel + PDF **32.5×32.5** só-ícone, sempre à direita. |
 
