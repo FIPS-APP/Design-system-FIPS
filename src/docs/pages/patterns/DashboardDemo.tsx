@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { CodeExportSection } from '../../components/CodeExport'
-import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown } from "react-icons/lu";
+import { LuLayoutGrid, LuCircleCheck, LuClock, LuTriangleAlert, LuFileText, LuList, LuChartColumnIncreasing, LuArrowUp, LuArrowDown, LuX, LuBuilding2, LuCalendar, LuUser, LuFlag, LuFileSpreadsheet, LuFileDown, LuChevronDown, LuFilter, LuSearch } from "react-icons/lu";
 import * as echarts from "echarts/core";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
@@ -75,6 +75,35 @@ function seed(): Row[]{
     }
   });
   return rows;
+}
+
+/* ═══════════════════ Drawer de Filtros — peças ═══════════════════ */
+/* Cópia literal do padrão canônico de DataListingDemo.tsx (§ Drawer de Filtros em
+   patterns.md): pills para campos de poucas opções semânticas, chip-dropdown pros de
+   muitas. Cores em hex fixo (não token): o pill ativo é fundo cheio + texto branco, e
+   tokens semânticos clareiam no dark, o que poria branco sobre fundo claro. */
+const PILL_PRIMARY="#0057B8";
+const STATUS_PILL_COLOR: Record<string,string>={"Finalizada":"#00A83E","Aguardando":"#F6921E","Em análise":"#002A68","Recusada":"#DC3545"};
+const PRIO_PILL_COLOR: Record<string,string>={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#6B7784"};
+
+function FilterLabel({icon:Icon,children}:{icon:React.ComponentType<{size?:number,style?:React.CSSProperties}>,children:React.ReactNode}){
+  return <p style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:7,fontSize:11,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}><Icon size={12} style={{flexShrink:0,color:C.cinzaChumbo}}/>{children}</p>;
+}
+
+function PillFilter({options,value,onChange}:{options:{value:string,label:string,color?:string}[],value:string|null,onChange:(v:string|null)=>void}){
+  return(
+    <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+      {[{value:"",label:"Todos",color:undefined as string|undefined},...options].map(o=>{
+        const active=(o.value||null)===value;
+        return(
+          <button key={o.value||"todos"} type="button" onClick={()=>onChange(o.value||null)} aria-pressed={active} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,borderRadius:999,cursor:"pointer",transition:"all .1s",border:active?"1px solid transparent":`1px solid ${C.cardBorder}`,background:active?(o.color||PILL_PRIMARY):C.cardBg,color:active?C.branco:C.cinzaChumbo,boxShadow:active?"0 1px 2px rgba(0,0,0,.08)":"none"}}>
+            {o.color&&!active&&<span style={{width:6,height:6,borderRadius:"50%",background:o.color,flexShrink:0}}/>}
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
 /* ═══════════════════ DSSelect ═══════════════════ */
@@ -261,11 +290,22 @@ export default function DSFIPSDashboard(){
 
   const [allData]=useState(()=>seed());
   const [filter,setFilter]=useState<Record<string,string|null>>({year:null,month:null,status:null,dept:null,priority:null,sol:null});
+  const [search,setSearch]=useState("");
+  const [showFilters,setShowFilters]=useState(false);
   const hasFilter=filter.year||filter.month||filter.status||filter.dept||filter.priority||filter.sol;
+  const totalFilters=[filter.year,filter.month,filter.status,filter.dept,filter.priority,filter.sol].filter(Boolean).length;
 
   const toggle=(key:string,val:string)=>setFilter(f=>({...f,[key]:f[key]===val?null:val}));
   const setF=(key:string,val:string|null)=>setFilter(f=>({...f,[key]:val||null}));
   const clearAll=()=>setFilter({year:null,month:null,status:null,dept:null,priority:null,sol:null});
+
+  /* Drawer fecha por overlay, X ou Esc — não por click-outside (padrão QLP). */
+  useEffect(()=>{
+    if(!showFilters)return;
+    const h=(e:KeyboardEvent)=>{if(e.key==="Escape")setShowFilters(false)};
+    document.addEventListener("keydown",h);
+    return()=>document.removeEventListener("keydown",h);
+  },[showFilters]);
 
   const filtered=useMemo(()=>allData.filter(r=>{
     if(filter.year&&r.year!==filter.year)return false;
@@ -274,8 +314,12 @@ export default function DSFIPSDashboard(){
     if(filter.dept&&r.dept!==filter.dept)return false;
     if(filter.priority&&r.priority!==filter.priority)return false;
     if(filter.sol&&r.sol!==filter.sol)return false;
+    if(search){
+      const q=search.toLowerCase();
+      if(!r.id.toLowerCase().includes(q)&&!r.sol.toLowerCase().includes(q))return false;
+    }
     return true;
-  }),[allData,filter]);
+  }),[allData,filter,search]);
 
   /* Derived data */
   const byMonth=useMemo(()=>MONTHS.map(m=>({l:m,v:filtered.filter(r=>r.month===m).length})),[filtered]);
@@ -391,6 +435,8 @@ export default function DSFIPSDashboard(){
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        @keyframes dlFade{from{opacity:0}to{opacity:1}}
+        @keyframes dlSlideLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
       `}</style>
 
       {/* ═══ HERO ═══ */}
@@ -406,37 +452,93 @@ export default function DSFIPSDashboard(){
       <div style={{padding:mob?"16px 12px 32px":"24px 40px 48px",maxWidth:1200,margin:"0 auto"}}>
 
         {/* ═══ BARRA DE FILTROS ═══ */}
-        {/* Faixa única, mesma anatomia da toolbar canônica do Data Listing
-            (DataListingDemo.tsx): padding 14px 18px, display:flex, gap 10, flexWrap:wrap.
-            Ordem: rótulo → chips → ações, tudo na mesma linha.
-            Recolhimento progressivo (patterns.md § Filtros avançados, padrão Governança
-            BI): os chips somem um a um da direita conforme a coluna estreita, do menos
-            pro mais essencial (Status → Prioridade → Solicitante).
-            Medido ao vivo: a coluna real disponível pra faixa é 1084px (1120 de largura
-            máxima − 36 de padding interno) e NÃO cresce além disso em telas mais largas
-            (o conteúdo da página trava em maxWidth:1200). Os 6 chips + rótulo + Relatório
-            juntos pedem 1112px — 28px a mais do que cabe em QUALQUER largura de tela.
-            Por isso "Mês" fica fora do recolhimento (não tem breakpoint que o encaixe);
-            os outros 5 (Área/Processo, Ano, Solicitante, Prioridade, Status) cabem numa
-            única linha do jeito que estão. Mesma razão pela qual a referência canônica
-            (Governança BI) só tem 3 chips recolhíveis, não 6 — e usa Drawer pro resto,
-            que esta página não tem. */}
+        {/* Toolbar canônica (patterns.md § Filtros avançados / pick de referência
+            DataListingDemo.tsx). Zonas, nesta ordem:
+              Filtros (abre o Drawer) → Busca (flex:1, come o vão) → chips → ações.
+            Recolhimento progressivo: os chips somem um a um da direita conforme a coluna
+            estreita (Status → Prioridade → Solicitante) e **reaparecem no Drawer**, que
+            tem sempre os 6 campos. Mês e Solicitante moram só no Drawer na largura padrão
+            — os 6 chips juntos pedem 1112px e a coluna útil é 1084px, então inline nunca
+            caberiam todos; é exatamente o caso que o Drawer resolve. */}
         <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?"12px":"14px 18px",marginBottom:mob?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04)",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-          <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-            <LuLayoutGrid size={16} color={dark?"#93BDE4":C.azulProfundo}/>
-            <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Filtros</span>
-            {hasFilter&&<span style={{fontSize:10,color:C.textMuted,fontFamily:Fn.body}}>· {filtered.length} de {allData.length}</span>}
+          {/* Filtros — outline sempre azul (não condicional ao estado), h30/px14/radius6,
+              badge de contagem quando há filtro. Par dark #93BDE4 porque --color-primary
+              não muda entre temas neste projeto. */}
+          <button onClick={()=>setShowFilters(true)} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:7,height:30,padding:"0 14px",fontSize:12,fontWeight:600,letterSpacing:"0.01em",whiteSpace:"nowrap",color:dark?"#93BDE4":C.azulProfundo,background:"transparent",border:`1.5px solid ${dark?"#93BDE4":C.azulProfundo}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s",flexShrink:0}}>
+            <LuFilter size={14}/> Filtros
+            {totalFilters>0&&<span style={{marginLeft:2,height:16,minWidth:16,padding:"0 4px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,fontFamily:Fn.body,background:dark?"#93BDE4":C.azulProfundo,color:dark?"#002A68":C.branco,borderRadius:999}}>{totalFilters}</span>}
+          </button>
+          {/* Busca — flex:1 sem maxWidth, borda estática, h34, ícones 14px. */}
+          <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:1,minWidth:180}}>
+            <LuSearch size={14} style={{flexShrink:0,color:C.cinzaChumbo}}/>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar por código ou solicitante..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}}/>
+            {search&&<LuX size={14} onClick={e=>{e.stopPropagation();setSearch("")}} style={{flexShrink:0,cursor:"pointer",opacity:.5,color:C.cinzaChumbo}}/>}
           </div>
           <ChipSelect label="Área / Processo" value={filter.dept} onChange={v=>setF("dept",v)} options={DEPTS} icon={<LuBuilding2 size={14} color={C.cinzaChumbo}/>}/>
           <ChipSelect label="Ano" value={filter.year} onChange={v=>setF("year",v)} options={YEARS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
-          {w>=1620&&<ChipSelect label="Solicitante" value={filter.sol} onChange={v=>setF("sol",v)} options={NAMES} icon={<LuUser size={14} color={C.cinzaChumbo}/>}/>}
-          {w>=1460&&<ChipSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>}
-          {w>=1300&&<ChipSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>}
+          {w>=1500&&<ChipSelect label="Status" value={filter.status} onChange={v=>setF("status",v)} options={STATUSES} icon={<LuCircleCheck size={14} color={C.cinzaChumbo}/>}/>}
+          {w>=1700&&<ChipSelect label="Prioridade" value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES} placeholder="Todas" icon={<LuFlag size={14} color={C.cinzaChumbo}/>}/>}
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+            {hasFilter&&<span style={{fontSize:10,color:C.textMuted,fontFamily:Fn.body,whiteSpace:"nowrap"}}>{filtered.length} de {allData.length}</span>}
             <button onClick={()=>exportPDF(filtered,filter,{valor:filtered.reduce((a,r)=>a+r.valor,0).toLocaleString("pt-BR")})} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.danger,background:`${C.danger}12`,border:`1px solid ${C.danger}30`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}} title="Gerar relatório PDF"><LuFileDown size={12} color={C.danger}/> Relatório</button>
             {hasFilter&&<button onClick={clearAll} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",fontSize:10,fontWeight:600,color:C.cinzaChumbo,background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}><LuX size={10} color={C.cinzaChumbo}/> Limpar</button>}
           </div>
         </div>
+
+        {/* ═══ DRAWER DE FILTROS — padrão QLP (patterns.md § Drawer de Filtros) ═══ */}
+        {/* Abre pela ESQUERDA cobrindo a sidebar; hero institucional + miolo rolável +
+            rodapé fixo. Fecha por overlay, X ou Esc — não por click-outside. Tem SEMPRE
+            os 6 campos, inclusive os que a barra recolheu. */}
+        {showFilters&&(
+          <div style={{position:"fixed",inset:0,zIndex:1000}}>
+            <div onClick={()=>setShowFilters(false)} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.35)",animation:"dlFade .2s ease"}}/>
+            <div role="dialog" aria-modal="true" aria-label="Filtros" style={{position:"fixed",top:0,left:0,width:400,maxWidth:"90vw",height:"100vh",background:C.cardBg,display:"flex",flexDirection:"column",boxShadow:"4px 0 24px rgba(0,0,0,.12)",animation:"dlSlideLeft .3s cubic-bezier(.4,0,.2,1)"}}>
+              <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"20px 56px 20px 24px",overflow:"hidden",flexShrink:0,background:dark?"linear-gradient(135deg,#1e2a3a 0%,#162030 50%,#1a2840 100%)":`linear-gradient(135deg,${C.azulProfundo} 0%,${C.azulEscuro} 60%,#001A4A 100%)`}}>
+                <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:dark?.04:.06}}/>
+                <span style={{position:"relative",display:"flex",flexShrink:0,width:44,height:44,borderRadius:11,alignItems:"center",justifyContent:"center",background:`${C.amareloOuro}1A`,border:`1px solid ${C.amareloOuro}30`}}><LuFilter size={20} color={C.amareloOuro}/></span>
+                <div style={{position:"relative",minWidth:0,flex:1}}>
+                  <span style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title}}>Painel</span>
+                  <h2 style={{margin:0,fontSize:21,fontWeight:700,lineHeight:1.15,letterSpacing:"-.2px",color:C.branco,fontFamily:Fn.title}}>Filtros</h2>
+                  <p style={{margin:"2px 0 0",fontSize:12,lineHeight:1.4,color:"rgba(255,255,255,.65)",fontFamily:Fn.body}}>{totalFilters>0?`${totalFilters} filtro(s) ativo(s)`:"Refine o painel pelos campos abaixo"}</p>
+                </div>
+                <button onClick={()=>setShowFilters(false)} aria-label="Fechar painel" style={{position:"absolute",top:20,right:16,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.9)",border:"none",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}><LuX size={16} color="currentColor"/></button>
+              </div>
+              {/* Miolo — pills pra campos de poucas opções semânticas, divisor, chips pros de muitas. */}
+              <div style={{flex:1,overflowY:"auto",padding:"20px 24px",display:"flex",flexDirection:"column",gap:16}}>
+                <div>
+                  <FilterLabel icon={LuCircleCheck}>Status</FilterLabel>
+                  <PillFilter value={filter.status} onChange={v=>setF("status",v)} options={STATUSES.map(s=>({value:s,label:s,color:STATUS_PILL_COLOR[s]}))}/>
+                </div>
+                <div>
+                  <FilterLabel icon={LuFlag}>Prioridade</FilterLabel>
+                  <PillFilter value={filter.priority} onChange={v=>setF("priority",v)} options={PRIORITIES.map(p=>({value:p,label:p,color:PRIO_PILL_COLOR[p]}))}/>
+                </div>
+                <div style={{height:1,background:C.cardBorder}}/>
+                <div>
+                  <FilterLabel icon={LuBuilding2}>Área / Processo</FilterLabel>
+                  <ChipSelect label="Área / Processo" value={filter.dept} onChange={v=>setF("dept",v)} options={DEPTS} icon={<LuBuilding2 size={14} color={C.cinzaChumbo}/>}/>
+                </div>
+                <div>
+                  <FilterLabel icon={LuUser}>Solicitante</FilterLabel>
+                  <ChipSelect label="Solicitante" value={filter.sol} onChange={v=>setF("sol",v)} options={NAMES} icon={<LuUser size={14} color={C.cinzaChumbo}/>}/>
+                </div>
+                <div>
+                  <FilterLabel icon={LuCalendar}>Ano</FilterLabel>
+                  <ChipSelect label="Ano" value={filter.year} onChange={v=>setF("year",v)} options={YEARS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
+                </div>
+                <div>
+                  <FilterLabel icon={LuCalendar}>Mês</FilterLabel>
+                  <ChipSelect label="Mês" value={filter.month} onChange={v=>setF("month",v)} options={MONTHS} icon={<LuCalendar size={14} color={C.cinzaChumbo}/>}/>
+                </div>
+              </div>
+              {/* Rodapé fixo */}
+              <div style={{display:"flex",gap:8,flexShrink:0,padding:"16px 24px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg}}>
+                <button onClick={clearAll} disabled={totalFilters===0} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:totalFilters===0?C.textLight:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:totalFilters===0?"default":"pointer",opacity:totalFilters===0?.6:1,transition:"all .15s"}}>Limpar tudo</button>
+                <button onClick={()=>setShowFilters(false)} style={{flex:1,padding:"8px 14px",fontSize:11,fontWeight:700,fontFamily:Fn.body,color:C.branco,background:PILL_PRIMARY,border:"none",borderRadius:8,cursor:"pointer",transition:"all .15s"}}>Ver {filtered.length} resultado(s)</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ═══ FILTROS ATIVOS (badges) ═══ */}
         {hasFilter&&(
