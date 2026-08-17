@@ -2,7 +2,9 @@
 // @ts-nocheck
 import { useState, useEffect, useMemo, useRef } from 'react'
 import type { CSSProperties } from 'react'
+import { Eye, Pencil, Trash2 } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
+import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
@@ -15,8 +17,6 @@ const Ic={
   sortAsc:(s=12,c=C.azulProfundo)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M8 3v10M5 6l3-3 3 3" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   sortDesc:(s=12,c=C.azulProfundo)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M8 13V3M5 10l3 3 3-3" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   sortNone:(s=12,c=C.cinzaClaro)=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3M5 10l3 3 3-3" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  eye:(s=14,c=C.azulProfundo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z" stroke={c} strokeWidth="1.5"/><circle cx="10" cy="10" r="2.5" stroke={c} strokeWidth="1.5"/></svg>,
-  edit:(s=14,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><path d="M12 3l5 5-10 10H2v-5L12 3z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
 };
 
 function JunctionLines({ style }: { style?: CSSProperties }) {
@@ -437,9 +437,6 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   );
 }
 
-/* ═══════════════════════════════════════════ ACTION BTNS ═══════════════════════════════════════════ */
-function ActionBtn({icon,onClick,title}){return <span onClick={onClick} title={title} style={{display:"flex",cursor:"pointer",opacity:.5,padding:3,borderRadius:4,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.opacity=".5";e.currentTarget.style.background="transparent"}}>{icon}</span>}
-
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
 function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
 function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
@@ -627,7 +624,21 @@ export default function TableDoc() {
     {key:"valor",label:"Valor",align:"right",render:v=><span style={{fontFamily:Fn.mono,fontWeight:600,color:C.cinzaEscuro}}>R$ {v.toLocaleString("pt-BR")}</span>},
     {key:"status",label:"Status",render:v=><Badge variant={statusMap[v]} dot>{v}</Badge>},
     {key:"sla",label:"SLA",width:120,render:v=><MiniProgress value={v}/>},
-    {key:"_actions",label:"",sortable:false,width:70,render:()=><div style={{display:"flex",gap:4}}><ActionBtn icon={Ic.eye(14,C.azulProfundo)} title="Ver"/><ActionBtn icon={Ic.edit(14,C.cinzaChumbo)} title="Editar"/></div>},
+    /* Coluna Ações — `RowActionsMenu` (menu radial), padrão documentado em
+       /docs/components/circular-command-menu. Não usar par de ícones soltos. */
+    {key:"_actions",label:"Ações",sortable:false,width:80,align:"center",render:(_v,r)=>(
+      <div onClick={e=>e.stopPropagation()} style={{display:"flex",justifyContent:"center"}}>
+        <RowActionsMenu
+          rowId={r.id}
+          radius={56}
+          actions={[
+            {key:"view",label:"Ver detalhes",icon:<Eye className="h-4 w-4"/>,onClick:()=>undefined},
+            {key:"edit",label:"Editar",icon:<Pencil className="h-4 w-4"/>,onClick:()=>undefined},
+            {key:"delete",label:"Excluir",icon:<Trash2 className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
+          ]}
+        />
+      </div>
+    )},
   ];
 
   const fornCols=[
