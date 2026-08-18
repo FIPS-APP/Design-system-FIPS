@@ -1,13 +1,13 @@
 ---
-name: design-system-fips
-description: Use when building, reviewing, documenting, or briefing another AI about interfaces that must match the Design System FIPS, including exact tokens, components, patterns, governance rules, and code-backed references.
+name: ds-fips
+description: DS-FIPS — use when building, reviewing, documenting, or briefing another AI about interfaces that must match the Design System FIPS, including exact tokens, components, patterns, governance rules, and code-backed references.
 ---
 
-# Design System FIPS
+# DS-FIPS — Design System FIPS
 
 Use this skill whenever the task involves FIPS interfaces or when another AI needs a portable package of the design rules.
 
-Referências sincronizadas com a **v0.11.33** (2026-08-11) do repositório DS-FIPS.
+Referências sincronizadas com a **v0.14.2** (2026-08-18) do repositório DS-FIPS.
 
 ## Workflow
 
@@ -38,7 +38,7 @@ a spec completa está em `references/patterns.md` → **Tabela canônica**.
 - [ ] Card com header: ícone 48 + título + subtítulo, `borderBottom` 1px
 - [ ] Header à direita, nesta ordem: segmented **Tabela | Cards** → **Configurar**
 - [ ] Chips de filtro ativo colados no título (um por VALOR, não contagem)
-- [ ] `th` **centralizado** (não segue `col.align`); `td` respeita `align`
+- [ ] `th` **centralizado** (não segue `col.align`); `td` respeita `align` — é o default de `TableHead` e é barrado no lint se a tela tentar `text-left`
 - [ ] Densidade como **altura de linha fixa** (`rowH` 30/42/56), não padding vertical
 - [ ] Zebra com `#D3E3F4` a 25% (a 5% fica invisível e parece não-zebrada)
 - [ ] Coluna **Ações** = `RowActionsMenu` (menu radial), nunca par olho/lápis
@@ -53,7 +53,7 @@ Use these searches when the repository is available:
 
 - `rg -n "PAGE_HERO_DEFAULT_DECORATION|PageHero" src`
 - `rg -n "buttonVariants|badgeVariants" src/components/ui`
-- `rg -n -- "--color-primary|--color-accent|--shadow-card|--font-heading" src/styles/globals.css`
+- `rg -n -- "--color-primary|--color-accent|--shadow-card|--font-heading" src/tokens/theme.ts` (fonte da verdade; o CSS é gerado dela)
 - `rg -n "DocPage|PatternGuidelines" src/docs`
 - `rg -n "ExportButtons|ExcelIcon|PdfIcon" src` (toolbar de listagem: par Excel/PDF)
 - `rg -n "DENSITY|rowH" src/docs/pages/patterns/DataListingDemo.tsx` (cadência canônica de linha da tabela)
@@ -62,5 +62,6 @@ Use these searches when the repository is available:
 - `rg -n "RowActionsMenu" src/docs/pages` (coluna Ações — os 2 únicos usos corretos)
 - `rg -n "version: '" src/docs/data/changelog.ts | head` (versão atual + histórico; o topo do array é a mais recente)
 - `rg -n "no-visual-overrides" -A 12 eslint.config.js` (regra de governança que roda no lint)
+- `rg -n "no-raw-color" -A 12 eslint.config.js` (segunda regra: cor crua é **erro** em `src/components/{ui,composites,brand,icons}` e `src/composites`, warn no resto)
 
 If the repository is not available, treat the portable references bundled with this skill as the source of truth until the codebase is synced.

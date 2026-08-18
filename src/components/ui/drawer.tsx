@@ -110,7 +110,7 @@ function DrawerHero({
   return (
     <div
       className={cn('relative flex shrink-0 items-center gap-4 overflow-hidden px-6 py-5 pr-14', className)}
-      style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)' }}
+      style={{ background: 'var(--fips-modal-hero-bg)' }}
     >
       {Icon ? (
         <span

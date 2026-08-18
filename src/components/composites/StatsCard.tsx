@@ -30,7 +30,7 @@ export function StatsCard({
   value,
   subtitle,
   icon: Icon,
-  color = 'var(--color-gov-azul-profundo, #004B9B)',
+  color = 'var(--color-gov-azul-profundo)',
   size = 'compact',
   loading = false,
   className,
@@ -47,10 +47,10 @@ export function StatsCard({
       onClick={onClick}
       disabled={onClick ? disabled : undefined}
       className={cn(
-        'relative flex min-w-0 items-center justify-between gap-2 rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_1px_3px_rgba(0,75,155,0.04)]',
+        'relative flex min-w-0 items-center justify-between gap-2 rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card-flat)]',
         compact ? 'px-3 py-2.5' : 'px-4 py-3.5',
         onClick &&
-          'cursor-pointer text-left transition-[box-shadow,border-color,transform] hover:border-[color-mix(in_srgb,var(--color-primary)_35%,var(--color-border))] hover:shadow-[0_4px_14px_rgba(0,75,155,0.08)] active:scale-[0.99]',
+          'cursor-pointer text-left transition-[box-shadow,border-color,transform] hover:border-[color-mix(in_srgb,var(--color-primary)_35%,var(--color-border))] hover:shadow-[var(--shadow-card-raise)] active:scale-[0.99]',
         onClick && disabled && 'pointer-events-none cursor-not-allowed opacity-50',
         selected &&
           'ring-2 ring-[var(--color-primary)]/35 ring-offset-1 ring-offset-[var(--color-surface)]',

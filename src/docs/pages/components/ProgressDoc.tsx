@@ -33,10 +33,10 @@ function autoColor(v: number) {
 function JunctionLines({style}: {style?: React.CSSProperties}){
   return (
     <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}>
-      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/>
+      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/>
+      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/>
+      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/>
+      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/>
       <path d="M0 170H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/>
       <path d="M0 20H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/>
     </svg>
@@ -568,7 +568,7 @@ export default function ProgressDoc() {
       `}</style>
 
       {/* HEADER */}
-      <header style={{ background: `linear-gradient(135deg,${C.azulProfundo} 0%,${C.azulEscuro} 100%)`, padding: mob ? "32px 20px 30px" : xl ? "56px 56px 52px" : "48px 40px 44px", position: "relative", overflow: "hidden" }}>
+      <header style={{ background: `linear-gradient(135deg,var(--color-gov-gradient-from) 0%,var(--color-gov-gradient-to) 100%)`, padding: mob ? "32px 20px 30px" : xl ? "56px 56px 52px" : "48px 40px 44px", position: "relative", overflow: "hidden" }}>
         <JunctionLines style={{ position: "absolute", top: -10, right: -20, width: mob ? 250 : 400, height: 250 }} />
         <JunctionLines style={{ position: 'absolute', bottom: -40, left: -60, width: 300, height: 200, transform: 'scaleX(-1)' }} />
         <div style={{ position: "relative" }}>

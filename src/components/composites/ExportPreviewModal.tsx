@@ -277,10 +277,10 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
               aria-hidden
               className="pointer-events-none absolute -top-2.5 -right-5 h-[200px] w-[360px] opacity-[0.06]"
             >
-              <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+              <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
             </svg>
 
             <DialogClose
@@ -293,7 +293,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
             <div className="relative flex items-start gap-3 pr-10">
               <div
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10"
-                style={{ boxShadow: '0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)' }}
+                style={{ boxShadow: 'var(--fips-modal-hero-icon-shadow)' }}
               >
                 <ModalIcon className="h-5 w-5 text-[var(--color-accent)]" aria-hidden />
               </div>
@@ -344,7 +344,9 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                       className="relative flex items-center gap-1 px-2 py-1 text-[10px] font-semibold transition-all"
                       style={{
                         borderRadius: '7px 7px 7px 12px',
-                        background: isActive ? 'rgba(0,75,155,0.15)' : 'transparent',
+                        background: isActive
+                          ? 'color-mix(in srgb, var(--color-primary) 15%, transparent)'
+                          : 'transparent',
                         color: isActive ? 'var(--color-primary)' : 'var(--color-fg-muted)',
                         border: isActive
                           ? '1px solid var(--color-primary)'
@@ -408,7 +410,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_1px_3px_rgba(0,75,155,0.04)]">
+              <div className="overflow-hidden rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card-flat)]">
                 <div className="flex items-center gap-3 border-b border-[var(--color-border)] px-4 py-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[color-mix(in_srgb,var(--color-primary)_8%,transparent)] bg-[color-mix(in_srgb,var(--color-primary)_4%,transparent)]">
                     <FileSpreadsheet className="h-[22px] w-[22px] text-[var(--color-primary)]" />
@@ -430,7 +432,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                         {previewColumns.map((col) => (
                           <th
                             key={col.key}
-                            className="border-b-2 border-[var(--color-border)] px-3 py-2 font-heading text-[9px] font-bold tracking-wider text-[var(--color-fg-muted)] uppercase"
+                            className="border-b-2 border-[var(--color-border)] px-3 py-2 text-center font-heading text-[9px] font-bold tracking-wider text-[var(--color-fg-muted)] uppercase"
                           >
                             {col.label}
                           </th>

@@ -15,8 +15,8 @@ export const FIPS_BANNER_ICON_BOX_STYLE: CSSProperties = {
 }
 
 export const FIPS_BANNER_PILL_STYLE: CSSProperties = {
-  background: 'rgba(255,255,255,0.06)',
-  border: '1px solid rgba(255,255,255,0.09)',
+  background: 'var(--fips-banner-pill-bg)',
+  border: '1px solid var(--fips-banner-pill-border)',
   borderRadius: 20,
   padding: '5px 14px',
 }
@@ -36,10 +36,10 @@ export function BannerJunctionLines({
       style={style}
       aria-hidden
     >
-      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="white" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="white" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="white" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="white" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
     </svg>
   )
 }

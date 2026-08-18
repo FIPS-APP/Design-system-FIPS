@@ -8,10 +8,10 @@ const Fn = { title: "'Saira Expanded', sans-serif", body: "'Open Sans', sans-ser
 function JunctionLines({ style }: { style?: React.CSSProperties }) {
   return (
     <svg viewBox="0 0 320 200" fill="none" style={{ opacity: 0.12, ...style }}>
-      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
     </svg>
   )
 }
@@ -139,9 +139,9 @@ export default function ColorsPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: Fn.body, fontSize: 12 }}>
               <thead>
                 <tr style={{ borderBottom: `1px solid ${C.cardBorder}` }}>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Token</th>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Light</th>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Dark</th>
+                  <th style={{ padding: '10px 16px', textAlign: 'center', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Token</th>
+                  <th style={{ padding: '10px 16px', textAlign: 'center', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Light</th>
+                  <th style={{ padding: '10px 16px', textAlign: 'center', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Dark</th>
                 </tr>
               </thead>
               <tbody>

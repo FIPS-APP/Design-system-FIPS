@@ -1,48 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Saira+Expanded:wght@500;600;700&display=swap');
 @import 'tailwindcss';
+@import './tokens.generated.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
-
-@theme {
-  --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'Saira Expanded', 'Open Sans', ui-sans-serif, system-ui, sans-serif;
-
-  --color-fips-blue-950: #002a68;
-  --color-fips-blue-900: #004b9b;
-  --color-fips-blue-700: #658ec9;
-  --color-fips-blue-400: #93bde4;
-  --color-fips-blue-200: #d3e3f4;
-  --color-fips-sky-600: #0090d0;
-
-  --color-fips-yellow-400: #fdc24e;
-  --color-fips-yellow-600: #f6921e;
-  --color-fips-yellow-100: #ffe4b8;
-
-  --color-fips-green-500: #00c64c;
-  --color-fips-green-700: #00904c;
-  --color-fips-green-300: #8be5ad;
-  --color-fips-red-600: #ef4444;
-  --color-fips-red-100: #fee2e2;
-  --color-fips-orange-100: #fff0d6;
-
-  --color-fips-gray-900: #333b41;
-  --color-fips-gray-400: #c0ccd2;
-  --color-fips-neutral-100: #e8ebff;
-  --color-fips-neutral-50: #f5f8fc;
-  --color-fips-neutral-25: #fbfdff;
-
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
-
-  --shadow-field: 0 1px 2px rgb(15 23 42 / 0.04), inset 0 1px 2px rgb(15 23 42 / 0.03);
-  --shadow-card: 0 2px 8px rgb(15 23 42 / 0.04), 0 10px 24px rgb(15 23 42 / 0.06);
-  --shadow-card-hover: 0 8px 22px rgb(15 23 42 / 0.08), 0 18px 38px rgb(0 75 155 / 0.08);
-  --shadow-elevated: 0 22px 64px rgb(0 75 155 / 0.18);
-  --shadow-float: 0 12px 36px rgb(15 23 42 / 0.12);
-}
 
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -109,125 +69,6 @@
 }
 
 @layer base {
-  :root {
-    color-scheme: light;
-    --color-primary: var(--color-fips-blue-900);
-    --color-primary-hover: var(--color-fips-blue-950);
-    --color-secondary: var(--color-fips-sky-600);
-    --color-secondary-hover: #007ab1;
-    --color-accent: var(--color-fips-yellow-400);
-    --color-accent-strong: var(--color-fips-yellow-600);
-    --color-success: var(--color-fips-green-500);
-    --color-success-strong: var(--color-fips-green-700);
-    --color-warning: var(--color-fips-yellow-600);
-    --color-danger: var(--color-fips-red-600);
-    --color-surface: #ffffff;
-    --color-surface-soft: var(--color-fips-neutral-25);
-    --color-surface-muted: var(--color-fips-neutral-50);
-    --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
-    --color-border: #d7e0ea;
-    --color-border-strong: var(--color-fips-gray-400);
-    --color-fg: var(--color-fips-gray-900);
-    --color-fg-muted: #6b7784;
-    --color-ring: var(--color-fips-sky-600);
-    --color-badge-warning-bg: var(--color-fips-orange-100);
-    --color-badge-danger-bg: var(--color-fips-red-100);
-    --color-sidebar: var(--color-fips-blue-950);
-    --color-sidebar-deep: var(--color-fips-blue-950);
-    --color-sidebar-soft: var(--color-fips-blue-900);
-    --color-gov-azul-profundo: #004B9B;
-    --color-gov-azul-escuro: #002A68;
-    --color-gov-azul-claro: #658EC9;
-    --color-gov-verde-escuro: #00904C;
-    --color-gov-gradient-from: #004B9B;
-    --color-gov-gradient-to: #002A68;
-    --color-semantic-info-bg: var(--color-fips-blue-200);
-    --color-semantic-info-fg: var(--color-fips-blue-950);
-    --color-semantic-info-border: var(--color-fips-blue-400);
-    --color-semantic-sucesso-bg: #ecfdf5;
-    --color-semantic-sucesso-fg: #00904c;
-    --color-semantic-sucesso-border: #a7f3d0;
-    --color-semantic-critico-bg: #fef2f2;
-    --color-semantic-critico-fg: #b91c1c;
-    --color-semantic-critico-border: #fecaca;
-    --shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
-  }
-
-  /* ─── Dark mode (extraído do Tecnopano 3.0 DashboardAdmin) ─── */
-  .dark {
-    color-scheme: dark;
-    --color-primary: var(--color-fips-blue-900);
-    --color-primary-hover: var(--color-fips-blue-950);
-    --color-secondary: var(--color-fips-sky-600);
-    --color-secondary-hover: #007ab1;
-    --color-accent: var(--color-fips-yellow-400);
-    --color-accent-strong: var(--color-fips-yellow-600);
-    --color-success: var(--color-fips-green-500);
-    --color-success-strong: var(--color-fips-green-700);
-    --color-warning: var(--color-fips-yellow-600);
-    --color-danger: var(--color-fips-red-600);
-    --color-surface: #222222;
-    --color-surface-soft: #252525;
-    --color-surface-muted: #1A1A1A;
-    --color-table-zebra: rgba(255, 255, 255, 0.03);
-    --color-border: #2E2E2E;
-    --color-border-strong: #3a3a3a;
-    --color-fg: #E2E2E8;
-    --color-fg-muted: #A1A1AA;
-    --color-ring: var(--color-fips-yellow-600);
-    --color-badge-warning-bg: rgba(246, 146, 30, 0.14);
-    --color-badge-danger-bg: rgba(239, 68, 68, 0.14);
-    --color-sidebar: var(--color-fips-blue-950);
-    --color-sidebar-deep: var(--color-fips-blue-950);
-    --color-sidebar-soft: var(--color-fips-blue-900);
-    /* ─── GovernancePage + doc pages accent colors ─── */
-    --color-gov-azul-profundo: #93BDE4;
-    --color-gov-azul-escuro: #658EC9;
-    --color-gov-azul-claro: #93BDE4;
-    --color-gov-verde-escuro: #8BE5AD;
-    --color-gov-gradient-from: #333B41;
-    --color-gov-gradient-to: #2a2f35;
-    --color-semantic-info-bg: rgba(147, 189, 228, 0.14);
-    --color-semantic-info-fg: #93bde4;
-    --color-semantic-info-border: rgba(147, 189, 228, 0.28);
-    --color-semantic-sucesso-bg: rgba(0, 198, 76, 0.14);
-    --color-semantic-sucesso-fg: #8be5ad;
-    --color-semantic-sucesso-border: rgba(0, 198, 76, 0.28);
-    --color-semantic-critico-bg: rgba(239, 68, 68, 0.14);
-    --color-semantic-critico-fg: #fca5a5;
-    --color-semantic-critico-border: rgba(239, 68, 68, 0.28);
-  }
-
-  /* Banners — PatternPanelHero / Suprimentos */
-  :root {
-    --fips-banner-page-bg: linear-gradient(
-      135deg,
-      var(--color-gov-gradient-from) 0%,
-      var(--color-gov-gradient-to) 100%
-    );
-    --fips-banner-content-bg: linear-gradient(
-      135deg,
-      var(--color-gov-gradient-from) 0%,
-      var(--color-gov-gradient-to) 60%,
-      #001a4a 100%
-    );
-    --fips-banner-content-shadow: 0 4px 20px rgba(0, 42, 104, 0.12);
-    --fips-banner-content-border-color: transparent;
-    /* Faixa de página (alta, full-bleed) aguenta trilho mais visível… */
-    --fips-banner-junction-opacity: 0.12;
-    /* …a faixa de conteúdo é baixa: 0.12 vira ruído atrás do título. Valor da doc do Banner. */
-    --fips-banner-junction-content-opacity: 0.06;
-  }
-
-  .dark {
-    --fips-banner-content-bg: linear-gradient(135deg, #1e2a3a 0%, #162030 50%, #1a2840 100%);
-    --fips-banner-content-shadow: 0 4px 20px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    --fips-banner-content-border-color: rgba(147, 189, 228, 0.08);
-    --fips-banner-junction-opacity: 0.04;
-    --fips-banner-junction-content-opacity: 0.04;
-  }
-
   .fips-banner-shell--page {
     background: var(--fips-banner-page-bg);
   }
@@ -251,28 +92,6 @@
 
   .fips-banner-shell--content .fips-banner-junction {
     opacity: var(--fips-banner-junction-content-opacity);
-  }
-
-  /* ─── Dark mode: hero banner das doc pages ─── */
-  .dark main > div > header:first-of-type {
-    background: #333B41 !important;
-  }
-
-  /* Junction lines SVG — stroke ouro visível no fundo escuro */
-  .dark main > div > header:first-of-type > svg path {
-    stroke: #FDC24E !important;
-  }
-
-  /* ─── Dark mode: doc page section titles (h2) azul → light ─── */
-  .dark main h2[style*="color: rgb(0, 42, 104)"],
-  .dark main h2[style*="color:#002A68"],
-  .dark main h2[style*="#002A68"] {
-    color: #E2E2E8 !important;
-  }
-
-  /* ─── Dark mode: guide cards (ButtonDoc, etc.) label azulClaro ─── */
-  .dark main [style*="letter-spacing: 1.2px"][style*="uppercase"] {
-    color: #93BDE4 !important;
   }
 
   html {
@@ -374,9 +193,9 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--color-surface);
   cursor: pointer;
-  border: 2px solid #004b9b;
+  border: 2px solid var(--color-primary);
   box-shadow: 0 1px 4px rgb(0 75 155 / 0.22);
 }
 
@@ -384,9 +203,9 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--color-surface);
   cursor: pointer;
-  border: 2px solid #004b9b;
+  border: 2px solid var(--color-primary);
   box-shadow: 0 1px 4px rgb(0 75 155 / 0.22);
 }
 

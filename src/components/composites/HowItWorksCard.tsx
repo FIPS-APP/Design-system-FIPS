@@ -30,7 +30,7 @@ export function HowItWorksCard({
       )}
     >
       <CardContent className="relative px-2.5 py-3 text-center sm:px-3 sm:py-3.5">
-        <span className="absolute -top-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--color-accent-strong)] text-[10px] font-bold text-white shadow-[0_4px_12px_rgba(246,146,30,0.30)] sm:-top-3 sm:h-6 sm:w-6 sm:text-xs">
+        <span className="absolute -top-2.5 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--color-accent-strong)] text-[10px] font-bold text-white shadow-[var(--shadow-step-badge)] sm:-top-3 sm:h-6 sm:w-6 sm:text-xs">
           {step}
         </span>
         <div className="mt-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 sm:mt-4 sm:h-10 sm:w-10">

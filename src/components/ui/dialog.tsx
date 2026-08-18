@@ -41,10 +41,9 @@ const DialogContent = React.forwardRef<
         'fixed top-1/2 left-1/2 z-50 w-[calc(100vw-1rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 sm:w-[calc(100%-1.5rem)] sm:w-full',
         'max-h-[calc(100dvh-1rem)] sm:max-h-[90vh]',
         'rounded-2xl border border-black/10 sm:rounded-[20px]',
-        'bg-gradient-to-br from-[#fafafa] via-[#f0f0f2] to-[#e8e8ec]',
-        'shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18),0_0_0_1px_rgba(255,255,255,0.8)_inset,0_1px_0_rgba(255,255,255,0.9)_inset]',
-        'dark:border-[#2e2e2e] dark:from-[#272727] dark:via-[#222222] dark:to-[#1d1d1d]',
-        'dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.04)_inset,0_1px_0_rgba(255,255,255,0.06)_inset]',
+        'bg-gradient-to-br from-[var(--color-dialog-from)] via-[var(--color-dialog-via)] to-[var(--color-dialog-to)]',
+        'shadow-[var(--shadow-dialog)]',
+        'dark:border-[var(--color-border)]',
         // padding fixo (não sm:p-*) — assim `p-0` do consumidor vale em todos os breakpoints
         'overflow-hidden p-6 transition-transform duration-200 data-[state=closed]:scale-[0.97] data-[state=open]:scale-100',
         className,
@@ -61,7 +60,7 @@ const DialogContent = React.forwardRef<
       {/* Faixa no topo — padrão FIPS azul (Tutorial / GuidedTour), não vermelho Tecnopano */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-0 right-0 left-0 z-[1] h-[3px] rounded-t-[20px] bg-gradient-to-r from-[#004B9B] via-[#93BDE4] to-transparent"
+        className="pointer-events-none absolute top-0 right-0 left-0 z-[1] h-[3px] rounded-t-[20px] bg-gradient-to-r from-[var(--color-fips-blue-900)] via-[var(--color-fips-blue-400)] to-transparent"
       />
       <div className={DIALOG_CONTENT_SCROLL_WRAPPER_CLASS}>{children}</div>
       {showCloseButton ? (
@@ -90,10 +89,9 @@ function DialogIconTile({ className, children, ...props }: React.HTMLAttributes<
     <div
       className={cn(
         'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-black/10',
-        'bg-gradient-to-br from-white via-[#ebebeb] to-[#e0e0e0]',
-        'text-[rgba(55,55,55,0.82)] shadow-[0_1px_2px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.85)]',
-        'dark:border-[#3a3a3a] dark:from-[#2c2c2c] dark:via-[#262626] dark:to-[#1f1f1f]',
-        'dark:text-[#a1a1aa] dark:shadow-[0_3px_10px_rgba(0,0,0,0.55),0_1px_0_rgba(255,255,255,0.08)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset]',
+        'bg-gradient-to-br from-[var(--color-dialog-tile-from)] via-[var(--color-dialog-tile-via)] to-[var(--color-dialog-tile-to)]',
+        'text-[var(--color-dialog-tile-fg)] shadow-[var(--shadow-dialog-tile)]',
+        'dark:border-[var(--color-border-strong)]',
         className,
       )}
       {...props}
@@ -128,7 +126,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      'font-heading text-xl leading-none font-semibold tracking-tight text-[#18181b] dark:text-[#fafafa]',
+      'font-heading text-xl leading-none font-semibold tracking-tight text-[var(--color-dialog-title)]',
       className,
     )}
     {...props}

@@ -264,7 +264,7 @@ Três densidades (`compact | normal | comfortable`, default `comfortable`) + qua
 
 **`TableHeader`** — `bg-[var(--color-surface-muted)] border-b-2 border-[var(--color-border)]`.
 
-**`TableHead`** — `px-4 text-[var(--color-fg-muted)]`; por densidade:
+**`TableHead`** — `px-4 text-center text-[var(--color-fg-muted)]`. O **centralizado é o default do primitive**, não algo que a tela liga: `TableHead` está na lista de `governance/no-visual-overrides` (`eslint.config.js`), então passar `className="text-left"` nele é erro de lint. Por densidade:
 - `compact` e `normal` → `text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]`; py-2 (compact) / py-2.5 (normal)
 - `comfortable` → `text-sm font-semibold`; `h-14`
 
@@ -275,7 +275,7 @@ Três densidades (`compact | normal | comfortable`, default `comfortable`) + qua
 
 **`TableRow`** — `hover:bg-[var(--color-surface-soft)]`; com `zebra=true` → `even:bg-[var(--color-table-zebra)]` (hover sobrescreve).
 
-**Token zebra** — `--color-table-zebra`: light = `#D3E3F440` (blue-200 @ 25%); dark = `rgba(255,255,255,0.03)`. Declarar em `globals.css` e no bloco `.dark`. **Zebra fraca demais é bug conhecido**: `#93BDE4` a 5% fica quase invisível e a tabela parece não-zebrada — o valor certo é o `#D3E3F4` a 25%.
+**Token zebra** — `--color-table-zebra`: light = `#D3E3F440` (blue-200 @ 25%); dark = `rgba(255,255,255,0.03)`. Declarar em `src/tokens/theme.ts` (`lightTokens`/`darkTokens`) e rodar `npm run tokens:build` — o CSS é gerado, não editado. **Zebra fraca demais é bug conhecido**: `#93BDE4` a 5% fica quase invisível e a tabela parece não-zebrada — o valor certo é o `#D3E3F4` a 25%.
 
 #### Cadência de linha — o alvo visual (`DENSITY`)
 
@@ -288,9 +288,10 @@ O `<Table>` governado expressa densidade como **padding vertical**. A referênci
 | `comfortable` | 56px | 13px | 20px |
 
 - Célula: `padding: 0 padX` (a altura vem da linha). **Exceção:** com "quebra de linha" ligada, volta a padding vertical — é o único caso em que a linha precisa crescer.
-- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, Saira Expanded, `borderBottom 2px`, **sempre centralizado** — o `th` **não** segue `col.align`, ao contrário da célula (`td`), que continua respeitando (`left` por padrão, `right` em valor monetário). Cabeçalho centralizado é o padrão do DS desde a v0.12.3; a v0.11.32 tinha feito o caminho inverso (centro → esquerda) e foi revertida.
+- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, Saira Expanded, `borderBottom 2px`, **sempre centralizado** — o `th` **não** segue `col.align`, ao contrário da célula (`td`), que continua respeitando (`left` por padrão, `right` em valor monetário). Vale para **toda** superfície com `<th>`, não só a tabela da listagem: preview do `ExportPreviewModal`, HTML de impressão e de PDF (`src/utils/exportData.ts`), tabelas de referência das doc pages. A coluna de checkbox também é `th` centralizado.
+- O alinhamento já foi revertido duas vezes (v0.11.32 centro → esquerda; v0.12.3 de volta ao centro). Na v0.14.1 virou **default do primitive + regra de lint** justamente para parar o vai-e-vem: se você está prestes a escrever `text-left` num cabeçalho, é a regra que está sendo quebrada, não uma exceção da tela.
 - Skeleton de carregamento usa a mesma `rowH`, senão as linhas "pulam" de altura ao sair do loading.
-- Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
+- Card da tabela leva `box-shadow: var(--shadow-card-flat)` (`0 1px 3px rgba(0,75,155,.04)`).
 
 #### Anatomia obrigatória — a ordem não muda
 

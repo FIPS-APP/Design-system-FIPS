@@ -23,7 +23,7 @@ const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
         ref={ref}
         type={type}
         className={cn(
-          'relative flex w-full items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-border-strong)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/25',
+          'relative flex w-full items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-border-strong)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[var(--color-fips-blue-400)] dark:focus-visible:ring-[var(--color-fips-blue-400)]/25',
           density === 'compact'
             ? 'h-8 px-2.5 text-[13px]'
             : 'h-12 px-4 text-[1.08rem]',

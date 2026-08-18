@@ -47,7 +47,7 @@ src/docs/                ← site de documentação (NÃO exportado pela library
     └─ pages/patterns/   ← layouts completos (Login, Dashboard, Data Listing…)
     │  (espelho manual)
     ▼
-skills/design-system-fips/references/  ← skill bundle portátil para IAs
+skills/ds-fips/references/            ← skill bundle portátil para IAs
 ```
 
 ### Exports públicos (`src/index.ts`)
@@ -165,7 +165,7 @@ export { PageHero, PAGE_HERO_DEFAULT_DECORATION } from './composites'
 
 ### Componente 4: Skill Bundle Validation (`scripts/validate-skill-sync.mjs`)
 
-- **Responsabilidade:** gate de CI — impedir deploy se `skills/design-system-fips/references/*.md` estiver desatualizado em relação a `src/tokens/` e `src/components/ui/`.
+- **Responsabilidade:** gate de CI — impedir deploy se `skills/ds-fips/references/*.md` estiver desatualizado em relação a `src/tokens/` e `src/components/ui/`.
 - **Arquivos a criar:**
   ```
   scripts/validate-skill-sync.mjs   ← verifica presença de tokens-chave no references/foundations.md

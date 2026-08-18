@@ -7,7 +7,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'border-transparent bg-[var(--color-primary)] text-white shadow-[0_2px_8px_rgba(0,75,155,0.12)] hover:bg-[var(--color-primary-hover)] hover:shadow-[0_2px_8px_rgba(0,75,155,0.18)]',
+          'border-transparent bg-[var(--color-primary)] text-white shadow-[var(--shadow-btn-primary)] hover:bg-[var(--color-primary-hover)] hover:shadow-[var(--shadow-btn-primary-hover)]',
         secondary:
           'border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-fg)] hover:bg-[var(--color-surface-muted)]',
         outline:
@@ -15,19 +15,19 @@ export const buttonVariants = cva(
         ghost:
           'border-transparent bg-transparent text-[var(--color-fg-muted)] hover:bg-[var(--color-fips-blue-200)]/50',
         accent:
-          'border-transparent bg-[var(--color-accent-strong)] text-white shadow-[0_2px_8px_rgba(246,146,30,0.2)] hover:bg-[var(--color-warning)] btn-shimmer',
+          'border-transparent bg-[var(--color-accent-strong)] text-white shadow-[var(--shadow-btn-accent)] hover:bg-[var(--color-warning)] btn-shimmer',
         inverseOutline:
           'border-white/60 bg-white/[0.06] text-white hover:border-white/70 hover:bg-white/[0.12]',
         success:
-          'border-transparent bg-[var(--color-success)] text-white shadow-[0_2px_8px_rgba(0,198,76,0.2)] hover:bg-[var(--color-success-strong)]',
+          'border-transparent bg-[var(--color-success)] text-white shadow-[var(--shadow-btn-success)] hover:bg-[var(--color-success-strong)]',
         successStrong:
-          'border-transparent bg-[var(--color-success-strong)] text-white shadow-[0_2px_8px_rgba(0,144,76,0.2)] hover:bg-[var(--color-success)]',
+          'border-transparent bg-[var(--color-success-strong)] text-white shadow-[var(--shadow-btn-success-strong)] hover:bg-[var(--color-success)]',
         save:
-          'border-transparent bg-[var(--color-success)] text-white shadow-[0_2px_8px_rgba(0,198,76,0.2)] hover:bg-[var(--color-success-strong)]',
+          'border-transparent bg-[var(--color-success)] text-white shadow-[var(--shadow-btn-success)] hover:bg-[var(--color-success-strong)]',
         ouro:
           'border-transparent bg-[var(--color-accent)] text-[var(--color-primary-hover)] shadow-[var(--shadow-card)] hover:bg-[var(--color-accent-strong)] btn-shimmer',
         danger:
-          'border-transparent bg-[var(--color-danger)] text-white shadow-[0_2px_8px_rgba(220,53,69,0.2)] hover:bg-[#c82333]',
+          'border-transparent bg-[var(--color-danger)] text-white shadow-[var(--shadow-btn-danger)] hover:bg-[var(--color-danger-hover)]',
         link:
           'h-auto min-h-0 border-transparent bg-transparent px-0 py-0 text-[var(--color-primary)] underline-offset-4 hover:underline active:scale-100',
       },

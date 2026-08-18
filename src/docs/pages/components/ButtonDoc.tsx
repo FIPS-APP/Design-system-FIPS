@@ -387,7 +387,7 @@ export default function DSFIPSButtons() {
       `}</style>
 
       {/* HEADER */}
-      <header style={{ background: `linear-gradient(135deg, ${C.azulProfundo} 0%, ${C.azulEscuro} 100%)`, padding: "48px 40px 44px", position: "relative", overflow: "hidden" }}>
+      <header style={{ background: `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 100%)`, padding: "48px 40px 44px", position: "relative", overflow: "hidden" }}>
         <JunctionLines style={{ position: "absolute", top: -10, right: -20, width: 400, height: 250 }} />
         <JunctionLines style={{ position: 'absolute', bottom: -40, left: -60, width: 300, height: 200, transform: 'scaleX(-1)' }} />
 

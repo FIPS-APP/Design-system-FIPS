@@ -73,10 +73,10 @@ export default function HeroHeaderDoc() {
       {/* HEADER HERO */}
       <header style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 100%)', padding: '48px 40px 44px', position: 'relative', overflow: 'hidden' }}>
         <svg viewBox="0 0 320 200" fill="none" style={{ opacity: 0.12, position: 'absolute', top: -10, right: -20, width: 400, height: 250 }}>
-          <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-          <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-          <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-          <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+          <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+          <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+          <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
+          <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
         </svg>
         <div style={{ position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 20, padding: '5px 14px', fontSize: 11, fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#FDC24E', fontFamily: "'Saira Expanded', sans-serif", marginBottom: 16 }}>
@@ -130,9 +130,9 @@ export default function HeroHeaderDoc() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Camada</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Classe / valor</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Papel</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Camada</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Classe / valor</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Papel</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
@@ -161,8 +161,8 @@ export default function HeroHeaderDoc() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Elemento</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Especificação</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Elemento</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Especificação</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
@@ -217,10 +217,10 @@ export default function HeroHeaderDoc() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Contexto</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Fundo</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Texto / ícones</th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Destaque</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Contexto</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Fundo</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Texto / ícones</th>
+                <th className="px-4 py-3 text-center font-semibold text-[var(--color-fg)]">Destaque</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">

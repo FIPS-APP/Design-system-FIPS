@@ -79,14 +79,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           {(title || description) && (hero ? (
             <div
               className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14"
-              style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)' }}
+              style={{ background: 'var(--fips-modal-hero-bg)' }}
             >
               {HeaderIcon ? (
                 <div
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.16] text-white"
                   style={{
-                    background: 'linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)',
-                    boxShadow: '0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
+                    background: 'var(--fips-modal-hero-icon-bg)',
+                    boxShadow: 'var(--fips-modal-hero-icon-shadow)',
                   }}
                 >
                   <HeaderIcon className="h-5 w-5" aria-hidden />

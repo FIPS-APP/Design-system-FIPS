@@ -205,7 +205,7 @@ export function exportPrint(
   .filtros-icon{opacity:.7;flex-shrink:0}
   .tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid rgba(255,255,255,0.07)}
   table{border-collapse:collapse;width:100%;font-size:11px}
-  thead th{background:#1e1e1e;color:rgba(255,255,255,0.7);padding:8px 10px;text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.1)}
+  thead th{background:#1e1e1e;color:rgba(255,255,255,0.7);padding:8px 10px;text-align:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.1)}
   tbody td{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:#d1d5db;vertical-align:top}
   tbody tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
   tbody tr:hover td{background:rgba(255,255,255,0.04)}
@@ -299,7 +299,7 @@ export function exportPDF(
       .sub { font-size: 12px; color: #666; margin-bottom: 4px; }
       .filtros { font-size: 11px; color: #B20028; font-weight: 600; margin-bottom: 16px; padding: 6px 10px; background: #fef2f2; border-left: 3px solid #B20028; border-radius: 4px; }
       table { border-collapse: collapse; width: 100%; }
-      th { background: #004B9B; color: white; padding: 8px 10px; font-size: 10px; text-transform: uppercase; text-align: left; }
+      th { background: #004B9B; color: white; padding: 8px 10px; font-size: 10px; text-transform: uppercase; text-align: center; }
       tr:nth-child(even) { background: #f8f9fa; }
       @media print { body { padding: 0; } }
     </style>

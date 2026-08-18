@@ -1,8 +1,13 @@
 # Foundations
 
+> **Onde a cor mora**: `src/tokens/theme.ts` é a fonte da verdade única.
+> `src/styles/tokens.generated.css` (o `@theme` + `:root` + `.dark`) é **gerado** dele
+> por `npm run tokens:build`; `src/tokens/colors.ts` é só uma vista com os nomes do
+> Brandbook. Nunca edite o CSS gerado nem duplique um hex — o CI compara os dois.
+
 ## Cores oficiais
 
-Fonte: `src/tokens/colors.ts`
+Fonte: `src/tokens/theme.ts` (vista em `src/tokens/colors.ts`)
 
 ### Primárias
 
@@ -32,11 +37,14 @@ Fonte: `src/tokens/colors.ts`
 
 ### Mapa semântico
 
-Fonte: `src/tokens/colors.ts` e `src/styles/globals.css`
+Fonte: `src/tokens/theme.ts` → `lightTokens` / `darkTokens` (gera `:root` e `.dark`)
+
+`semanticColors` (light) e `darkSemanticColors` (dark) são **derivados** dos mesmos
+mapas que geram o CSS — o que o swatch mostra é o que a tela pinta:
 
 ```ts
 export const semanticColors = {
-  primary: '#004B9B',
+  primary: '#004B9B',       // {--color-primary}
   primaryHover: '#002A68',
   secondary: '#0090D0',
   accent: '#FDC24E',
@@ -44,17 +52,18 @@ export const semanticColors = {
   success: '#00C64C',
   successStrong: '#00904C',
   surface: '#FFFFFF',
-  surfaceMuted: '#E8EBFF',
-  border: '#C0CCD2',
+  surfaceMuted: '#F5F8FC',  // = --color-surface-muted (era #E8EBFF só no TS)
+  border: '#D7E0EA',        // = --color-border (o #C0CCD2 é --color-border-strong)
   foreground: '#333B41',
-  sidebar: '#004B9B',
+  foregroundMuted: '#6B7784',
+  sidebar: '#002A68',       // = --color-sidebar (blue-950, não blue-900)
   sidebarMuted: '#002A68',
 }
 ```
 
 ## CSS globals
 
-Fonte: `src/styles/globals.css` (`@layer base`)
+Fonte: `src/styles/tokens.generated.css` (`@layer base`) — gerado de `src/tokens/theme.ts`
 
 ```css
 :root {
@@ -99,7 +108,16 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
 | `--color-ring` | sky-600 | yellow-600 |
 
-**Regra crítica:** `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` são **idênticos** nos dois temas. Por isso todo uso de `--color-primary` como **acento** (borda em foco, anel, borda do dropdown aberto, opção selecionada, botão outline) precisa do par manual `dark:…-[#93BDE4]` — sem ele o acento fica com contraste baixo no escuro. Esses `dark:` não são resíduo: são o substituto funcional do token dark que não existe.
+**Regra crítica:** `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` são **idênticos** nos dois temas. Por isso todo uso de `--color-primary` como **acento** (borda em foco, anel, borda do dropdown aberto, opção selecionada, botão outline) precisa do par manual no escuro — sem ele o acento fica com contraste baixo. Escreva o par **com token**, nunca com hex:
+
+```tsx
+// certo
+'focus-visible:border-[var(--color-primary)] dark:focus-visible:border-[var(--color-fips-blue-400)]'
+// errado — `governance/no-raw-color` barra no lint
+'focus-visible:border-[var(--color-primary)] dark:focus-visible:border-[#93BDE4]'
+```
+
+Esses `dark:` não são resíduo: são o substituto funcional do token dark que não existe.
 
 Já os tokens `--color-gov-*` (usados em páginas de doc/governança) **invertem** no dark — `--color-gov-azul-profundo` vira `#93BDE4`. Não usá-los como fundo cheio com texto branco por cima: no escuro o fundo clareia e o texto some (foi a causa dos pills do drawer de filtros usarem hex fixo).
 

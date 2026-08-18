@@ -22,7 +22,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
         'has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3',
 
         // Focus
-        'has-[[data-slot=input-group-control]:focus-visible]:border-[var(--color-primary)] has-[[data-slot=input-group-control]:focus-visible]:ring-2 has-[[data-slot=input-group-control]:focus-visible]:ring-[var(--color-primary)]/25 dark:has-[[data-slot=input-group-control]:focus-visible]:border-[#93BDE4] dark:has-[[data-slot=input-group-control]:focus-visible]:ring-[#93BDE4]/25',
+        'has-[[data-slot=input-group-control]:focus-visible]:border-[var(--color-primary)] has-[[data-slot=input-group-control]:focus-visible]:ring-2 has-[[data-slot=input-group-control]:focus-visible]:ring-[var(--color-primary)]/25 dark:has-[[data-slot=input-group-control]:focus-visible]:border-[var(--color-fips-blue-400)] dark:has-[[data-slot=input-group-control]:focus-visible]:ring-[var(--color-fips-blue-400)]/25',
 
         // Error
         'has-[[data-slot][aria-invalid=true]]:border-[var(--color-danger)] has-[[data-slot][aria-invalid=true]]:ring-2 has-[[data-slot][aria-invalid=true]]:ring-[var(--color-danger)]/25',

@@ -1,3 +1,9 @@
+/* eslint-disable governance/no-raw-color --
+ * Legado: este modal carrega um tema próprio em JS (paleta zinc, não FIPS) montado
+ * antes dos tokens semânticos existirem, e foi substituído pelo `ExportPreviewModal`
+ * — o único exportado por `src/index.ts`. Migrar as ~100 cores para token é tarefa
+ * separada; até lá o arquivo fica marcado em vez de derrubar o gate da biblioteca.
+ */
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -460,7 +466,7 @@ export function ExportModal({
                       {checkedCols.map((col) => (
                         <th
                           key={col.key}
-                          className="sticky top-0 px-3 py-2 text-left whitespace-nowrap"
+                          className="sticky top-0 px-3 py-2 text-center whitespace-nowrap"
                           style={{
                             background: shell.theadBg,
                             borderBottom: `1px solid ${shell.theadBorder}`,

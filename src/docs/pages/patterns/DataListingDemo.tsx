@@ -45,7 +45,7 @@ const Ic={
 };
 
 function JunctionLines({ style }: { style?: CSSProperties }) {
-  return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+  return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round"/></svg>}
 
 const BV_LIGHT={sucesso:{bg:"#ECFDF5",color:"#00904C",border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:"#D3E3F4",color:"#002A68",border:"#93BDE4"}};
 const BV_DARK={sucesso:{bg:"rgba(0,198,76,0.14)",color:"#8BE5AD",border:"rgba(0,198,76,0.28)"},atencao:{bg:"rgba(246,146,30,0.14)",color:"#FDC24E",border:"rgba(246,146,30,0.28)"},critico:{bg:"rgba(239,68,68,0.14)",color:"#FCA5A5",border:"rgba(239,68,68,0.28)"},info:{bg:"rgba(147,189,228,0.14)",color:"#93BDE4",border:"rgba(147,189,228,0.28)"}};
@@ -845,7 +845,7 @@ export default function DataListingDemo() {
             {view==="table"&&<div style={{overflowX:"auto"}}>
               <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
                 <thead><tr style={{background:C.bg}}>
-                  <th style={{padding:`8px ${D.padX}px`,textAlign:"left",width:36,borderBottom:`2px solid ${C.cardBorder}`}}><Checkbox checked={selected.size===data.length&&selected.size>0} onChange={toggleAll} size={14}/></th>
+                  <th style={{padding:`8px ${D.padX}px`,textAlign:"center",width:36,borderBottom:`2px solid ${C.cardBorder}`}}><Checkbox checked={selected.size===data.length&&selected.size>0} onChange={toggleAll} size={14}/></th>
                   {visibleColumnList.filter(c=>c.id!=="actions").map(col=>(
                     <th key={col.id} onClick={()=>sortableS&&setSortBy(s=>({col:col.id,dir:s.col===col.id&&s.dir==="asc"?"desc":"asc"}))} style={{padding:`8px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",cursor:sortableS?"pointer":"default",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>
                       <span style={{display:"inline-flex",alignItems:"center",gap:4}}>{col.label}{sortableS&&(sortBy.col===col.id?(sortBy.dir==="asc"?Ic.sortAsc(10):Ic.sortDesc(10)):Ic.sortNone(10))}</span>

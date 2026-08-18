@@ -5,8 +5,8 @@ type IconProps = SVGProps<SVGSVGElement> & {
   color?: string
 }
 
-/** Ícone Excel — convenção de extensão `#1D6F42` (não é token de marca). */
-export function ExcelIcon({ size = 16, color = '#1D6F42', ...rest }: IconProps) {
+/** Ícone Excel — verde da convenção de extensão (`--color-vendor-excel`), não é marca FIPS. */
+export function ExcelIcon({ size = 16, color = 'var(--color-vendor-excel)', ...rest }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden {...rest}>
       <rect
@@ -39,7 +39,7 @@ export function ExcelIcon({ size = 16, color = '#1D6F42', ...rest }: IconProps) 
 /** Ícone PDF — vermelho de extensão / danger. */
 export function PdfIcon({
   size = 16,
-  color = 'var(--color-danger, #DC3545)',
+  color = 'var(--color-danger)',
   ...rest
 }: IconProps) {
   return (

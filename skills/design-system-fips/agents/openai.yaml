@@ -1,8 +1,0 @@
-interface:
-  display_name: "Design System FIPS"
-  short_description: "Tokens, padrões e código-guia da UI FIPS"
-  brand_color: "#004B9B"
-  default_prompt: "Use $design-system-fips para implementar ou revisar uma interface fiel ao Design System FIPS."
-
-policy:
-  allow_implicit_invocation: true

@@ -111,10 +111,10 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           disabled={disabled}
           onClick={() => !disabled && setOpen(!open)}
           className={cn(
-            'flex w-full items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-border-strong)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/25',
+            'flex w-full items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-border-strong)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[var(--color-fips-blue-400)] dark:focus-visible:ring-[var(--color-fips-blue-400)]/25',
             isCompact ? 'h-8 px-2.5 text-[13px]' : 'h-12 px-4 text-[1.08rem]',
             leftIcon && (isCompact ? 'pl-8' : 'pl-11'),
-            open && 'rounded-b-none border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/25 dark:border-[#93BDE4] dark:ring-[#93BDE4]/25',
+            open && 'rounded-b-none border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/25 dark:border-[var(--color-fips-blue-400)] dark:ring-[var(--color-fips-blue-400)]/25',
             isInvalid && 'border-[var(--color-danger)] focus-visible:ring-[var(--color-danger)]/25',
           )}
         >
@@ -149,7 +149,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           <div
             role="listbox"
             className={cn(
-              'absolute left-0 right-0 top-full z-20 max-h-[200px] overflow-y-auto rounded-b-lg border border-t-0 border-[var(--color-primary)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] dark:border-[#93BDE4]',
+              'absolute left-0 right-0 top-full z-20 max-h-[200px] overflow-y-auto rounded-b-lg border border-t-0 border-[var(--color-primary)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] dark:border-[var(--color-fips-blue-400)]',
             )}
           >
             {options.map((o, i) => {
@@ -166,14 +166,14 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
                     'flex cursor-pointer items-center gap-2 transition-colors duration-100',
                     isCompact ? 'px-3 py-1.5 text-sm' : 'px-4 py-2.5 text-[0.95rem]',
                     sel
-                      ? 'bg-[var(--color-primary)]/8 font-semibold text-[var(--color-primary)] dark:bg-[rgba(147,189,228,0.14)] dark:text-[#93BDE4]'
+                      ? 'bg-[var(--color-primary)]/8 font-semibold text-[var(--color-primary)] dark:bg-[var(--color-semantic-info-bg)] dark:text-[var(--color-fips-blue-400)]'
                       : i === hi
-                        ? 'bg-[var(--color-surface-muted)] text-[var(--color-fg)] dark:bg-[#2a2a2a]'
+                        ? 'bg-[var(--color-surface-muted)] text-[var(--color-fg)] dark:bg-[var(--color-surface-hover)]'
                         : 'text-[var(--color-fg)]',
                   )}
                 >
                   {sel ? (
-                    <Check className={cn('shrink-0 text-[var(--color-primary)] dark:text-[#93BDE4]', isCompact ? 'h-3 w-3' : 'h-3.5 w-3.5')} aria-hidden />
+                    <Check className={cn('shrink-0 text-[var(--color-primary)] dark:text-[var(--color-fips-blue-400)]', isCompact ? 'h-3 w-3' : 'h-3.5 w-3.5')} aria-hidden />
                   ) : (
                     <span className={isCompact ? 'w-3' : 'w-3.5'} />
                   )}

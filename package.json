@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.13.0",
+  "version": "0.14.2",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -26,10 +26,13 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build --config vite.config.lib.ts && tsc -p tsconfig.lib.json --emitDeclarationOnly --declaration --outDir dist",
-    "build:site": "tsc -b && vite build",
+    "build": "npm run tokens:check && vite build --config vite.config.lib.ts && tsc -p tsconfig.lib.json --emitDeclarationOnly --declaration --outDir dist",
+    "build:site": "npm run tokens:check && tsc -b && vite build",
     "build:downloads": "bash scripts/build-ai-downloads.sh",
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:check": "node scripts/build-tokens.mjs --check",
     "lint": "eslint .",
+    "lint:colors": "node scripts/lint-colors.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {

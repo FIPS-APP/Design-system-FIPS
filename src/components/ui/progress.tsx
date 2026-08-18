@@ -24,7 +24,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         aria-valuemax={max}
         aria-valuenow={Math.round(boundedValue)}
         className={cn(
-          'relative h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-muted)] shadow-[inset_0_1px_2px_rgba(15,23,42,0.06)]',
+          'relative h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-muted)] shadow-[var(--shadow-progress-track)]',
           className,
         )}
         {...props}

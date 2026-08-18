@@ -27,8 +27,15 @@ Se houver conflito:
 
 ### Tokens e CSS globais
 
-- `src/styles/globals.css`
-- `src/tokens/colors.ts`
+- `src/tokens/theme.ts` — **fonte da verdade** de todo token que vira CSS custom property
+  (primitivas do `@theme`, semânticos light/dark, banners, sombras). Único lugar do repo
+  onde hex literal é permitido.
+- `src/styles/tokens.generated.css` — **gerado** por `npm run tokens:build`. Não editar:
+  `npm run tokens:check` roda no CI e falha se estiver defasado do `.ts`.
+- `src/styles/globals.css` — importa o CSS gerado e guarda o que não é token (utilities,
+  reset, classes de banner, keyframes).
+- `src/tokens/colors.ts` — vista com os nomes do Brandbook (`fipsPalette`, `semanticColors`,
+  `darkSemanticColors`), derivada de `theme.ts`.
 - `src/tokens/spacing.ts`
 - `src/tokens/typography.ts`
 
@@ -86,7 +93,7 @@ Se houver conflito:
 - `src/docs/data/changelog.ts` — **fonte única** do histórico (`CHANGELOG: ChangelogVersion[]`), consumida pela timeline `/docs/changelog` e pelo `ChangelogModal`. Nunca duplicar em array local.
 - `src/components/layout/ChangelogModal.tsx` — modal "Novidades do Sistema".
 - Toda alteração faz bump de `package.json#version` + `DOC_VERSION` (`src/app/DocLayout.tsx`) + entrada no `CHANGELOG` + README. SemVer.
-- **Ao mexer em token/componente/padrão, atualize também estas referências portáteis** — `npm run build:downloads` empacota `skills/design-system-fips` em `public/downloads/*.zip`.
+- **Ao mexer em token/componente/padrão, atualize também estas referências portáteis** — `npm run build:downloads` empacota `skills/ds-fips` em `public/downloads/ds-fips-skill.zip`.
 
 ### Navegação do site de docs
 

@@ -25,6 +25,82 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.14.2',
+    date: '2026-08-18',
+    title: 'Skill portátil passa a se chamar ds-fips',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O bundle portátil foi renomeado de `design-system-fips` para **`ds-fips`** — mesmo nome curto do repositório e do jeito que ele é chamado no dia a dia. Mudam a pasta (`skills/ds-fips/`), o `name` do `SKILL.md`, o `display_name` do `agents/openai.yaml` e o arquivo baixável (`/downloads/ds-fips-skill.zip`, linkado no card "Skill portátil para IA" da Visão geral). Acompanham o rename o `build-ai-downloads.sh`, o passo de sincronia do CI, o `CLAUDE.md`, `docs/architecture.md`, `docs/tokens.md` e o `gen-tokens-md.mjs`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Fim da skill duplicada em `~/.claude/skills/`: existiam duas — `design-system-fips` (symlink para o repo) e `ds-fips` (**cópia manual**, congelada na v0.11.33 e com a mesma `description`, ou seja, duas entradas disputando o mesmo gatilho). Agora é uma só, `ds-fips`, symlink para `skills/ds-fips` do repo — o que sai do repo é o que a IA lê, sem passo de cópia.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O cabeçalho do `SKILL.md` dizia "Referências sincronizadas com a **v0.11.33** (2026-08-11)" — 15 versões atrás. Passa a v0.14.2.',
+      },
+    ],
+  },
+  {
+    version: '0.14.1',
+    date: '2026-08-18',
+    title: 'Cabeçalho de tabela centralizado em todas as superfícies',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Cabeçalho centralizado deixou de ser "o que a maioria das tabelas faz" e virou **default do primitive + regra de lint**. `TableHead` já vinha com `text-center`, mas quem montava tabela fora dele decidia sozinho — e o alinhamento já tinha ido e voltado duas vezes (v0.11.32 centro → esquerda, v0.12.3 de volta). Agora `TableHead` entra na lista de `governance/no-visual-overrides`: `className="text-left"` num cabeçalho é erro de lint, não decisão de tela.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Centralizados os `<th>` que ainda escapavam: preview do `ExportPreviewModal`, tabela do `ExportModal` legado, HTML de **impressão** e de **PDF** (`src/utils/exportData.ts`, que saíam `text-align:left`), coluna de checkbox do Data Listing, e as tabelas de referência de `/docs/foundations/colors`, `/docs/patterns/hero-header` e `/docs/motion/brand-loader`. O `td` segue respeitando `align` — esquerda por padrão, direita em valor monetário.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`AdminTableSortHeader` perdeu o `text-left` — era letra morta dentro de um `th` centralizado — e ganhou `justify-center`, para o botão de ordenação ficar centrado junto com o rótulo.',
+      },
+    ],
+  },
+  {
+    version: '0.14.0',
+    date: '2026-08-18',
+    title: 'Tokens com um dono só e gate de cor crua no lint',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Nova **fonte da verdade de tokens**: `src/tokens/theme.ts`. Todo valor que vira CSS custom property (primitivas do `@theme`, semânticos light/dark, banners, sombras) mora lá — e `src/styles/tokens.generated.css` é **gerado** dele por `npm run tokens:build`. Antes cada cor existia duas vezes, no TS e no `@theme`, sincronizadas à mão; o próprio CLAUDE.md mandava editar "aqui **e** lá". `npm run tokens:check` roda antes de `build`/`build:site` e no CI, então o CSS não tem como ficar defasado do `.ts`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Nova regra de governança **`governance/no-raw-color`**: hex, `rgb()/rgba()` e `hsl()/hsla()` viram **erro** dentro da biblioteca publicada (`src/components/{ui,composites,brand,icons}`, `src/composites`) e **warn** no resto de `src/`. A regra antiga (`no-visual-overrides`) só olhava classe Tailwind em primitives — a saída de emergência real era `style={{ color: \'#004B9B\' }}`, e ela estava aberta. A mensagem aponta o token certo quando o hex bate com algum. Gate: `npm run lint:colors` (verde hoje, com a dívida das doc pages listada mas sem bloquear).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Mortos os seletores de dark mode que casavam **string de `style` inline** — `.dark main h2[style*="color:#002A68"]`, `.dark main [style*="letter-spacing: 1.2px"]` e o `background:#333B41 !important` no hero das doc pages. Além de quebrarem em qualquer refactor, os dois primeiros já não casavam nada e o terceiro estava **sobrescrevendo** os heros que já usavam `--color-gov-gradient-*` corretamente. No lugar: token `--color-junction-stroke` (branco no claro, ouro no escuro) aplicado nos 152 traços de trilho de junção, e a paleta do `DashboardDemo` migrada para os tokens `--color-gov-*`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Cor crua zerada na biblioteca: `dialog`, `Modal`, `drawer`, `select`, `switch`, `input`, `textarea`, `field-trigger`, `input-group`, `progress`, `badge-variants`, `button-variants`, `StatsCard`, `HowItWorksCard`, `ExportPreviewModal`, `ExportButtons`, `banner-shared` e `FileIcons` passaram a usar token. Vieram junto os tokens que faltavam — `--color-dialog-*` (chrome do Dialog, que agora dispensa os pares `dark:`), `--shadow-dialog`, `--shadow-btn-*`, `--shadow-card-flat`/`--shadow-card-raise`, `--color-surface-hover`, `--color-danger-hover`, `--fips-modal-hero-*` e `--color-vendor-excel`.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`semanticColors` e `darkSemanticColors` deixaram de divergir do CSS: agora são derivados dos mesmos mapas que geram as custom properties. Os swatches de `/docs/foundations/colors` mostravam valores que a tela não pintava — `surfaceMuted` (`#E8EBFF` → `#F5F8FC`), `border` (`#C0CCD2` → `#D7E0EA`, o antigo é `--color-border-strong`), `foregroundMuted` (`#4B5563` → `#6B7784`), `sidebar` (`#004B9B` → `#002A68`), `sidebarDeep` (`#0A0C10` → `#002A68`) e `warning` no dark (`#FDC24E` → `#F6921E`).',
+      },
+    ],
+  },
+  {
     version: '0.13.0',
     date: '2026-08-17',
     title: 'PageHeader entra na library e PageHero é alinhado com o produto',

@@ -25,6 +25,18 @@ jobs:
 
       # Gates que bloqueiam: os dois builds passam hoje, então qualquer vermelho
       # aqui é regressão de verdade — não dívida herdada.
+
+      # `src/styles/tokens.generated.css` é gerado de `src/tokens/theme.ts`. Editar o
+      # CSS à mão (ou o .ts sem regerar) volta a criar duas fontes da verdade — que
+      # foi exatamente o que essa geração veio matar.
+      - name: Tokens gerados estão em dia?
+        run: npm run tokens:check
+
+      # Cor crua é erro dentro da biblioteca publicada (hoje: zero). Fora dela é
+      # warn, e o script imprime o tamanho da dívida sem derrubar o build.
+      - name: Nenhuma cor crua na biblioteca
+        run: npm run lint:colors
+
       - name: Build da library (vite lib + declarations)
         run: npm run build
 
@@ -41,8 +53,8 @@ jobs:
       # vermelho pra sempre.
       - name: Skill bundle está sincronizado?
         run: |
-          unzip -q public/downloads/design-system-fips-skill.zip -d /tmp/skill-committed
-          if ! diff -r skills/design-system-fips /tmp/skill-committed/design-system-fips; then
+          unzip -q public/downloads/ds-fips-skill.zip -d /tmp/skill-committed
+          if ! diff -r skills/ds-fips /tmp/skill-committed/ds-fips; then
             echo "::error::public/downloads está defasado de skills/. Rode 'npm run build:downloads' e commite o zip."
             exit 1
           fi

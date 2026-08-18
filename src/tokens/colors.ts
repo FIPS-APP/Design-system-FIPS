@@ -1,78 +1,84 @@
 /**
  * Paleta oficial FIPS extraída do Brandbook (cores primárias, secundárias e neutros).
- * Valores em hex para uso em CSS/TS; alinhar alterações ao PDF de marca.
+ *
+ * Os valores NÃO moram aqui: este módulo é uma vista com os nomes do Brandbook
+ * sobre `theme.ts`, que é a fonte da verdade e também gera o CSS. Alterar cor =
+ * alterar `theme.ts` + `npm run tokens:build`.
  */
+import { themeTokens, light, dark } from './theme'
+
 export const fipsPalette = {
-  azulProfundo: '#004B9B',
-  azulProfundoDark: '#002A68',
-  cinzaChumbo: '#333B41',
-  cinzaMetal: '#C0CCD2',
-  azulIntermediario: '#658EC9',
-  azulCeuClaro: '#D3E3F4',
-  amareloPastel: '#FFE4B8',
-  azulCeu: '#93BDE4',
-  azulCeuProfundo: '#0090D0',
-  amareloOuro: '#FDC24E',
-  amareloOuroEscuro: '#F6921E',
-  verdeClaro: '#8BE5AD',
-  verdeFloresta: '#00C64C',
-  verdeFlorestaEscuro: '#00904C',
-  branco: '#FFFFFF',
-  neutroClaro: '#E8EBFF',
+  azulProfundo: themeTokens['--color-fips-blue-900'],
+  azulProfundoDark: themeTokens['--color-fips-blue-950'],
+  cinzaChumbo: themeTokens['--color-fips-gray-900'],
+  cinzaMetal: themeTokens['--color-fips-gray-400'],
+  azulIntermediario: themeTokens['--color-fips-blue-700'],
+  azulCeuClaro: themeTokens['--color-fips-blue-200'],
+  amareloPastel: themeTokens['--color-fips-yellow-100'],
+  azulCeu: themeTokens['--color-fips-blue-400'],
+  azulCeuProfundo: themeTokens['--color-fips-sky-600'],
+  amareloOuro: themeTokens['--color-fips-yellow-400'],
+  amareloOuroEscuro: themeTokens['--color-fips-yellow-600'],
+  verdeClaro: themeTokens['--color-fips-green-300'],
+  verdeFloresta: themeTokens['--color-fips-green-500'],
+  verdeFlorestaEscuro: themeTokens['--color-fips-green-700'],
+  branco: themeTokens['--color-fips-white'],
+  neutroClaro: themeTokens['--color-fips-neutral-100'],
 } as const
 
 export type FipsPaletteKey = keyof typeof fipsPalette
 
-/** Tokens semânticos para UI de produto e documentação */
+/**
+ * Tokens semânticos para UI de produto e documentação.
+ * Espelham 1:1 as custom properties do tema claro — se o valor mudar no CSS,
+ * muda aqui junto, porque a origem é a mesma.
+ */
 export const semanticColors = {
-  primary: fipsPalette.azulProfundo,
-  primaryHover: fipsPalette.azulProfundoDark,
-  secondary: fipsPalette.azulCeuProfundo,
-  accent: fipsPalette.amareloOuro,
-  accentStrong: fipsPalette.amareloOuroEscuro,
-  success: fipsPalette.verdeFloresta,
-  successStrong: fipsPalette.verdeFlorestaEscuro,
-  info: fipsPalette.azulCeu,
-  surface: fipsPalette.branco,
-  surfaceMuted: fipsPalette.neutroClaro,
-  border: fipsPalette.cinzaMetal,
-  foreground: fipsPalette.cinzaChumbo,
-  foregroundMuted: '#4b5563',
-  sidebar: fipsPalette.azulProfundo,
-  sidebarMuted: fipsPalette.azulProfundoDark,
+  primary: light('--color-primary'),
+  primaryHover: light('--color-primary-hover'),
+  secondary: light('--color-secondary'),
+  accent: light('--color-accent'),
+  accentStrong: light('--color-accent-strong'),
+  success: light('--color-success'),
+  successStrong: light('--color-success-strong'),
+  info: themeTokens['--color-fips-blue-400'],
+  surface: light('--color-surface'),
+  surfaceMuted: light('--color-surface-muted'),
+  border: light('--color-border'),
+  foreground: light('--color-fg'),
+  foregroundMuted: light('--color-fg-muted'),
+  sidebar: light('--color-sidebar'),
+  sidebarMuted: light('--color-sidebar-deep'),
 } as const
 
-/**
- * Tokens semânticos para dark mode.
- * Mapeia cada token do light mode para o valor equivalente no tema escuro.
- */
+/** Tokens semânticos do dark mode — mesma origem, tema `.dark`. */
 export const darkSemanticColors = {
-  surface: '#222222',
-  surfaceSoft: '#252525',
-  surfaceMuted: '#1A1A1A',
-  border: '#2E2E2E',
-  borderStrong: '#3a3a3a',
-  foreground: '#E2E2E8',
-  foregroundMuted: '#A1A1AA',
-  primary: '#93BDE4',
-  primaryHover: '#658EC9',
-  secondary: '#0090D0',
-  accent: '#FDC24E',
-  accentStrong: '#F6921E',
-  success: '#8BE5AD',
-  successStrong: '#00C64C',
-  danger: '#FCA5A5',
-  info: '#93BDE4',
-  warning: '#FDC24E',
-  sidebar: '#1A1A1A',
-  sidebarDeep: '#0a0c10',
-  sidebarSoft: '#222222',
-  inputBorder: '#3a3a3a',
-  inputBorderHover: '#4a4a4a',
-  inputBorderFocus: '#93BDE4',
-  inputBg: '#252525',
-  badgeSuccessBg: 'rgba(0,198,76,0.14)',
-  badgeWarningBg: 'rgba(246,146,30,0.14)',
-  badgeDangerBg: 'rgba(239,68,68,0.14)',
-  badgeInfoBg: 'rgba(147,189,228,0.14)',
+  surface: dark('--color-surface'),
+  surfaceSoft: dark('--color-surface-soft'),
+  surfaceMuted: dark('--color-surface-muted'),
+  border: dark('--color-border'),
+  borderStrong: dark('--color-border-strong'),
+  foreground: dark('--color-fg'),
+  foregroundMuted: dark('--color-fg-muted'),
+  primary: dark('--color-gov-azul-profundo'),
+  primaryHover: dark('--color-gov-azul-escuro'),
+  secondary: dark('--color-secondary'),
+  accent: dark('--color-accent'),
+  accentStrong: dark('--color-accent-strong'),
+  success: dark('--color-semantic-sucesso-fg'),
+  successStrong: dark('--color-success'),
+  danger: dark('--color-semantic-critico-fg'),
+  info: dark('--color-semantic-info-fg'),
+  warning: dark('--color-warning'),
+  sidebar: dark('--color-surface-muted'),
+  sidebarDeep: dark('--color-sidebar-deep'),
+  sidebarSoft: dark('--color-surface'),
+  inputBorder: dark('--color-border-strong'),
+  inputBorderHover: dark('--color-input-border-hover'),
+  inputBorderFocus: dark('--color-gov-azul-claro'),
+  inputBg: dark('--color-surface-soft'),
+  badgeSuccessBg: dark('--color-semantic-sucesso-bg'),
+  badgeWarningBg: dark('--color-badge-warning-bg'),
+  badgeDangerBg: dark('--color-badge-danger-bg'),
+  badgeInfoBg: dark('--color-semantic-info-bg'),
 } as const

@@ -2,8 +2,8 @@ import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
 import { cn } from '../../lib/cn'
 import { ExcelIcon, PdfIcon } from '../icons/FileIcons'
 
-const EXCEL = '#1D6F42'
-const PDF = 'var(--color-danger, #DC3545)'
+const EXCEL = 'var(--color-vendor-excel)'
+const PDF = 'var(--color-danger)'
 
 export type ExportButtonsProps = {
   onExcel?: () => void

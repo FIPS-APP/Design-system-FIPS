@@ -188,7 +188,7 @@ Heights reais:
 Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
 
 - **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
-- **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `globals.css`, light `--color-fips-gray-400` / dark `#3a3a3a`).
+- **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `src/tokens/theme.ts`, light `--color-fips-gray-400` / dark `#3A3A3A`).
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
 - **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
 - **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
@@ -241,7 +241,7 @@ Fontes:
 Direção de uso:
 
 - `Tabs`: navegação secundária e troca de contexto dentro da tela
-- `Table`: listagem operacional densa, com wrapper card e hover de linha. Sistema de densidade (`compact|normal|comfortable`) + toggles de aparência (`zebra`, `verticalBorders`, `stickyHeader`, `wrapText`) e `framed`, todos via props propagadas por context. Hook `useTableDensity()` deixa descendentes (Badge) auto-ajustarem. API completa, métricas por densidade, `AdminTableColumnMenu`/`Pagination`/`SortHeader` e persistência em `localStorage`: ver **Data Listing → Tabela canônica** em `patterns.md`
+- `Table`: listagem operacional densa, com wrapper card e hover de linha. Sistema de densidade (`compact|normal|comfortable`) + toggles de aparência (`zebra`, `verticalBorders`, `stickyHeader`, `wrapText`) e `framed`, todos via props propagadas por context. Hook `useTableDensity()` deixa descendentes (Badge) auto-ajustarem. **`TableHead` já vem centralizado** — cabeçalho centralizado é regra do DS (o `td` é que segue `align`) e `TableHead` é primitive governado por `governance/no-visual-overrides`, então `className="text-left"` nele quebra o lint. API completa, métricas por densidade, `AdminTableColumnMenu`/`Pagination`/`SortHeader` e persistência em `localStorage`: ver **Data Listing → Tabela canônica** em `patterns.md`
 - `Dialog`: ações focadas, filtros avançados em desktop, confirmação
 - `Drawer`: detalhes e fluxos laterais, principalmente em tablet/mobile
 - `Tooltip`: dica curta; requer `TooltipProvider`
@@ -307,6 +307,8 @@ Fonte: `src/components/composites/ExportPreviewModal.tsx` · canônico Tecnopano
 Modal grande de exportação: **header hero gov-gradient** (mesma anatomia canônica do `ChangelogModal`/`Modal` — âmbar, eyebrow "EXPORTAÇÃO", JunctionLines, título dinâmico, close/Tela cheia translúcido-branco) · segmented **Tudo / Tabela / Expandida** · chips de colunas (toggle + drag) · preview · footer Cancelar / Imprimir / PDF / Excel.
 
 Header renderizado com `showCloseButton={false}` no `DialogContent` (que mantém a faixa azul 3px + grain próprios) e uma faixa gov-gradient full-bleed por cima (`-mx-6 -mt-6` cancelando o padding do `DialogContent`, clipada pelos cantos arredondados do painel via `overflow-hidden` do ancestral — **não precisa de radius próprio**). Usa `DialogPrimitive.Title`/`DialogPrimitive.Description` crus (não os wrappers `DialogTitle`/`DialogDescription` governados, que têm cor fixa incompatível com fundo escuro) — mesma técnica do `ChangelogModal`.
+
+**Preview** — o `<th>` da pré-visualização é **centralizado**, igual à tabela da listagem, e o `<td>` mantém o alinhamento do dado. A mesma regra vale para o HTML de impressão e o de PDF gerados por `src/utils/exportData.ts`.
 
 **Rodapé — cada botão aparece se a callback correspondente for passada** (não depende mais de `intent`, que agora só define o título/ícone default do header): `onPrint` → Imprimir (outline); `onExportPdf` → PDF (**danger/vermelho**); `onExportExcel` → Excel (**successStrong/verde escuro**, rótulo "Excel" — não "Planilha"). Um consumidor pode passar as 3 para mostrar tudo (ex.: playground `DialogDoc.tsx`) ou só 1-2 pra manter um fluxo focado.
 

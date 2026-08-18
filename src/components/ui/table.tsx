@@ -129,6 +129,13 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
 )
 TableRow.displayName = 'TableRow'
 
+/**
+ * Cabeçalho de coluna. **Centralizado por padrão** — e não é preferência de tela:
+ * o `th` do DS nunca segue o `align` da coluna, só o `td` segue. Já foi revertido
+ * duas vezes (v0.11.32 alinhou à esquerda, v0.12.3 trouxe de volta), por isso
+ * `TableHead` está na lista de `governance/no-visual-overrides`: um `text-left`
+ * via `className` é barrado no lint.
+ */
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>

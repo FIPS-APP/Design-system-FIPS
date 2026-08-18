@@ -133,7 +133,7 @@ ${spacingScale.map(s => `- \`${s}\` → ${parseInt(s, 10) * 4}px`).join("\n")}
 
 - **Fonte da verdade**: \`src/tokens/colors.ts\`, \`typography.ts\`, \`spacing.ts\`.
 - **Espelho CSS**: \`src/styles/globals.css\` no bloco \`@theme\` (Tailwind v4) — atualize em paralelo a este doc.
-- **Skill bundle**: \`skills/design-system-fips/references/foundations.md\` — atualize quando paleta/tipografia mudar.
+- **Skill bundle**: \`skills/ds-fips/references/foundations.md\` — atualize quando paleta/tipografia mudar.
 
 `;
 

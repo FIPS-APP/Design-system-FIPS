@@ -43,7 +43,7 @@ function AdminTableSortHeader({
     <button
       type={type}
       className={cn(
-        'inline-flex items-center gap-1 whitespace-nowrap rounded-md text-left transition-colors hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20',
+        'inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md transition-colors hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20',
         active ? 'text-[var(--color-fg)]' : 'text-[var(--color-fg-muted)]',
         className,
       )}

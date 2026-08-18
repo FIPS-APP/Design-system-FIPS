@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILL_PARENT_DIR="$ROOT_DIR/skills"
-SKILL_NAME="design-system-fips"
+SKILL_NAME="ds-fips"
 OUT_DIR="$ROOT_DIR/public/downloads"
 OUT_FILE="$OUT_DIR/${SKILL_NAME}-skill.zip"
 
