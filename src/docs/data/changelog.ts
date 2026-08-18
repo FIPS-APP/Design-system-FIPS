@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-08-18',
+    title: 'A página do Modal passa a usar o Modal de verdade',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          '`/docs/components/dialog` era a origem dos modais fora do padrão: a página definia um **`Modal` local com API conflitante** (`onClose`, `icon`, `headerBg`, `width`, `iconBg`, `bodyBg`, `footerBg`) — mesmo nome do componente da library, contrato diferente — e montava os campos com `<label>`+`<input>` e `<button>` cru. Quem copiava a página escrevia algo que não existe no DS. Agora as **7 variantes do playground são o `<Modal>` real**, com `<Field>` + `<FieldLabel>` + primitive nos campos, `<ModalFooter>` no rodapé e `<Button>` nos gatilhos. Saíram do arquivo o `Modal` local, o `PopupModal`, o `FInput`, o `FSelect` e o `Btn` (−130 linhas de casca duplicada).',
+      },
+      {
+        type: 'feature',
+        description:
+          'Nova prop **`tone`** no `<Modal>` (`gov` | `success` | `danger` | `warning`). A regra de cor do DS — faixa gov → acento âmbar + trilhos; faixa **sólida** semântica → acento branco + shimmer diagonal — estava documentada mas não existia no componente: era por isso que confirmação/destrutivo/alerta só davam certo montando o header à mão. Tokens novos `--color-tone-success-solid`, `--color-tone-danger-solid` e `--color-tone-warning-solid`, definidos no `@theme` porque **não podem inverter** por tema (faixa com texto branco por cima).',
+      },
+      {
+        type: 'feature',
+        description:
+          'Nova prop **`headerActions`** no `<Modal>`: controles à direita do título no hero, antes do X. É o que permite o exemplo "Popup redimensionável" (alterna `size` entre `lg`/`2xl`/`full`) sem um segundo componente — o antigo `PopupModal` local existia só para isso.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'A página ganhou um bloco **"A API — é isto que se copia"** logo abaixo dos gatilhos do playground: import, chamada completa e o lembrete do `density="compact"` nos dois níveis (`Field` e controle). Antes, quem chegava na doc do Modal não encontrava em lugar nenhum a chamada real do componente.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-08-18',
     title: 'As 4 divergências entre doc e código, corrigidas no código',

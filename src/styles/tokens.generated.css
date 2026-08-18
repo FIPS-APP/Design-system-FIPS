@@ -50,6 +50,9 @@
   --shadow-step-badge: 0 4px 12px rgba(246, 146, 30, 0.3);
   --shadow-progress-track: inset 0 1px 2px rgba(15, 23, 42, 0.06);
   --shadow-switch-thumb: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --color-tone-success-solid: var(--color-fips-green-700);
+  --color-tone-danger-solid: #B91C1C;
+  --color-tone-warning-solid: #C2410C;
   --color-vendor-excel: #1D6F42;
 }
 

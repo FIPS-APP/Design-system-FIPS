@@ -1,6 +1,18 @@
 // @ts-nocheck
-import { useState, useEffect, useRef } from "react";
-import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  AlertTriangle, AppWindow, CalendarDays, Check, ClipboardEdit, ClipboardList, Download,
+  FileText, HelpCircle, Info, LayoutGrid, Maximize2, Minimize2, Sparkles, Tag, Trash2,
+  UserRound, X as XIcon,
+} from "lucide-react";
+/* Componentes REAIS da library — é o que um app FIPS importa de `@fips-app/ds-fips`.
+   Esta página não define casca de modal nem campo próprio: o que está aqui é o que
+   deve ser copiado. */
+import { Modal, ModalFooter } from '../../../components/ui/Modal';
+import { Field, FieldHint, FieldLabel } from '../../../components/ui/field';
+import { Input } from '../../../components/ui/input';
+import { Textarea } from '../../../components/ui/textarea';
+import { Button } from '../../../components/ui/button';
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
@@ -9,8 +21,6 @@ import { TutorialOverlay } from '../../../components/domain/TutorialContextual';
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
-/* Gradiente gov 3-stops — mesma linguagem do PageHeader/hero (idêntico ao BiDetailDialog do Governança BI) */
-const GOV_GRAD="linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)";
 
 /* ═══════════════════════════════════════════ ICONS ═══════════════════════════════════════════ */
 const Ic={
@@ -52,135 +62,15 @@ function Badge({variant="info",children,dot}){const v=BV[variant]||BV.info;retur
 function InfoCard({label,value}){return(<div style={{borderRadius:8,border:`1px solid ${C.cardBorder}`,background:C.bg,padding:"9px 12px",minWidth:0}}><dt style={{fontSize:10,fontWeight:600,letterSpacing:".04em",textTransform:"uppercase",color:C.textMuted,fontFamily:Fn.body}}>{label}</dt><dd style={{margin:"2px 0 0",fontSize:13,fontWeight:500,color:C.cinzaEscuro,fontFamily:Fn.body,wordBreak:"break-word"}}>{value||"—"}</dd></div>)}
 
 /* ═══════════════════════════════════════════
-   MODAL — REFINED v2
+   POPUP — tamanhos do `<Modal>` que o exemplo redimensionável percorre
    ═══════════════════════════════════════════ */
-function Modal({open,onClose,title,subtitle,eyebrow,eyebrowColor,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
-  const [vis,setVis]=useState(false);
-  const [animIn,setAnimIn]=useState(false);
-  useEffect(()=>{
-    if(open){setVis(true);requestAnimationFrame(()=>requestAnimationFrame(()=>setAnimIn(true)))}
-    else{setAnimIn(false);const t=setTimeout(()=>setVis(false),280);return()=>clearTimeout(t)}
-  },[open]);
-  useEffect(()=>{if(!open)return;const h=e=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
-  if(!vis)return null;
-  const isHero=headerBg===GOV_GRAD;
-  return(
-    <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
-      <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.45)",backdropFilter:"blur(2px)",WebkitBackdropFilter:"blur(2px)",opacity:animIn?1:0,transition:"opacity .28s",cursor:"pointer"}}/>
-      <div role="dialog" aria-modal="true" aria-labelledby="modal-title" style={{position:"relative",zIndex:1,width,maxWidth:"95vw",maxHeight:"90vh",background:C.cardBg,borderRadius:"12px 12px 12px 24px",boxShadow:"0 12px 48px rgba(0,42,104,.2), 0 2px 8px rgba(0,42,104,.08)",display:"flex",flexDirection:"column",transform:animIn?"scale(1) translateY(0)":"scale(.96) translateY(10px)",opacity:animIn?1:0,transition:"all .28s cubic-bezier(.32,.72,.37,1.1)",overflow:"hidden"}}>
-        {/* Botão fechar — canto superior direito */}
-        <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar modal" style={{position:"absolute",top:14,right:14,zIndex:2,width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"all .15s",background:"rgba(255,255,255,0.08)"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.18)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)"}} onKeyDown={e=>{if(e.key==="Enter")onClose()}}>{Ic.x(16,"rgba(255,255,255,0.75)")}</div>
-        <div style={{padding:"20px 24px",paddingRight:56,background:headerBg,display:"flex",alignItems:"center",gap:16,flexShrink:0,position:"relative",overflow:"hidden"}}>
-          {/* Decoração do header: JunctionLines no gradiente gov (= Pic 2); shimmer liso nos headers sólidos */}
-          {isHero
-            ? <JunctionLines style={{position:"absolute",top:-10,right:-20,width:360,height:200,opacity:.06}}/>
-            : <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)",pointerEvents:"none"}}/>}
-          <div style={{display:"flex",gap:14,alignItems:"center",minWidth:0,position:"relative"}}>
-            {icon&&<div style={{width:44,height:44,borderRadius:10,background:iconBg||"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${iconBorder||"rgba(255,255,255,0.16)"}`,boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
-            <div style={{minWidth:0}}>
-              {eyebrow&&<span style={{display:"block",fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:eyebrowColor||C.amareloEscuro,fontFamily:Fn.title,lineHeight:1.2,marginBottom:1}}>{eyebrow}</span>}
-              <h2 id="modal-title" style={{fontSize:21,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:"-0.2px"}}>{title}</h2>
-              {subtitle&&<p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
-            </div>
-          </div>
-        </div>
-        <div style={{flex:1,overflowY:"auto",padding:noPadBody?0:"20px 24px",background:bodyBg||"transparent"}}>{children}</div>
-        {footer&&<div style={{padding:"14px 24px",borderTop:`1px solid ${C.cardBorder}`,background:footerBg||C.bg,display:"flex",gap:10,justifyContent:"flex-end",alignItems:"center",flexShrink:0}}>{footer}</div>}
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   POPUP MODAL — Resizable: Normal / Grande / Tela Cheia
-   ═══════════════════════════════════════════ */
-const POPUP_SIZES={
-  normal:{width:480,maxH:"85vh",label:"Normal"},
-  grande:{width:720,maxH:"90vh",label:"Grande"},
-  "tela-cheia":{width:"92vw",maxH:"95vh",label:"Tela cheia"},
+const POPUP_SIZES = {
+  normal: { size: 'lg', label: 'Normal' },
+  grande: { size: '2xl', label: 'Grande' },
+  'tela-cheia': { size: 'full', label: 'Tela cheia' },
 };
-const POPUP_ORDER=["normal","grande","tela-cheia"];
+const POPUP_ORDER = ['normal', 'grande', 'tela-cheia'];
 
-function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg,iconBorder,headerBg=GOV_GRAD}){
-  const [vis,setVis]=useState(false);
-  const [animIn,setAnimIn]=useState(false);
-  const [size,setSize]=useState("normal");
-  useEffect(()=>{if(open){setSize("normal");setVis(true);requestAnimationFrame(()=>requestAnimationFrame(()=>setAnimIn(true)))}else{setAnimIn(false);const t=setTimeout(()=>setVis(false),280);return()=>clearTimeout(t)}},[open]);
-  useEffect(()=>{if(!open)return;const h=e=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
-
-  const cycleSize=()=>{const i=POPUP_ORDER.indexOf(size);setSize(POPUP_ORDER[(i+1)%POPUP_ORDER.length])};
-  const sz=POPUP_SIZES[size];
-  const isFullscreen=size==="tela-cheia";
-
-  if(!vis)return null;
-  return(
-    <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:isFullscreen?8:16}}>
-      <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,42,104,.45)",backdropFilter:"blur(2px)",WebkitBackdropFilter:"blur(2px)",opacity:animIn?1:0,transition:"opacity .28s",cursor:"pointer"}}/>
-      <div role="dialog" aria-modal="true" style={{position:"relative",zIndex:1,width:typeof sz.width==="number"?sz.width:undefined,maxWidth:typeof sz.width==="string"?sz.width:"95vw",minWidth:typeof sz.width==="string"?sz.width:undefined,maxHeight:sz.maxH,background:C.cardBg,borderRadius:isFullscreen?"8px":"12px 12px 12px 24px",boxShadow:"0 12px 48px rgba(0,42,104,.2), 0 2px 8px rgba(0,42,104,.08)",display:"flex",flexDirection:"column",transform:animIn?"scale(1) translateY(0)":"scale(.96) translateY(10px)",opacity:animIn?1:0,transition:"all .28s cubic-bezier(.32,.72,.37,1.1), width .25s ease, max-width .25s ease",overflow:"hidden"}}>
-        {/* Header — padrão canônico DS-FIPS: faixa gov + trilhos + ícone-tile âmbar + título 21px */}
-        <div style={{padding:"20px 24px",paddingRight:100,background:headerBg,display:"flex",alignItems:"center",gap:16,flexShrink:0,position:"relative",overflow:"hidden"}}>
-          {headerBg===GOV_GRAD
-            ? <JunctionLines style={{position:"absolute",top:-10,right:-20,width:360,height:200,opacity:.06}}/>
-            : <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)",pointerEvents:"none"}}/>}
-          <div style={{display:"flex",gap:14,alignItems:"center",minWidth:0,flex:1,position:"relative"}}>
-            {icon&&<div style={{width:44,height:44,borderRadius:10,background:iconBg||"linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 56%, rgba(0,24,58,0.22) 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${iconBorder||"rgba(255,255,255,0.16)"}`,boxShadow:"0 1px 2px rgba(0,42,104,0.3), inset 0 1px 0 rgba(255,255,255,0.08)"}}>{icon}</div>}
-            <div style={{minWidth:0}}>
-              <h2 style={{fontSize:21,fontWeight:700,color:"#FFFFFF",margin:0,fontFamily:Fn.title,lineHeight:1.2,letterSpacing:"-0.2px"}}>{title}</h2>
-              {subtitle&&<p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"3px 0 0",lineHeight:1.4,fontFamily:Fn.body}}>{subtitle}</p>}
-            </div>
-          </div>
-          {/* Size toggle + Close */}
-          <div style={{position:"absolute",top:14,right:14,display:"flex",gap:6,zIndex:2}}>
-            <button onClick={cycleSize} style={{display:"flex",alignItems:"center",gap:5,padding:"5px 10px",borderRadius:8,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",cursor:"pointer",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(255,255,255,0.8)",fontFamily:Fn.title,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.15)";e.currentTarget.style.color="#fff"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)";e.currentTarget.style.color="rgba(255,255,255,0.8)"}}>
-              {isFullscreen?Ic.minimize(13,"rgba(255,255,255,0.8)"):Ic.maximize(13,"rgba(255,255,255,0.8)")}
-              {sz.label}
-            </button>
-            <div onClick={onClose} tabIndex={0} role="button" aria-label="Fechar" style={{width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all .15s",background:"rgba(255,255,255,0.08)"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.18)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)"}} onKeyDown={e=>{if(e.key==="Enter")onClose()}}>{Ic.x(16,"rgba(255,255,255,0.75)")}</div>
-          </div>
-        </div>
-        {/* Body */}
-        <div style={{flex:1,overflowY:"auto",padding:"20px 24px",background:"#fafafa"}}>{typeof children==="function"?children({size,isWide:size!=="normal",isFullscreen}):children}</div>
-        {/* Footer */}
-        {footer&&<div style={{padding:"14px 24px",borderTop:`1px solid ${C.cardBorder}`,background:C.bg,display:"flex",gap:10,justifyContent:"flex-end",alignItems:"center",flexShrink:0}}>{footer}</div>}
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════ FORM COMPONENTS ═══════════════════════════════════════════ */
-/* Focus/blur padrão DS-FIPS (compact): ring 2px primary/20 + border primary; base = shadow-sm */
-const FIELD_BASE_SHADOW="0 1px 2px rgba(0,0,0,.05)";
-const fieldFocus=el=>{el.style.borderColor=C.azulProfundo;el.style.boxShadow="0 0 0 2px rgba(0,75,155,.2)"};
-const fieldBlur=el=>{el.style.borderColor=C.inputBorder;el.style.boxShadow=FIELD_BASE_SHADOW};
-function FInput({label,placeholder,value,required,icon,type="text"}){
-  return(
-    <div style={{display:"flex",flexDirection:"column",gap:4}}>
-      {label&&<label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}
-      <div style={{display:"flex",alignItems:"center",gap:8,height:36,padding:"0 12px",border:`1px solid ${C.inputBorder}`,borderRadius:12,background:C.branco,boxShadow:FIELD_BASE_SHADOW,transition:"all .2s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
-        {icon&&<span style={{display:"flex",flexShrink:0,color:C.textMuted}}>{icon}</span>}
-        <input type={type} placeholder={placeholder} defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>fieldFocus(e.target.parentElement)} onBlur={e=>fieldBlur(e.target.parentElement)}/>
-      </div>
-    </div>
-  );
-}
-function FSelect({label,options=[],value,icon}){
-  return(
-    <div style={{display:"flex",flexDirection:"column",gap:4}}>
-      {label&&<label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12}}>{label}</label>}
-      <Select
-        density="compact"
-        aria-label={typeof label==="string"?label:undefined}
-        defaultValue={value??options[0]}
-        leftIcon={icon}
-        options={options.map(o=>({value:o,label:o}))}
-      />
-    </div>
-  );
-}
-function Btn({label,color,outline,onClick,full,danger,icon:IconCmp}){
-  const bg=danger?C.danger:color||C.azulProfundo;
-  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s",...(IconCmp?{display:"inline-flex",alignItems:"center",gap:7,justifyContent:full?"center":"flex-start"}:null)}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{IconCmp&&<IconCmp size={14} strokeWidth={2.2}/>}{label}</button>;
-}
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
 function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.azulEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
@@ -218,6 +108,7 @@ export default function DialogDoc(){
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
   const [m,setM]=useState(null);
+  const [popupSize,setPopupSize]=useState("normal");
   const open=id=>setM(id);const close=()=>setM(null);
 
   return(
@@ -228,60 +119,78 @@ export default function DialogDoc(){
           LIVE MODALS
           ══════════════════════════════════════════════ */}
 
-      {/* 1. CONFIRMAÇÃO */}
-      <Modal open={m==="confirm"} onClose={close} eyebrow="Confirmação" eyebrowColor="rgba(255,255,255,0.9)" title="Aprovar requisição?" subtitle="Encaminhará REQ-4025 para o departamento de compras." icon={Ic.check(24,"#fff")} width={440} headerBg="#00904C"
-        footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Aprovar" color={C.verdeFloresta} onClick={close}/></>}>
+      {/* ──────────────────────────────────────────────────────────────────────
+          As 7 variantes abaixo usam o `<Modal>` REAL da library — mesma API que
+          um app FIPS consome (`@fips-app/ds-fips`). Nada de casca local: header,
+          ícone, footer, ESC/overlay/X e os campos vêm dos componentes governados.
+          ────────────────────────────────────────────────────────────────────── */}
+
+      {/* 1. CONFIRMAÇÃO — faixa sólida verde, acento branco */}
+      <Modal open={m==="confirm"} onOpenChange={v=>!v&&close()} hero tone="success" headerIcon={Check}
+        eyebrow="Confirmação" title="Aprovar requisição?"
+        description="Encaminhará REQ-4025 para o departamento de compras." size="md">
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           <div style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",background:C.bg,borderRadius:8}}><span style={{fontSize:12,color:C.cinzaChumbo}}>Solicitante</span><span style={{fontSize:13,fontWeight:600}}>Carlos Santos</span></div>
           <div style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",background:C.bg,borderRadius:8}}><span style={{fontSize:12,color:C.cinzaChumbo}}>Valor total</span><span style={{fontSize:13,fontWeight:700,color:C.azulProfundo}}>R$ 2.450,00</span></div>
           <div style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",background:C.bg,borderRadius:8}}><span style={{fontSize:12,color:C.cinzaChumbo}}>Status</span><Badge variant="atencao" dot>Pendente</Badge></div>
         </div>
+        <ModalFooter>
+          <Button variant="secondary" onClick={close}>Cancelar</Button>
+          <Button variant="success" onClick={close}>Aprovar</Button>
+        </ModalFooter>
       </Modal>
 
-      {/* 2. DESTRUTIVO */}
-      <Modal open={m==="delete"} onClose={close} eyebrow="Ação irreversível" eyebrowColor="rgba(255,255,255,0.9)" title="Excluir fornecedor?" subtitle="Esta ação é irreversível e afetará contratos ativos." icon={Ic.trash(24,"#fff")} width={420} headerBg="#B91C1C" footerBg="#FEF8F8"
-        footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Excluir permanentemente" danger onClick={close}/></>}>
+      {/* 2. DESTRUTIVO — faixa sólida vermelha, CTA `danger` */}
+      <Modal open={m==="delete"} onOpenChange={v=>!v&&close()} hero tone="danger" headerIcon={Trash2}
+        eyebrow="Ação irreversível" title="Excluir fornecedor?"
+        description="Esta ação é irreversível e afetará contratos ativos." size="md">
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <div style={{padding:"12px 16px",background:C.bg,borderRadius:8}}>
             <span style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,display:"block"}}>MRS Logística S.A.</span>
             <span style={{fontSize:11,color:C.textMuted}}>CNPJ: 01.417.222/0001-77 · Ativo desde 2019</span>
           </div>
-          <div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:8,padding:"12px 16px",display:"flex",gap:10,alignItems:"flex-start"}}>
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{flexShrink:0,marginTop:1}}><path d="M10 2L1.5 17h17L10 2z" stroke={C.danger} strokeWidth="1.5" strokeLinejoin="round"/><path d="M10 8v4M10 14v.5" stroke={C.danger} strokeWidth="1.8" strokeLinecap="round"/></svg>
+          <div style={{background:"var(--color-semantic-critico-bg)",border:"1px solid var(--color-semantic-critico-border)",borderRadius:8,padding:"12px 16px",display:"flex",gap:10,alignItems:"flex-start"}}>
+            <AlertTriangle size={18} style={{flexShrink:0,marginTop:1,color:"var(--color-danger)"}}/>
             <div>
-              <span style={{fontSize:12,fontWeight:700,color:"#B91C1C",display:"block",marginBottom:2}}>Impacto desta ação:</span>
-              <span style={{fontSize:11,color:"#B91C1C",lineHeight:1.5,display:"block"}}>3 contratos ativos serão cancelados. Histórico de 47 requisições será perdido. Esta ação não pode ser desfeita.</span>
+              <span style={{fontSize:12,fontWeight:700,color:"var(--color-semantic-critico-fg)",display:"block",marginBottom:2}}>Impacto desta ação:</span>
+              <span style={{fontSize:11,color:"var(--color-semantic-critico-fg)",lineHeight:1.5,display:"block"}}>3 contratos ativos serão cancelados. Histórico de 47 requisições será perdido. Esta ação não pode ser desfeita.</span>
             </div>
           </div>
         </div>
+        <ModalFooter>
+          <Button variant="secondary" onClick={close}>Cancelar</Button>
+          <Button variant="danger" onClick={close}>Excluir permanentemente</Button>
+        </ModalFooter>
       </Modal>
 
-      {/* 3. ALERTA */}
-      <Modal open={m==="alert"} onClose={close} eyebrow="Atenção" eyebrowColor="rgba(255,255,255,0.9)" title="Sessão expirando" subtitle="Sessões inativas são encerradas por segurança." icon={Ic.alertTri(24,"#fff")} width={400} headerBg="#C2410C"
-        footer={<><Btn label="Sair agora" outline onClick={close}/><Btn label="Renovar sessão" color={C.azulProfundo} onClick={close}/></>}>
+      {/* 3. ALERTA — faixa sólida laranja */}
+      <Modal open={m==="alert"} onOpenChange={v=>!v&&close()} hero tone="warning" headerIcon={AlertTriangle}
+        eyebrow="Atenção" title="Sessão expirando"
+        description="Sessões inativas são encerradas por segurança." size="md">
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
-          <div style={{padding:"16px",background:"#FFF7ED",border:"1px solid #FDBA74",borderRadius:8,textAlign:"center"}}>
+          <div style={{padding:"16px",background:"var(--color-badge-warning-bg)",border:"1px solid var(--color-fips-yellow-400)",borderRadius:8,textAlign:"center"}}>
             <span style={{fontSize:28,fontWeight:700,color:C.amareloEscuro,fontFamily:Fn.mono,display:"block"}}>4:59</span>
-            <span style={{fontSize:11,color:"#C2410C"}}>minutos restantes</span>
+            <span style={{fontSize:11,color:"var(--color-accent-strong)"}}>minutos restantes</span>
           </div>
           <p style={{fontSize:13,color:C.cinzaChumbo,margin:0,lineHeight:1.5,textAlign:"center"}}>Clique em <strong>"Renovar"</strong> para continuar trabalhando sem perder dados.</p>
         </div>
+        <ModalFooter>
+          <Button variant="secondary" onClick={close}>Sair agora</Button>
+          <Button variant="primary" onClick={close}>Renovar sessão</Button>
+        </ModalFooter>
       </Modal>
 
-      {/* 4. INFORMATIVO — detalhe de artefato read-only (modelo oficial: "Movimentação de Pátio" / Governança BI) */}
-      <Modal open={m==="info"} onClose={close} eyebrow="Dashboard" title="Movimentação de Pátio" icon={Ic.grid(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} headerBg={GOV_GRAD} width={680}
-        footer={<Btn label="Entendi" color={C.azulProfundo} onClick={close}/>}>
+      {/* 4. INFORMATIVO — detalhe read-only, faixa gov (tone default) */}
+      <Modal open={m==="info"} onOpenChange={v=>!v&&close()} hero headerIcon={LayoutGrid}
+        eyebrow="Dashboard" title="Movimentação de Pátio" size="2xl">
         <div style={{display:"flex",flexDirection:"column",gap:18}}>
-          {/* Descrição read-only */}
           <p style={{fontSize:13,color:C.cinzaEscuro,margin:0,lineHeight:1.6}}>Movimentação diária de contêineres por terminal, turno e tipo de operação. Consolida entradas e saídas do pátio para acompanhamento operacional.</p>
-          {/* Classificação */}
           <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
             <Badge variant="info" dot>Operacional</Badge>
             <Badge variant="critico" dot>Crítico</Badge>
             <Badge variant="sucesso" dot>Publicado</Badge>
             <Badge variant="info">RLS ativo</Badge>
           </div>
-          {/* Metadados — ficha em cartões */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
             {[
               {l:"Área Processo",v:"Operações Portuárias"},
@@ -292,7 +201,6 @@ export default function DialogDoc(){
               {l:"Atualização",v:"Diária"},
             ].map(f=><InfoCard key={f.l} label={f.l} value={f.v}/>)}
           </div>
-          {/* Auditoria — read-only, condicional por papel */}
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
             <div style={{display:"flex",alignItems:"center",gap:7}}>
               {Ic.lock(14,C.textMuted)}
@@ -310,33 +218,59 @@ export default function DialogDoc(){
             </div>
           </div>
         </div>
+        <ModalFooter>
+          <Button variant="primary" onClick={close}>Entendi</Button>
+        </ModalFooter>
       </Modal>
 
-      {/* 5. FORMULÁRIO — body #fafafa */}
-      <Modal open={m==="form"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
-        footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-          <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
-          <FSelect label="Tipo" options={["Interno","Externo","Terceiro"]} value="Interno" icon={Ic.tag(14)}/>
-          <FSelect label="Prioridade" options={["Baixa","Média","Alta","Urgente"]} value="Média" icon={Ic.doc(14)}/>
-          <FInput label="Prazo" type="date" icon={Ic.cal(14)}/>
+      {/* 5. FORMULÁRIO — a variante que mais sai errada.
+          Campo é SEMPRE Field + FieldLabel + primitive governado, com `density="compact"`
+          nos dois (o Field controla gap/recuo do label; o controle controla a altura).
+          Nada de <label>+<input> montado à mão. */}
+      <Modal open={m==="form"} onOpenChange={v=>!v&&close()} hero headerIcon={UserRound}
+        title="Atribuir responsável"
+        description="Selecione o colaborador e tipo de atribuição." size="lg">
+        <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:14}}>
+          <Field density="compact">
+            <FieldLabel required>Responsável</FieldLabel>
+            <Input density="compact" placeholder="Nome do colaborador" leftIcon={<UserRound size={14}/>}/>
+          </Field>
+          <Field density="compact">
+            <FieldLabel>Tipo</FieldLabel>
+            <Select density="compact" aria-label="Tipo" defaultValue="Interno" leftIcon={<Tag size={14}/>}
+              options={["Interno","Externo","Terceiro"].map(o=>({value:o,label:o}))}/>
+          </Field>
+          <Field density="compact">
+            <FieldLabel>Prioridade</FieldLabel>
+            <Select density="compact" aria-label="Prioridade" defaultValue="Média" leftIcon={<FileText size={14}/>}
+              options={["Baixa","Média","Alta","Urgente"].map(o=>({value:o,label:o}))}/>
+          </Field>
+          <Field density="compact">
+            <FieldLabel>Prazo</FieldLabel>
+            <Input density="compact" type="date" leftIcon={<CalendarDays size={14}/>}/>
+          </Field>
         </div>
-        <div style={{marginTop:14}}>
-          <label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12,display:"block",marginBottom:4}}>Observação</label>
-          <textarea placeholder="Notas sobre a atribuição..." rows={2} style={{width:"100%",minHeight:72,padding:"8px 12px",border:`1px solid ${C.inputBorder}`,borderRadius:12,fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,outline:"none",resize:"vertical",boxSizing:"border-box",background:C.branco,boxShadow:FIELD_BASE_SHADOW,transition:"all .2s"}} onFocus={e=>fieldFocus(e.target)} onBlur={e=>fieldBlur(e.target)}/>
-        </div>
+        <Field density="compact" style={{marginTop:14}}>
+          <FieldLabel>Observação</FieldLabel>
+          <Textarea density="compact" rows={2} placeholder="Notas sobre a atribuição..."/>
+          <FieldHint>Opcional — fica no histórico da atribuição.</FieldHint>
+        </Field>
+        <ModalFooter hint="Você poderá editar depois.">
+          <Button variant="secondary" onClick={close}>Cancelar</Button>
+          <Button variant="success" onClick={close}>Salvar atribuição</Button>
+        </ModalFooter>
       </Modal>
 
-      {/* 6. LISTA — body #f5f6f8 */}
-      <Modal open={m==="list"} onClose={close} title="Itens da requisição" subtitle="REQ-4025 · 3 itens · R$ 2.450,00" icon={Ic.docLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#f5f6f8" headerBg={GOV_GRAD} width={520} noPadBody
-        footer={<><span style={{fontSize:11,color:C.textMuted,marginRight:"auto",fontWeight:600}}>Total: <span style={{color:C.azulProfundo,fontSize:13}}>R$ 2.450,00</span></span><Btn label="Fechar" outline onClick={close}/><Btn label="Aprovar tudo" color={C.verdeFloresta} onClick={close}/></>}>
+      {/* 6. LISTA — corpo sem padding (`noPadBody`), a lista controla o próprio espaçamento */}
+      <Modal open={m==="list"} onOpenChange={v=>!v&&close()} hero headerIcon={ClipboardList}
+        title="Itens da requisição" description="REQ-4025 · 3 itens · R$ 2.450,00" size="xl" noPadBody>
         <div>
           {[
             {item:"Extintor PQS 6kg",qty:3,val:"R$ 450,00",status:"sucesso",sl:"Cotado"},
             {item:"Cone sinalização 75cm",qty:10,val:"R$ 1.200,00",status:"sucesso",sl:"Cotado"},
             {item:"Fita zebrada 200m",qty:5,val:"R$ 800,00",status:"atencao",sl:"Aguardando"},
           ].map((r,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"center",padding:"14px 24px",borderBottom:i<2?`1px solid ${C.cardBorder}`:"none",gap:14,background:C.branco,transition:"background .1s"}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background=C.branco}>
+            <div key={i} style={{display:"flex",alignItems:"center",padding:"14px 24px",borderBottom:i<2?`1px solid ${C.cardBorder}`:"none",gap:14}}>
               <div style={{flex:1}}>
                 <span style={{fontSize:13,fontWeight:600,color:C.cinzaEscuro,display:"block"}}>{r.item}</span>
                 <span style={{fontSize:11,color:C.textMuted}}>Qtd: {r.qty}</span>
@@ -346,35 +280,67 @@ export default function DialogDoc(){
             </div>
           ))}
         </div>
+        <ModalFooter hint={<>Total: <strong style={{color:C.azulProfundo,fontSize:13}}>R$ 2.450,00</strong></>}>
+          <Button variant="secondary" onClick={close}>Fechar</Button>
+          <Button variant="success" onClick={close}>Aprovar tudo</Button>
+        </ModalFooter>
       </Modal>
 
-      {/* 7. POPUP — Resizable */}
-      <PopupModal open={m==="popup"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição para a tarefa." icon={Ic.popup(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`}
-        footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
-        {({size,isWide,isFullscreen})=>(
-          <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:isFullscreen?20:14}}>
-            <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
-            <FSelect label="Tipo" options={["Interno","Externo","Terceiro"]} icon={Ic.tag(14)}/>
-            <FSelect label="Prioridade" options={["Baixa","Média","Alta","Urgente"]} icon={Ic.doc(14)}/>
-            <FInput label="Prazo" type="date" icon={Ic.cal(14)}/>
-            {isWide&&<>
-              <FSelect label="Departamento" options={["Operações","Logística","Administrativo","Financeiro"]}/>
-              <FInput label="Observação" placeholder="Notas sobre a atribuição..."/>
-            </>}
-            {isFullscreen&&<>
-              <FInput label="E-mail" placeholder="email@empresa.com"/>
-              <FInput label="Telefone" placeholder="(00) 00000-0000"/>
-              <FSelect label="Turno" options={["Manhã","Tarde","Noite","Integral"]}/>
-              <FSelect label="Nível de acesso" options={["Visualização","Edição","Aprovação","Administrador"]}/>
-            </>}
-            <div style={{gridColumn:isWide?"1 / -1":"auto",padding:"10px 14px",background:`${C.azulCeuClaro}30`,borderRadius:8,display:"flex",alignItems:"center",gap:8}}>
-              <span style={{fontSize:11,color:C.azulProfundo,fontWeight:600,fontFamily:Fn.body}}>Tamanho atual:</span>
-              <span style={{fontSize:12,fontWeight:700,color:C.azulEscuro,fontFamily:Fn.mono,textTransform:"uppercase"}}>{size}</span>
-              <span style={{fontSize:11,color:C.cinzaChumbo,marginLeft:4}}>— Clique no botão no header para alternar</span>
-            </div>
+      {/* 7. POPUP REDIMENSIONÁVEL — mesmo `<Modal>`, trocando `size` por estado.
+          O controle vive em `headerActions`, ao lado do X. */}
+      <Modal open={m==="popup"} onOpenChange={v=>!v&&close()} hero headerIcon={AppWindow}
+        title="Atribuir responsável"
+        description="Selecione o colaborador e tipo de atribuição para a tarefa."
+        size={POPUP_SIZES[popupSize].size}
+        headerActions={
+          <button type="button" onClick={()=>setPopupSize(s=>POPUP_ORDER[(POPUP_ORDER.indexOf(s)+1)%POPUP_ORDER.length])}
+            title={`Tamanho: ${POPUP_SIZES[popupSize].label} — clique para alternar`}
+            style={{display:"inline-flex",alignItems:"center",gap:6,height:32,padding:"0 10px",borderRadius:8,border:"none",cursor:"pointer",background:"rgba(255,255,255,0.08)",color:"rgba(255,255,255,0.85)",fontFamily:Fn.body,fontSize:11,fontWeight:600}}>
+            {popupSize==="tela-cheia"?<Minimize2 size={14}/>:<Maximize2 size={14}/>}
+            {POPUP_SIZES[popupSize].label}
+          </button>
+        }>
+        <div style={{display:"grid",gridTemplateColumns:popupSize==="normal"?"1fr":"1fr 1fr",gap:14}}>
+          <Field density="compact">
+            <FieldLabel required>Responsável</FieldLabel>
+            <Input density="compact" placeholder="Nome do colaborador" leftIcon={<UserRound size={14}/>}/>
+          </Field>
+          <Field density="compact">
+            <FieldLabel>Tipo</FieldLabel>
+            <Select density="compact" aria-label="Tipo" leftIcon={<Tag size={14}/>}
+              options={["Interno","Externo","Terceiro"].map(o=>({value:o,label:o}))}/>
+          </Field>
+          <Field density="compact">
+            <FieldLabel>Prioridade</FieldLabel>
+            <Select density="compact" aria-label="Prioridade" leftIcon={<FileText size={14}/>}
+              options={["Baixa","Média","Alta","Urgente"].map(o=>({value:o,label:o}))}/>
+          </Field>
+          <Field density="compact">
+            <FieldLabel>Prazo</FieldLabel>
+            <Input density="compact" type="date" leftIcon={<CalendarDays size={14}/>}/>
+          </Field>
+          {popupSize!=="normal"&&<>
+            <Field density="compact">
+              <FieldLabel>Departamento</FieldLabel>
+              <Select density="compact" aria-label="Departamento"
+                options={["Operações","Logística","Administrativo","Financeiro"].map(o=>({value:o,label:o}))}/>
+            </Field>
+            <Field density="compact">
+              <FieldLabel>E-mail</FieldLabel>
+              <Input density="compact" placeholder="email@empresa.com"/>
+            </Field>
+          </>}
+          <div style={{gridColumn:popupSize==="normal"?"auto":"1 / -1",padding:"10px 14px",background:"var(--color-semantic-info-bg)",borderRadius:8,display:"flex",alignItems:"center",gap:8}}>
+            <span style={{fontSize:11,color:"var(--color-semantic-info-fg)",fontWeight:600,fontFamily:Fn.body}}>Tamanho atual:</span>
+            <span style={{fontSize:12,fontWeight:700,color:"var(--color-semantic-info-fg)",fontFamily:Fn.mono,textTransform:"uppercase"}}>{popupSize}</span>
+            <span style={{fontSize:11,color:C.cinzaChumbo,marginLeft:4}}>— o botão no header alterna</span>
           </div>
-        )}
-      </PopupModal>
+        </div>
+        <ModalFooter>
+          <Button variant="secondary" onClick={close}>Cancelar</Button>
+          <Button variant="success" onClick={close}>Salvar atribuição</Button>
+        </ModalFooter>
+      </Modal>
 
       {/* 8. TUTORIAL CONTEXTUAL */}
       {/* Tutorial — componente REAL de produção (`TutorialOverlay`), o mesmo que o ícone
@@ -418,16 +384,51 @@ export default function DialogDoc(){
         <Section n="01" title="Playground interativo" desc="Clique em qualquer botão para abrir o modal correspondente. ESC ou overlay para fechar. Hover nos botões para ver feedback visual.">
           <DSCard mob={mob}>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
-              <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
-              <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
-              <Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>
-              <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>
-              <Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>
-              <Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>
-              <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
-              <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
-              <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
+              <Button variant="success" onClick={()=>open("confirm")}><Check size={14}/>Confirmação</Button>
+              <Button variant="danger" onClick={()=>open("delete")}><XIcon size={14}/>Destrutivo</Button>
+              <Button variant="accent" onClick={()=>open("alert")}><AlertTriangle size={14}/>Alerta</Button>
+              <Button variant="primary" onClick={()=>open("info")}><Info size={14}/>Informativo</Button>
+              <Button variant="outline" onClick={()=>open("form")}><ClipboardEdit size={14}/>Formulário</Button>
+              <Button variant="secondary" onClick={()=>open("list")}><ClipboardList size={14}/>Lista</Button>
+              <Button variant="outline" onClick={()=>open("popup")}><Maximize2 size={14}/>Popup</Button>
+              <Button variant="primary" onClick={()=>open("tutorial")}><HelpCircle size={14}/>Tutorial</Button>
+              <Button variant="secondary" onClick={()=>open("export")}><Download size={14}/>Exportação</Button>
+              <Button variant="ouro" onClick={()=>open("changelog")}><Sparkles size={14}/>Novidades</Button>
+            </div>
+            <div style={{marginTop:18,borderTop:`1px solid ${C.cardBorder}`,paddingTop:16}}>
+              <div style={{...gl,marginTop:0}}>A API — é isto que se copia</div>
+              <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px",lineHeight:1.55,fontFamily:Fn.body}}>
+                Todos os modais desta página usam o <strong>componente real</strong> da library.
+                Não existe casca local aqui: header, ícone, rodapé, ESC/overlay/X e os campos vêm
+                dos componentes governados.
+              </p>
+              <pre style={{margin:0,padding:"14px 16px",background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:8,overflowX:"auto",fontSize:12,lineHeight:1.65,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{`import { Modal, ModalFooter, Field, FieldLabel, Input, Button } from '@fips-app/ds-fips'
+import { UserRound } from 'lucide-react'
+
+<Modal
+  open={open} onOpenChange={setOpen}
+  hero                       // faixa institucional (gov). tone="success|danger|warning" = faixa sólida
+  headerIcon={UserRound}     // sempre — modal sem ícone está fora do padrão
+  eyebrow="Requisição"       // opcional; não repete palavra do título
+  title="Atribuir responsável"
+  description="Selecione o colaborador e tipo de atribuição."
+  size="lg"                  // sm md lg xl 2xl 3xl full workflow — nunca className="max-w-*"
+>
+  <Field density="compact">           {/* campo = Field + label + primitive governado */}
+    <FieldLabel required>Responsável</FieldLabel>
+    <Input density="compact" placeholder="Nome do colaborador" />
+  </Field>
+
+  <ModalFooter hint="Você poderá editar depois.">
+    <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+    <Button variant="success">Salvar atribuição</Button>
+  </ModalFooter>
+</Modal>`}</pre>
+              <p style={{...ge,marginTop:12}}>
+                A densidade <code>compact</code> vai no <code>Field</code> <strong>e</strong> no controle:
+                o Field cuida do gap e do recuo do label, o controle cuida da própria altura. Passar só
+                num dos dois deixa o campo com altura de formulário de página dentro do modal.
+              </p>
             </div>
             <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>10 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha) e novidades (ChangelogModal — header gov, versão atual + histórico expansível). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
@@ -802,7 +803,7 @@ export default function DialogDoc(){
                     </div>
                   ))}
                 </div>
-                <Btn label="Abrir tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")} full/>
+                <Button variant="primary" className="w-full" onClick={()=>open("tutorial")}><HelpCircle size={14}/>Abrir tutorial</Button>
               </div>
 
               {/* Specs */}
@@ -932,7 +933,7 @@ export default function DialogDoc(){
                     </div>
                   ))}
                 </div>
-                <Btn label="Abrir popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")} full/>
+                <Button variant="outline" className="w-full" onClick={()=>open("popup")}><Maximize2 size={14}/>Abrir popup</Button>
               </div>
 
               {/* Specs */}

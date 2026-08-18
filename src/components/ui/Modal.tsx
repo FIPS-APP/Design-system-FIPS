@@ -24,10 +24,25 @@ export interface ModalProps {
   headerIcon?: LucideIcon
   /** Header hero — gradiente institucional FIPS (fundo azul, ícone glass, texto branco). Default: header simples atual. */
   hero?: boolean
-  /** Rótulo dourado uppercase acima do título. Só tem efeito com `hero`. */
+  /**
+   * Cor da faixa do `hero`. `gov` (default) = gradiente institucional + trilhos de
+   * junção + eyebrow âmbar. As cores semânticas são faixa sólida + shimmer diagonal
+   * e acento **branco** — é a regra de cor documentada do DS.
+   */
+  tone?: 'gov' | 'success' | 'danger' | 'warning'
+  /** Rótulo uppercase acima do título. Só tem efeito com `hero`. */
   eyebrow?: ReactNode
+  /** Controles à direita do título no `hero` (ex.: alternar tamanho). Antes do botão fechar. */
+  headerActions?: ReactNode
   /** Remove o padding do corpo (`px-6 py-5`); o conteúdo controla o próprio espaçamento. */
   noPadBody?: boolean
+}
+
+const TONE_BG: Record<NonNullable<ModalProps['tone']>, string> = {
+  gov: 'var(--fips-modal-hero-bg)',
+  success: 'var(--color-tone-success-solid)',
+  danger: 'var(--color-tone-danger-solid)',
+  warning: 'var(--color-tone-warning-solid)',
 }
 
 const sizeVariants = {
@@ -58,7 +73,9 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       showCloseButton = true,
       headerIcon: HeaderIcon,
       hero = false,
+      tone = 'gov',
       eyebrow,
+      headerActions,
       noPadBody = false,
     },
     ref,
@@ -81,9 +98,16 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           {(title || description) && (hero ? (
             <div
               className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14"
-              style={{ background: 'var(--fips-modal-hero-bg)' }}
+              style={{ background: TONE_BG[tone] }}
             >
-              <ModalHeroJunctionLines />
+              {tone === 'gov' ? (
+                <ModalHeroJunctionLines />
+              ) : (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-white/[0.04] to-transparent"
+                />
+              )}
               {HeaderIcon ? (
                 <div
                   className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.16] text-white"
@@ -97,13 +121,23 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               ) : null}
               <div className="relative min-w-0 flex-1">
                 {eyebrow ? (
-                  <span className="block font-heading text-[11px] font-semibold uppercase leading-tight tracking-[0.14em] text-[var(--color-accent-strong)]">{eyebrow}</span>
+                  <span
+                    className={cn(
+                      'block font-heading text-[11px] font-semibold uppercase leading-tight tracking-[0.14em]',
+                      tone === 'gov' ? 'text-[var(--color-accent-strong)]' : 'text-white/90',
+                    )}
+                  >
+                    {eyebrow}
+                  </span>
                 ) : null}
                 {title ? (
                   <DialogTitle className="font-heading text-[21px] font-bold leading-tight tracking-[-0.2px] text-white">{title}</DialogTitle>
                 ) : null}
                 {description ? <DialogDescription className="mt-0.5 text-xs leading-snug text-white/65">{description}</DialogDescription> : null}
               </div>
+              {headerActions ? (
+                <div className="relative z-10 mr-1 flex shrink-0 items-center gap-1.5">{headerActions}</div>
+              ) : null}
               {showCloseButton ? (
                 <DialogClose
                   className="absolute right-3.5 top-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none"

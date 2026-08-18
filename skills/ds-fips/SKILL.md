@@ -7,7 +7,7 @@ description: DS-FIPS — use when building, reviewing, documenting, or briefing 
 
 Use this skill whenever the task involves FIPS interfaces or when another AI needs a portable package of the design rules.
 
-Referências sincronizadas com a **v0.15.0** (2026-08-18) do repositório DS-FIPS.
+Referências sincronizadas com a **v0.16.0** (2026-08-18) do repositório DS-FIPS.
 
 ## Workflow
 
@@ -34,10 +34,10 @@ Referências sincronizadas com a **v0.15.0** (2026-08-18) do repositório DS-FIP
 
 Depois da tabela, o modal é o que mais sai fora do padrão — e sempre pelos mesmos
 dois motivos: **sem ícone no header** e **campo montado na mão**. A página
-`/docs/components/dialog` documenta a *aparência*; os exemplos dela são mockups
-locais (inline style, `<label>`+`<input>`) feitos para o playground — **não copie
-a marcação dela**. O que se copia é a API abaixo. Spec completa em
-`references/components.md` → **Dialog/Modal**.
+`/docs/components/dialog` usa o `<Modal>` real desde a v0.16.0 (antes tinha um
+`Modal` local com API conflitante, que era justamente o que se copiava errado),
+então o playground de lá e o snippet abaixo dizem a mesma coisa. Spec completa em
+`references/components.md` → **Modal — a API**.
 
 ```tsx
 import { Modal, ModalFooter, Field, FieldLabel, FieldMessage, Input, Button } from '@fips-app/ds-fips'
@@ -69,6 +69,7 @@ import { ClipboardEdit } from 'lucide-react'
 - [ ] `<Modal>` da library — **não** remontar a casca com `Dialog`/`DialogContent`/`DialogHeader` na mão (esses são low-level, para quem está construindo um composite novo)
 - [ ] **`headerIcon` sempre.** A prop é opcional no tipo, mas modal sem ícone está fora do padrão. Se você não sabe qual ícone usar, o título está vago demais — resolva o título primeiro. Ícone vem do `lucide-react`, passado como componente (`headerIcon={Truck}`), não como JSX
 - [ ] `hero` para modal institucional/de fluxo (faixa gov + eyebrow); header simples só para confirmação curta
+- [ ] Confirmação/destrutivo/alerta usam faixa **sólida**: `tone="success"` / `"danger"` / `"warning"` — nunca uma cor solta em `className`. Com tone semântico o acento vira branco automaticamente
 - [ ] `eyebrow` **não repete palavra do título** ("Atribuição" + "Atribuir responsável" = redundante; remova o eyebrow)
 - [ ] Campo = `Field` + `FieldLabel` + `Input`/`Select`/`Textarea` + `FieldMessage`. **Nunca** `<label>` + `<input>` cru, nunca `<div>` com borda simulando campo
 - [ ] Dentro de modal a densidade é **`compact`** — no `Field` *e* no controle (`<Field density="compact">` + `<Input density="compact">`); as duas props existem e as duas precisam ser passadas

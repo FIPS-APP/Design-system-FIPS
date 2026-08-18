@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.15.0`
+## Versão atual: `v0.16.0`
 
 ## Consumindo a biblioteca
 
@@ -78,6 +78,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.16.0 | 2026-08-18 | **A página do Modal passa a usar o `<Modal>` de verdade.** `/docs/components/dialog` definia um `Modal` **local** com API conflitante (`onClose`/`icon`/`headerBg`/`width`) e campos `<label>`+`<input>` — era a origem dos modais fora do padrão, porque era isso que se copiava. As 7 variantes do playground agora são o componente real, com `Field`+primitive nos campos e `ModalFooter` no rodapé; saíram `Modal` local, `PopupModal`, `FInput`, `FSelect` e `Btn`. Duas props novas no `<Modal>`: **`tone`** (`gov`/`success`/`danger`/`warning` — a regra de faixa sólida com acento branco que a doc pedia e o componente não tinha) e **`headerActions`** (controles no hero, que substituem o `PopupModal`). A página ganhou o bloco "A API — é isto que se copia" |
 | 0.15.0 | 2026-08-18 | **As 4 divergências doc×código corrigidas no código.** `<Modal hero>` passa a renderizar os trilhos de junção (e as 4 curvas, antes copiadas em 3 arquivos, viram definição única em `icons/JunctionLines.tsx`, com preset `ModalHeroJunctionLines` exportado). `showCloseButton` passa a funcionar de verdade no `<Modal>` e a prop morta `layer` sai de `ModalProps`. `<Badge>` consome `useTableDensity()` e acompanha a densidade da tabela (`comfortable → md`, `compact`/`normal` → `sm`), comportamento que a doc prometia e o código não fazia. Variante `save` do `Button` marcada como alias de `success` |
 | 0.14.3 | 2026-08-18 | **Documentação do Modal deixa de ensinar a montar na mão.** `patterns.md` mandava copiar verbatim o `WorkspaceFormDialog` (Dialog+DialogContent com header inline) e só citava o `<Modal>` de passagem — invertido. Nova seção **Modal — a API** em `components.md` (snippet, props reais, regra de campo, "não faça") + checklist **Building a modal?** no `SKILL.md`. Documentado que `/docs/components/dialog` é referência visual e sua marcação não deve ser copiada. Auditoria da doc contra o código (133 caminhos, 16 imports, 57 props de snippet, 56 tokens) registrou 4 divergências: `<Modal hero>` não renderiza os JunctionLines da anatomia canônica; `showCloseButton`/`layer` são props mortas em `ModalProps`; `useTableDensity()` não tem consumidor no DS (o `<Badge>` **não** acompanha a densidade da tabela sozinho, ao contrário do que a doc dizia); e a variante `save` do `Button` (alias de `success`) faltava na lista |
 | 0.14.2 | 2026-08-18 | Skill portátil renomeada de `design-system-fips` para **`ds-fips`** — pasta, `name` do `SKILL.md`, `display_name` do agente e o baixável (`/downloads/ds-fips-skill.zip`). Acompanham `build-ai-downloads.sh`, o passo de sincronia do CI, `CLAUDE.md`, `docs/architecture.md`, `docs/tokens.md` e `gen-tokens-md.mjs`. Some a skill duplicada em `~/.claude/skills/` (havia um symlink **e** uma cópia manual congelada na v0.11.33, com a mesma `description`): fica só `ds-fips`, symlink para o repo |

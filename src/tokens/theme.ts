@@ -71,6 +71,12 @@ export const themeTokens = {
   '--shadow-progress-track': 'inset 0 1px 2px rgba(15, 23, 42, 0.06)',
   '--shadow-switch-thumb': '0 1px 3px rgba(0, 0, 0, 0.2)',
 
+  // Faixas sólidas do header de modal (`<Modal hero tone="…">`). Não invertem por
+  // tema: são fundo com texto branco por cima, e clarear no dark apagaria o texto.
+  '--color-tone-success-solid': '{--color-fips-green-700}',
+  '--color-tone-danger-solid': '#B91C1C',
+  '--color-tone-warning-solid': '#C2410C',
+
   // Cor de extensão de arquivo — convenção do formato, não é marca FIPS.
   '--color-vendor-excel': '#1D6F42',
 } as const

@@ -255,10 +255,12 @@ Direção de uso:
 `src/components/ui/dialog.tsx` são a camada baixa (Radix) — use apenas para
 construir um composite novo, nunca para remontar um modal comum.
 
-> **Atenção ao ler `/docs/components/dialog`:** aquela página é referência
-> **visual**. Os modais dela são mockups locais com `inline style` e
-> `<label>`+`<input>` — feitos para o playground, e a página nem importa o
-> `<Modal>`. Não copie a marcação de lá; copie a API daqui.
+> `/docs/components/dialog` usa este mesmo componente desde a v0.16.0 — as 7
+> variantes do playground são `<Modal>` de verdade, com `<Field>`+primitive nos
+> campos e `<ModalFooter>` no rodapé. Copiar de lá agora é seguro. (Até a v0.15.x
+> a página tinha um `Modal` **local** com API conflitante — `onClose`, `icon`,
+> `headerBg`, `width` — e campos `<label>`+`<input>` montados à mão; era a origem
+> de boa parte dos modais fora do padrão.)
 
 ```tsx
 import { Modal, ModalFooter, Field, FieldLabel, FieldMessage, Input, Button } from '@fips-app/ds-fips'
@@ -294,6 +296,8 @@ import { ClipboardEdit } from 'lucide-react'
 | `description` | `ReactNode` | — | subtítulo abaixo do título |
 | `headerIcon` | `LucideIcon` | — | tile do ícone. **Opcional no tipo, obrigatório na prática** |
 | `hero` | `boolean` | `false` | faixa institucional (`--fips-modal-hero-bg` + trilhos de junção + close branco + eyebrow âmbar). Sem ele: header claro com borda inferior e ícone em círculo azul-claro (`--color-fips-blue-200/60`) |
+| `tone` | `gov` `success` `danger` `warning` | `gov` | cor da faixa do `hero`. `gov` = gradiente + trilhos + eyebrow âmbar; as semânticas são **faixa sólida + shimmer diagonal + acento branco** (a regra de cor documentada). Tokens: `--color-tone-{success,danger,warning}-solid`, que não invertem por tema |
+| `headerActions` | `ReactNode` | — | controles à direita do título no `hero`, antes do X (ex.: alternar tamanho) |
 | `eyebrow` | `ReactNode` | — | rótulo âmbar uppercase acima do título. **Só tem efeito com `hero`** |
 | `size` | `sm` `md` `lg` `xl` `2xl` `3xl` `full` `workflow` | `md` | largura (`workflow` = 900px) |
 | `showCloseButton` | `boolean` | `true` | mostra o X. `false` = saída só pelos botões do rodapé |
