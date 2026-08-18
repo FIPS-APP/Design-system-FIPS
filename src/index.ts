@@ -69,3 +69,4 @@ export {
   type ActiveFilterChipsProps,
 } from './components/composites/ActiveFilterChips'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
+export { JunctionLines, ModalHeroJunctionLines } from './components/icons/JunctionLines'

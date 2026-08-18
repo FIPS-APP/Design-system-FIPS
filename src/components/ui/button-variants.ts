@@ -22,6 +22,8 @@ export const buttonVariants = cva(
           'border-transparent bg-[var(--color-success)] text-white shadow-[var(--shadow-btn-success)] hover:bg-[var(--color-success-strong)]',
         successStrong:
           'border-transparent bg-[var(--color-success-strong)] text-white shadow-[var(--shadow-btn-success-strong)] hover:bg-[var(--color-success)]',
+        // Alias byte a byte de `success`, mantido porque telas antigas gravam com
+        // `variant="save"`. Código novo usa `success`.
         save:
           'border-transparent bg-[var(--color-success)] text-white shadow-[var(--shadow-btn-success)] hover:bg-[var(--color-success-strong)]',
         ouro:

@@ -1,6 +1,7 @@
 import { Children, forwardRef, isValidElement, type ReactNode } from 'react'
 import { X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { ModalHeroJunctionLines } from '../icons/JunctionLines'
 import {
   Dialog,
   DialogClose,
@@ -18,8 +19,8 @@ export interface ModalProps {
   children: ReactNode
   className?: string
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full' | 'workflow'
+  /** Botão X. Default: `true` no header simples, e no hero (que desenha o próprio X). */
   showCloseButton?: boolean
-  layer?: number
   headerIcon?: LucideIcon
   /** Header hero — gradiente institucional FIPS (fundo azul, ícone glass, texto branco). Default: header simples atual. */
   hero?: boolean
@@ -54,6 +55,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       children,
       className,
       size = 'md',
+      showCloseButton = true,
       headerIcon: HeaderIcon,
       hero = false,
       eyebrow,
@@ -69,7 +71,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           ref={ref}
-          showCloseButton={!hero}
+          showCloseButton={showCloseButton && !hero}
           className={cn(
             'flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-h-[90vh] sm:p-0',
             sizeVariants[size],
@@ -81,9 +83,10 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14"
               style={{ background: 'var(--fips-modal-hero-bg)' }}
             >
+              <ModalHeroJunctionLines />
               {HeaderIcon ? (
                 <div
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.16] text-white"
+                  className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.16] text-white"
                   style={{
                     background: 'var(--fips-modal-hero-icon-bg)',
                     boxShadow: 'var(--fips-modal-hero-icon-shadow)',
@@ -92,7 +95,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   <HeaderIcon className="h-5 w-5" aria-hidden />
                 </div>
               ) : null}
-              <div className="min-w-0 flex-1">
+              <div className="relative min-w-0 flex-1">
                 {eyebrow ? (
                   <span className="block font-heading text-[11px] font-semibold uppercase leading-tight tracking-[0.14em] text-[var(--color-accent-strong)]">{eyebrow}</span>
                 ) : null}
@@ -101,12 +104,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 ) : null}
                 {description ? <DialogDescription className="mt-0.5 text-xs leading-snug text-white/65">{description}</DialogDescription> : null}
               </div>
-              <DialogClose
-                className="absolute right-3.5 top-3.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none"
-                aria-label="Fechar"
-              >
-                <X className="h-4 w-4" aria-hidden />
-              </DialogClose>
+              {showCloseButton ? (
+                <DialogClose
+                  className="absolute right-3.5 top-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none"
+                  aria-label="Fechar"
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                </DialogClose>
+              ) : null}
             </div>
           ) : (
             <DialogHeader

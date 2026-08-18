@@ -248,7 +248,7 @@ O `Select` do DS abre a lista como `absolute top-full` (**sem portal**). Qualque
 
 ### Tabela canônica
 
-Fontes: `src/components/ui/table.tsx` + `src/components/ui/admin-listing.tsx`. Implementação de referência: `src/pages/InventoryPage.tsx` (Governança BI).
+Fontes: `src/components/ui/table.tsx` + `src/components/ui/admin-listing.tsx` (este repo). Implementação de referência: `src/pages/InventoryPage.tsx` **no repositório Governança BI** — caminho relativo àquele repo, não a este.
 
 #### Componente `<Table>`
 
@@ -324,7 +324,7 @@ Conteúdo do card **derivado das colunas visíveis** (não hardcode): a 1ª colu
 
 A vista Cards tem os mesmos estados da tabela: skeleton no loading e empty state ocupando a grade inteira (`gridColumn: 1 / -1`).
 
-**`useTableDensity`** — hook exportado; retorna `TableDensity | null` (`null` = fora de `<Table>`). Descendentes como `Badge` usam para ajustar size automaticamente: `compact|normal → sm`, `comfortable → md`, fora de tabela → `sm`.
+**`useTableDensity`** — hook exportado; retorna `TableDensity | null` (`null` = fora de `<Table>`). O `<Badge>` **consome** desde a v0.15.0 e ajusta o próprio size: `compact|normal → sm`, `comfortable → md`, fora de tabela → `sm` (prop `size` explícita vence). Qualquer outro descendente que precise reagir à densidade usa o mesmo hook.
 
 **Telas de inventário nascem compactas** — passar `density="compact"` como default; usuário pode mudar via `AdminTableColumnMenu`.
 
@@ -472,16 +472,46 @@ Fonte: `src/docs/pages/patterns/ModalWorkflowDemo.tsx`
 
 Regras:
 
-- usar `compact` em filtros e formulários densos
+- montar com `<Modal>`/`<ModalFooter>` da library — `Dialog*` cru só para construir composite novo
+- `headerIcon` sempre; campo sempre `Field` + `Input`/`Select`/`Textarea` (nunca `<label>`+`<input>`)
+- usar `compact` em filtros e formulários densos — no `Field` **e** no controle
 - títulos claros, resumo curto e CTA inequívoco
 - overlays com `--shadow-elevated`
 - não transformar fluxo longo em modal único se a tarefa exigir navegação complexa
 
 ### Header hero + form dialog (padrão canônico)
 
-Implementação de referência REAL (copiar verbatim, não improvisar): `Governanca_BI/src/components/WorkspaceFormDialog.tsx`. Todo modal/drawer com título usa **header hero**, não o header branco simples. Estrutura: `Dialog`+`DialogContent` direto, `className="max-w-* gap-0 overflow-hidden rounded-[12px_12px_12px_24px] p-0 sm:p-0 [&>button]:hidden"`. Header inline: faixa gradiente gov (`linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`), **tile âmbar** `h-11 w-11 rounded-[11px]` (`bg color-mix(in srgb, var(--color-accent) 10%, transparent)`, borda `accent 19%`, ícone `accent` — NÃO glass branco) + eyebrow dourado uppercase (`accent-strong`) + título branco 21px (Saira Expanded) + subtítulo `white/65`, X próprio `right-4 top-5` (`bg-white/8`). Body `space-y-4 px-6 py-5`, campos `Field density="compact"` + `Input/Textarea density="compact"` com `leftIcon`. Footer `bg-[var(--color-surface-muted)]/70 px-6 py-4`. O componente `Modal` (DS-FIPS+GovBI) tem props `hero`/`eyebrow`/`noPadBody`/`showCloseButton` para o mesmo visual sem repetir o markup.
+Todo modal/drawer com título usa **header hero**, não o header branco simples.
 
-**Gotcha do padding-fantasma:** `DialogContent` tem `sm:p-8` e `DrawerContent` tem `sm:p-7` no base. Passar só `p-0` **não** remove (variante responsive; twMerge não funde com `p-0`) → moldura de 28–32px em volta em desktop. **Sempre `p-0 sm:p-0`.** Sintoma: header hero com margem branca em vez de ir borda-a-borda.
+**Caminho 1 — dentro do DS-FIPS (é este que você usa):** `<Modal hero headerIcon={Icone} eyebrow="…" title="…">`.
+O componente já entrega faixa, tile, eyebrow, título, X e footer. A API completa,
+com checklist e a lista de "não faça", está em `components.md` → **Modal — a API**.
+Não remonte a casca à mão só para ter header hero.
+
+```tsx
+<Modal open={open} onOpenChange={setOpen} hero headerIcon={ClipboardEdit}
+       eyebrow="Requisição" title="Nova requisição" size="lg">
+  <Field density="compact">
+    <FieldLabel required>Solicitante</FieldLabel>
+    <Input density="compact" />
+  </Field>
+  <ModalFooter>
+    <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+    <Button variant="primary">Salvar</Button>
+  </ModalFooter>
+</Modal>
+```
+
+**Caminho 2 — fora do DS-FIPS, sem acesso ao `<Modal>`** (ex.: um app que ainda não
+consome a library): aí sim monte na mão, copiando a implementação de referência real
+`Governanca_BI/src/components/WorkspaceFormDialog.tsx`, sem improvisar. Estrutura:
+`Dialog`+`DialogContent` direto, `className="max-w-* gap-0 overflow-hidden rounded-[12px_12px_12px_24px] p-0 sm:p-0 [&>button]:hidden"`.
+Header inline: faixa gradiente gov (`linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, var(--color-fips-blue-1000) 100%)` — é o token `--fips-modal-hero-bg`), **tile âmbar** `h-11 w-11 rounded-[11px]` (`bg color-mix(in srgb, var(--color-accent) 10%, transparent)`, borda `accent 19%`, ícone `accent` — NÃO glass branco) + eyebrow dourado uppercase (`accent-strong`) + título branco 21px (Saira Expanded) + subtítulo `white/65`, X próprio `right-4 top-5` (`bg-white/8`). Body `space-y-4 px-6 py-5`, campos `Field density="compact"` + `Input/Textarea density="compact"` com `leftIcon`. Footer `bg-[var(--color-surface-muted)]/70 px-6 py-4`.
+
+O ícone não é enfeite em nenhum dos dois caminhos: modal sem tile de ícone está fora
+do padrão.
+
+**Gotcha do padding-fantasma (só no caminho 2):** `DialogContent` tem `sm:p-8` e `DrawerContent` tem `sm:p-7` no base. Passar só `p-0` **não** remove (variante responsive; twMerge não funde com `p-0`) → moldura de 28–32px em volta em desktop. **Sempre `p-0 sm:p-0`.** Sintoma: header hero com margem branca em vez de ir borda-a-borda. Usando `<Modal>` isso já vem resolvido.
 
 ## Hero
 

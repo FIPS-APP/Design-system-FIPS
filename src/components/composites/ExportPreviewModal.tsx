@@ -21,6 +21,7 @@ import {
   X,
 } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { ModalHeroJunctionLines } from '../icons/JunctionLines'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
 
 export type ExportLayout = 'all' | 'table' | 'expanded'
@@ -271,17 +272,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
             className="relative shrink-0 overflow-hidden px-6 pt-5 pb-4 text-white"
             style={{ background: 'var(--fips-banner-content-bg)' }}
           >
-            <svg
-              viewBox="0 0 320 200"
-              fill="none"
-              aria-hidden
-              className="pointer-events-none absolute -top-2.5 -right-5 h-[200px] w-[360px] opacity-[0.06]"
-            >
-              <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-            </svg>
+            <ModalHeroJunctionLines />
 
             <DialogClose
               className="absolute top-5 right-6 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"

@@ -2,6 +2,7 @@ import { useState, type ComponentType } from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { X, Sparkles, Bug, Wrench, Rocket, CheckCircle2 } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { ModalHeroJunctionLines } from '../icons/JunctionLines'
 import { Button } from '../ui/button'
 import {
   CHANGELOG,
@@ -80,18 +81,7 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
             className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14 text-white"
             style={{ background: 'var(--fips-banner-content-bg)' }}
           >
-            {/* Decoração ferroviária (JunctionLines) */}
-            <svg
-              viewBox="0 0 320 200"
-              fill="none"
-              aria-hidden
-              className="pointer-events-none absolute -top-2.5 -right-5 h-[200px] w-[360px] opacity-[0.06]"
-            >
-              <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-            </svg>
+            <ModalHeroJunctionLines />
 
             <DialogPrimitive.Close
               className="absolute top-3.5 right-3.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"

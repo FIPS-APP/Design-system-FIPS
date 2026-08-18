@@ -25,6 +25,70 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.0',
+    date: '2026-08-18',
+    title: 'As 4 divergências entre doc e código, corrigidas no código',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '**`<Modal hero>` passa a renderizar os trilhos de junção.** A anatomia canônica sempre pediu o SVG e os dois modais reais (`ChangelogModal`, `ExportPreviewModal`) desenhavam — mas o componente governado não, então modal feito "certo" saía sem a decoração. De quebra, as 4 curvas viviam copiadas em três arquivos: agora há **uma definição só** em `src/components/icons/JunctionLines.tsx`, consumida pelo `<Modal hero>`, pelos dois modais e pelo `BannerJunctionLines`. O preset `ModalHeroJunctionLines` (posição + opacidade do token `--fips-banner-junction-content-opacity`) é exportado para quem monta hero próprio.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`showCloseButton` **funciona** no `<Modal>` (default `true`): esconde o X tanto no header simples quanto no `hero`, para fluxos com saída controlada. Antes estava no tipo mas nunca era lida — o X era decidido internamente por `!hero` e passar a prop não fazia nada. A prop `layer`, também morta e sem nenhuma implementação, foi **removida** de `ModalProps`.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`<Badge>` agora **consome** `useTableDensity()` e ajusta o próprio size dentro de `<Table>`: `comfortable → md`, `compact`/`normal` → `sm`, fora de tabela → `sm` (prop `size` explícita continua vencendo). A doc descrevia esse comportamento desde sempre, mas o hook era exportado sem nenhum consumidor: na prática o badge saía `md` em tabela compacta e estourava a altura da linha.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'A variante `save` do `Button` ganhou comentário marcando o que ela é — alias byte a byte de `success`, mantida porque telas antigas gravam com `variant="save"`. Código novo usa `success`.',
+      },
+    ],
+  },
+  {
+    version: '0.14.3',
+    date: '2026-08-18',
+    title: 'Documentação do Modal deixa de ensinar a montar na mão',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'A causa de modal sair fora do padrão estava na própria documentação: `patterns.md` → **Modal Workflow** mandava "copiar verbatim, não improvisar" a implementação do `WorkspaceFormDialog` do Governança BI — ou seja, montar `Dialog`+`DialogContent` com header inline na mão — e só citava o `<Modal>` no fim do parágrafo, como alternativa. Invertido: caminho 1 é `<Modal hero headerIcon>`; a montagem manual virou caminho 2, explicitamente para quem está fora do DS-FIPS.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Nova seção **Modal — a API (comece por aqui)** em `components.md`: snippet copy-paste, tabela de props reais, regra de campo dentro de modal (`Field` + `FieldLabel` + primitive + `FieldMessage`, `density="compact"` nos **dois**) e lista de "não faça" com os erros que se repetem. A antiga seção de anatomia continua, mas reposicionada como spec visual — para auditar ou construir composite, não para consumir.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Novo checklist **Building a modal?** no `SKILL.md`, no mesmo formato do de tabela, e non-negotiable explícito: "Modal é componente, não montagem", `headerIcon` sempre, campo sempre `Field` + primitive. É o arquivo que outra IA lê primeiro.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Documentado que `/docs/components/dialog` é referência **visual**: os modais daquela página são mockups locais com `inline style` e `<label>`+`<input>` (a página nem importa o `<Modal>`), então a marcação dela não deve ser copiada. Era o que estava sendo copiado.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Auditoria da doc contra o código (caminhos citados, imports de `@fips-app/ds-fips`, props de todo snippet `tsx` e tokens CSS — 133 caminhos, 16 imports, 57 props, 56 tokens) achou mais duas: (1) a doc dizia que o `<Badge>` **acompanha a densidade da tabela via `useTableDensity()`** — o hook é exportado mas **não tem nenhum consumidor no DS**; o Badge lê só a prop `size`, e quem liga as duas coisas é um wrapper do consumidor (`useBadgeSize()` no Governança BI). Quem confiasse na doc mandava badge do tamanho errado em tabela compacta. (2) a variante `save` do `Button` não estava na lista "variantes exatas" — é alias byte a byte de `success`, mantida por telas antigas. Fora isso, imports, props e tokens citados conferem 100%.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Registradas duas divergências reais achadas ao conferir a doc contra o código: (1) `<Modal hero>` **não** renderiza os JunctionLines que a anatomia canônica pede e que `ChangelogModal`/`ExportPreviewModal` renderizam; (2) `showCloseButton` e `layer` existem em `ModalProps` mas não são lidas pelo componente — passar não faz nada. Também corrigida a orientação de acento no dark, que ainda mandava escrever `dark:border-[#93BDE4]` (hex cru é erro de lint desde a v0.14.0) e a densidade do `Field`, documentada sem o `dense`.',
+      },
+    ],
+  },
+  {
     version: '0.14.2',
     date: '2026-08-18',
     title: 'Skill portátil passa a se chamar ds-fips',

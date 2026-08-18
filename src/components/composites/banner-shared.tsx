@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { cn } from '../../lib/cn'
+import { JunctionLines } from '../icons/JunctionLines'
 
 export const FIPS_BANNER_PAGE_CLASS = 'fips-banner-shell--page'
 export const FIPS_BANNER_CONTENT_CLASS = 'fips-banner-shell--content'
@@ -29,18 +30,10 @@ export function BannerJunctionLines({
   style?: CSSProperties
 }) {
   return (
-    <svg
-      viewBox="0 0 320 200"
-      fill="none"
+    <JunctionLines
       className={cn('fips-banner-junction pointer-events-none', className)}
       style={style}
-      aria-hidden
-    >
-      <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-      <path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke="var(--color-junction-stroke)" strokeWidth="6" strokeLinecap="round" />
-    </svg>
+    />
   )
 }
 

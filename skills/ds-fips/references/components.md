@@ -48,6 +48,7 @@ Variantes exatas:
 - `inverseOutline`
 - `success`
 - `successStrong` (verde escuro — `--color-success-strong`; hover pro `success` normal, inverso da variante `success`)
+- `save` — **alias byte a byte de `success`**, mantido porque o CTA de gravar aparece como `variant="save"` em telas antigas. Em código novo use `success`.
 - `ouro`
 - `danger`
 - `link`
@@ -121,7 +122,7 @@ Regras:
 - **icon** — máx. 1 por badge; não combinar `dot` + `icon` no mesmo badge.
 - **count** — fica à esquerda do texto, cor invertida (fundo = cor do texto); acima de 99 vira `99+`.
 - **onRemove** — X à direita com hover opacity; combina com `pill` para visual de tag/filtro.
-- **size dentro de tabela** — Badge em célula **acompanha a densidade** da `<Table>` via `useTableDensity()`: `comfortable → md`, `compact|normal → sm`, fora de tabela → `sm`. Não fixar `size` hardcoded em badge de célula; deixar o hook decidir. Ver wrapper `useBadgeSize()` em `src/components/BiBadges.tsx` (Governança BI) e **Data Listing → Tabela canônica** em `patterns.md`.
+- **size dentro de tabela** — o `<Badge>` **acompanha a densidade da `<Table>` sozinho** desde a v0.15.0, via `useTableDensity()`: `comfortable → md`, `compact`/`normal` → `sm`, fora de tabela → `sm`. Passar `size` explícito continua vencendo. Não fixe `size` em badge de célula sem motivo — deixe o hook decidir. (Até a v0.14.x isso era só convenção: o hook existia sem consumidor e o badge saía `md` em tabela compacta.) Ver **Data Listing → Tabela canônica** em `patterns.md`.
 
 ### Tokens (catálogo da doc)
 
@@ -173,7 +174,7 @@ Fontes:
 
 Regras:
 
-- `FieldDensity`: `default` ou `compact`
+- `FieldDensity`: `default`, `compact` ou `dense` (`dense` existe por compat e hoje tem as mesmas medidas de `compact`)
 - `FieldInset`: `none`, `control`, `icon`
 - Label padrão em modo normal é uppercase e mais discreta.
 - `compact` é a densidade preferida em filtros, modal denso e painéis operacionais.
@@ -191,7 +192,7 @@ Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — 
 - **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `src/tokens/theme.ts`, light `--color-fips-gray-400` / dark `#3A3A3A`).
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
 - **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
-- **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
+- **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual — escrito **com token**: `dark:border-[var(--color-fips-blue-400)] dark:ring-[var(--color-fips-blue-400)]/25`. Hex cru (`dark:border-[#93BDE4]`) é erro de lint desde a v0.14.0 (`governance/no-raw-color`). Sem o par, o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
 
 Fonte de verdade: `Field`/`FieldInput`/`Select` de `client/src/components/ui-sup/` no projeto QLP (`~/dev/projetos/QLP`), usados de verdade em `ColaboradorForm.tsx` (tela Edição Colaborador) — comentário do próprio `select.tsx` de lá documenta a cadeia Governança BI (canônico) → QLP (adaptado). Alinhados na v0.11.15 — a v0.11.14 tinha corrigido radius/borda mas errado a altura (35px, tirado do `DSInput` local de `/docs/components/input`, que diverge do padrão real de produto).
 
@@ -247,9 +248,120 @@ Direção de uso:
 - `Tooltip`: dica curta; requer `TooltipProvider`
 - `Progress`: status numérico e andamento visual
 
+### Modal — a API (comece por aqui)
+
+**Modal é componente pronto, não montagem.** Importe `Modal`/`ModalFooter` de
+`@fips-app/ds-fips` (fonte: `src/components/ui/Modal.tsx`). Os `Dialog*` de
+`src/components/ui/dialog.tsx` são a camada baixa (Radix) — use apenas para
+construir um composite novo, nunca para remontar um modal comum.
+
+> **Atenção ao ler `/docs/components/dialog`:** aquela página é referência
+> **visual**. Os modais dela são mockups locais com `inline style` e
+> `<label>`+`<input>` — feitos para o playground, e a página nem importa o
+> `<Modal>`. Não copie a marcação de lá; copie a API daqui.
+
+```tsx
+import { Modal, ModalFooter, Field, FieldLabel, FieldMessage, Input, Button } from '@fips-app/ds-fips'
+import { ClipboardEdit } from 'lucide-react'
+
+<Modal
+  open={open}
+  onOpenChange={setOpen}
+  hero
+  headerIcon={ClipboardEdit}
+  eyebrow="Requisição"
+  title="Nova requisição"
+  description="Preencha os dados para abrir a solicitação."
+  size="lg"
+>
+  <Field density="compact">
+    <FieldLabel required>Solicitante</FieldLabel>
+    <Input density="compact" placeholder="Nome completo" />
+    <FieldMessage tone="danger">Campo obrigatório</FieldMessage>
+  </Field>
+
+  <ModalFooter hint="Você poderá editar depois.">
+    <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+    <Button variant="primary">Salvar</Button>
+  </ModalFooter>
+</Modal>
+```
+
+| prop | tipo | default | efeito |
+|---|---|---|---|
+| `open` / `onOpenChange` | `boolean` / `(open) => void` | — | controle (obrigatório) |
+| `title` | `ReactNode` | — | vira `DialogTitle`. Sem `title` **e** sem `description` o header não é renderizado |
+| `description` | `ReactNode` | — | subtítulo abaixo do título |
+| `headerIcon` | `LucideIcon` | — | tile do ícone. **Opcional no tipo, obrigatório na prática** |
+| `hero` | `boolean` | `false` | faixa institucional (`--fips-modal-hero-bg` + trilhos de junção + close branco + eyebrow âmbar). Sem ele: header claro com borda inferior e ícone em círculo azul-claro (`--color-fips-blue-200/60`) |
+| `eyebrow` | `ReactNode` | — | rótulo âmbar uppercase acima do título. **Só tem efeito com `hero`** |
+| `size` | `sm` `md` `lg` `xl` `2xl` `3xl` `full` `workflow` | `md` | largura (`workflow` = 900px) |
+| `showCloseButton` | `boolean` | `true` | mostra o X. `false` = saída só pelos botões do rodapé |
+| `noPadBody` | `boolean` | `false` | remove `px-6 py-5` do corpo — para conteúdo que controla o próprio espaçamento |
+| `className` | `string` | — | layout externo apenas |
+
+`ModalFooter` (`children`, `hint`, `className`) já traz borda superior, fundo
+`--color-surface-muted/70` e alinhamento à direita — os botões vão como filhos e o
+texto de apoio vai em `hint`, nunca como parágrafo solto. O `Modal` detecta o
+`ModalFooter` entre os filhos e o move para fora da área rolável.
+
+`showCloseButton` (default `true`) esconde o X nos dois headers — no simples ele é
+repassado ao `DialogContent`, no `hero` ele controla o `DialogClose` próprio. Use
+quando o modal precisa de saída controlada (fluxo com passos, confirmação forçada).
+A prop `layer`, que existia no tipo sem nenhuma implementação, foi **removida** na
+v0.15.0 — não fazia nada.
+
+#### Campos dentro do modal
+
+O erro mais comum depois da falta de ícone. Dentro de modal, campo é **sempre**:
+
+```tsx
+<Field density="compact">
+  <FieldLabel required>Rótulo</FieldLabel>
+  <Input density="compact" />          {/* ou Select / Textarea / FieldTrigger */}
+  <FieldMessage tone="danger">Erro</FieldMessage>  {/* opcional */}
+</Field>
+```
+
+- **Nunca** `<label>` + `<input>` cru, nem `<div>` com borda simulando campo — é o
+  que aparece nos mockups da doc page e é o que não deve ser copiado.
+- A densidade `compact` precisa ser passada **nos dois**: `Field` controla o gap e o
+  recuo do label; o controle controla a própria altura (`h-8` vs `h-12`). Passar só
+  num dos dois deixa o campo com altura de formulário de página dentro do modal.
+- `FieldMessage` tem `tone` `default` | `danger` | `success` (default: `danger`).
+- Detalhes de caixa, alturas e estados: **Field e controles de formulário**, acima.
+
+#### Trilhos de junção — já vêm no `hero`
+
+`<Modal hero>` renderiza os **JunctionLines** sozinho (v0.15.0). A definição das 4
+curvas mora em `src/components/icons/JunctionLines.tsx` e é a mesma que o
+`ChangelogModal`, o `ExportPreviewModal` e o `BannerJunctionLines` usam — antes
+eram três cópias do SVG e o `<Modal hero>` não tinha nenhuma. Nunca adicione o SVG
+por fora do `<Modal>`: além de duplicar, empilha duas decorações.
+
+Para um hero próprio (fora do `<Modal>`), importe o preset:
+`import { ModalHeroJunctionLines } from '@fips-app/ds-fips'` — ele já traz posição
+(`-top-2.5 -right-5`, 360×200) e opacidade do token
+`--fips-banner-junction-content-opacity` (0.06 claro / 0.04 escuro).
+
+#### Não faça
+
+- montar a casca com `Dialog`+`DialogContent`+`DialogHeader` quando `<Modal>` resolve
+- entregar modal **sem `headerIcon`** — se não há ícone óbvio, o título está vago
+- passar o ícone como JSX (`headerIcon={<Truck />}`); é o **componente** (`headerIcon={Truck}`)
+- `eyebrow` sem `hero` (não renderiza) ou repetindo palavra do título
+- `<label>`/`<input>` cru, ou `Field` sem `density="compact"` dentro de modal
+- botões soltos no lugar do `<ModalFooter>`, ou CTA à esquerda do Cancelar
+- largura por `className="max-w-…"` em vez da prop `size`
+- reimplementar fechar por `Esc`/overlay/X — o `<Modal>` já entrega os três
+
 ### Dialog/Modal — anatomia canônica de header
 
-Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal`, playground de todas as variantes). Todo modal "cartão" do DS-FIPS (não confundir com o painel utilitário neumórfico do `ExportModal`, que é outra família visual) usa este header:
+Isto é a **spec visual** que o `<Modal hero>` já implementa. Você só precisa dela
+para auditar um modal existente ou construir um composite novo — para consumir,
+use a API acima. Referência viva do playground: `src/docs/pages/components/DialogDoc.tsx`.
+Todo modal "cartão" do DS-FIPS (não confundir com o painel utilitário neumórfico do
+`ExportModal`, que é outra família visual) usa este header:
 
 - **Faixa colorida** (`headerBg`) ocupando a largura toda, `padding: 20px 24px` (`24px` à direita reservado pro botão fechar).
 - **Decoração**: se `headerBg` é o gradiente institucional (`GOV_GRAD` / `--fips-banner-content-bg`, 135°, azul→`#001A4A`), sobrepõe **JunctionLines** (SVG de trilhos ferroviários, `opacity 0.06`, `top:-10 right:-20`). Em faixas de cor sólida, usa um shimmer diagonal leve (`linear-gradient(135deg, transparent, rgba(255,255,255,.04), transparent)`) no lugar.
