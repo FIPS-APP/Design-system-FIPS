@@ -1,5 +1,7 @@
 import * as React from 'react'
+import { Info } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip'
 
 export type FieldDensity = 'default' | 'compact' | 'dense'
 export type FieldInset = 'none' | 'control' | 'icon'
@@ -54,34 +56,77 @@ Field.displayName = 'Field'
 
 export interface FieldLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean
+  /**
+   * Ajuda curta em balão, num ícone ⓘ ao lado do texto — não a linha de
+   * legenda de `FieldHint` (que continua existindo para texto mais longo,
+   * sempre visível). O ícone precisa ficar na MESMA linha do rótulo, e por
+   * isso vive aqui, não em `FieldHint`: `FieldHint` é hoje um `<p>` irmão,
+   * tipicamente posicionado DEPOIS do campo — subir isso até a linha do
+   * rótulo exigiria posicionamento absoluto. Onde o rótulo já está, o ícone
+   * cai no lugar certo de graça.
+   */
+  hint?: React.ReactNode
+  /**
+   * Escape hatch raro: className extra no balão do `hint` (`TooltipContent`).
+   * O balão sai com `z-50`, suficiente para o `Dialog` Radix do próprio DS —
+   * mas uma tela que empilhe um modal FORA do Radix, com `z-index` inline
+   * maior (ex.: o Modal hand-rolled de `DialogDoc.tsx`, `zIndex:1000`), tampa
+   * o balão. Nesse caso, passe algo como `hintClassName="z-[1100]"`.
+   */
+  hintClassName?: string
 }
 
-const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(({ className, children, required = false, ...props }, ref) => {
-  const { density, inset } = React.useContext(FieldContext)
+const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
+  ({ className, children, required = false, hint, hintClassName, ...props }, ref) => {
+    const { density, inset } = React.useContext(FieldContext)
 
-  return (
-    <label
-      ref={ref}
-      className={cn(
-        'block font-semibold',
-        density !== 'default'
-          ? 'text-xs leading-4 text-[var(--color-fg)]'
-          : 'text-[0.95rem] leading-5 uppercase tracking-[0.02em] text-[var(--color-fg-muted)]',
-        fieldTextOffsetClasses[density][inset],
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      {required ? (
-        <>
-          <span aria-hidden className="ml-1 text-[var(--color-danger)]">*</span>
-          <span className="sr-only">obrigatório</span>
-        </>
-      ) : null}
-    </label>
-  )
-})
+    return (
+      <label
+        ref={ref}
+        className={cn(
+          // `flex` no lugar de `block`: o rótulo continua ocupando a linha
+          // inteira (block-level para os vizinhos em `Field`), mas por dentro
+          // alinha texto + asterisco + ícone numa linha só.
+          'flex items-center font-semibold',
+          density !== 'default'
+            ? 'text-xs leading-4 text-[var(--color-fg)]'
+            : 'text-[0.95rem] leading-5 uppercase tracking-[0.02em] text-[var(--color-fg-muted)]',
+          fieldTextOffsetClasses[density][inset],
+          className,
+        )}
+        {...props}
+      >
+        {children}
+        {required ? (
+          <>
+            <span aria-hidden className="ml-1 text-[var(--color-danger)]">*</span>
+            <span className="sr-only">obrigatório</span>
+          </>
+        ) : null}
+        {hint ? (
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  // Dentro de <label>, qualquer clique foca o controle associado —
+                  // sem isto, tocar no ⓘ no celular abria o teclado do campo
+                  // junto com o balão.
+                  onClick={(e) => e.preventDefault()}
+                  aria-label="Mais informações"
+                  className="ml-1 inline-flex shrink-0 text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-primary)]"
+                >
+                  <Info className="h-3 w-3" aria-hidden />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className={cn('max-w-xs', hintClassName)}>{hint}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : null}
+      </label>
+    )
+  },
+)
 FieldLabel.displayName = 'FieldLabel'
 
 export type FieldHintProps = React.HTMLAttributes<HTMLParagraphElement>
