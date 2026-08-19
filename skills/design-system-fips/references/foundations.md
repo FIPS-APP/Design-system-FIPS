@@ -103,6 +103,24 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 
 Já os tokens `--color-gov-*` (usados em páginas de doc/governança) **invertem** no dark — `--color-gov-azul-profundo` vira `#93BDE4`. Não usá-los como fundo cheio com texto branco por cima: no escuro o fundo clareia e o texto some (foi a causa dos pills do drawer de filtros usarem hex fixo).
 
+### Scrollbars
+
+Qualquer lista/painel com `overflow-y-auto` (fila lateral, dropdown longo, timeline) usa a barra
+**fina** do DS, nunca a barra default do navegador/SO — duas classes prontas, mesma anatomia
+(`scrollbar-width: thin` + trilho transparente + thumb arredondado de 6px), diferindo só na cor,
+porque o fundo por trás muda:
+
+| Classe | Onde usar | Cor do thumb |
+| --- | --- | --- |
+| `.sidebar-scroll` | sobre superfície **escura** (a lateral navy, `--color-sidebar`) | branco translúcido (`rgba(255,255,255,.3)`, hover `.5`) |
+| `.scroll-thin` | sobre superfície **clara** (cards/painéis de conteúdo, `--color-surface`) | `--color-border-strong`, hover `--color-fg-muted` |
+
+`.sidebar-scroll` sobre fundo claro é o erro mais fácil de cometer — o branco translúcido some (ou
+quase) sobre `--color-surface` claro. Os dois já respondem ao dark mode sozinhos, por herdarem de
+tokens (`.sidebar-scroll` fica sobre `--color-sidebar`, que não muda no dark; `.scroll-thin` segue
+`--color-border-strong`/`--color-fg-muted`, que SIM mudam — ver tabela acima). Fonte:
+`src/styles/globals.css` (`@layer base`).
+
 ## Tipografia
 
 Fonte: `src/tokens/typography.ts` e `src/styles/globals.css`

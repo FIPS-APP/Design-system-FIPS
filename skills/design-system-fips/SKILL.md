@@ -41,5 +41,6 @@ Use these searches when the repository is available:
 - `rg -n "DENSITY|rowH" src/docs/pages/patterns/DataListingDemo.tsx` (cadência canônica de linha da tabela)
 - `rg -n "version: '" src/docs/data/changelog.ts | head` (versão atual + histórico; o topo do array é a mais recente)
 - `rg -n "no-visual-overrides" -A 12 eslint.config.js` (regra de governança que roda no lint)
+- `rg -n "sidebar-scroll|scroll-thin" src/styles/globals.css` (barra de rolagem fina do DS — `.sidebar-scroll` pra superfície escura, `.scroll-thin` pra superfície clara; nunca a barra default do navegador)
 
 If the repository is not available, treat the portable references bundled with this skill as the source of truth until the codebase is synced.

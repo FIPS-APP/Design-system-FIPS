@@ -86,6 +86,32 @@
     background-color: rgba(255, 255, 255, 0.5);
   }
 
+  /* Mesma barra fina de `.sidebar-scroll`, mas nas cores certas pra cima de
+     superfície CLARA (`--color-surface`) — o branco de `.sidebar-scroll` foi
+     pensado pro navy da lateral e some (ou quase) sobre fundo claro. Usar em
+     listas roláveis dentro de cards/painéis do conteúdo, não na navegação. */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+
+  .scroll-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-strong);
+    border-radius: 3px;
+  }
+
+  .scroll-thin::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-fg-muted);
+  }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
