@@ -2,6 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles } from "lucide-react";
 import { Select } from '../../../components/ui/select';
+import { Field, FieldLabel } from '../../../components/ui/field';
+import { Input } from '../../../components/ui/input';
+import { Textarea } from '../../../components/ui/textarea';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
 
@@ -426,19 +429,39 @@ export default function DialogDoc(){
         </div>
       </Modal>
 
-      {/* 5. FORMULÁRIO — body #fafafa */}
+      {/* 5. FORMULÁRIO — body #fafafa
+          Único exemplo desta página migrado para Field/Input/Select/Textarea DE
+          VERDADE (o resto — Popup, Tutorial etc. — continua no FInput/FSelect
+          hand-rolled abaixo; migrar tudo de uma vez é escopo maior, não pedido
+          agora). É também a vitrine viva do `hint` novo do FieldLabel — em TODOS
+          os campos do grid, para deixar claro que `required` e `hint` convivem
+          no mesmo rótulo (caso de "Responsável", os dois juntos). */}
       <Modal open={m==="form"} onClose={close} title="Atribuir responsável" subtitle="Selecione o colaborador e tipo de atribuição." icon={Ic.pessoaLg(24,C.amareloOuro)} iconBg={`${C.amareloOuro}1A`} iconBorder={`${C.amareloOuro}30`} bodyBg="#fafafa" headerBg={GOV_GRAD} width={480}
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Salvar atribuição" color={C.verdeFloresta} onClick={close}/></>}>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-          <FInput label="Responsável" placeholder="Nome do colaborador" required icon={Ic.pessoa(14)}/>
-          <FSelect label="Tipo" options={["Interno","Externo","Terceiro"]} value="Interno" icon={Ic.tag(14)}/>
-          <FSelect label="Prioridade" options={["Baixa","Média","Alta","Urgente"]} value="Média" icon={Ic.doc(14)}/>
-          <FInput label="Prazo" type="date" icon={Ic.cal(14)}/>
+        <div className="grid grid-cols-2 gap-x-3.5 gap-y-3">
+          <Field density="compact" inset="icon">
+            <FieldLabel required hint="Busca por nome ou matrícula no cadastro de colaboradores." hintClassName="z-[1100]">Responsável</FieldLabel>
+            <Input density="compact" placeholder="Nome do colaborador" leftIcon={Ic.pessoa(14)} />
+          </Field>
+          <Field density="compact" inset="icon">
+            <FieldLabel hint="Interno é FIPS; Externo e Terceiro exigem CPF no cadastro." hintClassName="z-[1100]">Tipo</FieldLabel>
+            <Select density="compact" leftIcon={Ic.tag(14)} defaultValue="Interno"
+              options={[{value:"Interno",label:"Interno"},{value:"Externo",label:"Externo"},{value:"Terceiro",label:"Terceiro"}]} />
+          </Field>
+          <Field density="compact" inset="icon">
+            <FieldLabel hint="Urgente pula a fila e notifica o supervisor." hintClassName="z-[1100]">Prioridade</FieldLabel>
+            <Select density="compact" leftIcon={Ic.doc(14)} defaultValue="Média"
+              options={[{value:"Baixa",label:"Baixa"},{value:"Média",label:"Média"},{value:"Alta",label:"Alta"},{value:"Urgente",label:"Urgente"}]} />
+          </Field>
+          <Field density="compact" inset="icon">
+            <FieldLabel hint="Data limite para concluir a atribuição." hintClassName="z-[1100]">Prazo</FieldLabel>
+            <Input density="compact" type="date" leftIcon={Ic.cal(14)} />
+          </Field>
         </div>
-        <div style={{marginTop:14}}>
-          <label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12,display:"block",marginBottom:4}}>Observação</label>
-          <textarea placeholder="Notas sobre a atribuição..." rows={2} style={{width:"100%",minHeight:72,padding:"8px 12px",border:`1px solid ${C.inputBorder}`,borderRadius:12,fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,outline:"none",resize:"vertical",boxSizing:"border-box",background:C.branco,boxShadow:FIELD_BASE_SHADOW,transition:"all .2s"}} onFocus={e=>fieldFocus(e.target)} onBlur={e=>fieldBlur(e.target)}/>
-        </div>
+        <Field density="compact" className="mt-3.5">
+          <FieldLabel>Observação</FieldLabel>
+          <Textarea density="compact" rows={2} placeholder="Notas sobre a atribuição..." />
+        </Field>
       </Modal>
 
       {/* 6. LISTA — body #f5f6f8 */}
