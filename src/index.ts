@@ -21,6 +21,13 @@ export {
   type HowItWorksGridProps,
 } from './components/composites/HowItWorksCard'
 export {
+  RuleTile,
+  RuleTileGrid,
+  type RuleTileProps,
+  type RuleTileTone,
+  type RuleTileGridProps,
+} from './components/composites/RuleTile'
+export {
   ExportButtons,
   type ExportButtonsProps,
 } from './components/composites/ExportButtons'

@@ -377,8 +377,7 @@ export default function FieldDoc(){
     <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:F.body,color:C.cinzaEscuro}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-        input::placeholder { color: ${C.textLight}; }
+input::placeholder { color: ${C.textLight}; }
         input:disabled::placeholder { color: ${C.cinzaClaro}; }
         select { -webkit-appearance: none; -moz-appearance: none; appearance: none; padding-right: 24px; }
       `}</style>

@@ -25,6 +25,35 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.5',
+    date: '2026-08-25',
+    title: 'RuleTile: Regras da Home viram composto; token atencao entra no DS',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'RuleTile + RuleTileGrid: réplica da seção Regras da Home (kicker uppercase, título, descrição, tons info/atencao/critico/sucesso, grade 1/2/4). Doc em `/docs/components/card` seção 03d. Casca continua Card + CardHeader + CardContent.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Tokens `--color-semantic-atencao-{bg,fg,border}` passam a existir em `globals.css` (light e dark), iguais aos do molde Suprimentos. O tile laranja da Home e atalhos que usavam essas vars no DS caíam sem cor — a família semântica só tinha info/sucesso/critico.',
+      },
+    ],
+  },
+  {
+    version: '0.12.4',
+    date: '2026-08-25',
+    title: 'Saira Expanded de verdade: fontes locais, sem Google 400',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--font-heading` nunca carregava: o `@import` do Google ia para o meio de `dist/styles.css` (browser descarta) e pedia `family=Saira+Expanded`, que o Google responde **400** — essa família não existe, "Expanded" é o eixo `wdth=125` do Saira. Faces agora vêm no bundle (`src/fonts/*.woff2` + `src/styles/fontes-fips.css`), declaradas com o nome que o token já usa. `index.html` deixa de puxar a CDN. Regenerar: `python scripts/atualizar-fontes.py`.',
+      },
+    ],
+  },
+  {
     version: '0.12.3',
     date: '2026-08-12',
     title: 'Table e Data Listing: aba Ordenação, vista Cards no DSTable, header centralizado',

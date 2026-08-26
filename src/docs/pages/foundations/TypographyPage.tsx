@@ -72,7 +72,7 @@ export default function DSFIPSTypography(){
   return(
     <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500;600&display=swap');@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
 
       <header style={{background:`linear-gradient(135deg,var(--color-gov-gradient-from) 0%,var(--color-gov-gradient-to) 100%)`,padding:mob?"32px 20px":"48px 40px 44px",position:"relative",overflow:"hidden"}}>
         <JunctionLines style={{position:"absolute",top:-10,right:-20,width:mob?250:400,height:250}}/>
@@ -236,11 +236,11 @@ export default function DSFIPSTypography(){
               <TokenRow label="Corpo" value="Open Sans"/>
               <TokenRow label="Mono" value="Fira Code"/>
               <div style={{height:1,background:C.cardBorder,margin:"4px 0"}}/>
-              <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Google Fonts</span>
-              <TokenRow label="Import" value="fonts.googleapis.com"/>
-              <TokenRow label="Saira pesos" value="300–800"/>
-              <TokenRow label="Open Sans pesos" value="300–700"/>
-              <TokenRow label="Fira Code pesos" value="400–600"/>
+              <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Bundle local</span>
+              <TokenRow label="Arquivo" value="fontes-fips.css"/>
+              <TokenRow label="Saira" value="wdth=125 · 500–700"/>
+              <TokenRow label="Open Sans" value="400–700"/>
+              <TokenRow label="Mono" value="ui-monospace (token)"/>
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:10,minWidth:220}}>
               <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Tamanhos</span>
@@ -300,8 +300,6 @@ export default function DSFIPSTypography(){
    ═══════════════════════════════════════════ */
 
 /* Google Fonts import */
-@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@400;500;600;700;800&family=Open+Sans:wght@400;600;700&family=Fira+Code:wght@400;500;600&display=swap');
-
 :root {
   /* ── Familias ── */
   --font-heading: 'Saira Expanded', sans-serif;

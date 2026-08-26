@@ -420,8 +420,7 @@ export default function DataListingDemo() {
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-        @keyframes popIn{from{opacity:0;transform:scale(.95) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.95) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
         @keyframes dsShimmer{0%{left:-100%}100%{left:150%}}
         @keyframes dlFade{from{opacity:0}to{opacity:1}}
         @keyframes dlSlideLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}

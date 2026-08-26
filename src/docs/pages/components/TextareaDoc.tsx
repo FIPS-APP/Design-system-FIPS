@@ -610,8 +610,7 @@ export default function TextareaDoc() {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-        textarea::placeholder{color:${C.textLight}}
+textarea::placeholder{color:${C.textLight}}
         textarea:disabled::placeholder{color:${C.cinzaClaro}}
       `}</style>
 

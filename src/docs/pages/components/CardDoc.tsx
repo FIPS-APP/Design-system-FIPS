@@ -18,6 +18,8 @@ import {
 import { CodeExportSection } from '../../components/CodeExport';
 import { StatsCard, StatsCardGrid } from '../../../components/composites/StatsCard';
 import { HowItWorksCard, HowItWorksGrid } from '../../../components/composites/HowItWorksCard';
+import { RuleTile, RuleTileGrid } from '../../../components/composites/RuleTile';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -334,7 +336,7 @@ export default function CardDoc(){
 
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');`}</style>
+      <style>{``}</style>
 
       {/* HEADER */}
       <header style={{background:`linear-gradient(135deg,${C.azulProfundo} 0%,${C.azulEscuro} 100%)`,padding:mob?"32px 20px":"48px 40px 44px",position:"relative",overflow:"hidden"}}>
@@ -431,6 +433,33 @@ export default function CardDoc(){
             <HowItWorksCard step={6} title="RC e Suprimentos" description="Anexa a RC e entra na fila de Suprimentos para análise final." icon={Receipt} />
             <HowItWorksCard step={7} title="Concluída" description="Suprimentos aprovou. PDF consolidado fica no histórico." icon={CircleCheckBig} />
           </HowItWorksGrid>
+        </Section>
+
+        {/* 03d — Regras (Home Suprimentos / ciclo AMV) */}
+        <Section
+          n="03d"
+          title="Card Regras (tiles semânticos)"
+          desc="Composto canônico RuleTile + RuleTileGrid. Anatomia da seção Regras da Home: kicker uppercase, título, descrição; tons info / atencao / critico / sucesso nos tokens --color-semantic-*. Grade 1 → 2 → 4 no lg+. A casca continua sendo Card + CardHeader + CardContent."
+        >
+          <div style={{marginBottom:12}}>
+            <code style={gk}>import {'{'} Card, CardHeader, CardTitle, CardDescription, CardContent, RuleTile, RuleTileGrid {'}'} from '@fips-app/ds-fips'</code>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Regras do fluxo</CardTitle>
+              <CardDescription>
+                Hierarquia e alçada por que cada demanda passa. O limite define quantas aprovações são necessárias.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RuleTileGrid>
+                <RuleTile tone="info" kicker="1. Superior imediato" title="1ª aprovação" description="O gestor imediato valida a demanda antes de seguir para a área." />
+                <RuleTile tone="info" kicker="2. Até o limite" title="Só o gerente" description="Abaixo do limite, basta a aprovação do gerente da área." />
+                <RuleTile tone="atencao" kicker="2. Acima do limite" title="Gerente e diretor" description="Acima do limite, exige as duas aprovações em sequência." />
+                <RuleTile tone="sucesso" kicker="3. Etapa final" title="Área decide" description="Com o dossiê completo, a área faz a análise final e encerra." />
+              </RuleTileGrid>
+            </CardContent>
+          </Card>
         </Section>
 
         {/* 04 — Card Princípio */}

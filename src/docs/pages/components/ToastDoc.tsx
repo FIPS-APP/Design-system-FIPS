@@ -264,8 +264,7 @@ export default function ToastDoc(){
     <PlaygroundProvider>
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-        @keyframes toastSlideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes toastSlideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
         @keyframes toastTimer{from{width:100%}to{width:0%}}
       `}</style>
 

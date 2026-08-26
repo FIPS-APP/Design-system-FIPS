@@ -124,11 +124,9 @@ export const typeScale = {
 }
 ```
 
-Import de referência usado no projeto:
+As faces vêm no bundle (`src/styles/fontes-fips.css` + `src/fonts/*.woff2`), não da CDN. "Saira Expanded" não existe no catálogo do Google — é o Saira no eixo `wdth=125`, declarado localmente com o nome que `--font-heading` já usa. Regenerar: `python scripts/atualizar-fontes.py`.
 
-```css
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Saira+Expanded:wght@500;600;700&display=swap');
-```
+Não usar `@import url('https://fonts.googleapis.com/css2?family=Saira+Expanded...')`: o Google responde 400 e, se o `@import` cair no meio do CSS compilado, o browser descarta em silêncio.
 
 ## Espaçamento
 

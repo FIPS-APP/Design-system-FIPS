@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Saira+Expanded:wght@500;600;700&display=swap');
+@import './fontes-fips.css';
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -144,6 +144,9 @@
     --color-semantic-info-bg: var(--color-fips-blue-200);
     --color-semantic-info-fg: var(--color-fips-blue-950);
     --color-semantic-info-border: var(--color-fips-blue-400);
+    --color-semantic-atencao-bg: #fff7ed;
+    --color-semantic-atencao-fg: #c2410c;
+    --color-semantic-atencao-border: #fdba74;
     --color-semantic-sucesso-bg: #ecfdf5;
     --color-semantic-sucesso-fg: #00904c;
     --color-semantic-sucesso-border: #a7f3d0;
@@ -190,6 +193,9 @@
     --color-semantic-info-bg: rgba(147, 189, 228, 0.14);
     --color-semantic-info-fg: #93bde4;
     --color-semantic-info-border: rgba(147, 189, 228, 0.28);
+    --color-semantic-atencao-bg: rgba(246, 146, 30, 0.14);
+    --color-semantic-atencao-fg: #fdc24e;
+    --color-semantic-atencao-border: rgba(246, 146, 30, 0.28);
     --color-semantic-sucesso-bg: rgba(0, 198, 76, 0.14);
     --color-semantic-sucesso-fg: #8be5ad;
     --color-semantic-sucesso-border: rgba(0, 198, 76, 0.28);

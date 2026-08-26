@@ -11,7 +11,7 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
-- `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid`
+- `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
 - `CircularCommandMenu` · `RowActionsMenu`
 - `ExcelIcon`, `PdfIcon`

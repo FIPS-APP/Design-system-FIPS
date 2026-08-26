@@ -641,8 +641,7 @@ export default function TableDoc() {
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-        @keyframes shimmer{0%{opacity:.5}50%{opacity:.8}100%{opacity:.5}}
+@keyframes shimmer{0%{opacity:.5}50%{opacity:.8}100%{opacity:.5}}
         @keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
         .ds-shim{background:linear-gradient(90deg,#E2E8F0 25%,#f0f3f7 50%,#E2E8F0 75%);background-size:300% 100%;animation:shimMove 1.8s ease infinite}
         @keyframes shimMove{0%{background-position:100% 0}100%{background-position:-100% 0}}

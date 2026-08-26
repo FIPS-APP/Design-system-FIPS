@@ -70,7 +70,7 @@ Se houver conflito:
 - `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + **chips de filtro ativo** + tabela + paginação (referência viva do padrão)
 - `src/components/composites/ExportButtons.tsx`
 - `src/components/composites/ExportPreviewModal.tsx`
-- `src/components/composites/ListingKpiRow.tsx` · `StatsCard.tsx` · `HowItWorksCard.tsx`
+- `src/components/composites/ListingKpiRow.tsx` · `StatsCard.tsx` · `HowItWorksCard.tsx` · `RuleTile.tsx`
 - `src/components/composites/ActiveFilterChips.tsx` — chip por VALOR filtrado (não badge de contagem), usado no header da Table do Data Listing
 - `src/components/composites/CircularCommandMenu.tsx`
 - `src/components/composites/RowActionsMenu.tsx`

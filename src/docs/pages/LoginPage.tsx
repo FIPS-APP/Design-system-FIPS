@@ -37,9 +37,7 @@ export default function Login(){
 
   /* ── Shared login CSS (used in both playground + mobile) ── */
   const loginStyles = `
-    @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
-
-    @keyframes slideInLeft {
+@keyframes slideInLeft {
       0% { opacity:0; transform:translateX(-40px); }
       100% { opacity:1; transform:translateX(0); }
     }
@@ -516,8 +514,7 @@ export default function LoginDesktop() {
   return (
     <>
       <style>{\`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
-        @keyframes slideInLeft { 0%{opacity:0;transform:translateX(-40px)} 100%{opacity:1;transform:translateX(0)} }
+@keyframes slideInLeft { 0%{opacity:0;transform:translateX(-40px)} 100%{opacity:1;transform:translateX(0)} }
         @keyframes slideInRight { 0%{opacity:0;transform:translateX(30px)} 100%{opacity:1;transform:translateX(0)} }
         @keyframes stationPulse { 0%,100%{box-shadow:0 0 6px rgba(253,194,78,0.4),0 0 12px rgba(253,194,78,0.15)} 50%{box-shadow:0 0 10px rgba(253,194,78,0.7),0 0 20px rgba(253,194,78,0.3)} }
         @keyframes stationReveal { 0%{opacity:0;transform:translateX(-12px)} 100%{opacity:1;transform:translateX(0)} }
@@ -672,8 +669,7 @@ export default function LoginMobile() {
   return (
     <>
       <style>{\`
-        @import url('https://fonts.googleapis.com/css2?family=Saira+Expanded:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap');
-        @keyframes borderRotate { 0%{--border-angle:0deg} 100%{--border-angle:360deg} }
+@keyframes borderRotate { 0%{--border-angle:0deg} 100%{--border-angle:360deg} }
         @property --border-angle { syntax:"<angle>"; initial-value:0deg; inherits:false; }
         .liquid-card-m { position:relative; }
         .liquid-card-m::before {
