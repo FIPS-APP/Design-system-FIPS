@@ -28,3 +28,11 @@ vps/
 __canvas.html
 src/__canvas_mount.tsx
 src/__canvas_providers.tsx
+
+# Copias de referencia soltas dentro do repo — nao sao codigo do DS.
+# "ds FIPS/" e "ds system fips/" guardam recortes de componentes usados como
+# consulta visual; o repo oficial e este diretorio. "Open" e um arquivo vazio
+# criado por engano.
+/ds FIPS/
+/ds system fips/
+/Open
