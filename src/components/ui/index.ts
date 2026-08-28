@@ -60,6 +60,8 @@ export {
   DrawerTrigger,
 } from './drawer'
 export { Input, type InputProps } from './input'
+export { Avatar, AvatarImage, AvatarFallback, PessoaAvatar } from './avatar'
+export { ChipSelect, ChipRadio, chipTriggerCls, chipOptionCls, normalizar } from './chip-select'
 export {
   InputGroup,
   InputGroupAddon,

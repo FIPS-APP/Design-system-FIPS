@@ -1,6 +1,7 @@
 export { FipsTabBar } from './FipsTabBar'
 export type { FipsTabItem } from './FipsTabBar'
 export { SettingsPreferenceRow } from './SettingsPreferenceRow'
+export { BuscarPessoaModal, type Pessoa } from './BuscarPessoaModal'
 export { PatternPanelHero } from './PatternPanelHero'
 export type { PatternPanelHeroProps, PatternPanelHeroStat } from './PatternPanelHero'
 export {
