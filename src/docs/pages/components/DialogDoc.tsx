@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from "react";
 import {
-  AlertTriangle, AppWindow, CalendarDays, Check, ClipboardEdit, ClipboardList, Download,
+  AlertTriangle, AppWindow, CalendarDays, Check, ClipboardEdit, ClipboardList, Code2, Download,
   FileText, HelpCircle, Info, LayoutGrid, Maximize2, Minimize2, Sparkles, Tag, Trash2,
   UserRound, X as XIcon,
 } from "lucide-react";
@@ -395,14 +395,18 @@ export default function DialogDoc(){
               <Button variant="secondary" onClick={()=>open("export")}><Download size={14}/>Exportação</Button>
               <Button variant="ouro" onClick={()=>open("changelog")}><Sparkles size={14}/>Novidades</Button>
             </div>
-            <div style={{marginTop:18,borderTop:`1px solid ${C.cardBorder}`,paddingTop:16}}>
-              <div style={{...gl,marginTop:0}}>A API — é isto que se copia</div>
-              <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px",lineHeight:1.55,fontFamily:Fn.body}}>
-                Todos os modais desta página usam o <strong>componente real</strong> da library.
-                Não existe casca local aqui: header, ícone, rodapé, ESC/overlay/X e os campos vêm
-                dos componentes governados.
-              </p>
-              <pre style={{margin:0,padding:"14px 16px",background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:8,overflowX:"auto",fontSize:12,lineHeight:1.65,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{`import { Modal, ModalFooter, Field, FieldLabel, Input, Button } from '@fips-app/ds-fips'
+            <div style={{...gc,marginTop:18}}>
+              <div style={gh}>
+                <Code2 size={16} color={C.azulClaro}/>
+                <span style={{fontSize:13,fontWeight:700,color:C.azulEscuro,fontFamily:Fn.title}}>A API — é isto que se copia</span>
+              </div>
+              <div style={gb}>
+                <p style={{...gt,marginBottom:12}}>
+                  Todos os modais desta página usam o <strong>componente real</strong> da library.
+                  Não existe casca local aqui: header, ícone, rodapé, ESC/overlay/X e os campos vêm
+                  dos componentes governados.
+                </p>
+                <pre style={{margin:0,padding:"14px 16px",background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:8,overflowX:"auto",fontSize:12,lineHeight:1.65,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{`import { Modal, ModalFooter, Field, FieldLabel, Input, Button } from '@fips-app/ds-fips'
 import { UserRound } from 'lucide-react'
 
 <Modal
@@ -424,11 +428,12 @@ import { UserRound } from 'lucide-react'
     <Button variant="success">Salvar atribuição</Button>
   </ModalFooter>
 </Modal>`}</pre>
-              <p style={{...ge,marginTop:12}}>
-                A densidade <code>compact</code> vai no <code>Field</code> <strong>e</strong> no controle:
-                o Field cuida do gap e do recuo do label, o controle cuida da própria altura. Passar só
-                num dos dois deixa o campo com altura de formulário de página dentro do modal.
-              </p>
+                <p style={{...ge,marginTop:12}}>
+                  A densidade <code>compact</code> vai no <code>Field</code> <strong>e</strong> no controle:
+                  o Field cuida do gap e do recuo do label, o controle cuida da própria altura. Passar só
+                  num dos dois deixa o campo com altura de formulário de página dentro do modal.
+                </p>
+              </div>
             </div>
             <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>10 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha) e novidades (ChangelogModal — header gov, versão atual + histórico expansível). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
