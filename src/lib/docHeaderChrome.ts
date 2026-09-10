@@ -40,25 +40,26 @@ export const docHeaderTabsNavSeparatorClass = 'border-b-2 border-[var(--color-bo
 /* ─── Neumorphic: azulejo claro (repouso na faixa #f5f5f5 — mesmo padrão Tecnopano) ─── */
 export const docHeaderNeuLightBorderIdle = 'rgba(0,0,0,0.10)'
 export const docHeaderNeuLightBgIdle =
-  'linear-gradient(145deg, #ffffff 0%, #ebebeb 55%, #e0e0e0 100%)'
+  'linear-gradient(145deg, var(--neu-light-bg-1) 0%, var(--neu-light-bg-2) 55%, var(--neu-light-bg-3) 100%)'
 export const docHeaderNeuLightShadowIdle =
   '0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.85)'
 export const docHeaderNeuLightIconIdle = 'rgba(55,55,55,0.82)'
 
 /* ─── Neumorphic: hover/active amarelo FIPS — mesma força do azulejo do Menu ─── */
 export const docHeaderNeuAccentBorderHover = 'rgba(246,146,30,0.55)'
-export const docHeaderNeuAccentBgHover = 'linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#cf730d 100%)'
+export const docHeaderNeuAccentBgHover =
+  'linear-gradient(135deg,var(--neu-accent-bg-1),var(--neu-accent-bg-2) 34%,var(--neu-accent-bg-3) 64%,var(--neu-accent-bg-4) 100%)'
 export const docHeaderNeuAccentShadowHover =
   '0 6px 22px -4px rgba(246,146,30,0.5), 0 3px 10px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.12) inset, 0 -1px 0 rgba(0,0,0,0.35) inset'
-export const docHeaderNeuAccentIcon = '#002A68'
+export const docHeaderNeuAccentIcon = 'var(--neu-accent-icon)'
 
 /* ─── Neumorphic: faixa escura (repouso) ─── */
-export const docHeaderNeuDarkBorderIdle = '#3f3f46'
+export const docHeaderNeuDarkBorderIdle = 'var(--neu-dark-border-idle)'
 export const docHeaderNeuDarkBgIdle =
-  'linear-gradient(160deg, #303036 0%, #222226 55%, #1c1c20 100%)'
+  'linear-gradient(160deg, var(--neu-dark-bg-1) 0%, var(--neu-dark-bg-2) 55%, var(--neu-dark-bg-3) 100%)'
 export const docHeaderNeuDarkShadowIdle =
   '0 3px 10px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.08) inset, 0 -1px 0 rgba(0,0,0,0.45) inset'
-export const docHeaderNeuDarkIconIdle = '#a1a1aa'
+export const docHeaderNeuDarkIconIdle = 'var(--neu-dark-icon-idle)'
 
 /** Shimmer translúcido (sweep). */
 export const docHeaderNeuShimmerGradient =
@@ -67,6 +68,11 @@ export const docHeaderNeuShimmerGradient =
 export const docHeaderNeuShimmerOnAccent =
   'linear-gradient(135deg,transparent,rgba(255,255,255,0.38) 50%,transparent)'
 
+/**
+ * Os campos `*Hex` continuam em hexadecimal de propósito: `HeaderDoc.tsx` os
+ * EXIBE como texto na tabela de especificação da tab. Aqui o hex é o conteúdo,
+ * não o estilo — trocar por `var()` apagaria a informação que a página dá.
+ */
 export const docHeaderTabsUnderlineMd = {
   fontSizePx: 13,
   paddingXPx: 24,

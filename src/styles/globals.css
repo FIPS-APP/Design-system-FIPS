@@ -130,6 +130,28 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-ring: var(--color-fips-sky-600);
+
+    /* ─── Neumorphic ───────────────────────────────────────────────────────
+       As duas variantes ficam declaradas juntas, e não uma por tema: quem
+       escolhe entre clara e escura é o componente, que já sabe em qual faixa
+       está desenhando. O que muda aqui é a origem do valor — antes eram hex
+       soltos em `lib/docHeaderChrome.ts`, onde o tema não alcançava.        */
+    --neu-light-bg-1: #ffffff;
+    --neu-light-bg-2: #ebebeb;
+    --neu-light-bg-3: #e0e0e0;
+
+    --neu-dark-bg-1: #303036;
+    --neu-dark-bg-2: #222226;
+    --neu-dark-bg-3: #1c1c20;
+    --neu-dark-border-idle: #3f3f46;
+    --neu-dark-icon-idle: #a1a1aa;
+
+    /* Hover âmbar: os quatro pontos do gradiente, do mais claro ao queimado. */
+    --neu-accent-bg-1: #ffd37b;
+    --neu-accent-bg-2: #f7ad45;
+    --neu-accent-bg-3: var(--color-fips-yellow-600);
+    --neu-accent-bg-4: #cf730d;
+    --neu-accent-icon: var(--color-fips-blue-950);
     --color-badge-warning-bg: var(--color-fips-orange-100);
     --color-badge-danger-bg: var(--color-fips-red-100);
     --color-sidebar: var(--color-fips-blue-950);
