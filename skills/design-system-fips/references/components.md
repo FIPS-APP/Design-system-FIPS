@@ -245,29 +245,59 @@ Direção de uso:
 - `Tooltip`: dica curta; requer `TooltipProvider`
 - `Progress`: status numérico e andamento visual
 
-### Dialog/Modal — anatomia canônica de header
+### Dialog/Modal — componente governado
 
-Fonte de referência: `src/docs/pages/components/DialogDoc.tsx` (função `Modal`, playground de todas as variantes). Todo modal "cartão" do DS-FIPS (não confundir com o painel utilitário neumórfico do `ExportModal`, que é outra família visual) usa este header:
+**Fonte real: `src/components/ui/Modal.tsx`** — exporta `Modal` + `ModalFooter`, ambos reexportados pela library (`@fips-app/ds-fips`). É construído sobre `Dialog`/`DialogContent`/`DialogHeader`/`DialogTitle`/`DialogDescription`/`DialogClose` de `src/components/ui/dialog.tsx` (não confundir com o painel utilitário neumórfico do `ExportModal` legado, que é outra família visual, `eslint-disable` no topo).
 
-- **Faixa colorida** (`headerBg`) ocupando a largura toda, `padding: 20px 24px` (`24px` à direita reservado pro botão fechar).
-- **Decoração**: se `headerBg` é o gradiente institucional (`GOV_GRAD` / `--fips-banner-content-bg`, 135°, azul→`#001A4A`), sobrepõe **JunctionLines** (SVG de trilhos ferroviários, `opacity 0.06`, `top:-10 right:-20`). Em faixas de cor sólida, usa um shimmer diagonal leve (`linear-gradient(135deg, transparent, rgba(255,255,255,.04), transparent)`) no lugar.
-- **Ícone-tile**: `44×44px`, `border-radius 10px`, fundo translúcido na cor do acento (`{cor}1A` ≈ 10% opacidade) + borda `{cor}30` ≈ 19%, `box-shadow: 0 1px 2px rgba(0,42,104,.3), inset 0 1px 0 rgba(255,255,255,.08)`.
-- **Eyebrow** (opcional): `11px / 600 / letter-spacing 0.14em / uppercase`, Saira Expanded. **Regra:** eyebrow nunca repete palavra do título (ex.: "Atribuição" + "Atribuir responsável" é redundante — remover o eyebrow nesse caso; "Dashboard" + "Movimentação de Pátio" é válido porque não repete).
-- **Título**: sempre **21px / 700**, Saira Expanded, `line-height 1.2`, `letter-spacing -0.2px`, cor branca.
-- **Subtítulo** (opcional): `12px`, `rgba(255,255,255,.65)`, Open Sans.
-- **Botão fechar**: `32×32px`, `border-radius 8px`, `top:14 right:14`, fundo `rgba(255,255,255,.08)` → hover `rgba(255,255,255,.18)`.
-- **Radius do modal**: assimétrico `12px 12px 12px 24px` (assinatura FIPS), não `rounded-2xl` uniforme.
+**`Modal` — props (todas de `ModalProps`, sem `className` visual em consumidor — `governance/no-visual-overrides` cobre `Button`/`Input`/etc., não `Modal`, mas o espírito é o mesmo: aparência vem das props, não de classes soltas):**
 
-**Regra de cor do acento** (ícone-tile + eyebrow, quando colorido):
+| Prop | Tipo | Default | Efeito |
+|---|---|---|---|
+| `open` | `boolean` | — | obrigatório |
+| `onOpenChange` | `(open: boolean) => void` | — | obrigatório — **não** `onClose` |
+| `title` | `ReactNode` | — | vira `DialogTitle` |
+| `description` | `ReactNode` | — | vira `DialogDescription`, abaixo do título |
+| `children` | `ReactNode` | — | corpo; um `<ModalFooter>` entre os filhos é extraído e renderizado fixo embaixo (não precisa ser o último) |
+| `size` | `'sm'\|'md'\|'lg'\|'xl'\|'2xl'\|'3xl'\|'full'\|'workflow'` | `'md'` | `max-w-{sm..3xl}` / `max-w-4xl` (`full`) / `max-w-[900px]` (`workflow`) — nunca `className="max-w-*"` |
+| `headerIcon` | `LucideIcon` | — | componente do ícone (`headerIcon={UserRound}`, não JSX). Sem ícone o modal sai fora do padrão |
+| `hero` | `boolean` | `false` | header institucional (gradiente gov 135°, texto branco, close translúcido) em vez do header branco simples com borda |
+| `eyebrow` | `ReactNode` | — | rótulo dourado uppercase acima do título — **só tem efeito com `hero`** |
+| `noPadBody` | `boolean` | `false` | remove `px-6 py-5` do corpo; o conteúdo controla o próprio espaçamento (usado por conteúdo full-bleed, ex. tabela dentro do modal) |
+| `showCloseButton` | — | — | existe no tipo mas **não é lido** pelo componente — o X é decidido internamente por `!hero` (hero sempre tem X próprio; não-hero delega ao X default do `DialogContent`) |
+| `layer` | `number` | — | existe no tipo, **não usado** no corpo do componente hoje |
 
-| Fundo da faixa | Acento (ícone/eyebrow) |
-|---|---|
-| Gov gradient (`GOV_GRAD`) | **âmbar** (`C.amareloOuro` / `--color-accent`) |
-| Cor semântica sólida (verde/vermelho/laranja) | **branco** (`rgba(255,255,255,.9)`) |
+**`ModalFooter` — props:** `children` (botões), `className`, `hint` (texto de apoio à esquerda — se ausente, um spacer ocupa o lugar pra empurrar os botões à direita). Border-top + fundo `--color-surface-muted`/70, `px-6 py-4`.
 
-**10 variantes** documentadas (`DialogDoc.tsx`): Confirmação (verde `#00904C`), Destrutivo (vermelho `#B91C1C`), Alerta (laranja `#C2410C`), Informativo (gov, exemplo "Movimentação de Pátio"), Formulário (gov, campos density **compact** — `h-8`/`rounded-lg`/`text-[13px]`), Lista (gov), **Popup redimensionável** (gov + toggle de tamanho Normal/Grande/Tela cheia no header — mesma anatomia canônica desde v0.5.5, antes tinha faixa `#002A68` sólida com ícone branco 17px, hoje alinhado), Tutorial step-by-step (header próprio, **não** segue esta anatomia — tem barra de progresso e paginação Anterior/Próximo), **Exportação** (`ExportPreviewModal`, abaixo) e **Novidades** (`ChangelogModal`, abaixo — adicionado na v0.11.27). Todos fecham com `Esc`, clique no overlay ou botão X.
+**Anatomia do header `hero`** (gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`): tile de ícone `44×44px rounded-[10px]` com gradiente glass translúcido (branco 14%→6%→azul 22%) + borda `white/16`, eyebrow `11px/600/tracking-[0.14em] uppercase` cor `--color-accent-strong`, título branco `21px/700` Saira Expanded, descrição `white/65` `12px`, close `32×32 rounded-lg` `top-3.5 right-3.5` `bg-white/8` → hover `white/18`. Radius do modal inteiro: assimétrico `12px 12px 12px 24px` (assinatura FIPS) via `DialogContent`, não `rounded-2xl` uniforme.
 
-As duas últimas não são exemplos locais do playground: são os componentes reais importados e reutilizados. O trigger "Novidades" abre exatamente o mesmo `ChangelogModal` do item **Versão** do rodapé do sidebar.
+**Anatomia do header não-`hero`:** `DialogHeader` com borda inferior, ícone (se houver) em círculo `40×40` `bg-[var(--color-fips-blue-200)]/60` `text-[var(--color-primary)]`, título `text-lg` cor de texto padrão (não branco).
+
+**Regra:** `eyebrow` nunca repete palavra do título (ex.: "Atribuição" + "Atribuir responsável" é redundante — remover o eyebrow; "Dashboard" + "Movimentação de Pátio" é válido porque não repete).
+
+```tsx
+import { Modal, ModalFooter, Field, FieldLabel, Input, Button } from '@fips-app/ds-fips'
+import { UserRound } from 'lucide-react'
+
+<Modal open={open} onOpenChange={setOpen} hero headerIcon={UserRound}
+  eyebrow="Requisição" title="Atribuir responsável"
+  description="Selecione o colaborador e tipo de atribuição." size="lg">
+  <Field density="compact">
+    <FieldLabel required>Responsável</FieldLabel>
+    <Input density="compact" placeholder="Nome do colaborador" />
+  </Field>
+  <ModalFooter hint="Você poderá editar depois.">
+    <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
+    <Button variant="success">Salvar atribuição</Button>
+  </ModalFooter>
+</Modal>
+```
+
+**Gaps conhecidos do componente real (não invente prop pra cobrir — são lacunas, não documentação incompleta):**
+
+- **Não existe `tone`/variante de cor sólida.** `hero` é binário: gradiente institucional ou header branco simples. Não há prop pronta pra faixa sólida verde (confirmação) / vermelha (destrutivo) / laranja (alerta) — hoje quem precisa disso reimplementa o header na mão (ver "Não faça" abaixo). Se for construir esse caso, evolua `Modal.tsx` primeiro (prop nova, ex. `tone?: 'success'|'danger'|'warning'`) em vez de remontar a casca no consumidor.
+- **Sem JunctionLines no header `hero`.** O preset `ModalHeroJunctionLines` (`src/components/icons/JunctionLines.tsx`) existe especificamente pra isso — o comentário no próprio arquivo diz "compartilhada com o `<Modal hero>`" — mas `Modal.tsx` não o importa nem renderiza. A decoração de trilhos só aparece em componentes que remontam o header na mão (`ChangelogModal`, `ExportPreviewModal`).
+
+**Não faça — reimplementações locais que existem hoje (dívida, não padrão a copiar):** `src/docs/pages/components/DialogDoc.tsx` tem uma função local `Modal` (props `onClose`/`headerBg`/`width`/`icon`, API diferente da real) usada em 6 das variantes do playground (Confirmação, Destrutivo, Alerta, Informativo, Formulário, Lista); `ChangelogModal.tsx`, `ExportPreviewModal.tsx` e `BuscarPessoaModal.tsx` também remontam `Dialog`/`DialogPrimitive` na mão em vez de compor `<Modal>`/`<ModalFooter>`. Nenhum desses é referência de como consumir o componente — são candidatos a migração, não exemplo.
 
 ### Modal "Novidades do Sistema" (Changelog)
 
