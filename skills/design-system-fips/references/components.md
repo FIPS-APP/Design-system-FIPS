@@ -297,7 +297,9 @@ import { UserRound } from 'lucide-react'
 - **Não existe `tone`/variante de cor sólida.** `hero` é binário: gradiente institucional ou header branco simples. Não há prop pronta pra faixa sólida verde (confirmação) / vermelha (destrutivo) / laranja (alerta) — hoje quem precisa disso reimplementa o header na mão (ver "Não faça" abaixo). Se for construir esse caso, evolua `Modal.tsx` primeiro (prop nova, ex. `tone?: 'success'|'danger'|'warning'`) em vez de remontar a casca no consumidor.
 - **Sem JunctionLines no header `hero`.** O preset `ModalHeroJunctionLines` (`src/components/icons/JunctionLines.tsx`) existe especificamente pra isso — o comentário no próprio arquivo diz "compartilhada com o `<Modal hero>`" — mas `Modal.tsx` não o importa nem renderiza. A decoração de trilhos só aparece em componentes que remontam o header na mão (`ChangelogModal`, `ExportPreviewModal`).
 
-**Não faça — reimplementações locais que existem hoje (dívida, não padrão a copiar):** `src/docs/pages/components/DialogDoc.tsx` tem uma função local `Modal` (props `onClose`/`headerBg`/`width`/`icon`, API diferente da real) usada em 6 das variantes do playground (Confirmação, Destrutivo, Alerta, Informativo, Formulário, Lista); `ChangelogModal.tsx`, `ExportPreviewModal.tsx` e `BuscarPessoaModal.tsx` também remontam `Dialog`/`DialogPrimitive` na mão em vez de compor `<Modal>`/`<ModalFooter>`. Nenhum desses é referência de como consumir o componente — são candidatos a migração, não exemplo.
+**Não faça — reimplementações locais que existem hoje (dívida, não padrão a copiar):** `src/docs/pages/components/DialogDoc.tsx` tem uma função local `Modal` (props `onClose`/`headerBg`/`width`/`icon`, API diferente da real) usada em 6 das variantes do playground (Confirmação, Destrutivo, Alerta, Informativo, Formulário, Lista); `ChangelogModal.tsx`, `ExportPreviewModal.tsx`, `BuscarPessoaModal.tsx` e `BuscarUsuarioModal.tsx` também remontam `Dialog`/`DialogPrimitive` na mão em vez de compor `<Modal>`/`<ModalFooter>`. Nenhum desses é referência de como consumir o componente — são candidatos a migração, não exemplo.
+
+> **Por que os `Buscar*Modal` remontam à mão (contexto, não desculpa):** o `<Modal>`/`DialogContent` do catálogo hoje é shadcn/Tecnopano — card `rounded-2xl` + `bg-gradient-to-br #fafafa→#e8e8ec` + ícone do header **branco**. O padrão FIPS aprovado (NDM/OPA/QLP) é card **`rounded-[12px_12px_12px_24px]` + surface plano** + faixa gov com **ícone âmbar** (`var(--color-accent)`). Como o `<Modal>` não produz esse visual, os modais de busca remontam Radix cru pra bater com o FIPS. **Correção canônica:** alinhar o `DialogContent` (`src/components/ui/dialog.tsx`) ao card FIPS (raio assimétrico + surface, ícone âmbar no `hero`) e então fazer os `Buscar*Modal` **comporem `<Modal hero>`** em vez de remontar.
 
 ### Modal "Novidades do Sistema" (Changelog)
 
@@ -387,6 +389,32 @@ Fonte: `src/components/composites/ListingKpiRow.tsx` · `StatsCard` com `onClick
 Bloco **Indicadores rápidos**: faixa de `StatsCard` clicáveis no `panelHeader` do card da toolbar (borda inferior, acima de filtros/busca/export). Clique no card filtra a tabela; “Limpar filtro” limpa o foco.
 
 > **v0.11.24 — saiu da demo, continua na library.** O bloco foi removido da toolbar de `/docs/patterns/data-listing` (a toolbar de lá agora demonstra só filtros/busca/período + Excel/PDF). `ListingKpiRow` e `StatsCard` seguem exportados e são o padrão recomendado quando a listagem precisa de KPIs clicáveis — só não há mais demo viva deles nessa página. O bloco de KPI cards com sparkline (acima da toolbar) é outro componente e continua na página.
+
+## Busca de pessoa/usuário — BuscarPessoaModal / BuscarUsuarioModal
+
+Modal de escolher pessoa/usuário. Fontes: `src/components/composites/BuscarPessoaModal.tsx` (responsável no Data Listing) e `BuscarUsuarioModal.tsx` ("Entrar como usuário…" do menu Minha Conta). Anatomia portada verbatim do OPA-Gestão (`composites/Modal.tsx`, tone gov), que herdou do NDM/QLP. Spec: `plans/spec-buscar-responsavel-modal.md`.
+
+Anatomia (comum aos dois):
+
+- **Card FIPS**: `rounded-[12px_12px_12px_24px]` (canto inferior-esquerdo 24) + `bg-[var(--color-surface)]` plano + `shadow-[var(--shadow-elevated)]`, `max-w-md`, `max-h-[85vh] flex flex-col overflow-hidden`. (Remonta Radix cru — ver dívida na seção Dialog/Modal acima.)
+- **Header gov**: faixa `var(--fips-banner-content-bg)` (`px-6 py-5 pr-14`), tile do ícone 44×44 (`rounded-[10px]`, bg accent 10% / borda accent 19%) com ícone **âmbar** `var(--color-accent)` (NÃO branco); título branco 21px (Saira); **subtítulo visível** `text-white/65` (`Dialog.Description`, não sr-only); X glass branco.
+- **Campo de busca FIXO** (`shrink-0 px-6 pt-5 pb-3`): input com lupa à esquerda, `autoFocus`, `h≈38 radius 8 border 1.5px`.
+- **Lista ROLÁVEL** (`fips-scroll flex-1 space-y-0.5 overflow-y-auto px-6 pb-6`): o `pb-6` dá o padding inferior **dentro** da rolagem (último item respira ao rolar). Linha = `button flex items-center gap-3 rounded-xl px-2 py-2` com `PessoaAvatar`/`<img>` (foto → iniciais). Vazio: "Ninguém encontrado.".
+
+Diferenças:
+
+| | `BuscarPessoaModal` | `BuscarUsuarioModal` |
+|---|---|---|
+| busca | nome / cargo / matrícula | nome / e-mail (sem acento, `normalize NFD`) |
+| sem busca | **só quem tem equipe** (`qtd_lideranca > 0`, ordenado por liderança) | todos |
+| 2ª linha da row | `cargo · área` + matrícula à direita | e-mail + **papel colorido** à direita |
+| hover da row | `bg-[var(--color-surface-muted)]` | `bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]` |
+
+**Dados são MOCK fictício de propósito** — no OPA/QLP a lista vem da API com CS/matrícula reais, que é dado sensível e não pode ir pro catálogo público.
+
+## Scrollbar fina — `.fips-scroll`
+
+Utility em `src/styles/globals.css` para listas roláveis em **superfícies claras** (modais, popovers). Barra **fina, sem botões de seta** (`::-webkit-scrollbar-button{display:none}`), thumb cinza translúcido flutuante (`color-mix(var(--color-fg-muted) …%, transparent)`, `border: 3px solid transparent; background-clip: padding-box`), `scrollbar-width: thin`. Não confundir com `.sidebar-scroll` (thumb **branco**, só pra sidebar escura) nem `.no-scrollbar` (esconde).
 
 ## CircularCommandMenu / RowActionsMenu
 

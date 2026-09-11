@@ -70,11 +70,17 @@ Não faça:
 
   | | `sm+` (desktop) | `<sm` (mobile) |
   |---|---|---|
-  | conteúdo | avatar 28px + nome + cargo + chevron | só avatar, **32px** |
+  | conteúdo | avatar 28px + nome + chevron — **uma linha, sem cargo/papel** | só avatar, **32px** |
   | fundo/borda/sombra/shimmer | sim (neumorphic completo) | não |
   | clicável, abre `UserAccountMenu` | sim | sim |
 
+  Avatar: **foto quando há `avatarUrl`** (`<img rounded-full object-cover>`), senão iniciais em círculo com fundo `FIPS_ROLE_COLOR[papel]`. Foto de perfil: PNG recortado cabeça/ombros com **fundo transparente** (`public/avatars/*.png`).
+
 - **`UserAccountMenu`** é painel ancorado abaixo do chip (`align="end"`), **não** modal centralizado — replica o dropdown do Governança BI. Vai para `createPortal(document.body)`: os headers do DS (`DocLayout`, `DocHeaderStandard`) têm `overflow-hidden` (clip do art de fundo) que cortaria um painel `absolute` in-place. Posição recalculada por `getBoundingClientRect` do trigger em `resize`/`scroll`. Fecha em clique-fora ou `Esc`.
+- **Anatomia do menu** (`src/components/layout/UserAccountMenu.tsx`): cabeçalho (avatar 36px + nome + e-mail + cargo) → **badges lado a lado** (perfil por papel + **área** `"{processo} · {subprocesso}"`, `Badge size="sm"`) → **"Perfil (Modo Dev)"** → **"Entrar como usuário…"** → ações (Meu perfil / Preferências / Sair).
+- **Dois eixos de identidade (usuário efetivo):**
+  - **"Perfil (Modo Dev)"** = lista de **papéis** (só o rótulo colorido por `FIPS_ROLE_COLOR`, **sem nome/foto**, `Check` no ativo). Clicar troca **só o papel** (`devRole`) — a pessoa continua a mesma (teste da matriz de permissões). O "usuário efetivo" = pessoa + `devRole`; header/badge/avatar refletem `devRole`, mas nome/e-mail/cargo/área seguem da pessoa.
+  - **"Entrar como usuário…"** abre o `BuscarUsuarioModal` e **troca a pessoa** (impersonação); ao trocar, o `devRole` reseta pro papel dela.
 - **Hover dos itens do menu**: `bg-[var(--color-accent)]/20` (claro) / `/12` (escuro) + ícone da linha para `--color-accent-strong` — não usar `surface-muted` (contraste baixo demais, hover fica imperceptível).
 
 Não faça:
