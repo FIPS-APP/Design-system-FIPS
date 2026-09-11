@@ -54,7 +54,7 @@ export const FIPS_USERS: FipsUser[] = [
     cargo: 'Aprendiz',
     role: 'colaborador',
     email: 'fipinho.santista@fips.app.br',
-    area: 'Serviços - Tecnologia da Informação',
+    area: 'Serviços · Tecnologia da Informação',
     avatarUrl: '/avatars/fipinho.png',
   },
   {
