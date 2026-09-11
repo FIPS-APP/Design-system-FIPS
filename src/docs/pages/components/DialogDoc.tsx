@@ -1,9 +1,31 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
-import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles } from "lucide-react";
+import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles, Users } from "lucide-react";
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
+import { BuscarPessoaModal } from '../../../components/composites/BuscarPessoaModal';
+
+/* Mock fictício para a demo de "Buscar responsável" — nomes/matrículas INVENTADOS
+   (nunca colegas reais: CS é dado sensível). Sem foto → avatar cai nas iniciais.
+   `qtd_lideranca` reproduz o "sem busca, a lista traz quem tem equipe": só os >0
+   aparecem sem busca, ordenados por liderança. */
+const PESSOAS_MOCK = [
+  // Quem tem equipe (aparece sem busca, ordenado por nº de liderados):
+  { matricula: "101830", nome: "Gabriela Souza", cargo: "Ger Operação", area: "Pátio Norte", qtd_lideranca: 20 },
+  { matricula: "100234", nome: "Ana Ribeiro", cargo: "Coord Operação", area: "Pátio Norte", qtd_lideranca: 12 },
+  { matricula: "100901", nome: "Iara Nogueira", cargo: "Coord Operação", area: "Pátio Sul", qtd_lideranca: 11 },
+  { matricula: "100512", nome: "Bruno Carvalho", cargo: "Coord Manutenção", area: "Material Rodante", qtd_lideranca: 9 },
+  { matricula: "101122", nome: "João Peixoto", cargo: "Coord Centro de Controle", area: "CCP", qtd_lideranca: 8 },
+  { matricula: "101023", nome: "Diego Fontes", cargo: "Coord Operação", area: "Pátio Sul", qtd_lideranca: 7 },
+  { matricula: "101655", nome: "Lúcia Ramos", cargo: "Ger Planejamento", area: "Planejamento", qtd_lideranca: 6 },
+  { matricula: "102114", nome: "Henrique Dias", cargo: "Coord Manutenção", area: "Via Permanente", qtd_lideranca: 5 },
+  { matricula: "101988", nome: "Marcos Teixeira", cargo: "Coord SSMA", area: "SSMA", qtd_lideranca: 4 },
+  // Sem equipe (só aparecem ao buscar):
+  { matricula: "100788", nome: "Carla Menezes", cargo: "Maquinista I", area: "Pátio Norte", qtd_lideranca: 0 },
+  { matricula: "101299", nome: "Eduarda Lima", cargo: "Mecânico III", area: "Material Rodante", qtd_lideranca: 0 },
+  { matricula: "101547", nome: "Felipe Andrade", cargo: "Manobrador II", area: "Pátio Sul", qtd_lideranca: 0 },
+];
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
@@ -510,6 +532,10 @@ export default function DialogDoc(){
       {/* 10. NOVIDADES — composite real ChangelogModal, mesmo usado no rodapé do sidebar */}
       <ChangelogModal open={m==="changelog"} onOpenChange={v=>v?open("changelog"):close()} />
 
+      {/* 11. RESPONSÁVEL — BuscarPessoaModal portado do OPA-Gestão (título/subtítulo/placeholder
+              e o default "sem busca traz quem tem equipe"). Só a lista é MOCK (CS real = sensível). */}
+      <BuscarPessoaModal open={m==="responsavel"} onOpenChange={(o)=>{ if(!o) close(); }} people={PESSOAS_MOCK} onSelect={()=>{}}/>
+
       {/* ══════════════════════════════════════════════
           PAGE CONTENT
           ══════════════════════════════════════════════ */}
@@ -538,8 +564,9 @@ export default function DialogDoc(){
               <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
               <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
               <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
+              <Btn label="Responsável" icon={Users} color={C.azulCeu} onClick={()=>open("responsavel")}/>
             </div>
-            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>10 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha) e novidades (ChangelogModal — header gov, versão atual + histórico expansível). Todos fecham com ESC, clique no overlay ou botão X.</p>
+            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>11 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha), novidades (ChangelogModal — header gov, versão atual + histórico expansível) e buscar responsável (BuscarPessoaModal — campo de busca + lista com avatar/cargo/área; sem busca, traz quem tem equipe). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
         </Section>
 
