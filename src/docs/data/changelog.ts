@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.12.6',
+    date: '2026-09-11',
+    title: 'Tutorial da doc do Modal passa a ser o TutorialOverlay real',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O botão "Tutorial" do playground em `/docs/components/dialog` abria um `TutorialModal` definido dentro da própria página — casca própria, animação própria e 4 passos escritos à mão, sem relação com o tutorial que o ícone de capelo do header abre. Agora abre o `TutorialOverlay` de `components/domain/TutorialContextual`, com os 10 passos de `PAGE_TUTORIALS.dialog`: um componente só, uma fonte de passos só.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Saem da página o `TutorialModal` local (~90 linhas) e o array `tutorialSteps` (~20 linhas), que ficaram órfãos. Mesma classe de divergência já corrigida no `RowActionsMenu` da Table: quando a doc reimplementa o componente em vez de consumir o governado, ela documenta algo que não existe na library.',
+      },
+    ],
+  },
+  {
     version: '0.12.5',
     date: '2026-08-25',
     title: 'RuleTile: Regras da Home viram composto; token atencao entra no DS',

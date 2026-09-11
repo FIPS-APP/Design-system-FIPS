@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.12.5`
+## Versão atual: `v0.12.6`
 
 ## Consumindo a biblioteca
 
@@ -78,6 +78,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.12.6 | 2026-09-11 | Botão "Tutorial" da doc do Modal abre o `TutorialOverlay` real (passos de `PAGE_TUTORIALS.dialog`), igual ao ícone de tutorial do header. Sai o `TutorialModal` local da página, que era uma casca reimplementada com passos próprios |
 | 0.12.5 | 2026-08-25 | RuleTile + RuleTileGrid (seção Regras da Home: 4 tiles semânticos, grade 1/2/4). Tokens `--color-semantic-atencao-*` entram no DS (faltavam; o molde Suprimentos já usava) |
 | 0.12.4 | 2026-08-25 | `--font-heading` ("Saira Expanded") passa a carregar: faces locais no bundle (`src/fonts` + `fontes-fips.css`). O `@import` do Google era descartado no meio de `dist/styles.css` e pedia `family=Saira+Expanded`, que responde 400 — "Expanded" é o eixo `wdth=125` do Saira, não uma família |
 | 0.12.3 | 2026-08-12 | Nova aba **Ordenação** no Configurar do `DSTable` e do Data Listing (toggle Sim/Não + coluna padrão com Crescente/Decrescente) — de passagem corrigido bug real no Data Listing onde a ordenação nunca reordenava as linhas de fato. Nova prop `viewToggle` no `DSTable` (segmented Tabela/Cards, vista Cards genérica montada a partir das colunas visíveis). Cabeçalho de tabela passa de alinhado à esquerda para **centralizado** (primitive governado + `DSTable` + Data Listing), revertendo a v0.11.32. Removida a função de copiar das páginas Tabs, Table, Drawer, Header e Sidebar (`InlineCodeCopy`/`ExportBtn` saíram de `CodeExport.tsx` por ficarem sem consumidor). Removido texto duplicado de paginação do header do `DSTable` |
