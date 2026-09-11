@@ -1,17 +1,20 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { Check, LogOut, Settings, UserRound } from 'lucide-react'
+import { Check, LogOut, Settings, UserRound, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '../../lib/cn'
 import { Badge } from '../ui/badge'
+import { BuscarUsuarioModal } from '../composites/BuscarUsuarioModal'
 import {
   FIPS_ROLE_BADGE_VARIANT,
   FIPS_ROLE_COLOR,
   FIPS_ROLE_LABEL,
+  FIPS_ROLES,
   FIPS_USERS,
   fipsUserById,
   fipsUserInitials,
   type FipsUser,
+  type FipsUserRole,
 } from '../../docs/data/users'
 
 /**
@@ -26,8 +29,12 @@ export type UserAccountMenuProps = {
   trigger: ReactNode
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Pessoa efetiva (impersonada por "Entrar como usuário"). */
   activeUserId: string
   onActiveUserChange: (id: string) => void
+  /** Papel de acesso em teste ("Perfil (Modo Dev)") — NÃO troca a pessoa. */
+  devRole: FipsUserRole
+  onDevRoleChange: (role: FipsUserRole) => void
 }
 
 function UserAvatar({ user, size = 36 }: { user: FipsUser; size?: number }) {
@@ -57,11 +64,16 @@ export function UserAccountMenu({
   onOpenChange,
   activeUserId,
   onActiveUserChange,
+  devRole,
+  onDevRoleChange,
 }: UserAccountMenuProps) {
   const activeUser = fipsUserById(activeUserId)
+  // Usuário efetivo: a pessoa (nome/e-mail/cargo/área) + o papel em teste (devRole).
+  const effectiveUser: FipsUser = { ...activeUser, role: devRole }
   const anchorRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState<{ top: number; right: number } | null>(null)
+  const [buscarOpen, setBuscarOpen] = useState(false)
 
   /** Recalcula a posição do painel a partir do trigger — necessário pois ele é portado pro body. */
   useLayoutEffect(() => {
@@ -114,7 +126,7 @@ export function UserAccountMenu({
             >
               {/* Cabeçalho compacto: avatar + nome + e-mail + cargo */}
               <div className="flex items-start gap-2.5 px-3.5 pt-3.5 pb-2.5">
-                <UserAvatar user={activeUser} size={36} />
+                <UserAvatar user={effectiveUser} size={36} />
                 <div className="min-w-0 flex-1 pt-0.5 leading-tight">
                   <p className="truncate text-[13px] font-semibold text-[var(--color-fg)] dark:text-white">
                     {activeUser.fullName}
@@ -124,47 +136,47 @@ export function UserAccountMenu({
                 </div>
               </div>
 
-              {/* Badge de perfil */}
-              <div className="flex items-center gap-1 px-3.5 pb-2.5">
-                <Badge size="sm" variant={FIPS_ROLE_BADGE_VARIANT[activeUser.role]}>
-                  {FIPS_ROLE_LABEL[activeUser.role]}
+              {/* Classificação de acesso: badge de perfil (papel em teste) + badge de área */}
+              <div className="flex flex-wrap items-center gap-1 px-3.5 pb-2.5">
+                <Badge size="sm" variant={FIPS_ROLE_BADGE_VARIANT[devRole]}>
+                  {FIPS_ROLE_LABEL[devRole]}
                 </Badge>
+                {activeUser.area ? (
+                  <Badge size="sm" variant="secondary">
+                    {activeUser.area}
+                  </Badge>
+                ) : null}
               </div>
 
               <div className="h-px bg-[var(--color-border)]" />
 
-              {/* Trocar de perfil (demo) */}
+              {/* Perfil (Modo Dev) */}
               <div className="px-3.5 pt-2 pb-0.5 text-[9px] font-semibold tracking-[0.08em] text-[var(--color-fg-muted)] uppercase">
-                Trocar de perfil (demo)
+                Perfil (Modo Dev)
               </div>
+              {/* Lista de PAPÉIS (só o perfil — sem nome/foto), Check verde no ativo. */}
               <div className="pb-1">
-                {FIPS_USERS.map((u) => {
-                  const isActive = u.id === activeUser.id
+                {FIPS_ROLES.map((role) => {
+                  const isActive = role === devRole
                   return (
                     <button
-                      key={u.id}
+                      key={role}
                       type="button"
                       role="menuitemradio"
                       aria-checked={isActive}
-                      onClick={() => onActiveUserChange(u.id)}
+                      onClick={() => onDevRoleChange(role)}
                       className={cn(
-                        'flex w-full items-center gap-2 px-3.5 py-1 text-left transition-colors',
+                        'flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] transition-colors',
                         isActive
                           ? 'bg-[var(--color-primary)]/8'
                           : 'hover:bg-[var(--color-accent)]/20 dark:hover:bg-[var(--color-accent)]/12',
                       )}
                     >
-                      <UserAvatar user={u} size={24} />
-                      <span className="min-w-0 flex-1 leading-[1.15]">
-                        <span className="block truncate text-[12px] font-medium text-[var(--color-fg)] dark:text-white">
-                          {u.name}
-                        </span>
-                        <span
-                          className="block truncate text-[9px] font-medium"
-                          style={{ color: FIPS_ROLE_COLOR[u.role] }}
-                        >
-                          {u.cargo}
-                        </span>
+                      <span
+                        className="min-w-0 flex-1 truncate font-medium"
+                        style={{ color: FIPS_ROLE_COLOR[role] }}
+                      >
+                        {FIPS_ROLE_LABEL[role]}
                       </span>
                       {isActive && (
                         <Check className="h-3.5 w-3.5 shrink-0 text-[var(--color-success-strong)]" aria-hidden />
@@ -173,6 +185,23 @@ export function UserAccountMenu({
                   )
                 })}
               </div>
+
+              {/* Entrar como usuário — abre o BuscarUsuarioModal */}
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  onOpenChange(false)
+                  setBuscarOpen(true)
+                }}
+                className="group flex w-full items-center gap-2 px-3.5 py-1 pb-2 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-accent)]/20 dark:text-white/85 dark:hover:bg-[var(--color-accent)]/12"
+              >
+                <Users
+                  className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
+                  aria-hidden
+                />
+                Entrar como usuário…
+              </button>
 
               <div className="h-px bg-[var(--color-border)]" />
 
@@ -219,6 +248,13 @@ export function UserAccountMenu({
             document.body,
           )
         : null}
+
+      <BuscarUsuarioModal
+        open={buscarOpen}
+        onOpenChange={setBuscarOpen}
+        users={FIPS_USERS}
+        onSelect={(u) => onActiveUserChange(u.id)}
+      />
     </div>
   )
 }

@@ -15,6 +15,8 @@ export type FipsUser = {
   cargo: string
   role: FipsUserRole
   email: string
+  /** Área/subprocesso já formatado "{processo} · {subprocesso}" — badge de área do menu. */
+  area?: string
   avatarUrl?: string
 }
 
@@ -39,6 +41,9 @@ export const FIPS_ROLE_BADGE_VARIANT: Record<FipsUserRole, 'secondary' | 'defaul
   administrador: 'warning',
 }
 
+/** Papéis na ordem de exibição do seletor "Perfil (Modo Dev)". */
+export const FIPS_ROLES: FipsUserRole[] = ['colaborador', 'gestor', 'diretoria', 'administrador']
+
 export const DEFAULT_FIPS_USER_ID = 'fipinho-santista'
 
 export const FIPS_USERS: FipsUser[] = [
@@ -49,6 +54,8 @@ export const FIPS_USERS: FipsUser[] = [
     cargo: 'Aprendiz',
     role: 'colaborador',
     email: 'fipinho.santista@fips.app.br',
+    area: 'Serviços - Tecnologia da Informação',
+    avatarUrl: '/avatars/fipinho.png',
   },
   {
     id: 'amanda-sinhorini',
@@ -57,6 +64,7 @@ export const FIPS_USERS: FipsUser[] = [
     cargo: 'Coordenadora',
     role: 'gestor',
     email: 'amanda.sinhorini@fips.app.br',
+    area: 'Operações Pátio · Pátio Sul',
   },
   {
     id: 'rarafel-hipolito',
@@ -65,6 +73,7 @@ export const FIPS_USERS: FipsUser[] = [
     cargo: 'Diretor',
     role: 'diretoria',
     email: 'rarafel.hipolito@fips.app.br',
+    area: 'Diretoria · Operações',
   },
   {
     id: 'diogo-brito',
@@ -73,6 +82,7 @@ export const FIPS_USERS: FipsUser[] = [
     cargo: 'Analista',
     role: 'administrador',
     email: 'diogo.brito@fips.app.br',
+    area: 'Tecnologia · Governança BI',
   },
 ]
 

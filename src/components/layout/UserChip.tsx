@@ -15,7 +15,7 @@ import {
   docHeaderNeuShimmerGradient,
   docHeaderNeuShimmerOnAccent,
 } from '../../lib/docHeaderChrome'
-import { DEFAULT_FIPS_USER_ID, FIPS_ROLE_COLOR, FIPS_ROLE_LABEL, fipsUserById, fipsUserInitials } from '../../docs/data/users'
+import { DEFAULT_FIPS_USER_ID, FIPS_ROLE_COLOR, fipsUserById, fipsUserInitials, type FipsUserRole } from '../../docs/data/users'
 import { UserAccountMenu } from './UserAccountMenu'
 
 export type UserChipProps = {
@@ -39,6 +39,8 @@ export function UserChip({
   const [hovered, setHovered] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeUserId, setActiveUserId] = useState(DEFAULT_FIPS_USER_ID)
+  // Papel de acesso em teste ("Perfil (Modo Dev)") — muda o papel SEM trocar a pessoa.
+  const [devRole, setDevRole] = useState<FipsUserRole>(fipsUserById(DEFAULT_FIPS_USER_ID).role)
 
   if (variant === 'docHeader') {
     const idleBg = dark ? docHeaderNeuDarkBgIdle : docHeaderNeuLightBgIdle
@@ -51,7 +53,12 @@ export function UserChip({
         open={menuOpen}
         onOpenChange={setMenuOpen}
         activeUserId={activeUserId}
-        onActiveUserChange={setActiveUserId}
+        onActiveUserChange={(id) => {
+          setActiveUserId(id)
+          setDevRole(fipsUserById(id).role) // ao virar outra pessoa, o papel volta ao dela
+        }}
+        devRole={devRole}
+        onDevRoleChange={setDevRole}
         trigger={
           <button
             type="button"
@@ -99,27 +106,29 @@ export function UserChip({
               }}
               aria-hidden
             />
-            <span
-              className="relative z-[1] flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white sm:h-7 sm:w-7 sm:text-[12px]"
-              style={{ background: FIPS_ROLE_COLOR[activeUser.role] }}
-            >
-              {fipsUserInitials(activeUser.name)}
-            </span>
-            <span className="relative z-[1] hidden min-w-0 flex-1 flex-col text-left sm:flex">
+            {activeUser.avatarUrl ? (
+              <img
+                src={activeUser.avatarUrl}
+                alt={activeUser.name}
+                className="relative z-[1] h-8 w-8 shrink-0 rounded-full object-cover sm:h-7 sm:w-7"
+              />
+            ) : (
+              <span
+                className="relative z-[1] flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white sm:h-7 sm:w-7 sm:text-[12px]"
+                style={{ background: FIPS_ROLE_COLOR[devRole] }}
+              >
+                {fipsUserInitials(activeUser.name)}
+              </span>
+            )}
+            <span className="relative z-[1] hidden min-w-0 flex-1 text-left sm:block">
               <span
                 className={cn(
-                  'truncate font-sans text-[12px] leading-[1.2] font-semibold',
+                  'truncate font-sans text-[12px] leading-none font-semibold',
                   !hovered && (dark ? 'text-[#E2E2E8]' : 'text-[var(--color-fg)]'),
                 )}
                 style={hovered ? { color: docHeaderNeuAccentIcon } : undefined}
               >
                 {activeUser.name}
-              </span>
-              <span
-                className="truncate text-[9px] leading-[1.2] font-semibold tracking-[0.04em] uppercase"
-                style={{ color: hovered ? docHeaderNeuAccentIcon : FIPS_ROLE_COLOR[activeUser.role] }}
-              >
-                {FIPS_ROLE_LABEL[activeUser.role]}
               </span>
             </span>
             <ChevronDown
