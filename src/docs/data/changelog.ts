@@ -39,6 +39,16 @@ export const CHANGELOG: ChangelogVersion[] = [
         description:
           'Saem da página o `TutorialModal` local (~90 linhas) e o array `tutorialSteps` (~20 linhas), que ficaram órfãos. Mesma classe de divergência já corrigida no `RowActionsMenu` da Table: quando a doc reimplementa o componente em vez de consumir o governado, ela documenta algo que não existe na library.',
       },
+      {
+        type: 'fix',
+        description:
+          'Os 11 botões do playground do Modal repetiam cor. No claro, "Formulário" e "Responsável" usavam o mesmo `azulCeu`; no escuro era pior — `--color-gov-azul-profundo` e `--color-gov-azul-claro` clareiam os dois para `#93BDE4`, colapsando "Informativo", "Popup", "Formulário" e "Responsável" numa cor só. Como ali a cor é rótulo de categoria (não tema), os azuis de fundo passam a ser hex fixo e as faixas foram redistribuídas: 11 cores distintas no claro e no escuro.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`Btn` do playground ganha `fg` (rótulo do botão preenchido, default branco). "Novidades" (`#FDC24E`) e "Responsável" (`#93BDE4`) escreviam branco sobre fundo claro e saíam lavados; agora usam texto azul-escuro.',
+      },
     ],
   },
   {

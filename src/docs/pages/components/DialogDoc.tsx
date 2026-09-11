@@ -30,6 +30,11 @@ const PESSOAS_MOCK = [
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",azulCeuProfundo:"#0090D0",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)",inputBorder:"var(--color-border)",focusRing:"rgba(147,189,228,0.35)"};
+/* Azuis FIXOS para fundo de botão do playground. Os tokens `--color-gov-azul-*`
+   clareiam no dark (profundo e claro viram os dois #93BDE4, igual ao azulCeu):
+   usados como fundo com texto branco, colapsariam 4 botões na mesma cor e
+   deixariam o rótulo ilegível. Aqui a cor é rótulo de categoria, não tema. */
+const Btn3={azulInst:"#004B9B",azulNavy:"#002A68",azulMedio:"#658EC9"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 /* Gradiente gov 3-stops — mesma linguagem do PageHeader/hero (idêntico ao BiDetailDialog do Governança BI) */
 const GOV_GRAD="linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)";
@@ -199,9 +204,11 @@ function FSelect({label,options=[],value,icon}){
     </div>
   );
 }
-function Btn({label,color,outline,onClick,full,danger,icon:IconCmp}){
+/* `fg`: cor do rótulo no botão preenchido. Default branco; fundos claros da paleta
+   (ouro #FDC24E, azul céu #93BDE4) pedem texto escuro — branco sobre eles fica lavado. */
+function Btn({label,color,outline,onClick,full,danger,fg,icon:IconCmp}){
   const bg=danger?C.danger:color||C.azulProfundo;
-  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s",...(IconCmp?{display:"inline-flex",alignItems:"center",gap:7,justifyContent:full?"center":"flex-start"}:null)}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{IconCmp&&<IconCmp size={14} strokeWidth={2.2}/>}{label}</button>;
+  return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:fg||C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s",...(IconCmp?{display:"inline-flex",alignItems:"center",gap:7,justifyContent:full?"center":"flex-start"}:null)}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{IconCmp&&<IconCmp size={14} strokeWidth={2.2}/>}{label}</button>;
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
@@ -441,17 +448,20 @@ export default function DialogDoc(){
         <Section n="01" title="Playground interativo" desc="Clique em qualquer botão para abrir o modal correspondente. ESC ou overlay para fechar. Hover nos botões para ver feedback visual.">
           <DSCard mob={mob}>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              {/* Cor = categoria. Os 4 semânticos guardam a cor de estado (verde/vermelho/
+                  laranja/azul institucional); os estruturais e os compostos ocupam faixas
+                  distintas para nenhum par repetir — no claro E no escuro. */}
               <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
               <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
               <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
-              <Btn label="Informativo" icon={Info} color={C.azulProfundo} onClick={()=>open("info")}/>
-              <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeu} onClick={()=>open("form")}/>
+              <Btn label="Informativo" icon={Info} color={Btn3.azulInst} onClick={()=>open("info")}/>
+              <Btn label="Formulário" icon={ClipboardEdit} color={C.azulCeuProfundo} onClick={()=>open("form")}/>
               <Btn label="Lista" icon={ClipboardList} color={C.cinzaChumbo} onClick={()=>open("list")}/>
-              <Btn label="Popup" icon={Maximize2} color={C.azulClaro} onClick={()=>open("popup")}/>
-              <Btn label="Tutorial" icon={HelpCircle} color={C.azulEscuro} onClick={()=>open("tutorial")}/>
-              <Btn label="Exportação" icon={Download} color={C.azulCeuProfundo} onClick={()=>open("export")}/>
-              <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} onClick={()=>open("changelog")}/>
-              <Btn label="Responsável" icon={Users} color={C.azulCeu} onClick={()=>open("responsavel")}/>
+              <Btn label="Popup" icon={Maximize2} color={Btn3.azulNavy} onClick={()=>open("popup")}/>
+              <Btn label="Tutorial" icon={HelpCircle} color={Btn3.azulMedio} onClick={()=>open("tutorial")}/>
+              <Btn label="Exportação" icon={Download} color={C.verdeEscuro} onClick={()=>open("export")}/>
+              <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} fg={Btn3.azulNavy} onClick={()=>open("changelog")}/>
+              <Btn label="Responsável" icon={Users} color={C.azulCeu} fg={Btn3.azulNavy} onClick={()=>open("responsavel")}/>
             </div>
             <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>11 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha), novidades (ChangelogModal — header gov, versão atual + histórico expansível) e buscar responsável (BuscarPessoaModal — campo de busca + lista com avatar/cargo/área; sem busca, traz quem tem equipe). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
