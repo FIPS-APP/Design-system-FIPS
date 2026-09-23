@@ -14,6 +14,7 @@ import { DocHeaderNeuIconButton } from './DocHeaderNeuIconButton'
 
 export { DocHeaderNeuIconButton } from './DocHeaderNeuIconButton'
 import { DocHeaderPageTrail } from './DocHeaderPageTrail'
+import { AppFipsHeaderLogo } from '../composites/AppFipsHeaderLogo'
 import { SearchPill } from './SearchPill'
 import { UserChip } from './UserChip'
 
@@ -108,6 +109,7 @@ export function DocHeaderStandardPreview({
             <DocHeaderNeuIconButton ariaLabel="Recolher menu lateral" dark={dark} className="hidden sm:inline-flex">
               <PanelLeft className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
             </DocHeaderNeuIconButton>
+            <AppFipsHeaderLogo theme={dark ? 'dark' : 'light'} className="hidden sm:block" />
             <DocHeaderPageTrail groupLabel={groupLabel} pageTitle={pageTitle} dark={dark} />
           </div>
           <div className="hidden w-full max-w-xs md:block">

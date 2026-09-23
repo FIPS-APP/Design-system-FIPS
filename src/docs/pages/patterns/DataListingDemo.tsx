@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2 } from 'lucide-react'
+import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2, Globe, User } from 'lucide-react'
+import { ScopeSegment } from '../../../components/composites/ScopeSegment'
 import { CodeExportSection } from '../../components/CodeExport'
 import { CopyableInline } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
@@ -378,6 +379,8 @@ export default function DataListingDemo() {
   [filters]);
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
+  const [listingScope,setListingScope]=useState<'minha'|'todos'>('todos');
+  const countMinhaArea=useMemo(()=>allData.filter((_,i)=>i%6===0).length,[allData]);
 
   const filterRef=useRef(null);
   const configRef=useRef(null);
@@ -608,6 +611,17 @@ export default function DataListingDemo() {
                   </div>}
                 </div>}
               </div>
+
+              <ScopeSegment
+                value={listingScope}
+                onChange={setListingScope}
+                label="Área"
+                items={[
+                  { key: 'minha', label: 'Minha Área', Icon: User, count: countMinhaArea },
+                  { key: 'todos', label: 'Toda jurisdição', Icon: Globe, count: allData.length },
+                ]}
+              />
+              {/* Composite documentado em /docs/components/scope-segment */}
 
               <div style={{flex:1}}/>
 
@@ -1029,7 +1043,7 @@ export default function DataListingDemo() {
         <Section mob={mob} n="04" title="Toolbar" desc="Card próprio entre KPIs e Table. Esquerda agrupa filtros e busca (manipulação de dados). Direita agrupa exportações. Spacer no meio empurra os grupos pras pontas. Card minimal com mesmo borderRadius FIPS.">
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
-              {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (Button outline abre Drawer)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
+              {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (Button outline abre Drawer)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","ScopeSegment: Minha Área | Toda jurisdição + contador","Botões agrupados, gap 10","Próximos da entrada de dados"]},
               {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 32.5×32.5, ícone verde)","PDF (botão 32.5×32.5, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados · ExportButtons"]},
               {title:"Padrão visual",icon:Ic.list,color:C.amareloEscuro,items:["Card próprio com borderRadius FIPS","Padding 14px 18px","display:flex flexWrap:wrap","Spacer central com flex:1","marginBottom 14 antes da Table"]},
               {title:"Filtros oficiais",icon:Ic.calendar,color:C.verdeFloresta,items:["Drawer lateral (nunca popover ancorado)","Pills p/ poucas opções · chip-dropdown p/ muitas","Período suporta presets + Personalizado","Contador no botão quando há filtros","Chips do valor filtrado no header da Table"]},

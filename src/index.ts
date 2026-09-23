@@ -59,4 +59,24 @@ export {
   type ActiveFilterChip,
   type ActiveFilterChipsProps,
 } from './components/composites/ActiveFilterChips'
+export {
+  AppFipsHeaderLogo,
+  type AppFipsHeaderLogoProps,
+} from './components/composites/AppFipsHeaderLogo'
+export {
+  FormSectionCard,
+  FormSectionHeader,
+} from './components/composites/FormSectionCard'
+export {
+  ScopeSegment,
+  type ScopeSegmentItem,
+} from './components/composites/ScopeSegment'
+export {
+  LocationPinButtons,
+  type LocationPinButtonsProps,
+} from './components/composites/LocationPinButtons'
+export {
+  PhotoEvidenceDropzone,
+  type PhotoEvidenceDropzoneProps,
+} from './components/composites/PhotoEvidenceDropzone'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'

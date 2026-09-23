@@ -22,7 +22,12 @@ import {
   ArrowUpFromLine,
   LayoutGrid,
   Info,
+  ImagePlus,
+  Workflow,
 } from 'lucide-react'
+import { FormSectionCard, FormSectionHeader } from '../../../components/composites/FormSectionCard'
+import { LocationPinButtons } from '../../../components/composites/LocationPinButtons'
+import { PhotoEvidenceDropzone } from '../../../components/composites/PhotoEvidenceDropzone'
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { Button } from '../../../components/ui/button'
@@ -294,8 +299,26 @@ function WorkspaceField({ label, inset = 'control', required, tooltip, hint, cla
 }
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
+const OPA_CIDADES = ['Guarujá', 'Santos'] as const
+
 export default function FormWorkspaceDemo() {
   const [progress] = useState(82)
+  const [opaCidade, setOpaCidade] = useState<string | null>(null)
+  const [opaFotos, setOpaFotos] = useState<string[]>([])
+
+  const addOpaFotos = (files: FileList) => {
+    setOpaFotos((prev) => [
+      ...prev,
+      ...Array.from(files)
+        .filter((f) => f.type.startsWith('image/'))
+        .map((f) => URL.createObjectURL(f)),
+    ])
+  }
+
+  const removeOpaFoto = (url: string) => {
+    URL.revokeObjectURL(url)
+    setOpaFotos((prev) => prev.filter((u) => u !== url))
+  }
 
   return (
     <TooltipProvider>
@@ -560,6 +583,67 @@ export default function FormWorkspaceDemo() {
                   </WorkspaceField>
                 </CardContent>
               </Card>
+
+              {/* FormSectionCard + LocationPinButtons + PhotoEvidenceDropzone — ver Componentes */}
+              <FormSectionCard>
+                <FormSectionHeader num={3} title="Dados do Envolvido" Icon={Workflow} />
+                <div className="grid grid-cols-1 gap-2.5">
+                  <Field inset="control" density="compact">
+                    <FieldLabel required>Local de Atividade</FieldLabel>
+                    <LocationPinButtons
+                      options={OPA_CIDADES}
+                      value={opaCidade}
+                      onChange={setOpaCidade}
+                    />
+                  </Field>
+                  <Field inset="control" density="compact">
+                    <FieldLabel required>Local da Atividade/Ocorrido</FieldLabel>
+                    <Select
+                      density="compact"
+                      aria-label="Local da Atividade/Ocorrido"
+                      placeholder={opaCidade ? 'Selecione o local' : 'Selecione a cidade primeiro'}
+                      disabled={!opaCidade}
+                      leftIcon={<MapPin className="h-4 w-4" aria-hidden />}
+                    >
+                      {opaCidade === 'Guarujá' ? (
+                        <>
+                          <option value="terminal">Terminal</option>
+                          <option value="patio">Pátio</option>
+                        </>
+                      ) : opaCidade === 'Santos' ? (
+                        <>
+                          <option value="cais">Cais</option>
+                          <option value="armazem">Armazém</option>
+                        </>
+                      ) : null}
+                    </Select>
+                  </Field>
+                  <Field inset="control" density="compact">
+                    <FieldLabel>Sub Local da Atividade/Ocorrido</FieldLabel>
+                    <Select
+                      density="compact"
+                      aria-label="Sub Local"
+                      placeholder="Selecione o local primeiro"
+                      disabled
+                      leftIcon={<MapPin className="h-4 w-4" aria-hidden />}
+                    />
+                  </Field>
+                </div>
+              </FormSectionCard>
+
+              <FormSectionCard>
+                <FormSectionHeader
+                  num={4}
+                  title="Fotos / Evidências"
+                  hint="Opcional · JPG, PNG, WebP, HEIC · até 10 MB cada"
+                  Icon={ImagePlus}
+                />
+                <PhotoEvidenceDropzone
+                  urls={opaFotos}
+                  onAddFiles={addOpaFotos}
+                  onRemove={removeOpaFoto}
+                />
+              </FormSectionCard>
             </div>
 
             {/* RIGHT — Sidebar */}

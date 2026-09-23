@@ -319,7 +319,8 @@ export default function HeaderDoc() {
           <DSCard mob={mob}>
             <div style={gl}>Header completo</div>
             <p style={{ ...gt, marginBottom: 16 }}>
-              Preview real do header padrão DS-FIPS com breadcrumb, busca, notificações, dark mode e avatar.
+              Preview real do header padrão DS-FIPS com marca App FIPS, breadcrumb, busca, notificações, dark mode e avatar.
+              Marca isolada: <a href="/docs/components/app-fips-header-logo" style={{ color: C.azulProfundo, fontWeight: 600 }}>Componentes → Marca App FIPS</a>.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <DocHeaderStandardPreview

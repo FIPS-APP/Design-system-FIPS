@@ -36,6 +36,11 @@ const ApplicationShellDemo = lazy(() => import('./docs/pages/patterns/Applicatio
 const DashboardDemo = lazy(() => import('./docs/pages/patterns/DashboardDemo'))
 const DataListingDemo = lazy(() => import('./docs/pages/patterns/DataListingDemo'))
 const FormWorkspaceDemo = lazy(() => import('./docs/pages/patterns/FormWorkspaceDemo'))
+const AppFipsHeaderLogoDoc = lazy(() => import('./docs/pages/components/AppFipsHeaderLogoDoc'))
+const ScopeSegmentDoc = lazy(() => import('./docs/pages/components/ScopeSegmentDoc'))
+const LocationPinButtonsDoc = lazy(() => import('./docs/pages/components/LocationPinButtonsDoc'))
+const PhotoEvidenceDropzoneDoc = lazy(() => import('./docs/pages/components/PhotoEvidenceDropzoneDoc'))
+const FormSectionCardDoc = lazy(() => import('./docs/pages/components/FormSectionCardDoc'))
 const ModalWorkflowDemo = lazy(() => import('./docs/pages/patterns/ModalWorkflowDemo'))
 const HeroHeaderDoc = lazy(() => import('./docs/pages/patterns/HeroHeaderDoc'))
 const HeroBannerDoc = lazy(() => import('./docs/pages/patterns/HeroBannerDoc'))
@@ -86,11 +91,17 @@ export default function App() {
         <Route path="components/toast" element={renderLazyRoute(<ToastDoc />)} />
         <Route path="components/tooltip" element={renderLazyRoute(<TooltipDoc />)} />
         <Route path="components/circular-command-menu" element={renderLazyRoute(<CircularCommandMenuDoc />)} />
+        <Route path="components/app-fips-header-logo" element={renderLazyRoute(<AppFipsHeaderLogoDoc />)} />
+        <Route path="components/scope-segment" element={renderLazyRoute(<ScopeSegmentDoc />)} />
+        <Route path="components/location-pin-buttons" element={renderLazyRoute(<LocationPinButtonsDoc />)} />
+        <Route path="components/photo-evidence-dropzone" element={renderLazyRoute(<PhotoEvidenceDropzoneDoc />)} />
+        <Route path="components/form-section-card" element={renderLazyRoute(<FormSectionCardDoc />)} />
         <Route path="motion/brand-loader" element={renderLazyRoute(<BrandLoaderDoc />)} />
         <Route path="patterns/application-shell" element={renderLazyRoute(<ApplicationShellDemo />)} />
         <Route path="patterns/dashboard" element={renderLazyRoute(<DashboardDemo />)} />
         <Route path="patterns/data-listing" element={renderLazyRoute(<DataListingDemo />)} />
         <Route path="patterns/form-workspace" element={renderLazyRoute(<FormWorkspaceDemo />)} />
+        <Route path="patterns/opa-gestao-ui" element={<Navigate to="/docs/components/app-fips-header-logo" replace />} />
         <Route path="patterns/modal-workflow" element={renderLazyRoute(<ModalWorkflowDemo />)} />
         <Route path="patterns/hero" element={renderLazyRoute(<HeroHeaderDoc />)} />
         <Route path="patterns/hero-banner" element={renderLazyRoute(<HeroBannerDoc />)} />

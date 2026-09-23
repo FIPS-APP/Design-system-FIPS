@@ -15,6 +15,7 @@ import { Button } from '../components/ui/button'
 import { Toaster } from 'sonner'
 import { docHeaderBarTabs, docHeaderBarTop, docHeaderShellBorder } from '../lib/docHeaderChrome'
 import { useFipsTheme } from '../hooks/useFipsTheme'
+import { AppFipsHeaderLogo } from '../components/composites/AppFipsHeaderLogo'
 import { GuidedTour } from '../components/domain/GuidedTour'
 import { useTour } from '../hooks/useTour'
 import { DS_TOUR_STEPS, DS_TOUR_STORAGE_KEY } from '../data/tourSteps'
@@ -191,6 +192,7 @@ export function DocLayout() {
                     strokeWidth={1.9}
                   />
                 </DocHeaderNeuIconButton>
+                <AppFipsHeaderLogo theme={dark ? 'dark' : 'light'} className="hidden sm:block" />
                 <DocHeaderPageTrail groupLabel={currentGroupLabel} pageTitle={title} dark={dark} />
               </div>
               <div className="hidden w-full max-w-xs md:block" data-tour-step="busca">
