@@ -5,7 +5,7 @@ import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/C
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { Button } from '../../../components/ui/button'
-import { PageHero, PAGE_HERO_DEFAULT_DECORATION } from '../../../composites/PageHero'
+import { PageHero } from '../../../composites/PageHero'
 import { cn } from '../../../lib/cn'
 
 const HOME_BACKGROUND = '/backgrounds/app-shell-home-trains.png'
@@ -224,7 +224,7 @@ export default function HeroHeaderDoc() {
         <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>PageHero — faixa de módulo (não é este padrão)</h2>
         <p style={{ fontSize: 14, color: '#7B8C96', marginBottom: 16, lineHeight: 1.55 }}>
           Produção, Governança e demais telas internas usam esta faixa azul padrão — não o header glass da
-          Home. O trem/trilhos vêm da mesma arte base ({PAGE_HERO_DEFAULT_DECORATION}). Clique para copiar o código.
+          Home. A faixa é só o gradiente institucional: a arte de trem saiu do hero em 0.13.0. Clique para copiar o código.
         </p>
         <Copyable label="PageHero Faixa" code={codePageHeroFaixa()} preview={
           <div style={{ background: 'linear-gradient(135deg, #002A68 0%, #004B9B 100%)', borderRadius: 12, padding: '24px 20px', color: '#fff', fontFamily: "'Saira Expanded', sans-serif", fontSize: 14 }}>
@@ -237,7 +237,7 @@ export default function HeroHeaderDoc() {
                 <p className="text-xs font-medium uppercase tracking-wide text-white/70">Exemplo</p>
                 <h3 className="mt-1 font-heading text-xl font-semibold text-white">Faixa de módulo (PageHero)</h3>
                 <p className="mt-2 max-w-md text-sm text-white/80">
-                  Gradiente institucional + imagem sutil à direita. Detalhes em Padrão: Dashboard.
+                  Gradiente institucional. Detalhes em Padrão: Dashboard.
                 </p>
               </div>
             </PageHero>

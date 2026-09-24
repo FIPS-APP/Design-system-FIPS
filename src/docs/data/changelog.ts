@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.13.0',
+    date: '2026-09-21',
+    title: 'PageHero passa a ser só o gradiente',
+    entries: [
+      { type: 'breaking', description: 'PageHero perde as props `decorationSrc` e `showTrainSilhouette`, e a constante `PAGE_HERO_DEFAULT_DECORATION` deixa de ser exportada. Quem passava qualquer uma delas precisa remover a prop; quem quiser arte no topo desenha no children.' },
+      { type: 'improvement', description: 'A faixa de módulo fica só com o gradiente institucional. A foto entrava apenas na faixa direita (min(65vw,580px), object-right) e, em hero baixo, a borda esquerda dela virava uma emenda reta no meio do gradiente; a silhueta SVG lia como um vulto chapado no canto.' },
+    ],
+  },
+  {
     version: '0.12.6',
     date: '2026-09-11',
     title: 'Tutorial da doc do Modal passa a ser o TutorialOverlay real',
