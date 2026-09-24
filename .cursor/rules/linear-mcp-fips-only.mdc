@@ -1,0 +1,13 @@
+---
+description: Linear MCP só neste repo (Design System FIPS). Nunca usar Linear para Tecnopano ou outros produtos.
+alwaysApply: true
+---
+
+# Linear MCP — escopo FIPS (Design System)
+
+- **Usar Linear MCP apenas** quando o workspace aberto for **Design-system-FIPS** (`FIPS-APP/Design-system-FIPS`).
+- **Time / produto padrão:** issues e updates do **Design System FIPS** (não Tecnopano, não OPA app, não Suprimentos).
+- Ao criar issue ou comentário, título deve deixar claro: `DS-FIPS` ou `Design System FIPS`.
+- Conteúdo de entrega: apontar commit/PR no GitHub `FIPS-APP/Design-system-FIPS` e versão semver da doc (`DocLayout` / changelog).
+- **Proibido** abrir ou alterar issues de outros workspaces Linear (ex. Tecnopano) a partir desta doc.
+- Se o MCP Linear não estiver autenticado, pedir ao dono conectar em **Cursor Settings → MCP → linear** neste projeto e usar o handoff em `docs/specs/linear-update-*.md` até auth OK.
