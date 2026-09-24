@@ -25,6 +25,43 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.14.0',
+    date: '2026-09-24',
+    title: 'Padrão Filtro, anexos Registro (pin + fotos) e paridade OPA nos composites',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Página `/docs/patterns/filtro`: spec completa (toolbar ListingFilterToolbar, FilterDrawer 400px, chips, catálogo 15 dimensões, anti-patterns). Hero navy + seções alinhadas a Data Listing. Spec escrita em `docs/specs/pattern-filtro.md`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Composites exportados: `ListingFilterToolbar`, `FilterDrawer`, `PillGroup`, `PillFilter`, `ScopeSegment` na toolbar, `ActiveFilterChips` documentados no pacote.',
+      },
+      {
+        type: 'fix',
+        description:
+          '§08 Fluxo de dados: separado pipeline B (Período → Busca → Alçada → Drawer) de consumidores paralelos (KPIs/tabela/gráficos) e ordem UI vs layout — correção pós-review.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Anexo Registro no DS: `LocationPinButtons` em Select `#location-pin-buttons`; `PhotoEvidenceDropzone` + `FormSectionCard` em Input `#photo-evidence-dropzone` e Form Workspace (seções 3–4).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Paridade byte a byte OPA em fotos: `alt` «Foto do OPA», erro via `Alert tone="danger" size="xs"`, botão Ver sempre visível, `Lightbox` interno quando `onViewPhoto` omitido. `Alert` e `Lightbox` entraram no pacote.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Data Listing §06: regra da toolbar cita Alçada entre Filtros e Busca. Tutorial contextual `filtro` inclui passo do fluxo.',
+      },
+    ],
+  },
+  {
     version: '0.12.6',
     date: '2026-09-11',
     title: 'Tutorial da doc do Modal passa a ser o TutorialOverlay real',

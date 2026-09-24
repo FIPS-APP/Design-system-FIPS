@@ -2,7 +2,7 @@ import type { HTMLAttributes, ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 
-/** Cabeçalho numerado de seção (padrão Registro OPA / formulários densos). */
+/** Cabeçalho numerado de seção (formulários densos). */
 export function FormSectionHeader({
   num,
   title,
@@ -39,7 +39,7 @@ export function FormSectionHeader({
   )
 }
 
-/** Card de seção — cantos assimétricos, borda e sombra leve (Registro OPA). */
+/** Card de seção — cantos assimétricos, borda e sombra leve. */
 export function FormSectionCard({
   className,
   children,

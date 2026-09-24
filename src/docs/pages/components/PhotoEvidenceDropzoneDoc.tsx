@@ -34,7 +34,11 @@ export default function PhotoEvidenceDropzoneDoc() {
             hint="Opcional · JPG, PNG, WebP, HEIC · até 10 MB cada"
             Icon={ImagePlus}
           />
-          <PhotoEvidenceDropzone urls={urls} onAddFiles={add} onRemove={remove} />
+          <PhotoEvidenceDropzone
+            urls={urls}
+            onAddFiles={add}
+            onRemove={remove}
+          />
         </FormSectionCard>
         <p className="mt-3 text-xs text-[var(--color-fg-muted)]">
           Doc canônica:{' '}

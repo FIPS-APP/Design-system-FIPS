@@ -60,6 +60,19 @@ export {
   type ActiveFilterChipsProps,
 } from './components/composites/ActiveFilterChips'
 export {
+  FilterDrawer,
+  type FilterGroup,
+  type FilterChip,
+} from './components/composites/FilterDrawer'
+export { PillFilter, type PillOption } from './components/composites/PillFilter'
+export { PillGroup } from './components/composites/PillGroup'
+export {
+  ListingFilterToolbar,
+  LISTING_PERIOD_PRESETS,
+  type ListingFilterToolbarProps,
+  type ListingPeriodPreset,
+} from './components/composites/ListingFilterToolbar'
+export {
   AppFipsHeaderLogo,
   type AppFipsHeaderLogoProps,
 } from './components/composites/AppFipsHeaderLogo'
@@ -79,4 +92,6 @@ export {
   PhotoEvidenceDropzone,
   type PhotoEvidenceDropzoneProps,
 } from './components/composites/PhotoEvidenceDropzone'
+export { Alert, type AlertProps } from './components/composites/Alert'
+export { Lightbox, type LightboxProps } from './components/composites/Lightbox'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'

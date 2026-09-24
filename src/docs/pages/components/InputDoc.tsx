@@ -949,27 +949,29 @@ input::placeholder { color: #7B8C96; }
         <Section
           id="photo-evidence-dropzone"
           number="10"
-          title="Fotos / evidências (upload) — Gestão OPA"
-          desc="Dropzone tracejado, grid de thumbnails e tile Adicionar. JPG, PNG, WebP, HEIC até 10 MB. Composite: PhotoEvidenceDropzone (seção 4 do Registro OPA)."
+          title="Fotos / evidências (upload)"
+          desc="Dropzone tracejado, grid de thumbnails e tile Adicionar. JPG, PNG, WebP, HEIC até 10 MB. Use dentro de FormSectionCard com FormSectionHeader numerado."
         >
-          <Card>
-            <FormSectionCard>
+          <FormSectionCard>
               <FormSectionHeader
                 num={4}
                 title="Fotos / Evidências"
                 hint="Opcional · JPG, PNG, WebP, HEIC · até 10 MB cada"
                 Icon={ImagePlus}
               />
-              <PhotoEvidenceDropzone urls={evidenceUrls} onAddFiles={addEvidenceFiles} onRemove={removeEvidence} />
-            </FormSectionCard>
-            <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: "16px 0 0", lineHeight: 1.55, fontFamily: F.body }}>
-              Padrão completo:{" "}
-              <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
-                Form Workspace
-              </a>
-              .
-            </p>
-          </Card>
+              <PhotoEvidenceDropzone
+                urls={evidenceUrls}
+                onAddFiles={addEvidenceFiles}
+                onRemove={removeEvidence}
+              />
+          </FormSectionCard>
+          <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: "12px 0 0", lineHeight: 1.55, fontFamily: F.body }}>
+            Padrão completo:{" "}
+            <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+              Form Workspace
+            </a>
+            .
+          </p>
         </Section>
 
         <Section number="11" title="Modo Dark" desc="Comportamento e tokens do componente no tema escuro. O DS-FIPS garante consistência visual em ambos os modos — claro e escuro.">

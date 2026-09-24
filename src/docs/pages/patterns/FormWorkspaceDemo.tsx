@@ -587,7 +587,7 @@ export default function FormWorkspaceDemo() {
               {/* FormSectionCard + LocationPinButtons + PhotoEvidenceDropzone — ver Componentes */}
               <FormSectionCard>
                 <FormSectionHeader num={3} title="Dados do Envolvido" Icon={Workflow} />
-                <div className="grid grid-cols-1 gap-2.5">
+                <div className="mb-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)]">
                   <Field inset="control" density="compact">
                     <FieldLabel required>Local de Atividade</FieldLabel>
                     <LocationPinButtons

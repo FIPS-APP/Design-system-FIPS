@@ -40,6 +40,7 @@ const ModalWorkflowDemo = lazy(() => import('./docs/pages/patterns/ModalWorkflow
 const HeroHeaderDoc = lazy(() => import('./docs/pages/patterns/HeroHeaderDoc'))
 const HeroBannerDoc = lazy(() => import('./docs/pages/patterns/HeroBannerDoc'))
 const ConfiguracoesDemo = lazy(() => import('./docs/pages/patterns/ConfiguracoesDemo'))
+const FiltroDemo = lazy(() => import('./docs/pages/patterns/FiltroDemo'))
 const LoginClaudeLab = lazy(() => import('./docs/pages/LoginClaudeLab'))
 function RouteFallback() {
   return (
@@ -110,6 +111,7 @@ export default function App() {
         <Route path="patterns/application-shell" element={renderLazyRoute(<ApplicationShellDemo />)} />
         <Route path="patterns/dashboard" element={renderLazyRoute(<DashboardDemo />)} />
         <Route path="patterns/data-listing" element={renderLazyRoute(<DataListingDemo />)} />
+        <Route path="patterns/filtro" element={renderLazyRoute(<FiltroDemo />)} />
         <Route path="patterns/form-workspace" element={renderLazyRoute(<FormWorkspaceDemo />)} />
         <Route path="patterns/opa-gestao-ui" element={<Navigate to="/docs/components/header#header-app-fips-logo" replace />} />
         <Route path="patterns/modal-workflow" element={renderLazyRoute(<ModalWorkflowDemo />)} />

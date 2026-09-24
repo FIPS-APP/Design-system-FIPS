@@ -50,6 +50,7 @@ export function routeToPageName(path: string): string {
     "patterns/application-shell": "application-shell",
     "patterns/dashboard": "dashboard",
     "patterns/data-listing": "data-listing",
+    "patterns/filtro": "filtro",
     "patterns/form-workspace": "form-workspace",
     "patterns/modal-workflow": "modal-workflow",
     "patterns/hero": "hero",

@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
+import { MapPin, Workflow } from 'lucide-react'
+import { FormSectionCard, FormSectionHeader } from '../../../components/composites/FormSectionCard'
 import { LocationPinButtons } from '../../../components/composites/LocationPinButtons'
 import { Field, FieldLabel } from '../../../components/ui/field'
+import { Select } from '../../../components/ui/select'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -1928,22 +1931,55 @@ input::placeholder{color:${C.textLight}}
         <Section
           id="location-pin-buttons"
           n="01-G"
-          title="Local de atividade (pin) — Gestão OPA"
-          desc="Tipo de seleção para poucas opções fixas com ícone MapPin (ex.: Guarujá | Santos). Não substitui Select encadeado de sublocal. Composite: LocationPinButtons."
+          title="Local de atividade (pin)"
+          desc="Poucas opções fixas: botões sm primary/outline com Check ou MapPin. Acima do limite use Select compacto. Encadeie local e sublocal com Select."
         >
-          <Card mob={mob}>
-            <Field inset="control" density="compact">
-              <FieldLabel required>Local de Atividade</FieldLabel>
-              <LocationPinButtons options={['Guarujá', 'Santos']} value={cidadeOpa} onChange={setCidadeOpa} />
-            </Field>
-            <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: '16px 0 0', lineHeight: 1.55, fontFamily: F.body }}>
-              Contexto de formulário:{' '}
-              <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
-                Form Workspace
-              </a>
-              .
-            </p>
-          </Card>
+          <FormSectionCard>
+            <FormSectionHeader num={3} title="Dados do Envolvido" Icon={Workflow} />
+            <div className="mb-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)]">
+              <Field inset="control" density="compact">
+                <FieldLabel required>Local de Atividade</FieldLabel>
+                <LocationPinButtons options={['Guarujá', 'Santos']} value={cidadeOpa} onChange={setCidadeOpa} />
+              </Field>
+              <Field inset="control" density="compact">
+                <FieldLabel required>Local da Atividade/Ocorrido</FieldLabel>
+                <Select
+                  density="compact"
+                  leftIcon={<MapPin aria-hidden />}
+                  placeholder={cidadeOpa ? 'Selecione o local' : 'Selecione a cidade primeiro'}
+                  value=""
+                  onChange={() => {}}
+                  options={
+                    cidadeOpa === 'Guarujá'
+                      ? [{ value: 'terminal', label: 'Terminal' }]
+                      : cidadeOpa === 'Santos'
+                        ? [{ value: 'cais', label: 'Cais' }]
+                        : []
+                  }
+                  disabled={!cidadeOpa}
+                />
+              </Field>
+              <Field inset="control" density="compact">
+                <FieldLabel>Sub Local da Atividade/Ocorrido</FieldLabel>
+                <Select
+                  density="compact"
+                  leftIcon={<MapPin aria-hidden />}
+                  placeholder="Selecione o local primeiro"
+                  value=""
+                  onChange={() => {}}
+                  options={[]}
+                  disabled
+                />
+              </Field>
+            </div>
+          </FormSectionCard>
+          <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55, fontFamily: F.body }}>
+            Contexto completo:{' '}
+            <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+              Form Workspace
+            </a>
+            .
+          </p>
         </Section>
 
         <Section n="02" title="Guia de uso por tipo" desc="Significado, regras e exemplos FIPS para cada componente de seleção.">

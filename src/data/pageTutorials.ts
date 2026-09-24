@@ -244,6 +244,16 @@ export const PAGE_TUTORIALS: Record<string, PageTutorialStep[]> = {
     { title: "Estrutura do Data Listing", description: "Sequência obrigatória:\n1) Header azul (ícone + título + subtítulo + ação primária)\n2) 4 Cards KPI com tendência\n3) Toolbar (busca + filtros + colunas)\n4) Tabela com ordenação, seleção, badges, ações e paginação\n\nUse sempre que precisar listar dados com ações.", target: s(1) },
   ],
 
+  filtro: [
+    { title: "Padrão: Filtro", description: "Especificação da toolbar (card FIPS) + drawer FilterDrawer + chips ActiveFilterChips. Spec: docs/specs/pattern-filtro.md." },
+    { title: "01 · Preview", description: "Toolbar ao vivo: Filtros, Alçada, Busca, Período, Export. Abra Filtros para o drawer completo com 7 pills + 8 ChipSelect.", target: s(1) },
+    { title: "02–04 · Toolbar e drawer", description: "Seções 02–04: tokens do card (padding 14×18, gap 10), ordem fixa dos slots (UI), anatomia do DrawerHero/miolo/rodapé.", target: s(2) },
+    { title: "05 · Dimensões", description: "Tabela pills vs ChipSelect — catálogo de 15 dimensões, cores semânticas e busca automática ≥10 opções.", target: s(3) },
+    { title: "07 · Chips ativos", description: "ActiveFilterChips: um valor por chip, max 4 visíveis, +N reabre drawer, Limpar a partir de 2.", target: s(4) },
+    { title: "08 · Fluxo de dados", description: "Pipeline B: Período → Busca → Alçada → Drawer. KPIs/tabela/gráficos consomem `filtered` em paralelo — não são passos 5–6 do pipeline. Toolbar (A) e layout do painel (C) são ordens diferentes.", target: s(5) },
+    { title: "10 · Anti-patterns", description: "Sem popover, sem badge «3 filtros», alçada fora do drawer, exports ListingFilterToolbar + FilterDrawer.", target: s(6) },
+  ],
+
   "form-workspace": [
     { title: "Padrão: Form Workspace", description: "Workspace de formulário para fluxos densos." },
     { title: "Estrutura do Form Workspace", description: "Componentes:\n1) Header azul com resumo (obrigatórios, locais, cadeia, RC SAP)\n2) Barra de progresso (% preenchido)\n3) Seções de formulário com Field + controle base\n4) Painel contextual lateral\n\nTodos os campos usam a composição oficial Field.", target: s(1) },

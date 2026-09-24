@@ -1,5 +1,6 @@
-import { MapPin } from 'lucide-react'
+import { Check, MapPin } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { Button } from '../ui/button'
 
 export type LocationPinButtonsProps = {
   options: readonly string[]
@@ -8,49 +9,42 @@ export type LocationPinButtonsProps = {
   /** Rótulo do grupo para leitor de tela */
   ariaLabel?: string
   loading?: boolean
-  loadingLabel?: string
   className?: string
 }
 
-/**
- * Seleção de cidade/local com botões pin (Registro OPA).
- * Não usar Select quando há poucas cidades fixas.
- */
+/** Poucas cidades fixas: botões compactos (primary/outline) com Check ou MapPin. */
 export function LocationPinButtons({
   options,
   value,
   onChange,
   ariaLabel = 'Local de Atividade',
   loading = false,
-  loadingLabel = 'Carregando...',
   className,
 }: LocationPinButtonsProps) {
   return (
-    <div role="group" aria-label={ariaLabel} className={cn('flex flex-wrap gap-2', className)}>
-      {loading ? (
-        <span className="text-[12px] text-[var(--color-fg-muted)]">{loadingLabel}</span>
-      ) : (
-        options.map((label) => {
-          const active = value === label
-          return (
-            <button
-              key={label}
-              type="button"
-              aria-pressed={active}
-              onClick={() => onChange(label)}
-              className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[13px] font-semibold"
-              style={{
-                borderColor: 'var(--color-primary)',
-                color: active ? '#fff' : 'var(--color-primary)',
-                background: active ? 'var(--color-primary)' : 'var(--color-surface)',
-              }}
-            >
-              <MapPin className="h-3.5 w-3.5" aria-hidden />
-              {label}
-            </button>
-          )
-        })
-      )}
+    <div
+      role="group"
+      aria-label={ariaLabel}
+      className={cn('flex min-h-8 flex-wrap items-center gap-2', className)}
+    >
+      {loading
+        ? null
+        : options.map((c) => {
+            const escolhida = value === c
+            return (
+              <Button
+                key={c}
+                type="button"
+                size="sm"
+                variant={escolhida ? 'primary' : 'outline'}
+                aria-pressed={escolhida}
+                onClick={() => onChange(c)}
+              >
+                {escolhida ? <Check aria-hidden /> : <MapPin aria-hidden />}
+                {c}
+              </Button>
+            )
+          })}
     </div>
   )
 }
