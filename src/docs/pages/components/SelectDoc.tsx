@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
+import { LocationPinButtons } from '../../../components/composites/LocationPinButtons'
+import { Field, FieldLabel } from '../../../components/ui/field'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -1298,9 +1300,21 @@ function DSSegmented({
 }
 
 /* ═══════════════════════════════════════════ LAYOUT (mesmo padrão que ProgressDoc) ═══════════════════════════════════════════ */
-function Section({ n, title, desc, children }: { n: string; title: string; desc: string; children: ReactNode }) {
+function Section({
+  id,
+  n,
+  title,
+  desc,
+  children,
+}: {
+  id?: string
+  n: string
+  title: string
+  desc: string
+  children: ReactNode
+}) {
   return (
-    <section style={{ marginBottom: 44 }}>
+    <section id={id} style={{ marginBottom: 44, scrollMarginTop: 96 }}>
       <div
         style={{
           fontSize: 10,
@@ -1557,10 +1571,22 @@ export function DSSelect({
 /* ═══════════════════════════════════════════ MAIN (padrão ProgressDoc: mob / tab / xl / xxl) ═══════════════════════════════════════════ */
 export default function SelectDoc() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+  const [cidadeOpa, setCidadeOpa] = useState<string | null>(null)
   useEffect(() => {
     const h = () => setW(window.innerWidth)
     window.addEventListener('resize', h)
     return () => window.removeEventListener('resize', h)
+  }, [])
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const scrollToHash = () => {
+      const id = window.location.hash.replace(/^#/, '')
+      if (!id) return
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    }
+    scrollToHash()
+    window.addEventListener('hashchange', scrollToHash)
+    return () => window.removeEventListener('hashchange', scrollToHash)
   }, [])
   const mob = w < 640
   const tab = w < 900
@@ -1896,6 +1922,27 @@ input::placeholder{color:${C.textLight}}
                 </span>
               ))}
             </div>
+          </Card>
+        </Section>
+
+        <Section
+          id="location-pin-buttons"
+          n="01-G"
+          title="Local de atividade (pin) — Gestão OPA"
+          desc="Tipo de seleção para poucas opções fixas com ícone MapPin (ex.: Guarujá | Santos). Não substitui Select encadeado de sublocal. Composite: LocationPinButtons."
+        >
+          <Card mob={mob}>
+            <Field inset="control" density="compact">
+              <FieldLabel required>Local de Atividade</FieldLabel>
+              <LocationPinButtons options={['Guarujá', 'Santos']} value={cidadeOpa} onChange={setCidadeOpa} />
+            </Field>
+            <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: '16px 0 0', lineHeight: 1.55, fontFamily: F.body }}>
+              Contexto de formulário:{' '}
+              <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+                Form Workspace
+              </a>
+              .
+            </p>
           </Card>
         </Section>
 

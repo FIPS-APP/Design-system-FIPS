@@ -1363,8 +1363,29 @@ export default function SidebarDoc() {
         <Section
           n="01"
           title="Playground interativo"
-          desc="Navegue pelos itens: rota ativa simulada, submenus, badges, tooltip no colapsado e Modo menu."
+          desc="Navegue pelos itens: rota ativa simulada, submenus, badges, tooltip no colapsado e Modo menu. A marca App FIPS no topo do painel é o lockup principal no desktop; abaixo de lg ela migra para o header — ver Marca e responsivo."
         >
+          <Card mob={mob} s={{ marginBottom: 16, padding: mob ? 14 : 18, background: C.bg, border: `1px solid ${C.cardBorder}` }}>
+            <div id="sidebar-marca-responsiva" style={{ ...gl, marginTop: 0, scrollMarginTop: 96 }}>
+              Marca e responsivo (Gestão OPA)
+            </div>
+            <p style={{ ...gt, marginBottom: 8 }}>
+              <strong>Desktop (lg+, ≥1024px):</strong> a sidebar permanece na tela. No topo dela ficam o wordmark expandido (~52px de altura) ou o
+              símbolo 36×36 no rail recolhido — o header da página <strong>não</strong> repete a logo.
+            </p>
+            <p style={{ ...gt, marginBottom: 8 }}>
+              <strong>Responsivo (&lt; lg):</strong> o drawer lateral fica fora da tela; a assinatura App FIPS passa para o header, entre o
+              hambúrguer e o trilho (<code style={gk}>AppFipsHeaderLogo</code> com <code style={gk}>lg:hidden</code>). Paridade com Gestão OPA e{' '}
+              <code style={gk}>DocLayout</code>.
+            </p>
+            <p style={{ ...gt, margin: 0, fontSize: 12, color: C.textMuted }}>
+              Detalhe do composite:{' '}
+              <a href="/docs/components/header#header-app-fips-logo" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+                Header → marca responsiva
+              </a>
+              .
+            </p>
+          </Card>
           <Card mob={mob}>
             <SidebarCtx.Provider value={{ collapsed }}>
               <div
@@ -1436,8 +1457,10 @@ export default function SidebarDoc() {
                 <p style={gt}>Componente visual reutilizado por todos os itens e pelo trigger do Modo menu. Gerencia gradiente 3D, specular highlight e shimmer via props (isActive, hovered, shimmerLoop).</p>
                 <div style={gl}>Camada 4 — Integração app</div>
                 <p style={gt}>
-                  Conecta roteador, permissões e telemetria (analytics/eventos) sem acoplar regra de negócio ao JSX do item. O header da
-                  sidebar trata marca e título como lockup separado dos tiles 36×36 dos itens (wordmark expandido vs símbolo colapsado).
+                  Conecta roteador, permissões e telemetria (analytics/eventos) sem acoplar regra de negócio ao JSX do item. O topo da sidebar
+                  trata marca e título como lockup separado dos tiles 36×36 (wordmark expandido vs símbolo colapsado). Abaixo de{' '}
+                  <code style={gk}>lg</code>, com o drawer oculto, o mesmo papel visual da marca é assumido pelo header via{' '}
+                  <code style={gk}>AppFipsHeaderLogo</code> — não duplicar logo nos dois lugares na mesma viewport.
                 </p>
               </div>
             </div>
@@ -1556,8 +1579,8 @@ export default function SidebarDoc() {
                 <p style={gt}>- Dialog de Modo menu usa max-w-lg, rounded-2xl, overlay, botão X (padrão DS).</p>
                 <p style={gt}>- Sem overflow horizontal no container principal e no nav rolável.</p>
                 <p style={gt}>
-                  - Marca no header: wordmark legível expandido (altura ~52px, largura proporcional); ícone compacto colapsado (36×36),
-                  fundos PNG transparentes.
+                  - Marca na sidebar (desktop): wordmark legível expandido (altura ~52px); ícone 36×36 no rail; PNG transparente. Marca no header
+                  só &lt; lg (ver seção 01).
                 </p>
               </div>
             </div>

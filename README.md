@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.12.6`
+## Versão atual: `v0.13.0`
 
 ## Consumindo a biblioteca
 
@@ -112,6 +112,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 | 0.11.9 | 2026-07-28 | Removida a função de copiar da Seção 01 (Variantes do sistema) de `/docs/components/button` — os 10 botões (Primário…Link) viram preview puro. Removida a função `variantCode` (geradora do código copiado, sem outros usos) e o texto "Clique em qualquer botão para copiar o código" |
 | 0.11.8 | 2026-07-28 | Removida a função de copiar dos cards da Paleta principal (`/docs/foundations/colors`): wrapper `Copyable` e botão `CopyHex`. Como efeito colateral positivo, os cards passam a preencher a célula do grid (antes encolhiam pro tamanho do texto, com larguras irregulares de 135–189px em células de 329px) |
 | 0.11.7 | 2026-07-28 | Removido o badge "Preferências" do hero de `/docs/patterns/configuracoes` (`PatternPanelHero`, props `badgePill`/`badge`) |
+| 0.13.0 | 2026-09-24 | Doc shell alinhado ao Gestão OPA (abaixo de lg: hambúrguer + `appfips-logo-full` + trilho; desktop: PanelLeft + marca na sidebar). Composites OPA embutidos nos menus de doc (Card, Header, Select, Input, Data Listing); redirects das rotas avulsas; tour sem passo de busca; `ScopeSegment`/`FipsTabBar`/`AppFipsHeaderLogo` atualizados |
 | 0.11.6 | 2026-07-28 | Removidas as páginas de padrão "Relatórios operacionais" e "Export modal" (rotas, nav, lazy imports, mapeamento do tutorial contextual) e o link cruzado quebrado que sobrava em Modal Radix. Não afeta os composites `ExportModal`/`ExportPreviewModal`, que seguem em uso normal (Data Listing, Modal Radix, botão "Exportação" do Modal legado) |
 | 0.11.5 | 2026-07-28 | Pill group Tudo/Tabela/Expandida do `ExportPreviewModal` reduzido: 264×41 → 216×31 (botões `px-3 py-1.5 text-[11px]`→`px-2 py-1 text-[10px]`, ícone 12→11px, container `p-1`→`p-0.5`) |
 | 0.11.4 | 2026-07-28 | Fileira Tudo/Tabela/Expandida do `ExportPreviewModal` mais compacta: seção 70px → 58px (padding `py-3`→`py-2`, botões `px-4 py-2`→`px-3 py-1.5`, ícone 13→12px) |

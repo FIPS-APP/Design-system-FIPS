@@ -37,7 +37,15 @@ export default function PhotoEvidenceDropzoneDoc() {
           <PhotoEvidenceDropzone urls={urls} onAddFiles={add} onRemove={remove} />
         </FormSectionCard>
         <p className="mt-3 text-xs text-[var(--color-fg-muted)]">
-          Exemplo em página: <a href="/docs/patterns/form-workspace" className="font-semibold text-[var(--color-primary)]">Form Workspace</a>.
+          Doc canônica:{' '}
+          <a href="/docs/components/input#photo-evidence-dropzone" className="font-semibold text-[var(--color-primary)]">
+            Input → Fotos / evidências
+          </a>
+          . Padrão:{' '}
+          <a href="/docs/patterns/form-workspace" className="font-semibold text-[var(--color-primary)]">
+            Form Workspace
+          </a>
+          .
         </p>
       </DemoSection>
     </DocPage>

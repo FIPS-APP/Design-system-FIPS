@@ -14,7 +14,7 @@ export const DS_TOUR_STEPS: TourStep[] = [
     target: null,
     title: 'Bem-vindo ao Design System FIPS',
     content:
-      'Este é o portal vivo do DS — tokens, componentes e padrões oficiais da FIPS. Em 4 passos rápidos eu te mostro como navegar e configurar a experiência.',
+      'Este é o portal vivo do DS — tokens, componentes e padrões oficiais da FIPS. Em 3 passos rápidos eu te mostro como navegar e configurar a experiência.',
   },
   {
     id: 'nav-lateral',
@@ -24,14 +24,6 @@ export const DS_TOUR_STEPS: TourStep[] = [
       'Fundamentos, Componentes e Padrões ficam no menu lateral. Cada grupo expande nos seus itens — é por aqui que você explora todo o sistema.',
     placement: 'right',
     requiresSidebar: true,
-  },
-  {
-    id: 'busca',
-    target: 'busca',
-    title: 'Busca rápida',
-    content:
-      'Encontre qualquer token, componente ou página direto pela busca, sem precisar rolar o menu.',
-    placement: 'bottom',
   },
   {
     id: 'menu-auto',

@@ -28,11 +28,6 @@ import {
   MonitorSmartphone,
   Cpu,
   CircleDot,
-  Globe2,
-  MapPin,
-  ImagePlus,
-  Layers2,
-  BadgeCheck,
 } from 'lucide-react'
 
 export type NavItem = {
@@ -109,11 +104,6 @@ export const navGroups: NavGroup[] = [
       { label: 'Modal', to: '/docs/components/dialog', icon: ScanText },
       { label: 'Drawer', to: '/docs/components/drawer', icon: PanelLeft },
       { label: 'Header', to: '/docs/components/header', icon: PanelTop },
-      { label: 'Marca App FIPS', to: '/docs/components/app-fips-header-logo', icon: BadgeCheck },
-      { label: 'Recorte de área', to: '/docs/components/scope-segment', icon: Globe2 },
-      { label: 'Local (pin)', to: '/docs/components/location-pin-buttons', icon: MapPin },
-      { label: 'Fotos / evidências', to: '/docs/components/photo-evidence-dropzone', icon: ImagePlus },
-      { label: 'Card de seção', to: '/docs/components/form-section-card', icon: Layers2 },
       { label: 'Sidebar', to: '/docs/components/sidebar', icon: PanelLeft },
       { label: 'Toast', to: '/docs/components/toast', icon: Sparkles },
       { label: 'Tooltip', to: '/docs/components/tooltip', icon: MousePointer2 },

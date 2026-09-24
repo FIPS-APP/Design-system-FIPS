@@ -15,7 +15,6 @@ import { DocHeaderNeuIconButton } from './DocHeaderNeuIconButton'
 export { DocHeaderNeuIconButton } from './DocHeaderNeuIconButton'
 import { DocHeaderPageTrail } from './DocHeaderPageTrail'
 import { AppFipsHeaderLogo } from '../composites/AppFipsHeaderLogo'
-import { SearchPill } from './SearchPill'
 import { UserChip } from './UserChip'
 
 /** Camada de arte + gradientes (light mode — hero com lavagem clara). */
@@ -51,6 +50,8 @@ export type DocHeaderStandardPreviewProps = {
   footer?: ReactNode
   withCardChrome?: boolean
   dark?: boolean
+  /** Doc real: logo no header só abaixo de lg (`DocLayout`); preview usa true por padrão. */
+  showHeaderLogo?: boolean
 }
 
 /**
@@ -65,6 +66,7 @@ export function DocHeaderStandardPreview({
   ),
   withCardChrome = true,
   dark = false,
+  showHeaderLogo = true,
 }: DocHeaderStandardPreviewProps) {
   const inner = (
     <header
@@ -105,17 +107,16 @@ export function DocHeaderStandardPreview({
           >
             <Menu className="h-5 w-5" />
           </Button>
+          {showHeaderLogo ? (
+            <AppFipsHeaderLogo theme={dark ? 'dark' : 'light'} className="h-7 lg:hidden" />
+          ) : null}
+          <DocHeaderNeuIconButton ariaLabel="Recolher menu lateral" dark={dark} className="hidden lg:inline-flex">
+            <PanelLeft className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
+          </DocHeaderNeuIconButton>
           <div className="flex min-w-0 flex-1 items-center gap-2">
-            <DocHeaderNeuIconButton ariaLabel="Recolher menu lateral" dark={dark} className="hidden sm:inline-flex">
-              <PanelLeft className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />
-            </DocHeaderNeuIconButton>
-            <AppFipsHeaderLogo theme={dark ? 'dark' : 'light'} className="hidden sm:block" />
             <DocHeaderPageTrail groupLabel={groupLabel} pageTitle={pageTitle} dark={dark} />
           </div>
-          <div className="hidden w-full max-w-xs md:block">
-            <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2 sm:ml-auto">
             <div className="flex shrink-0 items-center gap-2">
               <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
                 <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />

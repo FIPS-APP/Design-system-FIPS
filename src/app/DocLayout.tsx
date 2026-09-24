@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
-import { Bell, BookOpen, GraduationCap, Menu, PanelLeft, SunMoon } from 'lucide-react'
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Bell, BookOpen, GraduationCap, Menu, PanelLeft, SunMoon, X } from 'lucide-react'
 import { cn } from '../lib/cn'
 import { bottomNavItems, navGroups } from '../routes/nav'
 import { DocHeaderHeroBackground, DocHeaderDarkBackground, DocHeaderNeuIconButton } from '../components/layout/DocHeaderStandard'
@@ -8,7 +8,6 @@ import { DocHeaderPageTrail } from '../components/layout/DocHeaderPageTrail'
 import { DocHeaderSectionNav } from '../components/layout/DocHeaderSectionNav'
 import { DocsNeuSidebar } from '../components/layout/DocsNeuSidebar'
 import { ChangelogModal } from '../components/layout/ChangelogModal'
-import { SearchPill } from '../components/layout/SearchPill'
 import { TutorialOverlay, routeToPageName } from '../components/domain/TutorialContextual'
 import { UserChip } from '../components/layout/UserChip'
 import { Button } from '../components/ui/button'
@@ -20,7 +19,7 @@ import { GuidedTour } from '../components/domain/GuidedTour'
 import { useTour } from '../hooks/useTour'
 import { DS_TOUR_STEPS, DS_TOUR_STORAGE_KEY } from '../data/tourSteps'
 
-const DOC_VERSION = 'v0.12.6'
+const DOC_VERSION = 'v0.13.0'
 
 export function DocLayout() {
   const { dark, toggle } = useFipsTheme()
@@ -53,6 +52,8 @@ export function DocLayout() {
   // `collapsed` (toggle "Recolher painel lateral") só existe no header desktop,
   // não deve ditar se o menu mobile mostra texto.
   const sidebarCollapsed = isLg ? collapsed : true
+  /** Marca no header só abaixo de lg (paridade Gestão OPA): drawer fora da tela. Em lg+ a marca fica na sidebar. */
+  const showHeaderLogo = !isLg
 
   // Após a animação de abertura (transform 300ms), re-mede o alvo agora visível —
   // useTour escuta 'resize'. Só emite evento externo, sem setState no effect.
@@ -161,44 +162,39 @@ export function DocLayout() {
                     ? 'border border-[#3F3F46] bg-[#27272A] text-[#E2E2E8] hover:bg-[#323236]'
                     : 'border border-[var(--color-border)]/60 bg-[var(--color-surface)]/90 text-[var(--color-fg)] hover:bg-[var(--color-surface)]',
                 )}
-                onClick={() => setMobileOpen(true)}
-                aria-label="Abrir menu"
+                onClick={() => setMobileOpen((o) => !o)}
+                aria-expanded={effectiveMobileOpen}
+                aria-label={effectiveMobileOpen ? 'Fechar menu' : 'Abrir menu'}
               >
-                <Menu className="h-5 w-5" />
+                {effectiveMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
-              <div className="flex min-w-0 flex-1 items-center gap-2">
-                <DocHeaderNeuIconButton
-                  className="hidden sm:inline-flex"
-                  dark={dark}
-                  ariaLabel={
-                    isLg
-                      ? collapsed
-                        ? 'Expandir painel lateral'
-                        : 'Recolher painel lateral'
-                      : mobileOpen
-                        ? 'Fechar menu'
-                        : 'Abrir menu'
-                  }
-                  aria-controls="docs-app-sidebar"
-                  aria-expanded={isLg ? !collapsed : mobileOpen}
-                  onClick={() => {
-                    if (isLg) setCollapsed((c) => !c)
-                    else setMobileOpen((o) => !o)
-                  }}
+              {showHeaderLogo ? (
+                <Link
+                  to="/docs"
+                  aria-label="App FIPS, ir para a documentação"
+                  className="shrink-0 lg:hidden"
                 >
-                  <PanelLeft
-                    className={cn('h-[17px] w-[17px] transition-transform duration-200', isLg && collapsed && 'rotate-180')}
-                    aria-hidden
-                    strokeWidth={1.9}
-                  />
-                </DocHeaderNeuIconButton>
-                <AppFipsHeaderLogo theme={dark ? 'dark' : 'light'} className="hidden sm:block" />
+                  <AppFipsHeaderLogo theme={dark ? 'dark' : 'light'} className="h-7" />
+                </Link>
+              ) : null}
+              <DocHeaderNeuIconButton
+                className="hidden lg:inline-flex"
+                dark={dark}
+                ariaLabel={collapsed ? 'Expandir painel lateral' : 'Recolher painel lateral'}
+                aria-controls="docs-app-sidebar"
+                aria-expanded={!collapsed}
+                onClick={() => setCollapsed((c) => !c)}
+              >
+                <PanelLeft
+                  className={cn('h-[17px] w-[17px] transition-transform duration-200', collapsed && 'rotate-180')}
+                  aria-hidden
+                  strokeWidth={1.9}
+                />
+              </DocHeaderNeuIconButton>
+              <div className="flex min-w-0 flex-1 items-center gap-2">
                 <DocHeaderPageTrail groupLabel={currentGroupLabel} pageTitle={title} dark={dark} />
               </div>
-              <div className="hidden w-full max-w-xs md:block" data-tour-step="busca">
-                <SearchPill variant="docHeader" dark={dark} aria-label="Buscar na documentação" />
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2 sm:ml-auto">
                 <div className="flex shrink-0 items-center gap-2">
                   <DocHeaderNeuIconButton ariaLabel="Notificações" dark={dark}>
                     <Bell className="h-[17px] w-[17px]" aria-hidden strokeWidth={1.9} />

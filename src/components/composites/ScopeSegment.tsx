@@ -8,19 +8,22 @@ export type ScopeSegmentItem<K extends string> = {
 }
 
 /**
- * Recorte Minha Área / Toda jurisdição na toolbar de listagem.
- * Fundo branco, borda cinza, segmento ativo azul cheio + contador mono.
+ * Alçada Minha Área / Toda jurisdição na toolbar (paridade Gestão OPA /dashboard).
+ * Fundo blue-100, borda primary 1.5px; segmento ativo azul cheio + contador mono.
  */
 export function ScopeSegment<K extends string>({
   value,
   onChange,
   items,
-  label = 'Área',
+  label = 'Alçada',
+  countUnit = 'OPAs',
 }: {
   value: K
   onChange: (key: K) => void
   items: ScopeSegmentItem<K>[]
   label?: string
+  /** Texto do aria-label do contador (ex.: "10 OPAs"). */
+  countUnit?: string
 }) {
   return (
     <div
@@ -30,9 +33,9 @@ export function ScopeSegment<K extends string>({
       style={{
         gap: 2,
         padding: 2,
-        background: 'var(--color-surface)',
+        background: 'var(--color-fips-blue-100)',
         borderRadius: 8,
-        border: '1px solid var(--color-border)',
+        border: '1.5px solid var(--color-primary)',
       }}
     >
       {items.map(({ key, label: itemLabel, Icon, count }) => {
@@ -43,6 +46,7 @@ export function ScopeSegment<K extends string>({
             type="button"
             onClick={() => onChange(key)}
             aria-pressed={isActive}
+            title={`${count} ${countUnit} com os filtros e o período atuais`}
             className="inline-flex items-center transition-all"
             style={{
               gap: 5,
@@ -67,7 +71,7 @@ export function ScopeSegment<K extends string>({
                 color: isActive ? 'rgba(255,255,255,0.75)' : 'var(--color-primary)',
                 opacity: isActive ? 1 : 0.65,
               }}
-              aria-label={`${count} registros`}
+              aria-label={`${count} ${countUnit}`}
             >
               {count}
             </span>

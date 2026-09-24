@@ -189,6 +189,8 @@ export default function TabsDoc(){
 
   const [p1,setP1]=useState(0);
   const [v1,setV1]=useState(0);const [v2,setV2]=useState(0);const [v3,setV3]=useState(0);const [v4,setV4]=useState(0);
+  const [vSeg,setVSeg]=useState("notificacoes");
+  const [fipsTecAwuiTab,setFipsTecAwuiTab]=useState("tecnopano");
   const [sc1,setSc1]=useState(0);const [sc2,setSc2]=useState(0);const [sc3,setSc3]=useState(0);const [sc4,setSc4]=useState(0);
   const [vert,setVert]=useState(0);
   const [cfgTab,setCfgTab]=useState(0);
@@ -229,7 +231,7 @@ export default function TabsDoc(){
         <div style={{position:"relative"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:6,background:`${C.branco}10`,border:`1px solid ${C.branco}18`,borderRadius:20,padding:"5px 14px",fontSize:11,fontWeight:600,letterSpacing:"1.5px",textTransform:"uppercase",color:C.amareloOuro,fontFamily:Fn.title,marginBottom:16}}>{Ic.grid(14,C.amareloOuro)} Design System FIPS</div>
           <h1 style={{fontSize:mob?30:44,fontWeight:700,color:C.branco,margin:"0 0 10px",fontFamily:Fn.title}}>Tabs</h1>
-          <p style={{fontSize:16,color:`${C.branco}B0`,lineHeight:1.6,maxWidth:700,margin:0,fontFamily:Fn.body}}>Navegação por abas com indicador deslizante, hover interativo e transição de conteúdo animada. Quatro variantes para diferentes contextos.</p>
+          <p style={{fontSize:16,color:`${C.branco}B0`,lineHeight:1.6,maxWidth:700,margin:0,fontFamily:Fn.body}}>Navegação por abas com indicador deslizante, hover interativo e transição de conteúdo animada. Cinco variantes para diferentes contextos.</p>
         </div>
       </header>
 
@@ -244,7 +246,7 @@ export default function TabsDoc(){
         </Section>
 
         {/* 02 — VARIANTES */}
-        <Section n="02" title="Variantes visuais" desc="Quatro estilos com hover, transição e destaque forte. Cada variante é interativa — clique nas abas para ver o comportamento.">
+        <Section n="02" title="Variantes visuais" desc="Cinco estilos com hover, transição e destaque forte. Cada variante é interativa — clique nas abas para ver o comportamento.">
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:16,alignItems:"start"}}>
             {/* Underline */}
             <div style={{...gc,borderLeft:`4px solid ${C.azulProfundo}`}}>
@@ -299,6 +301,26 @@ export default function TabsDoc(){
                 <p style={gt}>Configurações, formulários multi-parte, sidebar de navegação vertical.</p>
                 <div style={gl}>Exemplo FIPS</div>
                 <p style={ge}>Seções de configuração; sidebar do App Acesso; formulários multi-step.</p>
+              </div>
+            </div>
+
+            {/* Segmented (FipsTabBar) */}
+            <div style={{...gc,borderLeft:`4px solid ${C.azulProfundo}`,gridColumn:mob?"auto":"1 / -1"}}>
+              <div style={gh}>
+                <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Segmented</span>
+                <code style={gk}>FipsTabBar</code>
+              </div>
+              <div style={gb}>
+                <FipsTabBar tabs={fipsConfigTabs} activeId={vSeg} onChange={setVSeg}/>
+                {vSeg==="notificacoes"&&<TabContent k="vseg-n">Pílulas em card FIPS — aba ativa com borda primary e fundo 15% primary.</TabContent>}
+                {vSeg==="backup"&&<TabContent k="vseg-b">Largura <code style={gk}>w-fit</code> por padrão; ícones opcionais por aba.</TabContent>}
+                {vSeg==="sistema"&&<TabContent k="vseg-s">Radius assimétrico 10/10/10/18 no container; detalhe na seção 05.</TabContent>}
+                <div style={gl}>Significado</div>
+                <p style={gt}>Abas segmentadas dentro de um único card com sombra e borda. Ativo: borda primary, texto primary, peso 700. Inativo: texto muted, hover implícito no clique.</p>
+                <div style={gl}>Quando usar</div>
+                <p style={gt}>Configurações Suprimentos, escopos com poucas abas irmãs, alternância de módulo na mesma shell.</p>
+                <div style={gl}>Exemplo FIPS</div>
+                <p style={ge}>Notificações / Backup / Sistema no App Suprimentos; Tecnopano / awui (seção 05, <code style={gk}>stretch</code>).</p>
               </div>
             </div>
           </div>
@@ -375,7 +397,7 @@ export default function TabsDoc(){
             </div>
             <div style={{background:C.bg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 20px",padding:mob?12:18}}>
               <h3 style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title}}>Configurações do Usuário</h3>
-              <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px"}}>Bordered com navegação lateral (legado). Para Suprimentos use FipsTabBar — seção 05.</p>
+              <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px"}}>Bordered com navegação lateral (legado). Configurações Suprimentos: FipsTabBar — seção 05.</p>
               <div style={{background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:8,padding:12}}>
                 <TabsBordered tabs={[{label:"Perfil",icon:(c)=>Ic.pessoa(12,c)},{label:"Segurança",icon:(c)=>Ic.shield(12,c)},{label:"Notificações",icon:(c)=>Ic.bell(12,c),count:3}]} active={sc4} onChange={setSc4} size="sm"/>
                 {sc4===0&&<TabContent k="env0">Nome, departamento, cargo e foto. Edite suas informações de cadastro.</TabContent>}
@@ -428,13 +450,33 @@ export default function TabsDoc(){
         </Section>
 
         {/* 05 — SEGMENTED (FipsTabBar) */}
-        <Section n="05" title="Segmented — FipsTabBar" desc="Abas em pílulas dentro de um card com radius assimétrico FIPS. Padrão oficial de Configurações no módulo FIPS Suprimentos (notificações, backup, sistema).">
+        <Section n="05" title="Segmented — FipsTabBar" desc="Abas em pílulas dentro de um card com radius assimétrico FIPS. Padrão oficial de Configurações no módulo FIPS Suprimentos. A variante Segmented também está na seção 02.">
           <DSCard mob={mob}>
+            <p style={{fontSize:12,fontWeight:600,color:C.cinzaEscuro,margin:"0 0 10px",fontFamily:Fn.title}}>Configurações Suprimentos</p>
             <FipsTabBar tabs={fipsConfigTabs} activeId={fipsSegTab} onChange={setFipsSegTab}/>
             <div style={{marginTop:16}}>
               {fipsSegTab==="notificacoes"&&<TabContent k="fips-n">Preferências de notificação do escopo — switches por tipo de alerta.</TabContent>}
               {fipsSegTab==="backup"&&<TabContent k="fips-b">Exportação e importação de backup (admin).</TabContent>}
               {fipsSegTab==="sistema"&&<TabContent k="fips-s">Metadados do ambiente e versão do app.</TabContent>}
+            </div>
+          </DSCard>
+          <DSCard mob={mob} s={{marginTop:16}}>
+            <p style={{fontSize:12,fontWeight:600,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title}}>Tecnopano / awui</p>
+            <p style={{fontSize:12,color:C.cinzaChumbo,margin:"0 0 10px",fontFamily:Fn.body}}>
+              Barra em largura fluida (<code style={gk}>stretch</code>), sem largura fixa por aba.
+            </p>
+            <FipsTabBar
+              stretch
+              tabs={[
+                { id: 'tecnopano', label: 'Tecnopano' },
+                { id: 'awui', label: 'awui' },
+              ]}
+              activeId={fipsTecAwuiTab}
+              onChange={setFipsTecAwuiTab}
+            />
+            <div style={{marginTop:16}}>
+              {fipsTecAwuiTab==="tecnopano"&&<TabContent k="tec">Contexto Tecnopano — produção, salas e destinação de lotes.</TabContent>}
+              {fipsTecAwuiTab==="awui"&&<TabContent k="aw">Contexto awui — alternância de escopo ou módulo irmão na mesma shell.</TabContent>}
             </div>
           </DSCard>
           <p style={{fontSize:12,color:C.cinzaChumbo,marginTop:12,fontFamily:Fn.body}}>

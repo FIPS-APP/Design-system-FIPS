@@ -9,7 +9,7 @@ export default function ScopeSegmentDoc() {
   return (
     <DocPage
       title="Recorte de área (ScopeSegment)"
-      description="Segmento Minha Área | Toda jurisdição com ícone e contador, na toolbar de listagem."
+      description="Alçada Minha Área | Toda jurisdição — colada ao botão Filtros na toolbar (Gestão OPA)."
     >
       <DemoSection title="Toolbar de listagem">
         <p className="mb-4 text-sm text-[var(--color-fg-muted)]">
@@ -26,6 +26,7 @@ export default function ScopeSegmentDoc() {
           <ScopeSegment
             value={scope}
             onChange={setScope}
+            label="Alçada"
             items={[
               { key: 'minha', label: 'Minha Área', Icon: User, count: 0 },
               { key: 'todos', label: 'Toda jurisdição', Icon: Globe, count: 97 },
@@ -37,7 +38,11 @@ export default function ScopeSegmentDoc() {
           </div>
         </div>
         <p className="mt-3 text-xs text-[var(--color-fg-muted)]">
-          Contexto de página: <a href="/docs/patterns/data-listing" className="font-semibold text-[var(--color-primary)]">Data Listing</a>.
+          Contexto:{' '}
+          <a href="/docs/patterns/data-listing#scope-segment" className="font-semibold text-[var(--color-primary)]">
+            Padrões → Data Listing → Toolbar
+          </a>
+          .
         </p>
       </DemoSection>
     </DocPage>

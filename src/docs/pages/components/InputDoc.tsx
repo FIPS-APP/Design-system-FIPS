@@ -1,5 +1,8 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import { ImagePlus } from "lucide-react";
 import { CodeExportSection } from '../../components/CodeExport';
+import { FormSectionCard, FormSectionHeader } from "../../../components/composites/FormSectionCard";
+import { PhotoEvidenceDropzone } from "../../../components/composites/PhotoEvidenceDropzone";
 
 /* ═══════════════════════════════════════════
    FIPS DESIGN SYSTEM — BRAND TOKENS
@@ -160,8 +163,8 @@ function DSInput({ label, placeholder, icon, iconRight, type="text", inputMode, 
 }
 
 /* ═══════════════════════════════════════════ LAYOUT HELPERS ═══════════════════════════════════════════ */
-function Section({ number, title, desc, children }: { number: string; title: string; desc: string; children: React.ReactNode }) {
-  return <section style={{ marginBottom: 44 }}><div style={{ fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:F.title,marginBottom:6 }}>{number}</div><h2 style={{ fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:F.title,letterSpacing:"0.5px" }}>{title}</h2><p style={{ fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:F.body }}>{desc}</p>{children}</section>;
+function Section({ id, number, title, desc, children }: { id?: string; number: string; title: string; desc: string; children: React.ReactNode }) {
+  return <section id={id} style={{ marginBottom: 44, scrollMarginTop: 96 }}><div style={{ fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:F.title,marginBottom:6 }}>{number}</div><h2 style={{ fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:F.title,letterSpacing:"0.5px" }}>{title}</h2><p style={{ fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:F.body }}>{desc}</p>{children}</section>;
 }
 function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return <div style={{ background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:"28px",boxShadow:"0 1px 3px rgba(0,75,155,0.04), 0 4px 14px rgba(0,75,155,0.03)",...style }}>{children}</div>;
@@ -375,6 +378,33 @@ export default function InputDoc() {
   const [emailVal, setEmailVal] = useState("consultoriafiscal");
   const [scenarioNome, setScenarioNome] = useState("");
   const [scenarioEmail, setScenarioEmail] = useState("");
+  const [evidenceUrls, setEvidenceUrls] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const scrollToHash = () => {
+      const id = window.location.hash.replace(/^#/, "");
+      if (!id) return;
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    };
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, []);
+
+  const addEvidenceFiles = (files: FileList) => {
+    setEvidenceUrls((prev) => [
+      ...prev,
+      ...Array.from(files)
+        .filter((f) => f.type.startsWith("image/"))
+        .map((f) => URL.createObjectURL(f)),
+    ]);
+  };
+
+  const removeEvidence = (url: string) => {
+    URL.revokeObjectURL(url);
+    setEvidenceUrls((prev) => prev.filter((u) => u !== url));
+  };
 
   return (
     <div style={{ minHeight:"100vh", background:"var(--color-surface-muted)", fontFamily:F.body, color:C.cinzaEscuro }}>
@@ -916,7 +946,33 @@ input::placeholder { color: #7B8C96; }
           </Card>
         </Section>
 
-        <Section number="10" title="Modo Dark" desc="Comportamento e tokens do componente no tema escuro. O DS-FIPS garante consistência visual em ambos os modos — claro e escuro.">
+        <Section
+          id="photo-evidence-dropzone"
+          number="10"
+          title="Fotos / evidências (upload) — Gestão OPA"
+          desc="Dropzone tracejado, grid de thumbnails e tile Adicionar. JPG, PNG, WebP, HEIC até 10 MB. Composite: PhotoEvidenceDropzone (seção 4 do Registro OPA)."
+        >
+          <Card>
+            <FormSectionCard>
+              <FormSectionHeader
+                num={4}
+                title="Fotos / Evidências"
+                hint="Opcional · JPG, PNG, WebP, HEIC · até 10 MB cada"
+                Icon={ImagePlus}
+              />
+              <PhotoEvidenceDropzone urls={evidenceUrls} onAddFiles={addEvidenceFiles} onRemove={removeEvidence} />
+            </FormSectionCard>
+            <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: "16px 0 0", lineHeight: 1.55, fontFamily: F.body }}>
+              Padrão completo:{" "}
+              <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+                Form Workspace
+              </a>
+              .
+            </p>
+          </Card>
+        </Section>
+
+        <Section number="11" title="Modo Dark" desc="Comportamento e tokens do componente no tema escuro. O DS-FIPS garante consistência visual em ambos os modos — claro e escuro.">
           <Card>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
               {[

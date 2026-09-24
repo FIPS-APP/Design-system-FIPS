@@ -5,13 +5,16 @@ export type AppFipsHeaderLogoProps = {
   theme?: 'light' | 'dark'
 }
 
-/** Marca App FIPS no header de app (Gestão OPA): PNG light/dark, altura h-10. */
+/**
+ * Marca App FIPS no header (< lg), paridade Gestão OPA:
+ * claro → assinatura azul `appfips-logo-full`; escuro → lockup branco `appfips-logo`.
+ */
 export function AppFipsHeaderLogo({ className, theme = 'light' }: AppFipsHeaderLogoProps) {
   const isDark = theme === 'dark'
 
   return (
     <img
-      src={isDark ? '/brand/appfips-logo-dark.png' : '/brand/appfips-logo-light.png'}
+      src={isDark ? '/appfips-logo.png' : '/appfips-logo-full.png'}
       alt="App FIPS"
       className={cn('h-10 w-auto shrink-0 object-contain', className)}
     />

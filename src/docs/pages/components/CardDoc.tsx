@@ -1,5 +1,6 @@
 import { useState, useEffect, useId } from "react";
 import {
+  Tag,
   ClipboardList,
   CheckCircle2,
   Clock3,
@@ -20,6 +21,7 @@ import { StatsCard, StatsCardGrid } from '../../../components/composites/StatsCa
 import { HowItWorksCard, HowItWorksGrid } from '../../../components/composites/HowItWorksCard';
 import { RuleTile, RuleTileGrid } from '../../../components/composites/RuleTile';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { FormSectionCard, FormSectionHeader } from '../../../components/composites/FormSectionCard';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -196,7 +198,7 @@ function CardPrincipio({title,desc,icon,color}:{title:string,desc:string,icon:Re
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}:{n:string,title:string,desc:string,children:React.ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function Section({id,n,title,desc,children}:{id?:string,n:string,title:string,desc:string,children:React.ReactNode}){return(<section id={id} style={{marginBottom:44,scrollMarginTop:96}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
 function DSCard({children,s,mob:m}:{children:React.ReactNode,s?:React.CSSProperties,mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 function FamilyLabel({icon,label,color}:{icon:React.ReactNode,label:string,color:string}){return(<div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16,padding:"10px 16px",background:`${color}10`,borderRadius:8,border:`1px solid ${color}25`}}><span style={{display:"flex"}}>{icon}</span><span style={{fontSize:13,fontWeight:700,color,fontFamily:Fn.title,letterSpacing:".5px"}}>{label}</span></div>)}
 
@@ -332,6 +334,17 @@ export function CardAcao({ title, desc, primary, secondary, children }: CardAcao
 export default function CardDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
+  useEffect(()=>{
+    if(typeof window==="undefined")return;
+    const scrollToHash=()=>{
+      const id=window.location.hash.replace(/^#/,"");
+      if(!id)return;
+      requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));
+    };
+    scrollToHash();
+    window.addEventListener("hashchange",scrollToHash);
+    return()=>window.removeEventListener("hashchange",scrollToHash);
+  },[]);
   const mob=w<640;
 
   return(
@@ -673,7 +686,25 @@ export default function CardDoc(){
           </DSCard>
         </Section>
 
-        <Section n="11" title="Modo Dark" desc="Comportamento e tokens do componente no tema escuro. O DS-FIPS garante consistência visual em ambos os modos — claro e escuro.">
+        <FamilyLabel icon={Ic.doc(18,C.azulProfundo)} label="FAMÍLIA 3 — FORMULÁRIO / WORKSPACE" color={C.azulProfundo} />
+
+        <Section
+          id="form-section-card"
+          n="11"
+          title="Card de seção (formulário)"
+          desc="Bloco numerado com canto assimétrico para formulários densos (Registro OPA, Form Workspace). Export: FormSectionCard + FormSectionHeader."
+        >
+          <DSCard mob={mob}>
+            <FormSectionCard>
+              <FormSectionHeader num={1} title="Tipo de OPA" hint="Selecione o tipo de registro" Icon={Tag} />
+              <p style={{ fontSize: 13, color: C.cinzaChumbo, margin: 0, fontFamily: Fn.body, lineHeight: 1.55 }}>
+                Conteúdo da seção (campos, grids, LocationPinButtons, PhotoEvidenceDropzone).
+              </p>
+            </FormSectionCard>
+          </DSCard>
+        </Section>
+
+        <Section n="12" title="Modo Dark" desc="Comportamento e tokens do componente no tema escuro. O DS-FIPS garante consistência visual em ambos os modos — claro e escuro.">
           <DSCard mob={mob}>
             <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
               {[

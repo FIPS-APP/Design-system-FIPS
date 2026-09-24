@@ -18,16 +18,9 @@ export function DocHeaderPageTrail({
     dark ? 'text-[#fafafa]' : 'text-[var(--color-fg)]',
   )
 
-  const mobileMark = (
-    <div className="flex h-8 w-auto shrink-0 items-center justify-center sm:hidden">
-      <img src="/appfips-logo-full.png" alt="App FIPS" className="h-full w-auto object-contain" />
-    </div>
-  )
-
   if (groupLabel === pageTitle) {
     return (
       <nav aria-label="Trilho da documentação" className="flex min-w-0 flex-1 items-center">
-        {mobileMark}
         <p className={cn('m-0 hidden sm:block', titleClass)}>{pageTitle}</p>
       </nav>
     )
@@ -35,7 +28,6 @@ export function DocHeaderPageTrail({
 
   return (
     <nav aria-label="Trilho da documentação" className="flex min-w-0 flex-1 items-center">
-      {mobileMark}
       <ol className="m-0 hidden min-w-0 list-none items-baseline gap-1 p-0 sm:flex sm:gap-1.5">
         <li
           className={cn(

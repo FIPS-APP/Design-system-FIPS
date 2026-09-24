@@ -53,9 +53,9 @@ function JunctionLines({ style }) {
   )
 }
 
-function Section({ n, title, desc, children }) {
+function Section({ id, n, title, desc, children }) {
   return (
-    <section style={{ marginBottom: 44 }}>
+    <section id={id} style={{ marginBottom: 44, scrollMarginTop: 96 }}>
       <div
         style={{
           fontSize: 10,
@@ -247,6 +247,17 @@ export default function HeaderDoc() {
     window.addEventListener('resize', h)
     return () => window.removeEventListener('resize', h)
   }, [])
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const scrollToHash = () => {
+      const id = window.location.hash.replace(/^#/, '')
+      if (!id) return
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    }
+    scrollToHash()
+    window.addEventListener('hashchange', scrollToHash)
+    return () => window.removeEventListener('hashchange', scrollToHash)
+  }, [])
   const mob = w < 640
 
   return (
@@ -293,7 +304,7 @@ export default function HeaderDoc() {
           </div>
           <h1 style={{ fontSize: mob ? 30 : 44, fontWeight: 700, color: C.branco, margin: '0 0 10px', fontFamily: Fn.title }}>Header</h1>
           <p style={{ fontSize: 16, color: `${C.branco}B0`, lineHeight: 1.6, maxWidth: 720, margin: 0, fontFamily: Fn.body }}>
-            Barra superior do shell de documentação: contexto da seção, título da página, busca e ações. Fundo com imagem + gradientes (mesmo padrão do Application Shell), faixas em vidro e tipografia clara sobre o hero.
+            Barra superior do shell de documentação e apps FIPS: contexto da seção, título da página, ações e conta. Fundo com imagem + gradientes (Application Shell), faixas em vidro e tipografia clara sobre o hero.
           </p>
         </div>
       </header>
@@ -302,7 +313,7 @@ export default function HeaderDoc() {
         <Section
           n="01"
           title="Finalidade"
-          desc="O header ancora o usuário na hierarquia (grupo → página), oferece atalho de busca quando houver e mantém navegação rápida entre grandes áreas do DS. O conteúdo do header permanece legível sobre imagem e overlays; em viewport estreita o menu mobile substitui parte da linha de utilitários."
+          desc="O header ancora o usuário na hierarquia (grupo → página) e mantém navegação rápida entre grandes áreas do DS. O conteúdo permanece legível sobre imagem e overlays; em tablet e celular o drawer lateral e a marca App FIPS mudam de lugar — ver seção 02."
         >
           <DSCard mob={mob}>
             <p style={gt}>
@@ -314,14 +325,76 @@ export default function HeaderDoc() {
         <Section
           n="02"
           title="Anatomia"
-          desc="Da esquerda para a direita: controle de menu (mobile), ícone de painel, coluna de título (eyebrow + badge opcional + H2), busca (md+), botões neumórficos (notificações, tutorial) e chip de conta (sm+)."
+          desc="Shell completo (documentação e apps produto). Da esquerda para a direita: menu, painel (sm+), marca (só &lt; lg), trilho, ações e conta."
         >
           <DSCard mob={mob}>
-            <div style={gl}>Header completo</div>
-            <p style={{ ...gt, marginBottom: 16 }}>
-              Preview real do header padrão DS-FIPS com marca App FIPS, breadcrumb, busca, notificações, dark mode e avatar.
-              Marca isolada: <a href="/docs/components/app-fips-header-logo" style={{ color: C.azulProfundo, fontWeight: 600 }}>Componentes → Marca App FIPS</a>.
+            <div style={gl}>Header — shell completo</div>
+            <p style={{ ...gt, marginBottom: 12 }}>
+              Preview canônico: hero, trilho da página, notificações, tutorial e chip de conta. Implementação de referência:{' '}
+              <code style={gk}>DocLayout</code> + <code style={gk}>DocHeaderStandardPreview</code> (Gestão OPA segue a mesma regra de marca).
             </p>
+
+            <div
+              id="header-app-fips-logo"
+              style={{
+                ...gl,
+                scrollMarginTop: 96,
+                marginTop: 8,
+                padding: mob ? 12 : 14,
+                borderRadius: '10px 10px 10px 18px',
+                border: `1px solid ${C.cardBorder}`,
+                background: C.bg,
+              }}
+            >
+              Marca App FIPS — tablet e celular (&lt; lg)
+            </div>
+            <p style={{ ...gt, marginTop: 10, marginBottom: 8 }}>
+              Breakpoint Tailwind <code style={gk}>lg</code> = <strong>1024px</strong>. Quem consome o DS deve copiar esta tabela — não repetir logo no header e na sidebar na mesma viewport.
+            </p>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: mob ? '1fr' : '1fr 1fr',
+                gap: 10,
+                marginBottom: 14,
+                fontSize: 12,
+                fontFamily: Fn.body,
+              }}
+            >
+              {[
+                {
+                  t: 'Desktop (≥ 1024px)',
+                  b: 'Sidebar fixa na tela. Marca no topo dela: wordmark expandido ou ícone 36×36 no rail. Header = toggle PanelLeft + trilho + ações — sem AppFipsHeaderLogo.',
+                },
+                {
+                  t: 'Tablet e celular (< 1024px)',
+                  b: 'Drawer lateral fora da tela. Header = hambúrguer + AppFipsHeaderLogo (lg:hidden, h-7) + trilho + ações. Mesmo layout do Gestão OPA.',
+                },
+              ].map((row) => (
+                <div
+                  key={row.t}
+                  style={{
+                    padding: 12,
+                    borderRadius: 8,
+                    border: `1px solid ${C.cardBorder}`,
+                    background: C.cardBg,
+                  }}
+                >
+                  <div style={{ fontWeight: 700, color: C.cinzaEscuro, marginBottom: 6, fontFamily: Fn.title, fontSize: 13 }}>{row.t}</div>
+                  <p style={{ ...gt, fontSize: 12, margin: 0 }}>{row.b}</p>
+                </div>
+              ))}
+            </div>
+            <p style={{ ...gt, fontSize: 12, color: C.textMuted, marginBottom: 16, lineHeight: 1.55 }}>
+              Ordem abaixo de <code style={gk}>lg</code> (igual OPA): hambúrguer → logo → trilho (<code style={gk}>sm:flex</code>). Desktop: toggle PanelLeft (<code style={gk}>lg+</code>) → trilho — sem segundo botão de menu. Composite{' '}
+              <code style={gk}>AppFipsHeaderLogo</code>: claro <code style={gk}>/appfips-logo-full.png</code>, escuro{' '}
+              <code style={gk}>/appfips-logo.png</code>. Mais contexto:{' '}
+              <a href="/docs/components/sidebar#sidebar-marca-responsiva" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+                Sidebar → marca e responsivo
+              </a>
+              .
+            </p>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <DocHeaderStandardPreview
                 groupLabel="Componentes"
@@ -330,6 +403,9 @@ export default function HeaderDoc() {
                 withCardChrome={false}
               />
             </div>
+            <p style={{ ...gt, fontSize: 12, color: C.textMuted, marginTop: 12, marginBottom: 0 }}>
+              O preview acima é estático (desktop). Reduza a janela abaixo de 1024px ou use DevTools no site real (<code style={gk}>DocLayout</code>) para ver hambúrguer + logo.
+            </p>
           </DSCard>
         </Section>
 

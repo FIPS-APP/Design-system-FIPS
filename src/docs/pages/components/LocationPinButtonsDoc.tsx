@@ -28,8 +28,20 @@ export default function LocationPinButtonsDoc() {
           </Field>
         </FormSectionCard>
         <p className="mt-3 text-xs text-[var(--color-fg-muted)]">
-          Seção de formulário: <a href="/docs/patterns/form-workspace" className="font-semibold text-[var(--color-primary)]">Form Workspace</a>.
-          Card numerado: <a href="/docs/components/form-section-card" className="font-semibold text-[var(--color-primary)]">FormSectionCard</a>.
+          Doc canônica:{' '}
+          <a href="/docs/components/select#location-pin-buttons" className="font-semibold text-[var(--color-primary)]">
+            Select → Local (pin)
+          </a>
+          . Formulário:{' '}
+          <a href="/docs/patterns/form-workspace" className="font-semibold text-[var(--color-primary)]">
+            Form Workspace
+          </a>
+          .
+          Card numerado:{' '}
+          <a href="/docs/components/card#form-section-card" className="font-semibold text-[var(--color-primary)]">
+            FormSectionCard
+          </a>
+          .
         </p>
       </DemoSection>
     </DocPage>
