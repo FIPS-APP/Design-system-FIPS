@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import { docHeaderTabsUnderlineMd as U } from '../../lib/docHeaderChrome'
@@ -40,6 +41,11 @@ export interface AbasDeSecaoProps {
  *
  * O app define `--barra-inferior-altura` com a altura da própria barra. Sem
  * ela a faixa fica em `bottom: 0`, por baixo da barra, e some.
+ *
+ * `abas-secao-reserva` substitui a reserva do app, não soma: tire a reserva
+ * do app do MESMO elemento, porque uma regra sem camada do app vence a do
+ * pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`: a
+ * faixa passa a se posicionar por ele, não pela tela.
  */
 export function AbasDeSecao({
   abas,
@@ -50,8 +56,23 @@ export function AbasDeSecao({
   className,
 }: AbasDeSecaoProps) {
   const rodape = posicao === 'rodape'
+  const navRef = useRef<HTMLElement>(null)
+
+  // Com mais abas do que cabem, a ativa pode ficar fora da faixa. Rola só a
+  // faixa na horizontal, nunca a página.
+  useEffect(() => {
+    const nav = navRef.current
+    const ativaEl = nav?.querySelector<HTMLElement>('[data-state="active"]')
+    if (!nav || !ativaEl) return
+    const n = nav.getBoundingClientRect()
+    const a = ativaEl.getBoundingClientRect()
+    if (a.left < n.left) nav.scrollLeft += a.left - n.left
+    else if (a.right > n.right) nav.scrollLeft += a.right - n.right
+  }, [ativa])
+
   return (
     <nav
+      ref={navRef}
       aria-label={label}
       data-posicao={posicao}
       style={{ height: 'var(--abas-secao-altura, 39px)' }}

@@ -476,21 +476,26 @@ Fonte: `src/components/composites/AbasDeSecao.tsx`
 Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
 
 ```tsx
-import { AbasDeSecao } from 'ds-fips'
+import { useState } from 'react'
+import { AbasDeSecao } from '@fips-app/ds-fips'
 
-<main className="abas-secao-reserva">…</main>
-<AbasDeSecao
-  posicao="rodape"
-  label="Configurações"
-  abas={[{ id: 'modo', label: 'Modo' }, { id: 'tema', label: 'Tema' }]}
-  ativa={aba}
-  onSelecionar={setAba}
-/>
+const [aba, setAba] = useState('modo')
+
+<>
+  <main className="abas-secao-reserva">…</main>
+  <AbasDeSecao
+    posicao="rodape"
+    label="Configurações"
+    abas={[{ id: 'modo', label: 'Modo' }, { id: 'tema', label: 'Tema' }]}
+    ativa={aba}
+    onSelecionar={setAba}
+  />
+</>
 ```
 
 Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `posicao?`, `label?`, `className?`. Aba com `href` vira `<a>` e recarrega a página sem router; sem `href` é `<button>`.
 
-**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura` (39px), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma.
+**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura` (39px), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
 
 Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
 

@@ -34,6 +34,7 @@ function Moldura({
   abas = ABAS,
   posicao = 'rodape',
   extra,
+  ativaInicial,
 }: {
   demo: string
   largura?: number
@@ -41,8 +42,9 @@ function Moldura({
   abas?: AbaDeSecao[]
   posicao?: 'topo' | 'rodape'
   extra?: ReactNode
+  ativaInicial?: string
 }) {
-  const [ativa, setAtiva] = useState(abas[0].id)
+  const [ativa, setAtiva] = useState(ativaInicial ?? abas[0].id)
   const estilo = {
     width: largura,
     height: 560,
@@ -59,7 +61,7 @@ function Moldura({
       {posicao === 'topo' ? (
         <>
           <AbasDeSecao abas={abas} ativa={ativa} onSelecionar={setAtiva} posicao="topo" label={`Abas ${demo}`} />
-          <div data-rolavel className="h-[calc(100%-39px)] overflow-y-auto p-4">
+          <div data-rolavel className="h-[calc(100%-var(--abas-secao-altura))] overflow-y-auto p-4">
             <Texto />
           </div>
         </>
@@ -85,25 +87,33 @@ function Moldura({
   )
 }
 
-const CODIGO = `import { AbasDeSecao } from '@fips-app/ds-fips'
+const CODIGO = `import { useState } from 'react'
+import { AbasDeSecao } from '@fips-app/ds-fips'
 
 // O app publica a altura da própria barra inferior:
 // :root { --barra-inferior-altura: 54px; }
 // Se existe uma faixa fixa no mesmo vão (por exemplo "registro na fila"):
 // :root { --abas-secao-empilha: 40px; }
 
-<main className="abas-secao-reserva">…conteúdo…</main>
-<AbasDeSecao
-  posicao="rodape"
-  label="Configurações"
-  abas={[
-    { id: 'modo', label: 'Modo' },
-    { id: 'tema', label: 'Tema' },
-    { id: 'aparelho', label: 'Aparelho' },
-  ]}
-  ativa={aba}
-  onSelecionar={setAba}
-/>`
+export function Configuracoes() {
+  const [aba, setAba] = useState('modo')
+  return (
+    <>
+      <main className="abas-secao-reserva">…conteúdo…</main>
+      <AbasDeSecao
+        posicao="rodape"
+        label="Configurações"
+        abas={[
+          { id: 'modo', label: 'Modo' },
+          { id: 'tema', label: 'Tema' },
+          { id: 'aparelho', label: 'Aparelho' },
+        ]}
+        ativa={aba}
+        onSelecionar={setAba}
+      />
+    </>
+  )
+}`
 
 function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
@@ -128,7 +138,11 @@ export default function AbasDeSecaoDoc() {
         <strong>Sem <code>--barra-inferior-altura</code> a faixa some.</strong> O app tem de publicar a altura da
         própria barra. Sem ela a faixa fica em <code>bottom: 0</code>, por baixo da barra. No OPA-MOBILE:{' '}
         <code>--barra-inferior-altura: var(--barra-abas-altura)</code> e{' '}
-        <code>--abas-secao-empilha: var(--faixa-estado-altura, 0px)</code>.
+        <code>--abas-secao-empilha: var(--faixa-estado-altura, 0px)</code>. A classe{' '}
+        <code>abas-secao-reserva</code> substitui a reserva do app: tire a do app do <strong>mesmo elemento</strong>,
+        porque uma regra sem camada do app vence a do pacote. Se o app já reserva a altura da faixa de estado no
+        corpo da página, não some a reserva duas vezes. Ancestral com <code>transform</code> vira o bloco de
+        contenção do <code>fixed</code>.
       </div>
 
       <Secao titulo="Topo">
@@ -175,7 +189,7 @@ export default function AbasDeSecaoDoc() {
       <Secao titulo="Uma aba e seis abas">
         <div className="flex flex-wrap gap-6">
           <Moldura demo="uma" abas={[ABAS[0]]} />
-          <Moldura demo="seis" abas={SEIS} />
+          <Moldura demo="seis" abas={SEIS} ativaInicial="Ajuda" />
         </div>
       </Secao>
 
