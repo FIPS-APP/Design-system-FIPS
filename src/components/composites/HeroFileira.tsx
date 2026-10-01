@@ -1,13 +1,15 @@
 import { useState, type MouseEvent } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
-import { HeroAtalho } from './HeroAtalho'
+import { HeroAtalho, type HeroAtalhoVariante } from './HeroAtalho'
 
 export interface HeroFileiraAtalho {
   /** Único na fileira. */
   id: string
   icon: LucideIcon
   label: string
+  /** Repassado ao HeroAtalho. Use `ouro` no primário visual (ex. Facilities). */
+  variante?: HeroAtalhoVariante
   href?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
 }
@@ -54,6 +56,7 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
           key={a.id}
           icon={a.icon}
           label={a.label}
+          variante={a.variante}
           href={a.href}
           onClick={a.onClick}
           aberto={a.id === aberto}
