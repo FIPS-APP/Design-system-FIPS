@@ -36,8 +36,10 @@ export interface AbasDeSecaoProps {
  *    com a posição e o traço troca junto. Os dois ficam DENTRO da caixa do
  *    `nav`: o `overflow-x: auto` dele recortaria qualquer coisa fora, e a
  *    separação é um `box-shadow` inset, não uma borda.
- * 3. A altura (39px) é a variável `--abas-secao-altura`. A página reserva o
- *    espaço com `abas-secao-reserva`, que deriva dela.
+ * 3. A altura é a variável `--abas-secao-altura`: `max(39px, --alvo-toque)`, ou
+ *    seja 39px no escritório e o alvo de toque do modo no celular (44px normal,
+ *    48px fácil). A página reserva o espaço com `abas-secao-reserva`, que
+ *    deriva dela.
  *
  * O app define `--barra-inferior-altura` com a altura da própria barra. Sem
  * ela a faixa fica em `bottom: 0`, por baixo da barra, e some.
