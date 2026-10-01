@@ -25,6 +25,27 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.0',
+    date: '2026-09-29',
+    title: 'Atalhos do hero abrem no hover com o nome',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `HeroAtalho` + `HeroAtalhos` no pacote. Parado mostra só o ícone, 30px, no `inverseOutline`. No hover ou no foco abre e mostra o nome dentro do botão, com o realce de `docHeaderChrome` e o shimmer dos azulejos do header. Mesmo padrão da intranet (FIPS-400) e do Obrigações (FIPS-933).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Home do DS: Explorar componentes e Governança viram `HeroAtalho`, com os mesmos nomes e destinos. A demo e a página `/docs/patterns/hero` ganham a seção Atalhos do hero com exemplo e props.',
+      },
+      {
+        type: 'feature',
+        description: 'Nova constante `docHeaderNeuAccentGloss`: brilho na metade de cima do azulejo realçado.',
+      },
+    ],
+  },
+  {
     version: '0.14.1',
     date: '2026-10-01',
     title: 'Favicon App FIPS padronizado',
