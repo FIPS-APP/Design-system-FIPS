@@ -454,7 +454,7 @@ export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.
 Uso:
 
 ```tsx
-import { PageHero } from 'ds-fips'
+import { PageHero } from '@fips-app/ds-fips'
 
 <PageHero>
   <div className="px-8 py-10">
@@ -478,7 +478,7 @@ Atalhos do hero da Home. `HeroAtalho` parado mostra só o ícone (30px); no hove
 Para vários atalhos, use `HeroFileira`: um aberto por vez, o primeiro é o principal e fica aberto no repouso, apontar outro fecha o principal, sair da fileira volta a ele.
 
 ```tsx
-import { HeroFileira } from 'ds-fips'
+import { HeroFileira } from '@fips-app/ds-fips'
 
 <HeroFileira
   label="Atalhos da Home"

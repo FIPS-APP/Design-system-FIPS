@@ -193,7 +193,7 @@ export function AtalhosDaHome() {
     <HeroFileira
       label="Atalhos da Home"
       atalhos={[
-        { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', onClick: () => navigate('/painel') },
+        { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', variante: 'ouro', onClick: () => navigate('/painel') },
         { id: 'config', icon: Settings, label: 'Configurações', onClick: () => navigate('/configuracoes') },
       ]}
     />
@@ -356,7 +356,10 @@ export default function HeroHeaderDoc() {
           Quando o hero tem vários atalhos, use a fileira. Ela abre <strong>um por vez</strong> e o
           {' '}<strong>primeiro é o principal</strong>: fica aberto no repouso, explica a fileira inteira e
           serve de chamada. Apontar outro abre esse e fecha o principal. Sair da fileira volta ao principal.
-          Passe o mouse ou use Tab no exemplo.
+          Passe o mouse ou use Tab no exemplo. <strong>Principal</strong> é posição (primeiro da lista, aberto
+          no repouso). <strong>Cor ouro</strong> é opcional por atalho (`variante="ouro"` no item), repassada
+          ao `HeroAtalho`. Os dois convivem: o primeiro pode ser ouro e aberto; os demais ficam no
+          `inverseOutline` até apontar.
         </p>
         <Copyable label="Fileira de atalhos" code={codeHeroFileira()} preview={
           <div style={{ background: 'linear-gradient(135deg, #002A68, #004B9B)', borderRadius: 12, padding: '20px 16px', color: '#fff', fontFamily: "'Saira Expanded', sans-serif", fontSize: 13, textAlign: 'center' }}>
@@ -369,7 +372,7 @@ export default function HeroHeaderDoc() {
                 <HeroFileira
                   label="Fileira de demonstração"
                   atalhos={[
-                    { id: 'a', icon: ClipboardList, label: 'Ação primária' },
+                    { id: 'a', icon: ClipboardList, label: 'Ação primária', variante: 'ouro' },
                     { id: 'b', icon: Settings, label: 'Secundária' },
                     { id: 'c', icon: Sparkles, label: 'Terceira' },
                     { id: 'd', icon: ShieldCheck, label: 'Quarta' },
@@ -402,7 +405,7 @@ export default function HeroHeaderDoc() {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {[
-                ['atalhos', 'Lista de { id, icon, label, href?, onClick? }. O primeiro é o principal. O id é único na fileira.'],
+                ['atalhos', 'Lista de { id, icon, label, variante?, href?, onClick? }. O primeiro é o principal (aberto no repouso). variante repassa ao HeroAtalho (ex. ouro no primário visual).'],
                 ['label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
                 ['className', 'Opcional. Só para layout externo.'],
               ].map(([prop, uso]) => (
