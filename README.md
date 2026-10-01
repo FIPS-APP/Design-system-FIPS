@@ -4,7 +4,11 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.13.0`
+## Versão atual: `v0.14.1`
+
+## Favicon e ícones de app
+
+Apps FIPS usam o lockup **App FIPS** na aba (mesmo PNG do app de campo e da Gestão OPA). Arquivos em `public/icons/`, regra completa em [`docs/favicon.md`](docs/favicon.md).
 
 ## Consumindo a biblioteca
 
@@ -78,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.14.1 | 2026-10-01 | Padrão de favicon App FIPS: `public/icons/`, `docs/favicon.md`, vitrine `index.html` alinhada ao OPA-MOBILE |
 | 0.12.6 | 2026-09-11 | Botão "Tutorial" da doc do Modal abre o `TutorialOverlay` real (passos de `PAGE_TUTORIALS.dialog`), igual ao ícone de tutorial do header. Sai o `TutorialModal` local da página, que era uma casca reimplementada com passos próprios |
 | 0.12.5 | 2026-08-25 | RuleTile + RuleTileGrid (seção Regras da Home: 4 tiles semânticos, grade 1/2/4). Tokens `--color-semantic-atencao-*` entram no DS (faltavam; o molde Suprimentos já usava) |
 | 0.12.4 | 2026-08-25 | `--font-heading` ("Saira Expanded") passa a carregar: faces locais no bundle (`src/fonts` + `fontes-fips.css`). O `@import` do Google era descartado no meio de `dist/styles.css` e pedia `family=Saira+Expanded`, que responde 400 — "Expanded" é o eixo `wdth=125` do Saira, não uma família |
