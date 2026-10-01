@@ -2,7 +2,11 @@
 
 Critério: a aba do navegador precisa dizer **de que aplicativo FIPS** se trata. O lockup **App FIPS** (marca + texto) é o padrão. O símbolo FIPS sozinho (`public/brand/fips-symbol-only.png`, favicon antigo) **não** serve para aba nem PWA.
 
-Referência viva: `OPA-MOBILE` e `OPA-GESTAO` (Gestão OPA #56). Os arquivos canônicos ficam neste repo em `public/icons/`.
+**Origem canônica dos bytes:** `OPA-MOBILE` (`main`), pasta `public/icons/` e nomes de arquivo abaixo. Este repo espelha esses três PNG byte a byte.
+
+**OPA-GESTAO:** ainda não está alinhado (PNG e `favicon.png` diferentes do mobile; maskable com outro nome de arquivo). Não copie ícones da Gestão até a issue de paridade fechar. Depois do alinhamento, a Gestão segue os mesmos bytes e nomes do OPA-MOBILE.
+
+Os arquivos publicados pelo DS ficam em `public/icons/`.
 
 ## Arquivos que o DS entrega
 
@@ -10,10 +14,10 @@ Referência viva: `OPA-MOBILE` e `OPA-GESTAO` (Gestão OPA #56). Os arquivos can
 | --- | --- |
 | `public/icons/icon-192.png` | `rel="icon"`, `apple-touch-icon`, ícone 192 do manifest |
 | `public/icons/icon-512.png` | Ícone 512 do manifest (any) |
-| `public/icons/icon-maskable-512.png` | Ícone 512 **maskable** (Android: margem de segurança ~20%, o SO recorta) |
+| `public/icons/icon-512-maskable.png` | Ícone 512 **maskable** (Android: margem de segurança ~20%, o SO recorta) |
 | `public/favicon.png` | Cópia de `icon-192.png` para quem ainda linka `/favicon.png` |
 
-Origem: export App FIPS alinhado ao app de campo. Não recrie nem troque por `fips-symbol-only.png`.
+Nomes iguais ao OPA-MOBILE (`vite.config.ts` / manifest). Não recrie nem troque por `fips-symbol-only.png`.
 
 ## HTML mínimo (Vite / SPA)
 
@@ -27,14 +31,14 @@ Opcional: `favicon.svg` só se o app tiver SVG próprio; **não** use o SVG anti
 
 ## Manifest (PWA)
 
-Mesma família de PNG:
+Mesma família de PNG (paths iguais ao OPA-MOBILE):
 
 ```json
 {
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
 ```
@@ -49,10 +53,11 @@ O navegador reduz o PNG. O texto “App FIPS” pode sumir; a silhueta azul + am
 
 - `public/brand/fips-symbol-only.png` → marca institucional, **não** favicon de app.
 - `public/favicon.svg` legado (símbolo + “DS”) → vitrine antiga; apps FIPS seguem os PNG acima.
+- `public/icons/` do OPA-GESTAO enquanto os blobs forem diferentes do OPA-MOBILE.
 
 ## Checklist para app novo
 
-1. Copiar `public/icons/` (três PNG) do Design-system-FIPS ou do OPA-MOBILE (mesmos bytes).
+1. Copiar `public/icons/` (três PNG, mesmos nomes) do Design-system-FIPS **ou** do OPA-MOBILE.
 2. Colar o HTML mínimo no `index.html`.
-3. Apontar o manifest para os mesmos paths.
-4. Conferir aba ao lado da Gestão OPA e do app de campo.
+3. Colar o trecho de manifest deste documento (paths batem com os nomes no disco).
+4. Conferir aba ao lado do app de campo; Gestão OPA quando estiver alinhada.
