@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.14.1',
+    date: '2026-10-01',
+    title: 'Favicon App FIPS padronizado',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`public/icons/` espelha OPA-MOBILE (192, 512, maskable). Regra em `docs/favicon.md`. Vitrine `index.html` usa `/icons/icon-192.png`.',
+      },
+    ],
+  },
+  {
     version: '0.14.0',
     date: '2026-09-24',
     title: 'Padrão Filtro, anexos Registro (pin + fotos) e paridade OPA nos composites',
