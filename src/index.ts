@@ -100,4 +100,9 @@ export {
   type HeroAtalhoProps,
   type HeroAtalhosProps,
 } from './components/composites/HeroAtalho'
+export {
+  HeroFileira,
+  type HeroFileiraProps,
+  type HeroFileiraAtalho,
+} from './components/composites/HeroFileira'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
