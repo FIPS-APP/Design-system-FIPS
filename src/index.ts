@@ -95,3 +95,8 @@ export {
 export { Alert, type AlertProps } from './components/composites/Alert'
 export { Lightbox, type LightboxProps } from './components/composites/Lightbox'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
+export {
+  AbasDeSecao,
+  type AbasDeSecaoProps,
+  type AbaDeSecao,
+} from './components/composites/AbasDeSecao'

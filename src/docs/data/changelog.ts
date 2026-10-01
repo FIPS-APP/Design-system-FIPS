@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.18.0',
+    date: '2026-10-01',
+    title: 'AbasDeSecao: faixa de abas de seção, com variante de celular no rodapé',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `AbasDeSecao` no pacote. Faixa de abas de seção no topo (`posicao="topo"`) ou fixa logo acima da barra de navegação inferior (`posicao="rodape"`), para o celular.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Variáveis `--abas-secao-altura` (39px), `--abas-secao-empilha` e `--barra-inferior-altura`, e a classe `abas-secao-reserva`, que deriva o respiro da página da altura da faixa.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O traço da aba ativa e a separação ficam dentro da caixa da faixa e trocam de lado juntos com a posição. O `overflow-x` da faixa recortaria o traço se ele saísse da caixa.',
+      },
+    ],
+  },
+  {
     version: '0.14.1',
     date: '2026-10-01',
     title: 'Favicon App FIPS padronizado',
