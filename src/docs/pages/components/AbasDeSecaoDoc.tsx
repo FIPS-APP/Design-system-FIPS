@@ -180,8 +180,10 @@ export default function AbasDeSecaoDoc() {
 
       <Secao titulo="Altura em variável">
         <p className="mb-3 max-w-3xl text-sm text-[var(--color-fg-muted)]">
-          A altura é <code>--abas-secao-altura</code> (39px). A reserva da página deriva dela com a classe{' '}
-          <code>abas-secao-reserva</code>, que substitui a reserva da barra e não soma. Aqui a variável vale 48px.
+          A altura é <code>--abas-secao-altura</code>, que vale <code>max(39px, var(--alvo-toque))</code>: 39px acima de
+          767px e o alvo de toque do modo no celular (44px no normal, 48px no fácil, via <code>data-modo</code>). A
+          reserva da página deriva dela com a classe <code>abas-secao-reserva</code>, que substitui a reserva da barra
+          e não soma. Aqui a variável vale 48px.
         </p>
         <Moldura demo="altura" variaveis={{ '--abas-secao-altura': '48px' }} />
       </Secao>
@@ -206,7 +208,9 @@ export default function AbasDeSecaoDoc() {
           </li>
           <li>
             A altura mora em <code>--abas-secao-altura</code>. Escrever o número à mão na faixa e na página quebra o
-            respiro em silêncio quando o valor muda.
+            respiro em silêncio quando o valor muda. E <code>--alvo-toque</code> é declarada junto de cada{' '}
+            <code>data-modo</code>, não só na raiz: a propriedade que lê outra resolve no elemento onde foi declarada,
+            e um contêiner interno em modo fácil herdaria o 35px da raiz.
           </li>
         </ol>
       </Secao>

@@ -147,10 +147,70 @@
 }
 
 @layer base {
+  /*
+    Modos de uso: normal (escritório) e fácil (pátio, com luva). Mesmos nomes e
+    valores do app de campo. Sem `data-modo`, vale o normal, e nenhum token
+    resolve vazio.
+
+    ARMADILHA: uma propriedade que referencia outra (`--alvo-toque` lê
+    `--modo-alvo-min`) resolve NO ELEMENTO onde foi declarada. Declarada só em
+    `:root`, um contêiner interno com `data-modo="facil"` herdaria o 35px da
+    raiz. Por isso `--alvo-toque` e `--abas-secao-altura` ficam nos mesmos
+    blocos que `--modo-alvo-min`, para `:root` e para todo `[data-modo]`.
+  */
+  :root,
+  [data-modo='normal'] {
+    --modo-alvo-min: 35px;
+    --modo-texto-campo: 13px;
+    --modo-texto-base: 1.08rem;
+    --modo-texto-rotulo: 0.75rem;
+    --modo-espaco: 1rem;
+    --modo-borda-largura: 1px;
+    --modo-borda-cartao: 1px solid var(--color-border);
+    --modo-sombra-cartao: var(--shadow-card);
+    --modo-raio-controle: var(--radius-lg);
+    --modo-raio-cartao: var(--radius-2xl);
+    --modo-texto-titulo: 1.25rem;
+    --modo-peso: 600;
+  }
+
+  [data-modo='facil'] {
+    --modo-alvo-min: 48px;
+    --modo-texto-campo: 14px;
+    --modo-texto-base: 1.35rem;
+    --modo-texto-rotulo: 1rem;
+    --modo-espaco: 1.25rem;
+    --modo-borda-largura: 2px;
+    --modo-borda-cartao: 2px solid var(--color-fg);
+    --modo-sombra-cartao: none;
+    --modo-raio-controle: var(--radius-xl);
+    --modo-raio-cartao: var(--radius-2xl);
+    --modo-texto-titulo: 1.65rem;
+    --modo-peso: 700;
+  }
+
+  /*
+    Alvo de toque: acima de 767px vale o token do modo (35 e 48). No aparelho o
+    alvo segue o dedo, com piso de 44px: 44 no normal e 48 no fácil.
+  */
+  :root,
+  [data-modo] {
+    --alvo-toque: var(--modo-alvo-min);
+    /* Abas de seção: a altura mora num lugar só e a reserva da página deriva dela. */
+    --abas-secao-altura: max(39px, var(--alvo-toque));
+  }
+
+  @media (max-width: 767px) {
+    :root,
+    [data-modo] {
+      --alvo-toque: max(44px, var(--modo-alvo-min));
+    }
+  }
+}
+
+@layer base {
   :root {
     color-scheme: light;
-    /* Abas de seção: a altura mora num lugar só; a reserva da página deriva dela. */
-    --abas-secao-altura: 39px;
     --color-primary: var(--color-fips-blue-900);
     --color-primary-hover: var(--color-fips-blue-950);
     --color-secondary: var(--color-fips-sky-600);
