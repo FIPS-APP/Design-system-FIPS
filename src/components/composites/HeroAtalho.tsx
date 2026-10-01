@@ -11,9 +11,13 @@ import {
   docHeaderNeuShimmerOnAccent,
 } from '../../lib/docHeaderChrome'
 
+export type HeroAtalhoVariante = 'ouro' | 'inverseOutline'
+
 export interface HeroAtalhoProps {
   icon: LucideIcon
   label: string
+  /** `ouro` para o atalho primário do hero (mesmo fill do Button ouro). Padrão `inverseOutline`. */
+  variante?: HeroAtalhoVariante
   /** Com `href` vira `<a>`. Sem ele é `<button type="button">`. */
   href?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
@@ -29,7 +33,18 @@ export interface HeroAtalhoProps {
  * `auto` não tem transição. A caixa que corta não pode ter padding, senão o
  * botão fechado passa de 30px.
  */
-export function HeroAtalho({ icon: Icone, label, href, onClick }: HeroAtalhoProps) {
+const repousoInverse =
+  'border-[1.5px] border-white/60 bg-white/[0.06] text-white'
+const repousoOuro =
+  'border-transparent bg-[var(--color-accent)] text-[var(--color-primary-hover)] shadow-[var(--shadow-card)]'
+
+export function HeroAtalho({
+  icon: Icone,
+  label,
+  variante = 'inverseOutline',
+  href,
+  onClick,
+}: HeroAtalhoProps) {
   const [apontado, setApontado] = useState(false)
   const [focado, setFocado] = useState(false)
   const realcado = apontado || focado
@@ -53,8 +68,10 @@ export function HeroAtalho({ icon: Icone, label, href, onClick }: HeroAtalhoProp
     onMouseLeave: () => setApontado(false),
     onFocus: () => setFocado(true),
     onBlur: () => setFocado(false),
-    className:
-      'relative inline-flex h-[30px] cursor-pointer items-center justify-center overflow-hidden rounded-md border-[1.5px] border-white/60 bg-white/[0.06] pl-[6.5px] text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-accent)]/40 active:scale-[0.97]',
+    className: cn(
+      'relative inline-flex h-[30px] cursor-pointer items-center justify-center overflow-hidden rounded-md pl-[6.5px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-accent)]/40 active:scale-[0.97]',
+      realcado ? 'border-[1.5px]' : variante === 'ouro' ? repousoOuro : repousoInverse,
+    ),
     style,
   }
 
