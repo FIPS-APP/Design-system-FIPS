@@ -3,6 +3,8 @@
 > Winston · BMAD Phase: Architect · 2026-06-15  
 > Baseado em: `docs/brief.md` · `CLAUDE.md` · inspeção direta de `src/` (v0.4.3)
 
+Identidade na aba do navegador e ícones PWA: ver [`favicon.md`](favicon.md) (`public/icons/`, lockup App FIPS).
+
 ---
 
 ## Stack atual
