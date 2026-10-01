@@ -51,6 +51,15 @@
 }
 
 @layer utilities {
+  /* Respiro da página para a faixa fixa acima da barra inferior.
+     SUBSTITUI a reserva da barra (por exemplo .com-barra-abas), não soma. */
+  .abas-secao-reserva {
+    padding-bottom: calc(
+      var(--barra-inferior-altura, 0px) + var(--abas-secao-empilha, 0px) +
+        env(safe-area-inset-bottom, 0px) + var(--abas-secao-altura) + 8px
+    );
+  }
+
   .btn-shimmer:hover {
     background-image: linear-gradient(
       110deg,
@@ -140,6 +149,8 @@
 @layer base {
   :root {
     color-scheme: light;
+    /* Abas de seção: a altura mora num lugar só; a reserva da página deriva dela. */
+    --abas-secao-altura: 39px;
     --color-primary: var(--color-fips-blue-900);
     --color-primary-hover: var(--color-fips-blue-950);
     --color-secondary: var(--color-fips-sky-600);
