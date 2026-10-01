@@ -5,6 +5,7 @@ import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/C
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
 import { HeroAtalho, HeroAtalhos } from '../../../components/composites/HeroAtalho'
+import { HeroFileira } from '../../../components/composites/HeroFileira'
 import { PageHero, PAGE_HERO_DEFAULT_DECORATION } from '../../../composites/PageHero'
 import { cn } from '../../../lib/cn'
 
@@ -180,6 +181,26 @@ export function AtalhosDaHome() {
 }`
 }
 
+function codeHeroFileira() {
+  return `// DS-FIPS: fileira de atalhos do hero da Home
+import { useNavigate } from 'react-router-dom'
+import { ClipboardList, Settings } from 'lucide-react'
+import { HeroFileira } from '@fips-app/ds-fips'
+
+export function AtalhosDaHome() {
+  const navigate = useNavigate()
+  return (
+    <HeroFileira
+      label="Atalhos da Home"
+      atalhos={[
+        { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', onClick: () => navigate('/painel') },
+        { id: 'config', icon: Settings, label: 'Configurações', onClick: () => navigate('/configuracoes') },
+      ]}
+    />
+  )
+}`
+}
+
 function codePageHeroFaixa() {
   return `// DS-FIPS — PageHero Faixa de Modulo — Copy-paste ready
 
@@ -314,6 +335,8 @@ export default function HeroHeaderDoc() {
                 ['variante', 'Opcional. `ouro` no primário do hero; padrão `inverseOutline`. O realce no hover é igual nos dois.'],
                 ['href', 'Opcional. Com ele o atalho vira link <a> (recarrega a página). Apps com router usam `onClick`.'],
                 ['onClick', 'Opcional. Use para navegar pelo router do app.'],
+                ['aberto', 'Opcional. Definido, o atalho é controlado de fora e não guarda estado próprio. É o que a HeroFileira usa. Aparece como data-state="open" ou "closed".'],
+                ['aoApontar', 'Opcional. Chamado ao apontar ou focar, só quando controlado.'],
                 ['HeroAtalhos label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
               ].map(([prop, uso]) => (
                 <tr key={prop} className="bg-[var(--color-surface)]">
@@ -326,6 +349,72 @@ export default function HeroHeaderDoc() {
         </div>
       </section>
 
+      {/* Fileira de atalhos */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>Fileira de atalhos (HeroFileira)</h2>
+        <p style={{ fontSize: 14, color: '#7B8C96', marginBottom: 16, lineHeight: 1.55 }}>
+          Quando o hero tem vários atalhos, use a fileira. Ela abre <strong>um por vez</strong> e o
+          {' '}<strong>primeiro é o principal</strong>: fica aberto no repouso, explica a fileira inteira e
+          serve de chamada. Apontar outro abre esse e fecha o principal. Sair da fileira volta ao principal.
+          Passe o mouse ou use Tab no exemplo.
+        </p>
+        <Copyable label="Fileira de atalhos" code={codeHeroFileira()} preview={
+          <div style={{ background: 'linear-gradient(135deg, #002A68, #004B9B)', borderRadius: 12, padding: '20px 16px', color: '#fff', fontFamily: "'Saira Expanded', sans-serif", fontSize: 13, textAlign: 'center' }}>
+            HeroFileira
+          </div>
+        }>
+          <div className="w-[640px] max-w-full overflow-hidden rounded-xl border border-[var(--color-border)] shadow-sm">
+            <PageHero>
+              <div className="px-6 py-8">
+                <HeroFileira
+                  label="Fileira de demonstração"
+                  atalhos={[
+                    { id: 'a', icon: ClipboardList, label: 'Ação primária' },
+                    { id: 'b', icon: Settings, label: 'Secundária' },
+                    { id: 'c', icon: Sparkles, label: 'Terceira' },
+                    { id: 'd', icon: ShieldCheck, label: 'Quarta' },
+                    { id: 'e', icon: ClipboardList, label: 'Quinta' },
+                    { id: 'f', icon: Settings, label: 'Sexta' },
+                  ]}
+                />
+              </div>
+            </PageHero>
+          </div>
+        </Copyable>
+        <div className="mt-4 max-w-3xl rounded-2xl border border-[var(--color-semantic-info-border)] bg-[var(--color-semantic-info-bg)] p-4 text-sm leading-relaxed text-[var(--color-semantic-info-fg)]">
+          <strong>O estado mora na fileira, e o "saiu" também.</strong> Com o <code>onMouseLeave</code> em
+          cada atalho, atravessar a fileira pisca: o vão de 8px entre os botões zera o estado por um quadro
+          e o principal reabre no meio do caminho. Na fileira, o último apontado segura até outro assumir.
+          Pelo teclado vale o mesmo: o blur testa o <code>relatedTarget</code>, senão pular de um atalho para
+          o vizinho com Tab também pisca.
+        </div>
+        <p style={{ fontSize: 13, color: '#7B8C96', marginTop: 12, lineHeight: 1.55 }}>
+          A fileira é centrada. Como o atalho aberto é bem mais largo que o fechado, os vizinhos andam
+          quando o aberto muda, e o atalho apontado pode sair de baixo do cursor parado.
+        </p>
+        <div className="mt-4 max-w-3xl overflow-hidden rounded-2xl border border-[var(--color-border)]">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Prop</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Uso</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {[
+                ['atalhos', 'Lista de { id, icon, label, href?, onClick? }. O primeiro é o principal. O id é único na fileira.'],
+                ['label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
+                ['className', 'Opcional. Só para layout externo.'],
+              ].map(([prop, uso]) => (
+                <tr key={prop} className="bg-[var(--color-surface)]">
+                  <td className="px-4 py-3 font-mono text-xs text-[var(--color-fg)]">{prop}</td>
+                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{uso}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* Implementação */}
       <section style={{ marginTop: 36 }}>
