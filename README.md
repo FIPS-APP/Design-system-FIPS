@@ -8,7 +8,7 @@ Packages.
 
 ## Favicon e ícones de app
 
-Apps FIPS usam o lockup **App FIPS** na aba (mesmo PNG do app de campo e da Gestão OPA). Arquivos em `public/icons/`, regra completa em [`docs/favicon.md`](docs/favicon.md).
+Apps FIPS usam o lockup **App FIPS** na aba. Bytes e nomes canônicos vêm do **OPA-MOBILE**; o DS publica a cópia em `public/icons/`. Regra completa: [`docs/favicon.md`](docs/favicon.md).
 
 ## Consumindo a biblioteca
 
