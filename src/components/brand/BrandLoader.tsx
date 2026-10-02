@@ -25,9 +25,9 @@ const SIZE_CLASS: Record<BrandLoaderSize, string> = {
  * BrandLoader — a marca FIPS extrudada em 3D que nasce branca, com contorno nas
  * cores da marca, e recebe a cor da esquerda para a direita conforme carrega.
  *
- * A animação é uma peça de motion da marca (WebM com canal alfa + APNG de
- * fallback), renderizada a partir da arte oficial. Não é SVG: a fidelidade
- * tipográfica do wordmark exige o arquivo original.
+ * A animação usa o APNG com canal alfa. O WebM com alfa falha no Safari (alfa
+ * vira preto). Conteúdo dentro de `<video>` não substitui a mídia em navegador
+ * moderno. Não é SVG: a fidelidade tipográfica do wordmark exige o arquivo original.
  *
  * Acessibilidade: `role="status"` com `aria-live="polite"`. Sob
  * `prefers-reduced-motion` exibe o quadro final estático, já colorido.
@@ -61,19 +61,12 @@ export const BrandLoader = React.forwardRef<HTMLDivElement, BrandLoaderProps>(
             className={cn(SIZE_CLASS[size], 'h-auto')}
           />
         ) : (
-          <video
-            className={cn(SIZE_CLASS[size], 'h-auto')}
-            autoPlay
-            loop
-            muted
-            playsInline
+          <img
+            src={`${basePath}/fips-brandloader.apng`}
+            alt=""
             aria-hidden="true"
-            poster={`${basePath}/fips-brandloader-static.png`}
-          >
-            <source src={`${basePath}/fips-brandloader.webm`} type="video/webm" />
-            {/* Safari não toca WebM com alfa: cai no APNG */}
-            <img src={`${basePath}/fips-brandloader.apng`} alt="" />
-          </video>
+            className={cn(SIZE_CLASS[size], 'h-auto')}
+          />
         )}
 
         {caption ? (
