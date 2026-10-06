@@ -156,8 +156,14 @@
     --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
     --color-border: #d7e0ea;
     --color-border-strong: var(--color-fips-gray-400);
+    /* No claro a borda de campo é a mesma do divisor. */
+    --color-border-control: var(--color-border);
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
+    --color-primary-text: var(--color-primary);
+    --color-danger-text: var(--color-danger);
+    --color-success-fill: var(--color-fips-green-700);
+    --color-neutral-fill: var(--color-fg-muted);
     --color-ring: var(--color-fips-sky-600);
     --color-badge-warning-bg: var(--color-fips-orange-100);
     --color-badge-danger-bg: var(--color-fips-red-100);
@@ -185,7 +191,7 @@
     --shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
   }
 
-  /* ─── Dark mode (extraído do Tecnopano 3.0 DashboardAdmin) ─── */
+  /* ─── Dark mode: neutros do Gestão OPA (cartão #1a1a1a sobre página #252525) ─── */
   .dark {
     color-scheme: dark;
     --color-primary: var(--color-fips-blue-900);
@@ -195,17 +201,26 @@
     --color-accent: var(--color-fips-yellow-400);
     --color-accent-strong: var(--color-fips-yellow-600);
     --color-success: var(--color-fips-green-500);
-    --color-success-strong: var(--color-fips-green-700);
+    /* Texto. O verde de fundo com texto branco é --color-success-fill. */
+    --color-success-strong: #8be5ad;
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
-    --color-surface: #222222;
-    --color-surface-soft: #252525;
-    --color-surface-muted: #1A1A1A;
+    --color-surface: #1a1a1a;
+    --color-surface-soft: #1f1f1f;
+    --color-surface-muted: #252525;
     --color-table-zebra: rgba(255, 255, 255, 0.03);
-    --color-border: #2E2E2E;
+    /* Divisor de linha e de cartão. 1,28:1 sobre o cartão. Não serve em campo. */
+    --color-border: #2e2e2e;
     --color-border-strong: #3a3a3a;
-    --color-fg: #E2E2E8;
-    --color-fg-muted: #A1A1AA;
+    /* Campo, select e botão outline. 3,03:1 sobre #1a1a1a. */
+    --color-border-control: #666666;
+    --color-fg: #e8e8e8;
+    --color-fg-muted: #9ca3af;
+    --color-primary-text: var(--color-fips-blue-400);
+    --color-danger-text: color-mix(in srgb, var(--color-fips-red-600) 82%, white 18%);
+    /* 4,56:1 com texto branco. */
+    --color-success-fill: #008842;
+    --color-neutral-fill: #5b6470;
     --color-ring: var(--color-fips-yellow-600);
     --color-badge-warning-bg: rgba(246, 146, 30, 0.14);
     --color-badge-danger-bg: rgba(239, 68, 68, 0.14);
