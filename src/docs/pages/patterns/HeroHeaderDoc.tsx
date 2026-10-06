@@ -388,8 +388,9 @@ export default function HeroHeaderDoc() {
           <strong>O estado mora na fileira, e o "saiu" também.</strong> Com o <code>onMouseLeave</code> em
           cada atalho, atravessar a fileira pisca: o vão de 8px entre os botões zera o estado por um quadro
           e o principal reabre no meio do caminho. Na fileira, o último apontado segura até outro assumir.
-          Pelo teclado vale o mesmo: o blur testa o <code>relatedTarget</code>, senão pular de um atalho para
-          o vizinho com Tab também pisca.
+          Pelo teclado vale o mesmo. O blur testa o <code>relatedTarget</code>. No Safari esse alvo vem nulo
+          no Tab entre irmãos, e a fileira espera um instante antes de voltar ao repouso. Sair com o mouse
+          enquanto o teclado está num atalho não derruba esse foco.
         </div>
         <p style={{ fontSize: 13, color: '#7B8C96', marginTop: 12, lineHeight: 1.55 }}>
           A fileira é centrada. Como o atalho aberto é bem mais largo que o fechado, os vizinhos andam
