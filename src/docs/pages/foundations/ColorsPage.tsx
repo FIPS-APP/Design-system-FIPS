@@ -146,16 +146,17 @@ export default function ColorsPage() {
               </thead>
               <tbody>
                 {[
-                  { token: 'surface', light: '#FFFFFF', dark: '#222222' },
-                  { token: 'surface-muted', light: '#F5F8FC', dark: '#1A1A1A' },
+                  { token: 'surface', light: '#FFFFFF', dark: '#1A1A1A' },
+                  { token: 'surface-muted', light: '#F5F8FC', dark: '#252525' },
                   { token: 'border', light: '#D7E0EA', dark: '#2E2E2E' },
-                  { token: 'foreground', light: '#333B41', dark: '#E2E2E8' },
-                  { token: 'fg-muted', light: '#6B7784', dark: '#A1A1AA' },
+                  { token: 'border-control', light: '#D7E0EA', dark: '#666666' },
+                  { token: 'foreground', light: '#333B41', dark: '#E8E8E8' },
+                  { token: 'fg-muted', light: '#6B7784', dark: '#9CA3AF' },
                   { token: 'primary', light: '#004B9B', dark: '#93BDE4' },
                   { token: 'accent', light: '#FDC24E', dark: '#FDC24E' },
                   { token: 'success', light: '#00C64C', dark: '#8BE5AD' },
                   { token: 'danger', light: '#EF4444', dark: '#FCA5A5' },
-                  { token: 'input-border', light: '#D7E0EA', dark: '#3A3A3A' },
+                  { token: 'input-border', light: '#D7E0EA', dark: '#666666' },
                   { token: 'input-focus', light: '#004B9B', dark: '#93BDE4' },
                   { token: 'badge-success-bg', light: 'rgba(0,198,76,0.14)', dark: 'rgba(0,198,76,0.14)' },
                   { token: 'badge-warning-bg', light: 'rgba(246,146,30,0.14)', dark: 'rgba(246,146,30,0.14)' },
@@ -180,6 +181,11 @@ export default function ColorsPage() {
               </tbody>
             </table>
           </div>
+          <p style={{ fontSize: 13, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55 }}>
+            No escuro, <code>--color-border</code> (#2E2E2E) é divisor: 1,28:1 sobre o cartão #1A1A1A.
+            <code> --color-border-control</code> (#666666) é campo e botão outline: 3,03:1 sobre o mesmo cartão.
+            <code> --color-success-fill</code> (#008842) com texto branco: 4,56:1.
+          </p>
         </Section>
 
         <div style={{ textAlign: 'center', padding: '20px 0 0', borderTop: `1px solid ${C.cardBorder}`, marginTop: 20 }}>
