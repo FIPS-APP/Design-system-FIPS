@@ -11,6 +11,7 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
+- `HeroAtalho`, `HeroAtalhos`, `HeroFileira`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
 - `CircularCommandMenu` · `RowActionsMenu`
@@ -453,7 +454,7 @@ export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.
 Uso:
 
 ```tsx
-import { PageHero } from 'ds-fips'
+import { PageHero } from '@fips-app/ds-fips'
 
 <PageHero>
   <div className="px-8 py-10">
@@ -467,6 +468,28 @@ Comportamento:
 - gradiente azul institucional
 - foto/trilho sutil à direita por padrão
 - fallback opcional para `showTrainSilhouette`
+
+## HeroAtalho e HeroFileira
+
+Fonte: `src/components/composites/HeroAtalho.tsx` e `HeroFileira.tsx`
+
+Atalhos do hero da Home. `HeroAtalho` parado mostra só o ícone (30px); no hover ou no foco abre e mostra o nome dentro do botão. Cor, sombra e shimmer vêm de `docHeaderChrome`: nenhuma cor nova.
+
+Para vários atalhos, use `HeroFileira`: um aberto por vez, o primeiro é o principal e fica aberto no repouso, apontar outro fecha o principal, sair da fileira volta a ele.
+
+```tsx
+import { HeroFileira } from '@fips-app/ds-fips'
+
+<HeroFileira
+  label="Atalhos da Home"
+  atalhos={[
+    { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', href: '/painel' },
+    { id: 'config', icon: Settings, label: 'Configurações', href: '/configuracoes' },
+  ]}
+/>
+```
+
+Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos, e a fileira espera um instante. Sair com o mouse não derruba um atalho que ainda tem foco de teclado.
 
 ## FipsLogo e marca do menu (sidebar header)
 
