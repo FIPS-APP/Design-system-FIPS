@@ -489,7 +489,7 @@ import { HeroFileira } from '@fips-app/ds-fips'
 />
 ```
 
-Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`.
+Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos, e a fileira espera um instante. Sair com o mouse não derruba um atalho que ainda tem foco de teclado.
 
 ## FipsLogo e marca do menu (sidebar header)
 
