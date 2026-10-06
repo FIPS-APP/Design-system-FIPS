@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.1',
+    date: '2026-10-06',
+    title: 'BrandLoader sem retângulo preto no Safari',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`BrandLoader` anima com o APNG em `<img>` e não usa mais `<video>` WebM: o Safari não compõe o alfa do WebM e pintava o fundo de preto, e o `<img>` de reserva dentro do `<video>` nunca era exibido (#30). Com `prefers-reduced-motion` continua o quadro estático.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',
