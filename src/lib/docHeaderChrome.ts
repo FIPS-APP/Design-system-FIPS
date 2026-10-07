@@ -72,7 +72,7 @@ export const docHeaderNeuShimmerOnAccent =
 
 export const docHeaderTabsUnderlineMd = {
   fontSizePx: 13,
-  paddingXPx: 24,
+  paddingXPx: 18,
   paddingYPx: 8,
   navHeightPx: 39,
   iconGapPx: 7,
