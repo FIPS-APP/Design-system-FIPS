@@ -24,6 +24,8 @@
   --color-fips-green-300: #8be5ad;
   --color-fips-red-600: #ef4444;
   --color-fips-red-100: #fee2e2;
+  --color-fips-red-700: #b91c1c;
+  --color-fips-red-300: #fca5a5;
   --color-fips-orange-100: #fff0d6;
 
   --color-fips-gray-900: #333b41;
@@ -150,6 +152,7 @@
     --color-success-strong: var(--color-fips-green-700);
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
+    --color-danger-strong: var(--color-fips-red-700);
     --color-surface: #ffffff;
     --color-surface-soft: var(--color-fips-neutral-25);
     --color-surface-muted: var(--color-fips-neutral-50);
@@ -198,6 +201,7 @@
     --color-success-strong: var(--color-fips-green-700);
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
+    --color-danger-strong: var(--color-fips-red-300);
     --color-surface: #222222;
     --color-surface-soft: #252525;
     --color-surface-muted: #1A1A1A;
