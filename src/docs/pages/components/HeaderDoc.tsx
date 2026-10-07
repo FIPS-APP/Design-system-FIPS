@@ -442,7 +442,7 @@ export default function HeaderDoc() {
               {[
                 { label: 'Altura da nav', value: '39px', token: 'navHeightPx' },
                 { label: 'Padding vertical (tab)', value: '8px', token: 'paddingYPx' },
-                { label: 'Padding horizontal (tab)', value: '24px', token: 'paddingXPx' },
+                { label: 'Padding horizontal (tab)', value: '18px', token: 'paddingXPx' },
                 { label: 'Font size', value: '13px', token: 'fontSizePx' },
                 { label: 'Gap ícone–label', value: '7px', token: 'iconGapPx' },
                 { label: 'Tamanho do ícone', value: '14px', token: 'iconSizePx' },
