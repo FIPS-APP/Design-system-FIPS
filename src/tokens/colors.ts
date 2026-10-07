@@ -32,6 +32,7 @@ export const semanticColors = {
   accentStrong: fipsPalette.amareloOuroEscuro,
   success: fipsPalette.verdeFloresta,
   successStrong: fipsPalette.verdeFlorestaEscuro,
+  dangerStrong: '#B91C1C',
   info: fipsPalette.azulCeu,
   surface: fipsPalette.branco,
   surfaceMuted: fipsPalette.neutroClaro,
@@ -83,6 +84,7 @@ export const darkSemanticColors = {
   /** No escuro é cor de texto. Fundo com texto branco usa successFill. */
   successStrong: '#8BE5AD',
   danger: '#FCA5A5',
+  dangerStrong: '#FCA5A5',
   info: '#93BDE4',
   warning: '#FDC24E',
   sidebar: '#1A1A1A',

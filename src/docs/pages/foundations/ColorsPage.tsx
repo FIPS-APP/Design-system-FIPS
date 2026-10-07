@@ -158,6 +158,7 @@ export default function ColorsPage() {
                   { token: 'success-strong', light: '#00904C', dark: '#8BE5AD' },
                   { token: 'success-fill', light: '#00904C', dark: '#008842' },
                   { token: 'danger-text', light: '#B91C1C', dark: '#FCA5A5' },
+                  { token: 'danger-strong', light: '#B91C1C', dark: '#FCA5A5' },
                   { token: 'neutral-fill', light: '#6B7784', dark: '#5B6470' },
                   { token: 'input-focus', light: '#004B9B', dark: '#93BDE4' },
                   { token: 'badge-success-bg', light: 'rgba(0,198,76,0.14)', dark: 'rgba(0,198,76,0.14)' },
