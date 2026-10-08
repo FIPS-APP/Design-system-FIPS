@@ -12,7 +12,15 @@ export type PatternPanelHeroProps = {
   title: ReactNode
   subtitle: string
   icon: ReactNode
+  /**
+   * Linha acima do título. Use só para ESTADO da tela (ex.: "Passo 2 de 4").
+   * Não passe o nome do sistema ou do módulo: o menu lateral e o cabeçalho já o dizem.
+   */
   badge?: ReactNode
+  /**
+   * @deprecated Não use a pílula como marca. Ela some do uso novo; fica só para
+   * quem mostra estado em `badge` e ainda depende dela.
+   */
   badgePill?: boolean
   action?: ReactNode
   stats?: PatternPanelHeroStat[]
