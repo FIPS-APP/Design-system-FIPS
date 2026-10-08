@@ -1,6 +1,7 @@
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { Palette, SlidersHorizontal, Smartphone } from 'lucide-react'
 import { AbasDeSecao, type AbaDeSecao } from '../../../components/composites/AbasDeSecao'
+import { docHeaderTabsUnderlineMd as U } from '../../../lib/docHeaderChrome'
 
 const ABAS: AbaDeSecao[] = [
   { id: 'modo', label: 'Modo', icon: SlidersHorizontal },
@@ -61,7 +62,7 @@ function Moldura({
       {posicao === 'topo' ? (
         <>
           <AbasDeSecao abas={abas} ativa={ativa} onSelecionar={setAtiva} posicao="topo" label={`Abas ${demo}`} />
-          <div data-rolavel className="h-[calc(100%-var(--abas-secao-altura))] overflow-y-auto p-4">
+          <div data-rolavel style={{ height: `calc(100% - ${U.navHeightPx}px)` }} className="overflow-y-auto p-4">
             <Texto />
           </div>
         </>
@@ -180,7 +181,7 @@ export default function AbasDeSecaoDoc() {
 
       <Secao titulo="Altura em variável">
         <p className="mb-3 max-w-3xl text-sm text-[var(--color-fg-muted)]">
-          A altura é <code>--abas-secao-altura</code> (39px). A reserva da página deriva dela com a classe{' '}
+          A altura é <code>--abas-secao-altura</code> (44px, o alvo de toque mínimo). A reserva da página deriva dela com a classe{' '}
           <code>abas-secao-reserva</code>, que substitui a reserva da barra e não soma. Aqui a variável vale 48px.
         </p>
         <Moldura demo="altura" variaveis={{ '--abas-secao-altura': '48px' }} />
