@@ -36,8 +36,10 @@ export interface AbasDeSecaoProps {
  *    com a posição e o traço troca junto. Os dois ficam DENTRO da caixa do
  *    `nav`: o `overflow-x: auto` dele recortaria qualquer coisa fora, e a
  *    separação é um `box-shadow` inset, não uma borda.
- * 3. A altura (39px) é a variável `--abas-secao-altura`. A página reserva o
- *    espaço com `abas-secao-reserva`, que deriva dela.
+ * 3. A altura do rodapé (44px, o alvo de toque mínimo) é a variável
+ *    `--abas-secao-altura`. A página reserva o espaço com `abas-secao-reserva`,
+ *    que deriva dela. No topo a altura é a da faixa do cabeçalho (39px) e não
+ *    usa a variável.
  *
  * O app define `--barra-inferior-altura` com a altura da própria barra. Sem
  * ela a faixa fica em `bottom: 0`, por baixo da barra, e some.
@@ -75,7 +77,7 @@ export function AbasDeSecao({
       ref={navRef}
       aria-label={label}
       data-posicao={posicao}
-      style={{ height: 'var(--abas-secao-altura, 39px)' }}
+      style={{ height: rodape ? 'var(--abas-secao-altura, 44px)' : U.navHeightPx }}
       className={cn(
         'no-scrollbar relative flex w-full min-w-0 items-center overflow-x-auto bg-[var(--color-surface)]',
         rodape

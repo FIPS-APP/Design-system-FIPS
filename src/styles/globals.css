@@ -149,8 +149,9 @@
 @layer base {
   :root {
     color-scheme: light;
-    /* Abas de seção: a altura mora num lugar só; a reserva da página deriva dela. */
-    --abas-secao-altura: 39px;
+    /* Abas de seção no rodapé: a altura mora num lugar só; a reserva da página deriva dela.
+       44px é o alvo de toque mínimo. */
+    --abas-secao-altura: 44px;
     --color-primary: var(--color-fips-blue-900);
     --color-primary-hover: var(--color-fips-blue-950);
     --color-secondary: var(--color-fips-sky-600);
