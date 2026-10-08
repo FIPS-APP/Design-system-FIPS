@@ -164,6 +164,13 @@
     --color-danger-text: var(--color-danger);
     --color-success-fill: var(--color-fips-green-700);
     --color-neutral-fill: var(--color-fg-muted);
+    /* Botão sólido: fundo, hover e texto. No claro repetem os valores de antes. */
+    --color-btn-success: var(--color-success);
+    --color-btn-success-hover: var(--color-success-strong);
+    --color-btn-danger: var(--color-danger);
+    --color-btn-danger-hover: #c82333;
+    --color-btn-accent-fg: #ffffff;
+    --color-btn-accent-hover: var(--color-warning);
     --color-ring: var(--color-fips-sky-600);
     --color-badge-warning-bg: var(--color-fips-orange-100);
     --color-badge-danger-bg: var(--color-fips-red-100);
@@ -221,6 +228,13 @@
     /* 4,56:1 com texto branco. */
     --color-success-fill: #008842;
     --color-neutral-fill: #5b6470;
+    /* Botão sólido no escuro: texto branco com 4,5:1 ou mais. Laranja leva texto azul. */
+    --color-btn-success: var(--color-success-fill);
+    --color-btn-success-hover: color-mix(in srgb, var(--color-success-fill) 80%, black);
+    --color-btn-danger: #dc2626;
+    --color-btn-danger-hover: #b91c1c;
+    --color-btn-accent-fg: var(--color-primary-hover);
+    --color-btn-accent-hover: var(--color-accent);
     --color-ring: var(--color-fips-yellow-600);
     --color-badge-warning-bg: rgba(246, 146, 30, 0.14);
     --color-badge-danger-bg: rgba(239, 68, 68, 0.14);
