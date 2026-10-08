@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-06',
+    title: 'Tema escuro segue o Gestão OPA',
+    entries: [
+      {
+        type: 'breaking',
+        description:
+          'O `.dark` troca os neutros: cartão `#1a1a1a`, página `#252525`, texto `#e8e8e8`, texto apagado `#9ca3af`. O desenho anterior (cartão `#222222` sobre página `#1a1a1a`) sai.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`--color-border-control` separa a borda de campo da borda de divisor. No escuro o campo é `#666666` (3,03:1 sobre o cartão) e o divisor fica `#2e2e2e` (1,28:1). No claro os dois apontam para a mesma borda.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Entram no pacote `--color-primary-text`, `--color-danger-text`, `--color-success-fill` (`#008842` no escuro, 4,56:1 com branco) e `--color-neutral-fill`. App com `tema-escuro.css` próprio tira essas sobrescritas ao atualizar. O que for só daquele app permanece no arquivo.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',
