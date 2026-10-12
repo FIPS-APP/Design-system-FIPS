@@ -30,19 +30,29 @@ export const CHANGELOG: ChangelogVersion[] = [
     title: 'Tema escuro segue o Gestão OPA',
     entries: [
       {
-        type: 'breaking',
+        type: 'improvement',
         description:
-          'O `.dark` troca os neutros: cartão `#1a1a1a`, página `#252525`, texto `#e8e8e8`, texto apagado `#9ca3af`. O desenho anterior (cartão `#222222` sobre página `#1a1a1a`) sai.',
+          'O `.dark` troca o desenho dos neutros: cartão `#1a1a1a`, soft `#1f1f1f`, página `#252525`, texto `#e8e8e8`, texto apagado `#9ca3af`. O desenho anterior (cartão `#222222` sobre página `#1a1a1a`) sai. Quem não sobrescrevia os neutros passa a ver a diferença, e o hover do `secondary` agora clareia em vez de escurecer.',
       },
       {
         type: 'feature',
         description:
-          '`--color-border-control` separa a borda de campo da borda de divisor. No escuro o campo é `#666666` (3,03:1 sobre o cartão) e o divisor fica `#2e2e2e` (1,28:1). No claro os dois apontam para a mesma borda.',
+          '`--color-border-control` separa a borda de campo da borda de divisor. `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup` usam o token. No escuro o campo é `#666666` (3,03:1 sobre o cartão) e o divisor fica `#2e2e2e` (1,28:1); o hover do campo sobe para `--color-fg-muted`. No claro os dois apontam para a mesma borda.',
       },
       {
         type: 'feature',
         description:
-          'Entram no pacote `--color-primary-text`, `--color-danger-text`, `--color-success-fill` (`#008842` no escuro, 4,56:1 com branco) e `--color-neutral-fill`. App com `tema-escuro.css` próprio tira essas sobrescritas ao atualizar. O que for só daquele app permanece no arquivo.',
+          'Entram no pacote `--color-primary-text`, `--color-danger-text`, `--color-success-fill` (`#008842` no escuro, 4,56:1 com branco) e `--color-neutral-fill`. `--color-danger-text` vale `#b91c1c` no claro (6,47:1 sobre branco) e `#fca5a5` no escuro (9,17:1 sobre o cartão). `FieldMessage` de erro e o texto do `Alert` de erro passam a usar o token; no claro o vermelho desses textos fica mais escuro.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'No escuro `--color-success-strong` é cor de texto (`#8be5ad`). Fundo verde com texto branco usa `--color-success-fill`. `src/tokens/colors.ts` e a página Cores acompanham os valores do CSS.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'App com `tema-escuro.css` próprio tira as sobrescritas dos tokens acima ao atualizar e mantém só o que é dele e difere do pacote, como `--color-ring`, os fundos dos badges, `--color-semantic-atencao-fg` e os tokens da casca.',
       },
     ],
   },
