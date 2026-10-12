@@ -43,6 +43,7 @@ export const semanticColors = {
   accentStrong: '#F6921E',
   success: '#00C64C',
   successStrong: '#00904C',
+  dangerStrong: '#B91C1C',
   surface: '#FFFFFF',
   surfaceMuted: '#E8EBFF',
   border: '#C0CCD2',
@@ -68,6 +69,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-success-strong: var(--color-fips-green-700);
   --color-warning: var(--color-fips-yellow-600);
   --color-danger: var(--color-fips-red-600);
+  --color-danger-strong: var(--color-fips-red-700);
   --color-surface: #ffffff;
   --color-surface-soft: var(--color-fips-neutral-25);
   --color-surface-muted: var(--color-fips-neutral-50);
@@ -97,6 +99,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-fg` | gray-900 | `#E2E2E8` |
 | `--color-fg-muted` | `#6b7784` | `#A1A1AA` |
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
+| `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
 | `--color-ring` | sky-600 | yellow-600 |
 
 **Regra crítica:** `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` são **idênticos** nos dois temas. Por isso todo uso de `--color-primary` como **acento** (borda em foco, anel, borda do dropdown aberto, opção selecionada, botão outline) precisa do par manual `dark:…-[#93BDE4]` — sem ele o acento fica com contraste baixo no escuro. Esses `dark:` não são resíduo: são o substituto funcional do token dark que não existe.

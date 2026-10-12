@@ -183,7 +183,7 @@
     --color-semantic-sucesso-fg: #00904c;
     --color-semantic-sucesso-border: #a7f3d0;
     --color-semantic-critico-bg: #fef2f2;
-    --color-semantic-critico-fg: #b91c1c;
+    --color-semantic-critico-fg: var(--color-danger-strong);
     --color-semantic-critico-border: #fecaca;
     --shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
   }
@@ -233,7 +233,7 @@
     --color-semantic-sucesso-fg: #8be5ad;
     --color-semantic-sucesso-border: rgba(0, 198, 76, 0.28);
     --color-semantic-critico-bg: rgba(239, 68, 68, 0.14);
-    --color-semantic-critico-fg: #fca5a5;
+    --color-semantic-critico-fg: var(--color-danger-strong);
     --color-semantic-critico-border: rgba(239, 68, 68, 0.28);
   }
 
