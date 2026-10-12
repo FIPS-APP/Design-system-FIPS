@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.15.0`
+## Versão atual: `v0.16.2`
 
 ## Favicon e ícones de app
 
@@ -82,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.16.2 | 2026-10-12 | `--color-danger-strong`, o par vermelho de `--color-success-strong` para texto pequeno: `#b91c1c` no claro (6,47:1 sobre branco, mínimo de 5,30:1 nas superfícies) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1). `--color-semantic-critico-fg` passa a ler o token, sem mudar nenhum pixel |
 | 0.15.0 | 2026-09-29 | `HeroAtalho` + `HeroAtalhos`: atalho do hero que mostra só o ícone e abre com o nome no hover ou no foco, com o realce do header. Home do DS e página Hero passam a usar |
 | 0.14.1 | 2026-10-01 | Padrão de favicon App FIPS: `public/icons/`, `docs/favicon.md`, vitrine `index.html` alinhada ao OPA-MOBILE |
 | 0.12.6 | 2026-09-11 | Botão "Tutorial" da doc do Modal abre o `TutorialOverlay` real (passos de `PAGE_TUTORIALS.dialog`), igual ao ícone de tutorial do header. Sai o `TutorialModal` local da página, que era uma casca reimplementada com passos próprios |
