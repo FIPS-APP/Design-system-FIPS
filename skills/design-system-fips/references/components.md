@@ -13,6 +13,7 @@ Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
+- `FilterBlock`, `FilterBlockProps` (Filtros + busca + exportar; ver Padrões → Bloco enxuto)
 - `CircularCommandMenu` · `RowActionsMenu`
 - `ExcelIcon`, `PdfIcon`
 

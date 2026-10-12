@@ -457,7 +457,7 @@ function AntiPatternCard({ title, body }: { title: string; body: string }) {
 
 const BLOCK_STATUS = ['Aberto', 'Em análise', 'Concluído']
 
-function FilterBlockPreview({ withSearch }: { withSearch: boolean }) {
+function FilterBlockPreview() {
   const [status, setStatus] = useState('')
   const [search, setSearch] = useState('')
   const active = status ? 1 : 0
@@ -472,7 +472,7 @@ function FilterBlockPreview({ withSearch }: { withSearch: boolean }) {
         setSearch('')
       }}
       search={search}
-      onSearchChange={withSearch ? setSearch : undefined}
+      onSearchChange={setSearch}
       filters={
         <PillGroup
           icon={CircleCheck}
@@ -1166,12 +1166,9 @@ export default function FiltroDemo() {
           id="bloco-enxuto"
           n="10"
           title="FilterBlock: Filtros, busca e exportar"
-          desc="Para telas sem alçada nem período. Botão Filtros abre o drawer, a busca é opcional (sem onSearchChange o campo não existe) e exportar é uma vaga única: par Excel/PDF, um PDF sozinho ou um botão desabilitado."
+          desc="Para telas sem alçada nem período. Botão Filtros abre o drawer, a busca é obrigatória (search e onSearchChange) e exportar é uma vaga única: par Excel/PDF, um PDF sozinho ou um botão desabilitado."
         >
-          <div style={{ display: 'grid', gap: 14 }}>
-            <FilterBlockPreview withSearch />
-            <FilterBlockPreview withSearch={false} />
-          </div>
+          <FilterBlockPreview />
           <CodeBlock>{`<FilterBlock
   eyebrow="Mapa de Pátios"
   activeCount={ativos}
@@ -1179,12 +1176,12 @@ export default function FiltroDemo() {
   onClear={limpar}
   filters={<PillGroup ... />}
   search={busca}
-  onSearchChange={setBusca}   // omitido = sem campo de busca
+  onSearchChange={setBusca}
   actions={<ExportButtons onExcel={...} onPdf={...} />}
 />`}</CodeBlock>
         </PatternSection>
 
-        {/* 10 — Anti-patterns */}
+        {/* 11 — Anti-patterns */}
         <PatternSection
           id="anti"
           n="11"

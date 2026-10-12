@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Filter, Search, SlidersHorizontal } from 'lucide-react'
 import { Button } from '../ui/button'
-import { Drawer, DrawerContent, DrawerHero } from '../ui/drawer'
+import { Drawer, DrawerContent, DrawerHero, DrawerTrigger } from '../ui/drawer'
 import { cn } from '../../lib/cn'
 
 export type FilterBlockProps = {
@@ -15,9 +15,9 @@ export type FilterBlockProps = {
   eyebrow?: string
   /** Resultados que sobraram, para o rodapé do drawer. */
   resultCount?: number
-  /** Texto da busca. A busca só aparece se `onSearchChange` vier junto. */
-  search?: string
-  onSearchChange?: (value: string) => void
+  /** Texto da busca. A busca faz parte do padrão e sempre aparece. */
+  search: string
+  onSearchChange: (value: string) => void
   searchPlaceholder?: string
   /** Controles da tela antes da ação de exportar (ex.: "Expandir tudo"). */
   trailing?: ReactNode
@@ -32,7 +32,7 @@ export type FilterBlockProps = {
 /**
  * Bloco de filtros da casa: Filtros (abre drawer) · Busca · Exportar.
  * Card 10/10/10/18, controles de 30px. As dimensões moram no drawer, nunca soltas na barra.
- * Busca e exportação são opcionais: tela sem busca não ganha campo vazio.
+ * A busca é obrigatória (`search` e `onSearchChange`); a vaga de exportar é opcional.
  */
 export function FilterBlock({
   filters,
@@ -40,7 +40,7 @@ export function FilterBlock({
   onClear,
   eyebrow,
   resultCount,
-  search = '',
+  search,
   onSearchChange,
   searchPlaceholder = 'Buscar…',
   trailing,
@@ -53,30 +53,24 @@ export function FilterBlock({
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] p-3 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:p-4',
+        'flex flex-wrap items-center gap-3 rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] p-3 shadow-[var(--shadow-card)] sm:p-4',
         className,
       )}
     >
       {filters ? (
         <div className="shrink-0">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={open}
-          >
-            <Filter aria-hidden />
-            Filtros
-            {hasActive ? (
-              <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] font-semibold text-white">
-                {activeCount}
-              </span>
-            ) : null}
-          </Button>
-
           <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild>
+              <Button type="button" variant="outline" size="sm">
+                <Filter aria-hidden />
+                Filtros
+                {hasActive ? (
+                  <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] font-semibold text-white">
+                    {activeCount}
+                  </span>
+                ) : null}
+              </Button>
+            </DrawerTrigger>
             <DrawerContent
               side="left"
               showCloseButton={false}
@@ -109,24 +103,20 @@ export function FilterBlock({
         </div>
       ) : null}
 
-      {onSearchChange ? (
-        <div className="relative min-w-0 flex-1">
-          <Search
-            className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-fg-muted)]"
-            aria-hidden
-          />
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={searchPlaceholder}
-            aria-label={searchPlaceholder}
-            className="h-[30px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] pl-8 pr-2.5 text-[13px] text-[var(--color-fg)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/25"
-          />
-        </div>
-      ) : (
-        <div className="hidden flex-1 sm:block" aria-hidden />
-      )}
+      <div className="relative min-w-[160px] flex-1">
+        <Search
+          className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-fg-muted)]"
+          aria-hidden
+        />
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder={searchPlaceholder}
+          aria-label={searchPlaceholder}
+          className="h-[30px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] pl-8 pr-2.5 text-[13px] text-[var(--color-fg)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/25"
+        />
+      </div>
 
       {trailing ? <div className="flex shrink-0 items-center gap-2">{trailing}</div> : null}
       {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
