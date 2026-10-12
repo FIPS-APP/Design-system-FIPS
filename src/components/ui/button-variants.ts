@@ -9,11 +9,11 @@ export const buttonVariants = cva(
         primary:
           'border-transparent bg-[var(--color-primary)] text-white shadow-[0_2px_8px_rgba(0,75,155,0.12)] hover:bg-[var(--color-primary-hover)] hover:shadow-[0_2px_8px_rgba(0,75,155,0.18)]',
         secondary:
-          'border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-fg)] hover:bg-[var(--color-surface-muted)]',
+          'border-[var(--color-border-control)] bg-[var(--color-surface-soft)] text-[var(--color-fg)] hover:bg-[var(--color-surface-muted)]',
         outline:
           'border-[var(--color-primary-text)] bg-transparent text-[var(--color-primary-text)] hover:bg-[var(--color-fips-blue-200)] dark:hover:bg-[var(--color-primary-text)]/15',
         ghost:
-          'border-transparent bg-transparent text-[var(--color-fg-muted)] hover:bg-[var(--color-fips-blue-200)]/50 dark:hover:bg-[var(--color-fg)]/10',
+          'border-transparent bg-transparent text-[var(--color-fg-muted)] hover:bg-[var(--color-fips-blue-200)]/50 dark:hover:bg-[var(--color-primary-text)]/12',
         accent:
           'border-transparent bg-[var(--color-accent-strong)] text-[var(--color-btn-accent-fg)] shadow-[0_2px_8px_rgba(246,146,30,0.2)] hover:bg-[var(--color-btn-accent-hover)] btn-shimmer',
         inverseOutline:
