@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.2',
+    date: '2026-10-19',
+    title: 'badgePill do PatternPanelHero deprecado',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela (ex.: "Passo 2 de 4"), nunca o nome do sistema. O `@deprecated` vai para o `dist/index.d.ts` e aparece riscado no editor de quem consome o pacote. Nada quebra: a pílula segue funcionando para quem mostra estado nela.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
