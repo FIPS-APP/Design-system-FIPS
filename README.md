@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.16.0`
+## Versão atual: `v0.16.2`
 
 ## Favicon e ícones de app
 
@@ -82,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.16.2 | 2026-10-12 | `--color-danger-strong`, o par vermelho de `--color-success-strong` para texto pequeno: `#b91c1c` no claro (6,47:1 sobre branco, mínimo de 5,30:1 nas superfícies) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1). `--color-danger-text` (0.16.0) e `--color-semantic-critico-fg` passam a ler o token, sem mudar nenhum pixel |
 | 0.16.0 | 2026-10-06 | Tema escuro segue o Gestão OPA: cartão `#1a1a1a`, soft `#1f1f1f`, página `#252525`. Borda de campo `--color-border-control` `#666666` (3,03:1), usada por `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup`. Divisor continua `#2e2e2e`. Entram `--color-primary-text`, `--color-danger-text` (`#b91c1c` no claro, `#fca5a5` no escuro), `--color-success-fill` e `--color-neutral-fill`. No escuro `--color-success-strong` é cor de texto; fundo verde com texto branco é `--color-success-fill`. Botões no escuro com texto acima de 4,5:1: `outline` e `link` usam `--color-primary-text`, e `success`, `save`, `successStrong`, `danger` e `accent` leem os tokens `--color-btn-*`; o claro não muda. Quem sobrescrevia `--color-success-strong`, `--color-danger` ou `--color-primary` dentro do botão perde a sobrescrita |
 | 0.15.1 | 2026-10-18 | `TableHead`, `AdminTableSortHeader` e a prévia de exportação usam `--color-fg` no título de coluna: de 4,29:1 para 10,70:1 sobre a faixa no claro. Faixa e borda não mudam. `DSTable`, demos e referência portátil alinhados |
 | 0.15.0 | 2026-09-29 | `HeroAtalho` + `HeroAtalhos`: atalho do hero que mostra só o ícone e abre com o nome no hover ou no foco, com o realce do header. Home do DS e página Hero passam a usar |

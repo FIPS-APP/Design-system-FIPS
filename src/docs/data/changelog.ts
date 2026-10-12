@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.2',
+    date: '2026-10-12',
+    title: 'Par vermelho do success-strong para texto pequeno',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Entra `--color-danger-strong`: `#b91c1c` no claro (6,47:1 sobre branco; 5,30:1 sobre o fundo do badge de perigo) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1 nas superfícies do tema). É o vermelho de texto pequeno, como `--color-success-strong` é o verde. Também em `src/tokens/colors.ts` e na página Cores.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`--color-danger-text`, da 0.16.0, passa a ser alias de `--color-danger-strong` nos dois temas: o valor é o mesmo (`#b91c1c` no claro, `#fca5a5` no escuro), então quem já usa o nome não vê diferença. O nome novo é o `--color-danger-strong`. `--color-semantic-critico-fg` também lê `--color-danger-strong`, para o Badge de perigo e o texto vermelho nunca divergirem. Nenhum pixel muda.',
+      },
+    ],
+  },
+  {
     version: '0.16.0',
     date: '2026-10-06',
     title: 'Tema escuro segue o Gestão OPA',
