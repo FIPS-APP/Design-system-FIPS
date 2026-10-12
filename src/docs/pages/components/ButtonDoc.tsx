@@ -64,8 +64,8 @@ function DSButton({ variant = "primary", size = "medium", disabled = false, load
   const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
 
   const variantMap: Record<string, { bg: string; bgH: string; color: string; border: string; underline?: boolean }> = {
-    primary:   { bg: isDark ? "#0090D0" : "#004B9B",  bgH: isDark ? "#007AB1" : "#002A68", color: "#FFFFFF", border: "transparent" },
-    secondary: { bg: "var(--color-surface-soft)", bgH: "var(--color-surface-muted)", color: C.cinzaEscuro, border: "var(--color-border)" },
+    primary:   { bg: "var(--color-primary)", bgH: "var(--color-primary-hover)", color: "#FFFFFF", border: "transparent" },
+    secondary: { bg: "var(--color-surface-soft)", bgH: "var(--color-surface-muted)", color: C.cinzaEscuro, border: "var(--color-border-control)" },
     outline:   { bg: "transparent",   bgH: isDark ? "rgba(147,189,228,0.15)" : C.azulCeuClaro, color: isDark ? "#93BDE4" : "#004B9B", border: isDark ? "#93BDE4" : "#004B9B" },
     inverse:   { bg: isDark ? "#333B41" : "#002A68", bgH: isDark ? "#444" : C.cinzaEscuro, color: "#FFFFFF", border: isDark ? "#444" : "#002A68" },
     ghost:     { bg: "transparent",   bgH: isDark ? "rgba(147,189,228,0.12)" : `${C.azulCeuClaro}88`, color: C.cinzaChumbo, border: "transparent" },
@@ -73,7 +73,7 @@ function DSButton({ variant = "primary", size = "medium", disabled = false, load
     save:      { bg: isDark ? "#008842" : C.verdeFloresta, bgH: isDark ? "#006D35" : C.verdeEscuro, color: C.branco, border: "transparent" },
     danger:    { bg: isDark ? "#DC2626" : C.danger, bgH: isDark ? "#B91C1C" : C.dangerDark, color: C.branco, border: "transparent" },
     link:      { bg: "transparent",   bgH: "transparent",    color: isDark ? "#93BDE4" : "#004B9B", border: "transparent", underline: true },
-    ouro:      { bg: C.amareloOuro,   bgH: C.amareloEscuro,  color: C.azulEscuro,   border: "transparent" },
+    ouro:      { bg: "var(--color-accent)", bgH: "var(--color-accent-strong)", color: "var(--color-primary-hover)", border: "transparent" },
   };
 
   const v = variantMap[variant] || variantMap.primary;
@@ -299,7 +299,7 @@ export function Button({ variant = "primary", size = "medium", disabled = false,
   const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
 
   const variantMap: Record<string, { bg: string; bgH: string; color: string; border: string; underline?: boolean }> = {
-    primary:   { bg: isDark ? "#0090D0" : "#004B9B",  bgH: isDark ? "#007AB1" : "#002A68", color: "#FFFFFF", border: "transparent" },
+    primary:   { bg: "#004B9B", bgH: "#002A68", color: "#FFFFFF", border: "transparent" },
     secondary: { bg: C.surfaceMuted, bgH: C.surfaceMuted, color: C.fg, border: C.border },
     outline:   { bg: "transparent",   bgH: isDark ? "rgba(147,189,228,0.15)" : C.azulCeuClaro, color: isDark ? "#93BDE4" : "#004B9B", border: isDark ? "#93BDE4" : "#004B9B" },
     inverse:   { bg: isDark ? "#333B41" : "#002A68", bgH: isDark ? "#444" : "#333B41", color: "#FFFFFF", border: isDark ? "#444" : "#002A68" },
