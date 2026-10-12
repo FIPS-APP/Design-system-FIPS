@@ -43,6 +43,7 @@ export const semanticColors = {
   accentStrong: '#F6921E',
   success: '#00C64C',
   successStrong: '#00904C',
+  dangerStrong: '#B91C1C',
   borderControl: '#C0CCD2',
   primaryText: '#004B9B',
   dangerText: '#B91C1C',
@@ -73,6 +74,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-success-strong: var(--color-fips-green-700);
   --color-warning: var(--color-fips-yellow-600);
   --color-danger: var(--color-fips-red-600);
+  --color-danger-strong: var(--color-fips-red-700);
   --color-surface: #ffffff;
   --color-surface-soft: var(--color-fips-neutral-25);
   --color-surface-muted: var(--color-fips-neutral-50);
@@ -113,6 +115,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-success-fill` (fundo cheio com texto branco) | green-700 | `#008842` (4,56:1) |
 | `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
+| `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
 | `--color-ring` | sky-600 | yellow-600 |
 
 Botões sólidos leem seis tokens próprios, com texto acima de 4,5:1 no escuro. No claro repetem os valores de antes:
