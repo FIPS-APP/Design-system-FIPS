@@ -161,7 +161,8 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
-    --color-danger-text: var(--color-danger);
+    /* 6,47:1 sobre branco. Texto vermelho pequeno. */
+    --color-danger-text: #b91c1c;
     --color-success-fill: var(--color-fips-green-700);
     --color-neutral-fill: var(--color-fg-muted);
     --color-ring: var(--color-fips-sky-600);
@@ -212,12 +213,13 @@
     /* Divisor de linha e de cartão. 1,28:1 sobre o cartão. Não serve em campo. */
     --color-border: #2e2e2e;
     --color-border-strong: #3a3a3a;
-    /* Campo, select e botão outline. 3,03:1 sobre #1a1a1a. */
+    /* Campo, select, textarea e gatilho de campo. 3,03:1 sobre #1a1a1a. */
     --color-border-control: #666666;
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);
-    --color-danger-text: color-mix(in srgb, var(--color-fips-red-600) 82%, white 18%);
+    /* 8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão. */
+    --color-danger-text: #fca5a5;
     /* 4,56:1 com texto branco. */
     --color-success-fill: #008842;
     --color-neutral-fill: #5b6470;

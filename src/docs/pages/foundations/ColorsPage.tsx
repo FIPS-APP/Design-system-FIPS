@@ -147,16 +147,18 @@ export default function ColorsPage() {
               <tbody>
                 {[
                   { token: 'surface', light: '#FFFFFF', dark: '#1A1A1A' },
+                  { token: 'surface-soft', light: '#FBFDFF', dark: '#1F1F1F' },
                   { token: 'surface-muted', light: '#F5F8FC', dark: '#252525' },
                   { token: 'border', light: '#D7E0EA', dark: '#2E2E2E' },
                   { token: 'border-control', light: '#D7E0EA', dark: '#666666' },
                   { token: 'foreground', light: '#333B41', dark: '#E8E8E8' },
                   { token: 'fg-muted', light: '#6B7784', dark: '#9CA3AF' },
-                  { token: 'primary', light: '#004B9B', dark: '#93BDE4' },
+                  { token: 'primary-text', light: '#004B9B', dark: '#93BDE4' },
                   { token: 'accent', light: '#FDC24E', dark: '#FDC24E' },
-                  { token: 'success', light: '#00C64C', dark: '#8BE5AD' },
-                  { token: 'danger', light: '#EF4444', dark: '#FCA5A5' },
-                  { token: 'input-border', light: '#D7E0EA', dark: '#666666' },
+                  { token: 'success-strong', light: '#00904C', dark: '#8BE5AD' },
+                  { token: 'success-fill', light: '#00904C', dark: '#008842' },
+                  { token: 'danger-text', light: '#B91C1C', dark: '#FCA5A5' },
+                  { token: 'neutral-fill', light: '#6B7784', dark: '#5B6470' },
                   { token: 'input-focus', light: '#004B9B', dark: '#93BDE4' },
                   { token: 'badge-success-bg', light: 'rgba(0,198,76,0.14)', dark: 'rgba(0,198,76,0.14)' },
                   { token: 'badge-warning-bg', light: 'rgba(246,146,30,0.14)', dark: 'rgba(246,146,30,0.14)' },
@@ -183,8 +185,10 @@ export default function ColorsPage() {
           </div>
           <p style={{ fontSize: 13, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55 }}>
             No escuro, <code>--color-border</code> (#2E2E2E) é divisor: 1,28:1 sobre o cartão #1A1A1A.
-            <code> --color-border-control</code> (#666666) é campo e botão outline: 3,03:1 sobre o mesmo cartão.
-            <code> --color-success-fill</code> (#008842) com texto branco: 4,56:1.
+            <code> --color-border-control</code> (#666666) é a borda de campo, select, textarea e gatilho de campo: 3,03:1 sobre o mesmo cartão.
+            <code> --color-success-strong</code> (#8BE5AD) é cor de texto no escuro; fundo verde com texto branco usa
+            <code> --color-success-fill</code> (#008842): 4,56:1.
+            <code> --color-danger-text</code> é o vermelho de texto pequeno: 6,47:1 sobre branco e 9,17:1 sobre o cartão escuro.
           </p>
         </Section>
 
