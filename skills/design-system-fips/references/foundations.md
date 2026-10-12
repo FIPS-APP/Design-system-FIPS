@@ -115,6 +115,19 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
 | `--color-ring` | sky-600 | yellow-600 |
 
+Botões sólidos leem seis tokens próprios, com texto acima de 4,5:1 no escuro. No claro repetem os valores de antes:
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `--color-btn-success` | `--color-success` | `--color-success-fill` (`#008842`) |
+| `--color-btn-success-hover` | `--color-success-strong` | `#006d35` |
+| `--color-btn-danger` | `--color-danger` | `#dc2626` |
+| `--color-btn-danger-hover` | `#c82333` | `#b91c1c` |
+| `--color-btn-accent-fg` | `#ffffff` | `--color-primary-hover` (`#002a68`) |
+| `--color-btn-accent-hover` | `--color-warning` | `--color-accent` (`#fdc24e`) |
+
+`outline` e `link` usam `--color-primary-text`. Não sobrescreva os tokens do botão fora do pacote.
+
 **Regra crítica:** no escuro `--color-success-strong` é cor de **texto**. Fundo verde com texto branco usa `--color-success-fill`; `success-strong` como fundo dá 1,51:1 com branco.
 
 `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` continuam **idênticos** nos dois temas. Para **texto e contorno** de ação use `--color-primary-text`. Para **acento** de foco (borda em foco, anel, borda do dropdown aberto, opção selecionada) o par manual `dark:…-[#93BDE4]` continua necessário: `--color-primary` não muda no escuro, e sem o par o acento fica com contraste baixo. Esses `dark:` não são resíduo.

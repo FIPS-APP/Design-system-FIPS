@@ -45,7 +45,7 @@ Variantes exatas:
 - `accent`
 - `inverseOutline`
 - `success`
-- `successStrong` (verde escuro — `--color-success-strong`; hover pro `success` normal, inverso da variante `success`)
+- `successStrong` (verde escuro — `--color-btn-success-hover` em repouso e `--color-btn-success` no hover, inverso da variante `success`; no escuro `--color-success-strong` é cor de texto e não serve de fundo)
 - `ouro`
 - `danger`
 - `link`

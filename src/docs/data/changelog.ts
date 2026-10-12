@@ -50,6 +50,16 @@ export const CHANGELOG: ChangelogVersion[] = [
           'No escuro `--color-success-strong` é cor de texto (`#8be5ad`). Fundo verde com texto branco usa `--color-success-fill`. `src/tokens/colors.ts` e a página Cores acompanham os valores do CSS.',
       },
       {
+        type: 'fix',
+        description:
+          'Botões no escuro com texto acima de 4,5:1. `outline` e `link` usam `--color-primary-text` (`#93bde4`, 8,82:1 sobre o cartão; eram 2,06:1). `success`, `save`, `successStrong`, `danger` e `accent` passam a ler seis tokens novos, `--color-btn-success`, `--color-btn-success-hover`, `--color-btn-danger`, `--color-btn-danger-hover`, `--color-btn-accent-fg` e `--color-btn-accent-hover`: verde `#008842` e `#006d35`, vermelho `#dc2626` e `#b91c1c`, e o `accent` laranja com texto azul `#002a68` (5,91:1) e hover `#fdc24e`. O hover de `ghost` e de `outline` ganha cor própria no escuro e a borda do `secondary` usa `--color-border-control`. O claro fica igual: os seis tokens repetem os valores de antes.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Quem sobrescreve `--color-success-strong`, `--color-danger` ou `--color-primary` dentro do botão (por exemplo as regras de botão de um `tema-escuro.css` próprio) perde a sobrescrita: o botão agora lê os tokens `--color-btn-*` e `--color-primary-text`. `FilterDrawer` (Limpar tudo) e `ListingKpiRow` (Limpar filtro) passam a usar `--color-primary-text` no texto.',
+      },
+      {
         type: 'improvement',
         description:
           'App com `tema-escuro.css` próprio tira as sobrescritas dos tokens acima ao atualizar e mantém só o que é dele e difere do pacote, como `--color-ring`, os fundos dos badges, `--color-semantic-atencao-fg` e os tokens da casca.',
