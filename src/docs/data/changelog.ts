@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.1',
+    date: '2026-10-12',
+    title: 'Menu do topo com itens de 18px',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Menu do topo: `paddingX` dos itens passa de 24 para 18px em `docHeaderTabsUnderlineMd`, lido pelo `DocHeaderSectionNav` e pela réplica da doc.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`docHeaderTabsUnderlineMd` e `DocHeaderSectionNav` não saem no pacote `@fips-app/ds-fips`. O valor de 18px é padrão documentado em `/docs/components/header` e cada app copia.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Tutorial e exemplo de código de `/docs/components/header` ainda diziam 24px de padding horizontal da aba. Passam a 18px, igual à tabela da seção 04.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',
