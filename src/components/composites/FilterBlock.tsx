@@ -114,7 +114,7 @@ export function FilterBlock({
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={searchPlaceholder}
           aria-label={searchPlaceholder}
-          className="h-[30px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] pl-8 pr-2.5 text-[13px] text-[var(--color-fg)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/25"
+          className="h-[30px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] pl-8 pr-2.5 text-[13px] text-[var(--color-fg)] transition-colors focus-visible:border-[var(--color-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/25"
         />
       </div>
 
