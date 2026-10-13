@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.17.0`
+## Versão atual: `v0.17.1`
 
 ## Favicon e ícones de app
 
@@ -82,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.17.1 | 2026-10-13 | `HeroFileira`: só foco de teclado (`:focus-visible`) segura o atalho ao sair com o mouse, e o blur sem `relatedTarget` (Safari) não derruba o atalho apontado com o ponteiro dentro da fileira |
 | 0.17.0 | 2026-10-01 | `HeroFileira`: fileira de atalhos do hero com um aberto por vez e o primeiro aberto no repouso. O estado e o saiu moram na fileira, para atravessar sem piscar. `HeroAtalho` aceita `aberto` e `aoApontar` |
 | 0.15.0 | 2026-09-29 | `HeroAtalho` + `HeroAtalhos`: atalho do hero que mostra só o ícone e abre com o nome no hover ou no foco, com o realce do header. Home do DS e página Hero passam a usar |
 | 0.14.1 | 2026-10-01 | Padrão de favicon App FIPS: `public/icons/`, `docs/favicon.md`, vitrine `index.html` alinhada ao OPA-MOBILE |
