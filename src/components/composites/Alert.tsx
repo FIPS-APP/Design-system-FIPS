@@ -21,7 +21,7 @@ const alertVariants = cva(
         warning:
           'bg-[var(--color-badge-warning-bg)] border-[var(--color-accent-strong)] text-[var(--color-accent-strong)]',
         danger:
-          'bg-[var(--color-badge-danger-bg)] border-[var(--color-danger)] text-[var(--color-danger)]',
+          'bg-[var(--color-badge-danger-bg)] border-[var(--color-danger)] text-[var(--color-danger-text)]',
       },
       size: {
         xs: 'gap-1.5 px-2 py-1 text-[10.5px]',

@@ -25,7 +25,7 @@ const C = {
   cardBorder: 'var(--color-border)',
   textMuted: 'var(--color-fg-muted)',
   textLight: 'var(--color-fg-muted)',
-  inputBorder: 'var(--color-border)',
+  inputBorder: 'var(--color-border-control)',
   inputBg: 'var(--color-surface)',
   inputBgDisabled: 'var(--color-surface-muted)',
   focusRing: 'rgba(147,189,228,0.35)',
