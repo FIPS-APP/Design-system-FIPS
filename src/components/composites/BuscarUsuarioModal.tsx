@@ -83,7 +83,7 @@ export function BuscarUsuarioModal({
             'w-[calc(100%-2rem)] max-w-md rounded-[12px_12px_12px_24px] bg-[var(--color-surface)] ' +
             'shadow-[var(--shadow-elevated)] focus:outline-none ' +
             'flex max-h-[85vh] flex-col overflow-hidden ' +
-            'transition-all duration-200 data-[state=closed]:scale-95 data-[state=closed]:opacity-0'
+            'transition duration-200 data-[state=closed]:scale-95 data-[state=closed]:opacity-0'
           }
         >
           {/* Header — faixa gov (ícone âmbar) */}
