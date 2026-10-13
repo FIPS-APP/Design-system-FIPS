@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { cn } from '../../lib/cn'
+import type { AccessibleName } from './accessible-name'
 
 export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: number
@@ -11,7 +12,8 @@ function clampValue(value: number, max: number) {
   return Math.min(Math.max(value, 0), max)
 }
 
-const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
+/** `aria-label` ou `aria-labelledby` obrigatório: a barra não tem texto próprio. */
+const Progress = React.forwardRef<HTMLDivElement, ProgressProps & AccessibleName>(
   ({ className, value = 0, max = 100, ...props }, ref) => {
     const boundedValue = clampValue(value, max)
     const percent = max > 0 ? (boundedValue / max) * 100 : 0

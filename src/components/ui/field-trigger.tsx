@@ -35,6 +35,7 @@ const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
       >
         {leftIcon ? (
           <span
+            aria-hidden
             className={cn(
               'pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)]',
               density === 'compact'
@@ -52,6 +53,7 @@ const FieldTrigger = React.forwardRef<HTMLButtonElement, FieldTriggerProps>(
 
         {rightIcon ? (
           <span
+            aria-hidden
             className={cn(
               'pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)]',
               density === 'compact'

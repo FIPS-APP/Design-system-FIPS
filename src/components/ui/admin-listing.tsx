@@ -186,6 +186,19 @@ function AdminTableColumnMenu({
   const [dropTargetId, setDropTargetId] = React.useState<string | null>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
 
+  // Alternativa ao arrastar: setas na alça. Sempre pede "a de baixo vai para antes da de cima",
+  // forma que dá o mesmo resultado se o consumidor insere antes do destino ou no índice dele.
+  function moverPorTeclado(event: React.KeyboardEvent, index: number) {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return
+    event.preventDefault()
+    const de = event.key === 'ArrowUp' ? index : index + 1
+    const para = de - 1
+    const baixo = columns[de]
+    const cima = columns[para]
+    if (!baixo || !cima || fixedColumns.includes(baixo.id) || fixedColumns.includes(cima.id)) return
+    onReorderColumn(baixo.id, cima.id)
+  }
+
   React.useEffect(() => {
     function handlePointerDown(event: MouseEvent) {
       if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
@@ -269,7 +282,7 @@ function AdminTableColumnMenu({
                 <p className="mb-1.5 ml-1 text-[9px] font-bold uppercase tracking-[1px] text-[var(--color-fg-muted)]">
                   Visíveis ({visibleCount})
                 </p>
-                {columns.map((column) => {
+                {columns.map((column, index) => {
                   const checked = visibleColumns[column.id] ?? true
                   const fixed = fixedColumns.includes(column.id)
                   const isDropTarget = dropTargetId === column.id
@@ -295,30 +308,37 @@ function AdminTableColumnMenu({
                         setDropTargetId(null)
                       }}
                       className={cn(
-                        'flex items-center gap-2 rounded-lg border px-2 py-1.5 text-sm transition-colors',
+                        'flex items-center gap-2 rounded-lg border px-2 py-1.5 text-sm transition-colors select-none',
                         isDropTarget
                           ? 'border-[var(--color-secondary)]/40 bg-[var(--color-semantic-info-bg)]'
                           : 'border-transparent hover:bg-[var(--color-surface-soft)]',
                         fixed && 'opacity-60',
                       )}
                     >
-                      <span
+                      <button
+                        type="button"
+                        disabled={fixed}
+                        aria-label={`Mover coluna ${column.label}`}
+                        aria-keyshortcuts="ArrowUp ArrowDown"
+                        title={fixed ? undefined : 'Arraste ou use as setas para mover'}
+                        onKeyDown={(event) => moverPorTeclado(event, index)}
                         className={cn(
-                          'text-[var(--color-fg-muted)]',
+                          'rounded text-[var(--color-fg-muted)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none',
                           fixed ? 'cursor-not-allowed' : 'cursor-grab active:cursor-grabbing',
                         )}
                       >
                         <GripVertical className="h-3.5 w-3.5" aria-hidden />
-                      </span>
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        disabled={fixed}
-                        onChange={() => onToggleColumn(column.id)}
-                        className="h-4 w-4 rounded accent-[var(--color-primary)]"
-                        aria-label={`Alternar coluna ${column.label}`}
-                      />
-                      <span className="flex-1 truncate text-[var(--color-fg)]">{column.label}</span>
+                      </button>
+                      <label className={cn('flex min-w-0 flex-1 items-center gap-2', fixed ? 'cursor-not-allowed' : 'cursor-pointer')}>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          disabled={fixed}
+                          onChange={() => onToggleColumn(column.id)}
+                          className="h-4 w-4 rounded accent-[var(--color-primary)]"
+                        />
+                        <span className="flex-1 truncate text-[var(--color-fg)]">{column.label}</span>
+                      </label>
                       {fixed ? (
                         <span className="font-mono text-[9px] text-[var(--color-fg-muted)]">fixa</span>
                       ) : checked ? (
@@ -396,7 +416,7 @@ function AdminTableColumnMenu({
                   Aparência da tabela
                 </p>
                 {APPEARANCE_OPTIONS.map((opt) => (
-                  <div key={opt.id} className="flex items-center gap-3 rounded-lg px-2 py-2">
+                  <label key={opt.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2">
                     <span className="flex-1">
                       <span className="block text-[11px] font-semibold text-[var(--color-fg)]">
                         {opt.label}
@@ -408,7 +428,7 @@ function AdminTableColumnMenu({
                       onChange={() => onAppearanceChange({ ...appearance, [opt.id]: !appearance[opt.id] })}
                       label={opt.label}
                     />
-                  </div>
+                  </label>
                 ))}
               </div>
             ) : null}

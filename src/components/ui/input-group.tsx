@@ -4,6 +4,7 @@ import { cn } from '../../lib/cn'
 import { Input } from './input'
 import { Textarea } from './textarea'
 import { Button, type ButtonProps } from './button'
+import type { AccessibleName } from './accessible-name'
 
 /* ─── Root ─── */
 function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
@@ -87,13 +88,23 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm shadow-non
   },
 })
 
-function InputGroupButton({
+type InputGroupButtonSize = NonNullable<VariantProps<typeof inputGroupButtonVariants>['size']>
+
+/**
+ * `icon-xs` e `icon-sm` escritos na chamada exigem `aria-label` ou `aria-labelledby`
+ * (mesma regra do `Button` só-ícone; `size` dinâmico não é cobrado).
+ */
+export type InputGroupButtonProps<S extends InputGroupButtonSize | null | undefined = InputGroupButtonSize | null | undefined> =
+  Omit<ButtonProps, 'size'> & { size?: S } & ([S] extends ['icon-xs' | 'icon-sm'] ? AccessibleName : unknown)
+
+function InputGroupButton<S extends InputGroupButtonSize | null | undefined = undefined>({
   className,
   type = 'button',
   variant = 'ghost',
-  size = 'xs',
+  size: sizeProp,
   ...props
-}: Omit<ButtonProps, 'size'> & VariantProps<typeof inputGroupButtonVariants>) {
+}: InputGroupButtonProps<S>) {
+  const size = sizeProp ?? 'xs'
   return (
     <Button
       type={type}
