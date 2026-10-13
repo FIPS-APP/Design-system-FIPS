@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { ChevronDown, Search, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 
@@ -7,6 +7,9 @@ const BUSCA_MIN_OPCOES = 10
 
 /** Comparação pra busca: sem acento e sem caixa ("Jose" acha "Jose"). */
 export const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
+/** Ponteiro fino (mouse): focar o campo de busca ao abrir é seguro; no toque abriria o teclado virtual. */
+const ponteiroFino = () => typeof window === 'undefined' || !!window.matchMedia?.('(pointer: fine)').matches
 
 // Padrão "chip" de filtro do DS-FIPS (DataListingDemo): trigger 32.5px, radius 8,
 // 11px/600, prefixo mudo "Label:" + valor bold. Usado na barra de ferramentas E
@@ -50,20 +53,47 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
 }) {
   const [open, setOpen] = useState(false)
   const [busca, setBusca] = useState('')
+  const [hi, setHi] = useState(-1)
+  // O realce veio do teclado: só então ele rola a lista e ganha o indicador de teclado.
+  // Clique para abrir e hover do mouse não rolam nada.
+  const [teclado, setTeclado] = useState(false)
+  // O campo de busca recebe o foco ao abrir (ponteiro fino). Sem isso o foco fica no gatilho.
+  const [focaBusca, setFocaBusca] = useState(ponteiroFino)
   const ref = useRef<HTMLDivElement>(null)
+  const gatilhoRef = useRef<HTMLButtonElement>(null)
   const buscaRef = useRef<HTMLInputElement>(null)
+  const uid = useId()
+  const listId = `${uid}-lista`
+  const optId = useCallback((i: number) => `${uid}-opcao-${i}`, [uid])
   useEffect(() => {
     if (!open) return
     const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
     document.addEventListener('mousedown', h)
     return () => document.removeEventListener('mousedown', h)
   }, [open])
-  // Abriu: campo limpo e cursor já na busca (digita direto, sem clicar).
+  // Abriu: cursor já na busca (digita direto, sem clicar). Só com ponteiro fino:
+  // no toque, focar o campo abre o teclado virtual por cima da lista.
+  useEffect(() => {
+    if (open && focaBusca) buscaRef.current?.focus()
+  }, [open, focaBusca])
+  // Escape com o dropdown aberto fecha só o dropdown (e devolve o foco ao gatilho). Escuta na
+  // captura da window porque o drawer de filtros (Radix) escuta na captura do document.
   useEffect(() => {
     if (!open) return
-    setBusca('')
-    buscaRef.current?.focus()
+    const h = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== 'Escape' || !ref.current?.contains(document.activeElement)) return
+      e.preventDefault()
+      e.stopPropagation()
+      setOpen(false)
+      gatilhoRef.current?.focus()
+    }
+    window.addEventListener('keydown', h, true)
+    return () => window.removeEventListener('keydown', h, true)
   }, [open])
+  // Opção realçada pelo teclado fica visível dentro da lista rolável.
+  useEffect(() => {
+    if (open && teclado && hi >= 0) document.getElementById(optId(hi))?.scrollIntoView({ block: 'nearest' })
+  }, [open, teclado, hi, optId])
 
   const comBusca = searchable ?? options.length >= BUSCA_MIN_OPCOES
   const visiveis = useMemo(() => {
@@ -72,11 +102,98 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
     return options.filter((o) => normalizar(o.label).includes(q))
   }, [options, busca])
 
+  // Abrir limpa a busca na mesma atualização, para o realce (índice em `options`) e a lista
+  // completa chegarem juntos e a opção selecionada ser rolada para a vista.
+  const abrir = (realce: number, porTeclado: boolean) => {
+    setBusca('')
+    setTeclado(porTeclado)
+    setFocaBusca(ponteiroFino())
+    setOpen(true)
+    setHi(options.length ? realce : -1)
+  }
+  // Move o realce pelo teclado, sempre dentro das opções visíveis.
+  const mover = (proximo: (h: number) => number) => {
+    setTeclado(true)
+    setHi((h) => Math.min(Math.max(proximo(h), 0), visiveis.length - 1))
+  }
+  const fechar = () => {
+    setOpen(false)
+    gatilhoRef.current?.focus()
+  }
+  const escolher = (v: string) => {
+    onChange(v)
+    fechar()
+  }
+
+  // Mesmo teclado no gatilho e no campo de busca: setas, Home/End, Enter, Escape e Tab.
+  const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    const atual = options.findIndex((o) => o.value === value)
+    const ultimo = visiveis.length - 1
+    const noCampo = e.currentTarget === buscaRef.current
+    if (!open) {
+      if (['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Home', 'End'].includes(e.key)) {
+        e.preventDefault()
+        abrir(e.key === 'End' || (e.key === 'ArrowUp' && atual < 0) ? options.length - 1 : e.key === 'Home' ? 0 : Math.max(atual, 0), true)
+      }
+      return
+    }
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        mover((h) => h + 1)
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        mover((h) => h - 1)
+        break
+      case 'Home':
+      case 'End':
+        // No campo de busca, Home/End movem o cursor do texto.
+        if (noCampo) break
+        e.preventDefault()
+        mover(() => (e.key === 'Home' ? 0 : ultimo))
+        break
+      case ' ':
+        if (noCampo) break
+        e.preventDefault()
+        if (hi >= 0 && visiveis[hi]) escolher(visiveis[hi].value)
+        break
+      case 'Enter':
+        e.preventDefault()
+        if (hi >= 0 && visiveis[hi]) escolher(visiveis[hi].value)
+        break
+      case 'Tab':
+        // Fechar desmonta o campo que tem o foco antes de o navegador mover o foco, e o focus trap
+        // do drawer (Radix) leva o foco ao início do painel. Devolver o foco ao gatilho antes de
+        // fechar faz o Tab seguir dali; o Shift+Tab fica no próprio gatilho.
+        if (noCampo) {
+          if (e.shiftKey) e.preventDefault()
+          gatilhoRef.current?.focus()
+        }
+        setOpen(false)
+        break
+    }
+  }
+
+  const ativo = open && hi >= 0 && hi < visiveis.length ? optId(hi) : undefined
   const current = options.find((o) => o.value === value)?.label ?? ''
   return (
     <div ref={ref} className={cn('relative shrink-0', className)}>
-      <button type="button" onClick={() => setOpen((v) => !v)} aria-label={ariaLabel} className={cn(chipTriggerCls(open), block && 'flex w-full')}>
-        <Icon className="h-3.5 w-3.5 shrink-0 text-[var(--color-fg-muted)]" />
+      <button
+        ref={gatilhoRef}
+        type="button"
+        onClick={() => (open ? setOpen(false) : abrir(options.findIndex((o) => o.value === value), false))}
+        onKeyDown={onKeyDown}
+        aria-label={ariaLabel}
+        // Sem busca, ou com a busca sem foco (toque), o foco fica no gatilho: ele é o combobox e anuncia o realce.
+        role={comBusca && focaBusca ? undefined : 'combobox'}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        aria-activedescendant={comBusca && focaBusca ? undefined : ativo}
+        className={cn(chipTriggerCls(open), block && 'flex w-full')}
+      >
+        <Icon className="h-3.5 w-3.5 shrink-0 text-[var(--color-fg-muted)]" aria-hidden />
         <span className="shrink-0 text-[var(--color-fg-muted)]">{fieldLabel}:</span>
         <span className={cn('truncate font-bold text-[var(--color-fg)]', block && 'flex-1 text-left')}>{current}</span>
         <ChevronDown className={cn('h-2.5 w-2.5 shrink-0 text-[var(--color-fg-muted)] transition-transform duration-200', open && 'rotate-180')} aria-hidden />
@@ -91,19 +208,40 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
                 ref={buscaRef}
                 type="text"
                 value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false) }}
+                name={`busca-${normalizar(fieldLabel).replace(/[^a-z0-9]+/g, '-')}`}
+                autoComplete="off"
+                role="combobox"
+                aria-expanded
+                aria-autocomplete="list"
+                aria-controls={listId}
+                aria-activedescendant={ativo}
+                onChange={(e) => { setBusca(e.target.value); setTeclado(true); setHi(0) }}
+                onKeyDown={onKeyDown}
                 placeholder={`Buscar ${fieldLabel.toLowerCase()}…`}
                 aria-label={`Buscar em ${fieldLabel}`}
-                className="min-w-0 flex-1 border-none bg-transparent text-[11px] font-medium text-[var(--color-fg)] outline-none placeholder:font-normal placeholder:text-[var(--color-fg-muted)]"
+                className="min-w-0 flex-1 rounded-sm border-none bg-transparent text-[11px] font-medium text-[var(--color-fg)] outline-none placeholder:font-normal placeholder:text-[var(--color-fg-muted)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25"
               />
             </div>
           )}
-          <div role="listbox" className="min-h-0 flex-1 overflow-y-auto py-1.5">
-            {visiveis.map((o) => {
+          {/* onMouseDown: clique numa opção não tira o foco do gatilho nem da busca. */}
+          <div id={listId} role="listbox" aria-label={ariaLabel} onMouseDown={(e) => e.preventDefault()} className="min-h-0 flex-1 overflow-y-auto py-1.5">
+            {visiveis.map((o, i) => {
               const active = o.value === value
               return (
-                <div key={o.value} role="option" aria-selected={active} onClick={() => { onChange(o.value); setOpen(false) }} className={chipOptionCls(active)}>
+                <div
+                  key={o.value}
+                  id={optId(i)}
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => escolher(o.value)}
+                  onMouseEnter={() => { setTeclado(false); setHi(i) }}
+                  className={cn(
+                    chipOptionCls(active),
+                    i === hi && !active && 'bg-[var(--color-surface-muted)]',
+                    // Indicador do realce de teclado: barra de 3px (>= 3:1 contra a lista nos dois temas).
+                    i === hi && teclado && 'shadow-[inset_3px_0_0_var(--color-primary)] dark:shadow-[inset_3px_0_0_var(--color-fips-blue-400)]',
+                  )}
+                >
                   <ChipRadio active={active} />
                   <span className="flex-1 truncate">{o.label}</span>
                 </div>
