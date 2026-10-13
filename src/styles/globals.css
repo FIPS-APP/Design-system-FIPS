@@ -453,3 +453,19 @@
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
+
+/* Movimento reduzido (preferência do sistema): nada gira, desliza, escala ou brilha.
+   Fora de @layer e com !important para vencer utilitários e estilos inline. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .btn-shimmer:hover {
+    animation: none;
+    background-image: none;
+  }
+}

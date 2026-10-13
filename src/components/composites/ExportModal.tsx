@@ -265,7 +265,7 @@ export function ExportModal({
         <div
           className={cn(
             "pointer-events-auto w-full flex flex-col overflow-hidden rounded-2xl",
-            "transition-all duration-200",
+            "transition duration-200",
             sz.maxW,
             sz.maxH,
           )}
@@ -310,7 +310,7 @@ export function ExportModal({
                   type="button"
                   onClick={() => setSize(nextSize)}
                   title={`${sz.label} → ${MODAL_SIZES[nextSize].label}`}
-                  style={{ width: 28, height: 28, borderRadius: 8, background: shell.closeBg, border: `1px solid ${shell.closeBorder}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: shell.closeColor, transition: "all .15s" }}
+                  style={{ width: 28, height: 28, borderRadius: 8, background: shell.closeBg, border: `1px solid ${shell.closeBorder}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: shell.closeColor, transition: "background-color .15s, border-color .15s, color .15s, box-shadow .15s, opacity .15s, transform .15s" }}
                   onMouseEnter={e => { e.currentTarget.style.background = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"; e.currentTarget.style.color = shell.title; }}
                   onMouseLeave={e => { e.currentTarget.style.background = shell.closeBg; e.currentTarget.style.color = shell.closeColor; }}
                 >
@@ -319,7 +319,7 @@ export function ExportModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  style={{ width: 28, height: 28, borderRadius: 8, background: shell.closeBg, border: `1px solid ${shell.closeBorder}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: shell.closeColor, transition: "all .15s" }}
+                  style={{ width: 28, height: 28, borderRadius: 8, background: shell.closeBg, border: `1px solid ${shell.closeBorder}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: shell.closeColor, transition: "background-color .15s, border-color .15s, color .15s, box-shadow .15s, opacity .15s, transform .15s" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "color-mix(in srgb, var(--color-primary) 15%, transparent)"; e.currentTarget.style.borderColor = "color-mix(in srgb, var(--color-primary) 30%, transparent)"; e.currentTarget.style.color = "var(--color-primary)"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = shell.closeBg; e.currentTarget.style.borderColor = shell.closeBorder; e.currentTarget.style.color = shell.closeColor; }}
                 >
@@ -344,7 +344,7 @@ export function ExportModal({
                       key={key}
                       type="button"
                       onClick={() => setSectionFilter(key)}
-                      className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all"
+                      className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition"
                       style={{
                         background: active ? shell.tabActiveBg : shell.tabInactiveBg,
                         border: `1px solid ${active ? shell.tabActiveBorder : shell.tabInactiveBorder}`,
@@ -411,7 +411,7 @@ export function ExportModal({
                       onClick={() => toggleOne(col.id)}
                       title={col.checked ? `Remover "${col.label}"` : `Adicionar "${col.label}"`}
                       className={cn(
-                        "flex cursor-grab select-none items-center gap-1 rounded-full px-2.5 py-[4px] text-[10px] font-semibold transition-all active:cursor-grabbing",
+                        "flex cursor-grab select-none items-center gap-1 rounded-full px-2.5 py-[4px] text-[10px] font-semibold transition active:cursor-grabbing",
                         isDragging && "opacity-30 scale-95",
                         isOver && "ring-2 ring-[var(--color-primary)]/40 ring-offset-1",
                       )}
