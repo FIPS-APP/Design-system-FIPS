@@ -51,6 +51,9 @@ export const docHeaderNeuAccentBgHover = 'linear-gradient(135deg,#FFD37B,#f7ad45
 export const docHeaderNeuAccentShadowHover =
   '0 6px 22px -4px rgba(246,146,30,0.5), 0 3px 10px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.12) inset, 0 -1px 0 rgba(0,0,0,0.35) inset'
 export const docHeaderNeuAccentIcon = '#002A68'
+/** Brilho na metade de cima do azulejo realçado. */
+export const docHeaderNeuAccentGloss =
+  'linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.02))'
 
 /* ─── Neumorphic: faixa escura (repouso) ─── */
 export const docHeaderNeuDarkBorderIdle = '#3f3f46'

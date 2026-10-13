@@ -94,6 +94,12 @@ export {
 } from './components/composites/PhotoEvidenceDropzone'
 export { Alert, type AlertProps } from './components/composites/Alert'
 export { Lightbox, type LightboxProps } from './components/composites/Lightbox'
+export {
+  HeroAtalho,
+  HeroAtalhos,
+  type HeroAtalhoProps,
+  type HeroAtalhosProps,
+} from './components/composites/HeroAtalho'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
 export {
   AbasDeSecao,

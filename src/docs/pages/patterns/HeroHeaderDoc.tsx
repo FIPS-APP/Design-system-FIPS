@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
-import { ShieldCheck, AlertTriangle, ArrowUpFromLine, LayoutGrid } from 'lucide-react'
+import { ShieldCheck, AlertTriangle, ArrowUpFromLine, LayoutGrid, ClipboardList, Settings, Sparkles } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import { RuleCards } from '../../components/RuleCards'
 import { Badge } from '../../../components/ui/badge'
-import { Button } from '../../../components/ui/button'
+import { HeroAtalho, HeroAtalhos } from '../../../components/composites/HeroAtalho'
 import { PageHero, PAGE_HERO_DEFAULT_DECORATION } from '../../../composites/PageHero'
 import { cn } from '../../../lib/cn'
 
@@ -55,12 +55,10 @@ function HeroHeaderDemo() {
               <p className="mt-3 text-sm text-white/75 max-w-xs mx-auto">
                 Role a página para ver o cabeçalho transicionar de vidro para branco.
               </p>
-              <div className="mt-6 flex gap-3 justify-center">
-                <Button variant="accent" size="sm">Ação Primária</Button>
-                <Button variant="inverseOutline" size="sm">
-                  Secundária
-                </Button>
-              </div>
+              <HeroAtalhos className="mt-6">
+                <HeroAtalho icon={ClipboardList} label="Ação primária" variante="ouro" />
+                <HeroAtalho icon={Settings} label="Secundária" />
+              </HeroAtalhos>
             </div>
           </div>
 
@@ -165,6 +163,23 @@ export function HeroWithAdaptiveHeader() {
 }`
 }
 
+function codeHeroAtalhos() {
+  return `// DS-FIPS — Atalhos do hero da Home
+import { useNavigate } from 'react-router-dom'
+import { Sparkles, ShieldCheck } from 'lucide-react'
+import { HeroAtalho, HeroAtalhos } from '@fips-app/ds-fips'
+
+export function AtalhosDaHome() {
+  const navigate = useNavigate()
+  return (
+    <HeroAtalhos label="Atalhos da Home">
+      <HeroAtalho icon={Sparkles} label="Explorar componentes" onClick={() => navigate('/docs')} />
+      <HeroAtalho icon={ShieldCheck} label="Governança" onClick={() => navigate('/docs/governance')} />
+    </HeroAtalhos>
+  )
+}`
+}
+
 function codePageHeroFaixa() {
   return `// DS-FIPS — PageHero Faixa de Modulo — Copy-paste ready
 
@@ -255,6 +270,60 @@ export default function HeroHeaderDoc() {
         }>
           <HeroHeaderDemo />
         </Copyable>
+      </section>
+
+      {/* Atalhos do hero */}
+      <section style={{ marginTop: 36 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-gov-azul-escuro)', margin: '0 0 12px', fontFamily: "'Saira Expanded', sans-serif" }}>Atalhos do hero (HeroAtalho)</h2>
+        <p style={{ fontSize: 14, color: '#7B8C96', marginBottom: 16, lineHeight: 1.55 }}>
+          Os botões do hero da Home são atalhos. Parado, cada um mostra só o ícone, em 30px, no
+          estilo <code>inverseOutline</code>. No hover ou no foco pelo teclado ele abre e mostra o nome
+          dentro do botão, com o realce amarelo dos azulejos do header. O nome fica no HTML, sem
+          {' '}<code>title</code>. Mantenha os nomes e destinos que o app já tem. Passe o mouse ou use Tab
+          no exemplo. Clique para copiar o código.
+        </p>
+        <Copyable label="Atalhos do hero" code={codeHeroAtalhos()} preview={
+          <div style={{ background: 'linear-gradient(135deg, #002A68, #004B9B)', borderRadius: 12, padding: '20px 16px', color: '#fff', fontFamily: "'Saira Expanded', sans-serif", fontSize: 13, textAlign: 'center' }}>
+            HeroAtalho
+          </div>
+        }>
+          <div className="w-[640px] max-w-full overflow-hidden rounded-xl border border-[var(--color-border)] shadow-sm">
+            <PageHero>
+              <div className="px-6 py-8">
+                <HeroAtalhos label="Atalhos de exemplo">
+                  <HeroAtalho icon={Sparkles} label="Explorar componentes" />
+                  <HeroAtalho icon={ShieldCheck} label="Governança" />
+                  <HeroAtalho icon={Settings} label="Configurações" />
+                </HeroAtalhos>
+              </div>
+            </PageHero>
+          </div>
+        </Copyable>
+        <div className="mt-4 max-w-3xl overflow-hidden rounded-2xl border border-[var(--color-border)]">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-muted)]">
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Prop</th>
+                <th className="px-4 py-3 text-left font-semibold text-[var(--color-fg)]">Uso</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {[
+                ['icon', 'Ícone Lucide mostrado sempre.'],
+                ['label', 'Nome que aparece ao abrir. Também é o nome para leitor de tela.'],
+                ['variante', 'Opcional. `ouro` no primário do hero; padrão `inverseOutline`. O realce no hover é igual nos dois.'],
+                ['href', 'Opcional. Com ele o atalho vira link <a> (recarrega a página). Apps com router usam `onClick`.'],
+                ['onClick', 'Opcional. Use para navegar pelo router do app.'],
+                ['HeroAtalhos label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
+              ].map(([prop, uso]) => (
+                <tr key={prop} className="bg-[var(--color-surface)]">
+                  <td className="px-4 py-3 font-mono text-xs text-[var(--color-fg)]">{prop}</td>
+                  <td className="px-4 py-3 text-[var(--color-fg-muted)]">{uso}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
 
