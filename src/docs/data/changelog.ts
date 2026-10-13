@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.2',
+    date: '2026-10-13',
+    title: 'Site de docs sem rolagem lateral em 11 rotas a 375 px',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'A coluna de conteúdo do `DocLayout` só tinha `min-w-0` a partir de `lg`: abaixo disso o filho flex crescia até a largura do conteúdo e a página rolava de lado. Agora `min-w-0` vale em todas as larguras. A 375 px, as rotas de docs com rolagem lateral caem de 22 para 11 de 37; as 11 restantes vêm de demos de largura fixa dentro das páginas.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',
