@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.19.0',
+    date: '2026-10-01',
+    title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Atributo `data-modo` (`normal` e `facil`) e tokens `--modo-*` (alvo, texto, borda, raio, peso, espaço), com os mesmos nomes e valores do app de campo. Sem `data-modo` vale o normal.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Token `--alvo-toque`: o token do modo acima de 767px (35px normal, 48px fácil) e, no celular, `max(44px, --modo-alvo-min)` (44px normal, 48px fácil). Fica declarado junto de cada `[data-modo]`, porque propriedade que lê outra resolve no elemento onde foi declarada.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`--abas-secao-altura` passa a ser `max(39px, --alvo-toque)`: a faixa de `AbasDeSecao` sobe de 39px para 44px ou 48px no celular. Acima de 767px no modo normal segue em 39px.',
+      },
+    ],
+  },
+  {
     version: '0.18.0',
     date: '2026-10-01',
     title: 'AbasDeSecao: faixa de abas de seção, com variante de celular no rodapé',

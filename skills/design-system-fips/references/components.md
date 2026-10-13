@@ -495,9 +495,21 @@ const [aba, setAba] = useState('modo')
 
 Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `posicao?`, `label?`, `className?`. Aba com `href` vira `<a>` e recarrega a página sem router; sem `href` é `<button>`.
 
-**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura` (39px), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
+**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura`, que vale `max(39px, var(--alvo-toque))` (39px no escritório, 44px ou 48px no celular), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
 
 Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
+
+## Modos de uso (`data-modo`)
+
+Fonte: `src/styles/globals.css`.
+
+App de campo tem dois modos: `data-modo="normal"` (escritório) e `data-modo="facil"` (pátio, com luva). O atributo vai no `<html>` ou em qualquer contêiner. Sem ele vale o normal, e nenhum token resolve vazio.
+
+Tokens `--modo-*` (mesmos nomes e valores do app de campo): `--modo-alvo-min` (35px e 48px), `--modo-texto-campo` (13px e 14px), `--modo-texto-base`, `--modo-texto-rotulo`, `--modo-texto-titulo`, `--modo-espaco`, `--modo-borda-largura` (1px e 2px), `--modo-borda-cartao`, `--modo-sombra-cartao`, `--modo-raio-controle`, `--modo-raio-cartao`, `--modo-peso` (600 e 700).
+
+`--alvo-toque` é o alvo de toque do aparelho: o token do modo acima de 767px e `max(44px, --modo-alvo-min)` até 767px (44px normal, 48px fácil). Use `min-height: var(--alvo-toque)` em controle de toque.
+
+**Armadilha:** propriedade que lê outra (`--alvo-toque` lê `--modo-alvo-min`) resolve no elemento onde foi declarada. `--alvo-toque` e `--abas-secao-altura` ficam declaradas junto de cada `[data-modo]`; declarar só em `:root` faz um contêiner interno em modo fácil herdar o 35px da raiz.
 
 ## FipsLogo e marca do menu (sidebar header)
 
