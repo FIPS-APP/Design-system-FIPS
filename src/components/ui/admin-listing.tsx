@@ -141,8 +141,8 @@ function ConfigToggle({
     >
       <span
         className={cn(
-          'absolute top-0.5 h-3.5 w-3.5 rounded-full bg-[var(--color-surface)] shadow-sm transition-all',
-          checked ? 'left-[14px]' : 'left-0.5',
+          'absolute top-0.5 left-0.5 h-3.5 w-3.5 rounded-full bg-[var(--color-surface)] shadow-sm transition-transform',
+          checked ? 'translate-x-3' : 'translate-x-0',
         )}
       />
     </button>
