@@ -54,6 +54,6 @@ export { ListingFilterToolbar, LISTING_PERIOD_PRESETS } from './ListingFilterToo
 export { PillFilter } from './PillFilter'
 export { PillGroup } from './PillGroup'
 export { HeroAtalho, HeroAtalhos } from './HeroAtalho'
-export type { HeroAtalhoProps, HeroAtalhosProps } from './HeroAtalho'
+export type { HeroAtalhoProps, HeroAtalhosProps, HeroAtalhoAtributos } from './HeroAtalho'
 export { HeroFileira } from './HeroFileira'
 export type { HeroFileiraProps, HeroFileiraAtalho } from './HeroFileira'
