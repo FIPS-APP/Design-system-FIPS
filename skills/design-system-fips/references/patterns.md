@@ -30,7 +30,7 @@ Fontes: `src/components/layout/DocHeaderStandard.tsx` (`DocHeaderStandardPreview
 Duas faixas empilhadas num único `<header overflow-hidden>` (o `overflow-hidden` clipa o art decorativo de fundo — mesmo motivo pelo qual o painel do `UserAccountMenu` precisa de portal, ver abaixo):
 
 1. **Faixa superior** (`docHeaderBarTop`, sempre visível) — `flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6` (padding direito um degrau menor que o esquerdo, decisão intencional). Da esquerda pra direita: botão hambúrguer (`lg:hidden`, abre a sidebar mobile) → `DocHeaderNeuIconButton` recolher/expandir sidebar (`hidden sm:inline-flex`) → `DocHeaderPageTrail` (`flex-1`) → `SearchPill` (`hidden md:block`) → cluster de ações (ícones + divisor `h-6 w-px` `hidden sm:block` + `UserChip variant="docHeader"`).
-2. **Faixa de tabs** (`docHeaderBarTabs`, `hidden lg:block`) — `DocHeaderSectionNav`; some completamente abaixo de `lg` (navegação mobile vive só na sidebar).
+2. **Faixa de tabs** (`docHeaderBarTabs`, `hidden lg:block`) — `DocHeaderSectionNav`; some completamente abaixo de `lg` (navegação mobile vive só na sidebar). Nos apps de campo, a faixa de seção no celular é o `AbasDeSecao` da biblioteca, com `posicao="rodape"`.
 
 Não faça:
 
