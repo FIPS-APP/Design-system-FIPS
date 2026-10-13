@@ -98,6 +98,7 @@ export {
   HeroAtalho,
   HeroAtalhos,
   type HeroAtalhoProps,
+  type HeroAtalhoAtributos,
   type HeroAtalhosProps,
 } from './components/composites/HeroAtalho'
 export {

@@ -1,9 +1,9 @@
 import { useRef, useState, type FocusEvent, type MouseEvent } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
-import { HeroAtalho, type HeroAtalhoVariante } from './HeroAtalho'
+import { HeroAtalho, type HeroAtalhoAtributos, type HeroAtalhoVariante } from './HeroAtalho'
 
-export interface HeroFileiraAtalho {
+export interface HeroFileiraAtalho extends HeroAtalhoAtributos {
   /** Único na fileira. */
   id: string
   icon: LucideIcon
@@ -12,6 +12,9 @@ export interface HeroFileiraAtalho {
   variante?: HeroAtalhoVariante
   href?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  /** Repassado ao HeroAtalho: `aria-pressed` no `<button>` (sem `href`), sem mudar o visual. */
+  pressionado?: boolean
+  // Os `data-*` e `aria-*` do item (ex. `'data-tutorial': 'novo'`) chegam ao <a>/<button>.
 }
 
 export interface HeroFileiraProps {
@@ -108,16 +111,18 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
       onMouseLeave={aoSairComMouse}
       onBlur={aoDesfocar}
     >
-      {atalhos.map((a) => (
+      {atalhos.map(({ id, icon, label: nome, variante, href, onClick, pressionado, ...atributos }) => (
         <HeroAtalho
-          key={a.id}
-          icon={a.icon}
-          label={a.label}
-          variante={a.variante}
-          href={a.href}
-          onClick={a.onClick}
-          aberto={a.id === aberto}
-          aoApontar={() => setApontado(a.id)}
+          {...atributos}
+          key={id}
+          icon={icon}
+          label={nome}
+          variante={variante}
+          href={href}
+          onClick={onClick}
+          pressionado={pressionado}
+          aberto={id === aberto}
+          aoApontar={() => setApontado(id)}
         />
       ))}
     </nav>
