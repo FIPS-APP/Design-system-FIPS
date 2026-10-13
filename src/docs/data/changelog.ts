@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.1',
+    date: '2026-10-13',
+    title: 'Alert info legível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Alert` com `tone="info"` usa os tokens `--color-semantic-info-bg/fg/border`, que mudam no escuro. Antes o fundo ficava em `blue-200` nos dois temas e o texto virava `blue-400`: 1,51:1 no escuro; agora 6,00:1. No claro os valores não mudam (10,49:1).',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',

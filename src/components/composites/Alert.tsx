@@ -15,7 +15,7 @@ const alertVariants = cva(
     variants: {
       tone: {
         info:
-          'bg-[var(--color-fips-blue-200)] border-[var(--color-fips-blue-400)] text-[var(--color-fips-blue-950)] dark:border-[var(--color-fips-blue-700)] dark:text-[var(--color-fips-blue-400)]',
+          'bg-[var(--color-semantic-info-bg)] border-[var(--color-semantic-info-border)] text-[var(--color-semantic-info-fg)]',
         success:
           'bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.40)] text-[var(--color-success-strong)]',
         warning:
