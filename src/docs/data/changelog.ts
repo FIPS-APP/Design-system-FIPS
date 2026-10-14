@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.5',
+    date: '2026-10-14',
+    title: 'Site sem scripts de localhost',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O `index.html` do site carregava dois scripts de `localhost:3000` desde 23/06; eles saem do HTML de produção. Número provisório: renumera na ordem de entrada da fila.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',
