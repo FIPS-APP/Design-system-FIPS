@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.2',
+    date: '2026-10-19',
+    title: 'Site sem scripts de localhost',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O `index.html` do site carregava dois scripts de `localhost:3000` desde 23/06; eles saem do HTML de produção. Número provisório: renumera na ordem de entrada da fila.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
