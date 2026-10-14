@@ -1,11 +1,17 @@
 import * as React from 'react'
 import * as SwitchPrimitives from '@radix-ui/react-switch'
 import { cn } from '../../lib/cn'
+import type { AccessibleName } from './accessible-name'
 
-const Switch = React.forwardRef<
-  React.ComponentRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => (
+export type SwitchProps = React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+
+/**
+ * Nome do switch: `aria-label`, `aria-labelledby` ou `id`. O `id` pressupõe um
+ * `<label htmlFor>` ligado a ele (o rótulo clicável ao lado é o nome).
+ */
+export type SwitchName = AccessibleName | { id: string }
+
+const Switch = React.forwardRef<React.ComponentRef<typeof SwitchPrimitives.Root>, SwitchProps & SwitchName>(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     ref={ref}
     className={cn(

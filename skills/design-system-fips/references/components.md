@@ -197,11 +197,15 @@ Composição recomendada:
 
 ```tsx
 <Field density="compact" inset="icon">
-  <FieldLabel required>Razao social</FieldLabel>
-  <Input density="compact" placeholder="Nome da empresa" />
-  <FieldMessage tone="danger">Campo obrigatorio</FieldMessage>
+  <FieldLabel htmlFor="razao" required>Razao social</FieldLabel>
+  <Input id="razao" density="compact" placeholder="Nome da empresa" aria-invalid aria-describedby="razao-erro" />
+  <FieldMessage id="razao-erro" tone="danger">Campo obrigatorio</FieldMessage>
 </Field>
 ```
+
+`FieldMessage` sai com `role="alert"` no tom `danger` (erro anunciado na hora) e `aria-live="polite"` nos tons `default` e `success`. Ligue o campo à mensagem com `aria-describedby` apontando para o `id` dela.
+
+Nome acessível obrigatório pelo tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` só compilam com `aria-label` ou `aria-labelledby` (o `Button` com `asChild` leva o nome no filho). No `AdminTableColumnMenu`, o nome da coluna é o rótulo do checkbox, o texto da aparência é o rótulo do switch, e a alça move a coluna com ArrowUp/ArrowDown (sem passar por coluna fixa).
 
 Cuidado — o dropdown do `Select` é `absolute` (sem portal). Ancestral com `overflow-hidden` corta a lista "pra dentro". Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. Nunca corrija no `Select` do DS (é sincronizado); corrija no consumidor.
 

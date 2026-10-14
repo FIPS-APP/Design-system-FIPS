@@ -180,7 +180,7 @@ export default function HomePage(){
                     <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>{p.label}</span>
                     <span style={{fontSize:11,fontWeight:600,color:C.cinzaChumbo,fontFamily:Fn.mono}}>{p.pct}%</span>
                   </div>
-                  <Progress value={p.pct}/>
+                  <Progress value={p.pct} aria-label={p.label}/>
                   <p style={{fontSize:12,color:C.cinzaChumbo,margin:"4px 0 0",lineHeight:1.5,fontFamily:Fn.body}}>{p.desc}</p>
                 </div>
               ))}

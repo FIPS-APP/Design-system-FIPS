@@ -120,6 +120,9 @@ const FieldMessage = React.forwardRef<HTMLParagraphElement, FieldMessageProps>(
     return (
       <p
         ref={ref}
+        // Erro é anunciado na hora; dica e sucesso esperam o leitor de tela terminar a frase.
+        role={tone === 'danger' ? 'alert' : undefined}
+        aria-live={tone === 'danger' ? undefined : 'polite'}
         className={cn(
           'text-xs font-medium leading-4.5',
           fieldTextOffsetClasses[density][inset],
