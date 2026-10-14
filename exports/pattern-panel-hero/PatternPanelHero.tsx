@@ -13,6 +13,10 @@ export type PatternPanelHeroProps = {
   subtitle: string
   icon: ReactNode
   badge?: ReactNode
+  /**
+   * @deprecated Não use a pílula como marca. Ela some do uso novo; fica só para
+   * quem mostra estado em `badge` e ainda depende dela.
+   */
   badgePill?: boolean
   action?: ReactNode
   stats?: PatternPanelHeroStat[]
