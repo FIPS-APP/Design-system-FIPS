@@ -32,7 +32,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          '`badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela (ex.: "Passo 2 de 4"), nunca o nome do sistema. O `@deprecated` vai para o `dist/index.d.ts` e aparece riscado no editor de quem consome o pacote. Nada quebra: a pílula segue funcionando para quem mostra estado nela.',
+          '`badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela (ex.: "Passo 2 de 4"), nunca o nome do sistema. O `PatternPanelHero` não sai no pacote; a regra vale para a cópia de `exports/pattern-panel-hero`, que os apps copiam, e o `@deprecated` aparece riscado no editor de quem usa essa cópia. Nada quebra: a pílula segue funcionando para quem mostra estado nela.',
       },
     ],
   },
