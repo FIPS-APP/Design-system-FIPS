@@ -5,8 +5,13 @@ import type { AccessibleName } from './accessible-name'
 
 export type SwitchProps = React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
 
-/** `aria-label` ou `aria-labelledby` obrigatório: o switch não tem texto visível. */
-const Switch = React.forwardRef<React.ComponentRef<typeof SwitchPrimitives.Root>, SwitchProps & AccessibleName>(({ className, ...props }, ref) => (
+/**
+ * Nome do switch: `aria-label`, `aria-labelledby` ou `id`. O `id` pressupõe um
+ * `<label htmlFor>` ligado a ele (o rótulo clicável ao lado é o nome).
+ */
+export type SwitchName = AccessibleName | { id: string }
+
+const Switch = React.forwardRef<React.ComponentRef<typeof SwitchPrimitives.Root>, SwitchProps & SwitchName>(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     ref={ref}
     className={cn(
