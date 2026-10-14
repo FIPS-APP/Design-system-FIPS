@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, MotionConfig, useReducedMotionConfig } from 'framer-motion'
 import { cn } from '../../lib/cn'
 
 export type CommandItem = {
@@ -28,14 +28,24 @@ const DEFAULT_TRIGGER_CLASS = cn(
   'relative z-20 flex h-14 w-14 items-center justify-center rounded-full',
   'bg-[var(--color-primary)] text-white shadow-lg',
   'transition-colors hover:opacity-90',
-  'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2',
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
 )
 
 /**
  * Menu radial de ações (Multitags → Tecnopano). Portal + órbita + teclado.
  * Peer: `framer-motion`.
  */
-export function CircularCommandMenu({
+// reducedMotion="user": com movimento reduzido no sistema, posição e escala vão direto.
+// A opacidade o framer-motion continua animando, então o spring dela é trocado por duração 0.
+export function CircularCommandMenu(props: CircularCommandMenuProps) {
+  return (
+    <MotionConfig reducedMotion="user">
+      <CircularCommandMenuBase {...props} />
+    </MotionConfig>
+  )
+}
+
+function CircularCommandMenuBase({
   items = [],
   trigger,
   className,
@@ -49,6 +59,7 @@ export function CircularCommandMenu({
   const [center, setCenter] = useState({ x: 0, y: 0 })
   const [mounted, setMounted] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const reduceMotion = useReducedMotionConfig()
 
   const enabledItems = items.filter((i) => !i.disabled)
   const itemCount = enabledItems.length
@@ -184,7 +195,7 @@ export function CircularCommandMenu({
                       initial={{ scale: 0, rotate: 0 }}
                       animate={{ scale: 1, rotate: 45 }}
                       exit={{ scale: 0, rotate: 0 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                      transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 25 }}
                       onClick={() => setIsOpen(false)}
                       style={{ marginLeft: -18, marginTop: -18 }}
                       className="cmd-glass-center pointer-events-auto absolute top-0 left-0 flex h-9 w-9 items-center justify-center rounded-full"
@@ -220,12 +231,11 @@ export function CircularCommandMenu({
                             scale: 1,
                           }}
                           exit={{ opacity: 0, x: 0, y: 0, scale: 0 }}
-                          transition={{
-                            type: 'spring',
-                            stiffness: 400,
-                            damping: 25,
-                            delay: index * 0.04,
-                          }}
+                          transition={
+                            reduceMotion
+                              ? { duration: 0 }
+                              : { type: 'spring', stiffness: 400, damping: 25, delay: index * 0.04 }
+                          }
                           onClick={(e) => {
                             e.stopPropagation()
                             item.onClick?.()

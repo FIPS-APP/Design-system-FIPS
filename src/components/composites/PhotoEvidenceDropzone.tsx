@@ -60,7 +60,7 @@ export function PhotoEvidenceDropzone({
           }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
-          className="group relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-5 text-center transition-all"
+          className="group relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-5 text-center transition"
           style={{
             borderColor: dragOver || uploading ? 'var(--color-primary)' : 'var(--color-border-strong, #CBD5E1)',
             background: dragOver
@@ -81,7 +81,7 @@ export function PhotoEvidenceDropzone({
           />
           {uploading ? (
             <span className="flex items-center gap-2.5">
-              <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" aria-hidden />
+              <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)] motion-reduce:animate-none" aria-hidden />
               <span className="text-[13px] font-semibold text-[var(--color-primary)]">Enviando fotos…</span>
             </span>
           ) : (
@@ -119,7 +119,7 @@ export function PhotoEvidenceDropzone({
           }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
-          className="grid grid-cols-2 gap-2 rounded-xl transition-all sm:grid-cols-3 md:grid-cols-4"
+          className="grid grid-cols-2 gap-2 rounded-xl transition sm:grid-cols-3 md:grid-cols-4"
           style={{
             outline: dragOver ? '2px dashed var(--color-primary)' : '2px dashed transparent',
             outlineOffset: 4,
@@ -177,7 +177,7 @@ export function PhotoEvidenceDropzone({
           ))}
 
           <label
-            className="group relative flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border-2 border-dashed transition-all hover:border-[var(--color-primary)]"
+            className="group relative flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border-2 border-dashed transition hover:border-[var(--color-primary)]"
             style={{
               aspectRatio: '1 / 1',
               borderColor: uploading ? 'var(--color-primary)' : 'var(--color-border-strong, #CBD5E1)',
@@ -196,7 +196,7 @@ export function PhotoEvidenceDropzone({
               className="absolute inset-0 cursor-pointer opacity-0"
             />
             {uploading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-[var(--color-primary)]" aria-hidden />
+              <Loader2 className="h-5 w-5 animate-spin text-[var(--color-primary)] motion-reduce:animate-none" aria-hidden />
             ) : (
               <>
                 <span

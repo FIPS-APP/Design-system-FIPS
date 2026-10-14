@@ -58,7 +58,10 @@ export function HeroAtalho({
       transform: 'translateY(-1px)',
     }),
     paddingRight: realcado ? 9 : 6.5,
-    transition: realcado ? 'all 0.3s ease' : 'all 0.25s ease',
+    // Lista explícita: só o que muda entre repouso e realce.
+    transition: ['background-color', 'border-color', 'color', 'box-shadow', 'transform', 'padding-right']
+      .map((p) => `${p} ${realcado ? '0.3s' : '0.25s'} ease`)
+      .join(', '),
   }
 
   const comum = {

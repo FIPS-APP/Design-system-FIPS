@@ -25,7 +25,7 @@ export function HowItWorksCard({
   return (
     <Card
       className={cn(
-        'group min-w-0 border border-[var(--color-border)] shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card)]',
+        'group min-w-0 border border-[var(--color-border)] shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card)]',
         className,
       )}
     >

@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.6',
+    date: '2026-10-14',
+    title: 'Sem transition-all e com movimento reduzido',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Componentes sem `transition-all` (cada transição lista as propriedades) e animações que respeitam `prefers-reduced-motion`. Número provisório: renumera na ordem de entrada da fila.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Atenção para quem consome o pacote: o bloco global de `prefers-reduced-motion` do `styles.css` (globals.css, fora de @layer e com !important) vale para qualquer app que importe esse arquivo e zera também as animações do próprio app quando a pessoa pede menos movimento no sistema.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',

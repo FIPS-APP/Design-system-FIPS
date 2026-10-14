@@ -29,9 +29,13 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         )}
         {...props}
       >
+        {/* Anima por transform (não por width): a barra cheia desliza para dentro da trilha.
+            O degradê ocupa só o trecho visível (o fim da barra), como quando ela crescia por width.
+            background-size transiciona junto, com a mesma duração e curva do transform; sem isso o
+            degradê encolhe na hora e a barra se desfaz no meio da transição. */}
         <div
-          className="h-full rounded-full bg-[linear-gradient(90deg,var(--color-secondary),var(--color-primary))] transition-[width] duration-300 ease-out"
-          style={{ width: `${percent}%` }}
+          className="h-full w-full rounded-full bg-[linear-gradient(90deg,var(--color-secondary),var(--color-primary))] bg-right bg-no-repeat transition-[transform,background-size] duration-300 ease-out"
+          style={{ transform: `translateX(-${100 - percent}%)`, backgroundSize: `${percent}% 100%` }}
         />
       </div>
     )
