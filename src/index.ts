@@ -53,6 +53,11 @@ export {
   RowActionsMenu,
   type RowMenuAction,
 } from './components/composites/RowActionsMenu'
+export { SettingsPreferenceRow } from './components/composites/SettingsPreferenceRow'
+export {
+  SettingsPreferenceRowSelect,
+  type SettingsPreferenceRowSelectProps,
+} from './components/composites/SettingsPreferenceRowSelect'
 export {
   ActiveFilterChips,
   MAX_FILTER_CHIPS,
