@@ -139,8 +139,7 @@ Replicar em outros apps: manter **contraste mínimo WCAG AA** para texto sobre `
 ### 5.1 Hero de módulo (`PageHero`)
 
 - **Home:** barra superior em vidro sobre imagem + gradiente (padrão **Hero** na doc do DS: `/docs/patterns/hero`).  
-- **Todas as outras páginas de produto (Produção, Governança, etc.):** usar o composite **`PageHero`** — faixa com degradê azul institucional e **trem/trilhos sutis** à direita (arte padrão: `/backgrounds/app-shell-home-trains.png`; constante `PAGE_HERO_DEFAULT_DECORATION` no pacote `ds-fips`).
-- Sem foto: `decorationSrc={null}` e, se quiser reforço leve, `showTrainSilhouette` (SVG em `/brand/hero-train-silhouette.svg`).
+- **Todas as outras páginas de produto (Produção, Governança, etc.):** usar o composite **`PageHero`**: faixa só com o degradê azul institucional. Desde a 0.16.0 ele não tem arte de trem nem props de decoração; quem precisar de arte no topo desenha no `children`.
 
 ```tsx
 import { PageHero } from 'ds-fips'
