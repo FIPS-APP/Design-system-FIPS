@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
+import { MapPin, Workflow } from 'lucide-react'
+import { FormSectionCard, FormSectionHeader } from '../../../components/composites/FormSectionCard'
+import { LocationPinButtons } from '../../../components/composites/LocationPinButtons'
+import { Field, FieldLabel } from '../../../components/ui/field'
+import { Select } from '../../../components/ui/select'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -1298,9 +1303,21 @@ function DSSegmented({
 }
 
 /* ═══════════════════════════════════════════ LAYOUT (mesmo padrão que ProgressDoc) ═══════════════════════════════════════════ */
-function Section({ n, title, desc, children }: { n: string; title: string; desc: string; children: ReactNode }) {
+function Section({
+  id,
+  n,
+  title,
+  desc,
+  children,
+}: {
+  id?: string
+  n: string
+  title: string
+  desc: string
+  children: ReactNode
+}) {
   return (
-    <section style={{ marginBottom: 44 }}>
+    <section id={id} style={{ marginBottom: 44, scrollMarginTop: 96 }}>
       <div
         style={{
           fontSize: 10,
@@ -1557,10 +1574,22 @@ export function DSSelect({
 /* ═══════════════════════════════════════════ MAIN (padrão ProgressDoc: mob / tab / xl / xxl) ═══════════════════════════════════════════ */
 export default function SelectDoc() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+  const [cidadeOpa, setCidadeOpa] = useState<string | null>(null)
   useEffect(() => {
     const h = () => setW(window.innerWidth)
     window.addEventListener('resize', h)
     return () => window.removeEventListener('resize', h)
+  }, [])
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const scrollToHash = () => {
+      const id = window.location.hash.replace(/^#/, '')
+      if (!id) return
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    }
+    scrollToHash()
+    window.addEventListener('hashchange', scrollToHash)
+    return () => window.removeEventListener('hashchange', scrollToHash)
   }, [])
   const mob = w < 640
   const tab = w < 900
@@ -1897,6 +1926,60 @@ input::placeholder{color:${C.textLight}}
               ))}
             </div>
           </Card>
+        </Section>
+
+        <Section
+          id="location-pin-buttons"
+          n="01-G"
+          title="Local de atividade (pin)"
+          desc="Poucas opções fixas: botões sm primary/outline com Check ou MapPin. Acima do limite use Select compacto. Encadeie local e sublocal com Select."
+        >
+          <FormSectionCard>
+            <FormSectionHeader num={3} title="Dados do Envolvido" Icon={Workflow} />
+            <div className="mb-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)]">
+              <Field inset="control" density="compact">
+                <FieldLabel required>Local de Atividade</FieldLabel>
+                <LocationPinButtons options={['Guarujá', 'Santos']} value={cidadeOpa} onChange={setCidadeOpa} />
+              </Field>
+              <Field inset="control" density="compact">
+                <FieldLabel required>Local da Atividade/Ocorrido</FieldLabel>
+                <Select
+                  density="compact"
+                  leftIcon={<MapPin aria-hidden />}
+                  placeholder={cidadeOpa ? 'Selecione o local' : 'Selecione a cidade primeiro'}
+                  value=""
+                  onChange={() => {}}
+                  options={
+                    cidadeOpa === 'Guarujá'
+                      ? [{ value: 'terminal', label: 'Terminal' }]
+                      : cidadeOpa === 'Santos'
+                        ? [{ value: 'cais', label: 'Cais' }]
+                        : []
+                  }
+                  disabled={!cidadeOpa}
+                />
+              </Field>
+              <Field inset="control" density="compact">
+                <FieldLabel>Sub Local da Atividade/Ocorrido</FieldLabel>
+                <Select
+                  density="compact"
+                  leftIcon={<MapPin aria-hidden />}
+                  placeholder="Selecione o local primeiro"
+                  value=""
+                  onChange={() => {}}
+                  options={[]}
+                  disabled
+                />
+              </Field>
+            </div>
+          </FormSectionCard>
+          <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55, fontFamily: F.body }}>
+            Contexto completo:{' '}
+            <a href="/docs/patterns/form-workspace" style={{ color: C.azulProfundo, fontWeight: 600 }}>
+              Form Workspace
+            </a>
+            .
+          </p>
         </Section>
 
         <Section n="02" title="Guia de uso por tipo" desc="Significado, regras e exemplos FIPS para cada componente de seleção.">

@@ -25,6 +25,10 @@ Não há suíte de testes neste repo. Validação = `npm run build` (TS) + `npm 
 
 Deploy: `Dockerfile` faz build estático e serve via nginx (`nginx/default.conf`); `docker-compose.yml` é a stack Swarm com labels Traefik.
 
+## Favicon e ícones de app
+
+Regra canônica: **`docs/favicon.md`**. Lockup App FIPS em `public/icons/` (192, 512, `icon-512-maskable.png`), espelhando **OPA-MOBILE**. Não usar `fips-symbol-only` na aba. Não copiar ícones do OPA-GESTAO até paridade fechar.
+
 ## Architecture
 
 ### Camadas (de "fonte da verdade" para "consumidor")

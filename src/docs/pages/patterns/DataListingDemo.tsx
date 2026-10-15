@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2 } from 'lucide-react'
+import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2, Globe, User } from 'lucide-react'
+import { ScopeSegment } from '../../../components/composites/ScopeSegment'
 import { CodeExportSection } from '../../components/CodeExport'
 import { CopyableInline } from '../../components/CodePlayground'
 import type { CSSProperties } from 'react'
@@ -300,9 +301,9 @@ function dlPreview(part: string) {
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 // Fora do render: componente criado a cada render perde estado e quebra reconciliação.
 // `mob` era closure sobre a largura da janela — agora entra como prop.
-function Section({n,title,desc,children,mob}){
+function Section({id,n,title,desc,children,mob}:{id?:string,n:string,title:string,desc?:string,children:React.ReactNode,mob:boolean}){
   return(
-  <div style={{marginBottom:mob?32:48}}>
+  <div id={id} style={{marginBottom:mob?32:48,scrollMarginTop:96}}>
     <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}>
       <span style={{fontSize:11,fontWeight:700,color:C.amareloOuro,fontFamily:Fn.mono,letterSpacing:"1.5px"}}>{n}</span>
       <h2 style={{fontSize:mob?17:20,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title,margin:0,letterSpacing:"-0.3px"}}>{title}</h2>
@@ -319,6 +320,17 @@ export default function DataListingDemo() {
   const zebraBg=dark?"rgba(255,255,255,0.03)":"#D3E3F440";
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
+  useEffect(()=>{
+    if(typeof window==="undefined")return;
+    const scrollToHash=()=>{
+      const id=window.location.hash.replace(/^#/,"");
+      if(!id)return;
+      requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));
+    };
+    scrollToHash();
+    window.addEventListener("hashchange",scrollToHash);
+    return()=>window.removeEventListener("hashchange",scrollToHash);
+  },[]);
   const mob=w<768;
 
   const [view,setView]=useState("table");
@@ -378,6 +390,8 @@ export default function DataListingDemo() {
   [filters]);
 
   const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
+  const [listingScope,setListingScope]=useState<'minha'|'todos'>('todos');
+  const countMinhaArea=useMemo(()=>allData.filter((_,i)=>i%6===0).length,[allData]);
 
   const filterRef=useRef(null);
   const configRef=useRef(null);
@@ -548,15 +562,27 @@ export default function DataListingDemo() {
                 <Filter size={14}/> Filtros
                 {totalFilters>0&&<span style={{marginLeft:2,height:16,minWidth:16,padding:"0 4px",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,fontFamily:Fn.body,background:dark?"#93BDE4":C.azulProfundo,color:dark?"#002A68":C.branco,borderRadius:999}}>{totalFilters}</span>}
               </button>
+
+              {/* Alçada — logo após Filtros (Gestão OPA /dashboard) */}
+              <ScopeSegment
+                value={listingScope}
+                onChange={setListingScope}
+                label="Alçada"
+                items={[
+                  { key: 'minha', label: 'Minha Área', Icon: User, count: countMinhaArea },
+                  { key: 'todos', label: 'Toda jurisdição', Icon: Globe, count: allData.length },
+                ]}
+              />
+
               {/* Buscar — mesma anatomia do campo do QLP (ListingToolbar.tsx): flex-1 sem
                   min/maxWidth, borda estática (sem realce de foco), h-34, ícones lucide 14px. */}
-              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:1}}>
+              <div onClick={e=>e.currentTarget.querySelector("input")?.focus()} style={{display:"flex",alignItems:"center",gap:8,height:34,padding:"0 12px",background:"var(--color-surface)",border:`1px solid ${C.cardBorder}`,borderRadius:8,cursor:"text",flex:"1 1 12rem",minWidth:0,width:"100%"}}>
                 <Search size={14} style={{flexShrink:0,color:C.cinzaChumbo}}/>
-                <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar requisições..." style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}}/>
+                <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar OPAs por código, resumo…" style={{flex:1,border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0}}/>
                 {search&&<X size={14} onClick={e=>{e.stopPropagation();setSearch("")}} style={{flexShrink:0,cursor:"pointer",opacity:.5,color:C.cinzaChumbo}}/>}
               </div>
               {/* Período (single-select dropdown) */}
-              <div ref={periodoRef} style={{position:"relative"}}>
+              <div ref={periodoRef} style={{position:"relative",marginLeft:"auto"}}>
                 <button onClick={()=>setShowPeriodo(!showPeriodo)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 12px",fontSize:11,fontWeight:600,color:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${showPeriodo?C.azulProfundo:C.cardBorder}`,borderRadius:8,cursor:"pointer",fontFamily:Fn.body,transition:"all .15s"}}>{Ic.calendar(13)}<span style={{color:C.cinzaChumbo}}>Período:</span><span style={{color:C.cinzaEscuro,fontWeight:700}}>{periodo}</span>{Ic.chev(10,showPeriodo?C.azulProfundo:C.cinzaChumbo)}</button>
                 {showPeriodo&&<div style={{position:"absolute",top:"calc(100% + 6px)",left:0,zIndex:50,minWidth:240,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"8px 8px 8px 14px",boxShadow:"0 12px 36px rgba(0,42,104,.18),0 2px 8px rgba(0,42,104,.06)",animation:"popIn .18s ease",overflow:"hidden",padding:"6px 0"}}>
                   {["Hoje","Últimos 7 dias","Últimos 30 dias","Últimos 90 dias","Este ano","Todos"].map(opt=>{
@@ -609,7 +635,7 @@ export default function DataListingDemo() {
                 </div>}
               </div>
 
-              <div style={{flex:1}}/>
+              <div style={{flex:1,minWidth:8}}/>
 
               <ExportButtons
                 onExcel={()=>{setExportIntent("excel");setExportOpen(true)}}
@@ -1026,10 +1052,10 @@ export default function DataListingDemo() {
         </Section>
 
         {/* ═══ 04 — Toolbar ═══ */}
-        <Section mob={mob} n="04" title="Toolbar" desc="Card próprio entre KPIs e Table. Esquerda agrupa filtros e busca (manipulação de dados). Direita agrupa exportações. Spacer no meio empurra os grupos pras pontas. Card minimal com mesmo borderRadius FIPS.">
+        <Section mob={mob} id="scope-segment" n="04" title="Toolbar" desc="Card entre KPIs e Table. Ordem Gestão OPA: Filtros → Alçada (ScopeSegment) → Busca (flex-1) → Período → Export. Alçada com fundo blue-100 e borda primary 1.5px.">
           <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:12}}>
             {[
-              {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (Button outline abre Drawer)","Busca (DSInput desktop com focus state)","Período (single-select com Personalizado)","Botões agrupados, gap 10","Próximos da entrada de dados"]},
+              {title:"Esquerda — Manipulação",icon:Ic.filter,color:C.azulProfundo,items:["Filtros (outline sm, abre Drawer)","Alçada: ScopeSegment colado ao Filtros","Busca flex-1 (placeholder OPAs)","Período (presets + Personalizado)","gap 10 · padding 14×18"]},
               {title:"Direita — Exportação",icon:Ic.excel,color:"#1D6F42",items:["Excel (botão 32.5×32.5, ícone verde)","PDF (botão 32.5×32.5, ícone vermelho)","Hover suave com cor da extensão","Sem labels — só ícones com tooltip","Ações de saída de dados · ExportButtons"]},
               {title:"Padrão visual",icon:Ic.list,color:C.amareloEscuro,items:["Card próprio com borderRadius FIPS","Padding 14px 18px","display:flex flexWrap:wrap","Spacer central com flex:1","marginBottom 14 antes da Table"]},
               {title:"Filtros oficiais",icon:Ic.calendar,color:C.verdeFloresta,items:["Drawer lateral (nunca popover ancorado)","Pills p/ poucas opções · chip-dropdown p/ muitas","Período suporta presets + Personalizado","Contador no botão quando há filtros","Chips do valor filtrado no header da Table"]},
@@ -1198,7 +1224,7 @@ export default function DataListingDemo() {
               {t:"Quando usar este Painel",d:"Sempre que precisar exibir dados administrativos com 4 elementos: ações principais (Header), métricas agregadas (KPIs), manipulação de dados (Toolbar) e listagem detalhada (Table). Ex: Painel de Requisições, Ações, Ocorrências."},
               {t:"Header obrigatório no Card",d:"Toda Table dentro do painel precisa de header próprio com ícone (48×48), título (Saira 16/700) e subtítulo (Open Sans 11). Sem exceções — é a identidade do dataset, distinto do Header navy do painel."},
               {t:"4 KPIs sempre",d:"Bloco de KPIs sempre tem 4 cards (2×2 mobile). Agregados de TODA a base, não da página. Sparkline area chart obrigatório com hover interativo. Sem linha reta — todas as séries com spread visível."},
-              {t:"Toolbar separada",d:"Card próprio entre KPIs e Table. Esquerda agrupa Filtros + Busca + Período. Direita agrupa Excel + PDF. Spacer central. Nunca colocar exportação à esquerda nem filtros à direita."},
+              {t:"Toolbar separada",d:"Card próprio entre KPIs e Table. Esquerda: Filtros → Alçada (ScopeSegment) → Busca → Período (ordem fixa). Direita: Excel + PDF. Spacer central. Nunca colocar exportação à esquerda nem filtros à direita."},
               {t:"Chips de filtro ativo",d:"Toda listagem com botão Filtros mostra no header da Table um chip por VALOR filtrado (ex: \"Moderado ×\", \"Guarujá ×\") — nunca só a contagem (\"3 filtros\"). Cada X remove aquele valor; acima de 4 chips o excedente vira \"+N\" que reabre o Drawer; a partir de 2 chips aparece um \"Limpar\" textual. O usuário precisa ler o que está filtrando sem reabrir o Drawer."},
               {t:"Densidade padrão Normal",d:"Tabela inicia em Normal (42px). Compacta só para power users em telas com 1000+ registros. Confortável para apresentações ou acessibilidade."},
               {t:"Colunas fixas",d:"Pelo menos uma coluna identificadora (Código/ID) e a coluna Ações devem ser fixas. Não podem ser desabilitadas pelo usuário no botão Configurar."},

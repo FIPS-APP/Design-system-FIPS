@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
+import { HeroAtalho, HeroAtalhos } from "../../components/composites/HeroAtalho";
 import { Progress } from "../../components/ui/progress";
 import {
   Sparkles, Palette, Component, LayoutDashboard, ShieldCheck, BookOpen,
@@ -89,16 +89,10 @@ export default function HomePage(){
             <Badge variant="info">Dark mode</Badge>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2 pt-1">
-            <Button variant="ouro" size="sm" onClick={()=>navigate("/docs")}>
-              <Sparkles className="h-4 w-4" aria-hidden />
-              Explorar componentes
-            </Button>
-            <Button variant="inverseOutline" size="sm" onClick={()=>navigate("/docs/governance")}>
-              <ShieldCheck className="h-4 w-4" aria-hidden />
-              Governança
-            </Button>
-          </div>
+          <HeroAtalhos>
+            <HeroAtalho icon={Sparkles} label="Explorar componentes" onClick={()=>navigate("/docs")} />
+            <HeroAtalho icon={ShieldCheck} label="Governança" onClick={()=>navigate("/docs/governance")} />
+          </HeroAtalhos>
         </div>
       </section>
 

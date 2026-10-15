@@ -3,6 +3,8 @@
 > Winston · BMAD Phase: Architect · 2026-06-15  
 > Baseado em: `docs/brief.md` · `CLAUDE.md` · inspeção direta de `src/` (v0.4.3)
 
+Identidade na aba do navegador e ícones PWA: ver [`favicon.md`](favicon.md) (`public/icons/`, lockup App FIPS).
+
 ---
 
 ## Stack atual
@@ -57,7 +59,7 @@ export * from './tokens'           // fipsPalette, semanticColors, fontFamilies,
 export { cn } from './lib/cn'
 export * from './components/ui'    // todos os primitives + AdminListing
 export { FipsLogo } from './components/brand/FipsLogo'
-export { PageHero, PAGE_HERO_DEFAULT_DECORATION } from './composites'
+export { PageHero } from './composites'
 ```
 
 ### Inventário de primitives em `src/components/ui/`

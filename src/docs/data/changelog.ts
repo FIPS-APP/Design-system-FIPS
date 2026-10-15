@@ -25,12 +25,90 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.13.0',
-    date: '2026-09-21',
+    version: '0.16.0',
+    date: '2026-10-15',
     title: 'PageHero passa a ser só o gradiente',
     entries: [
-      { type: 'breaking', description: 'PageHero perde as props `decorationSrc` e `showTrainSilhouette`, e a constante `PAGE_HERO_DEFAULT_DECORATION` deixa de ser exportada. Quem passava qualquer uma delas precisa remover a prop; quem quiser arte no topo desenha no children.' },
-      { type: 'improvement', description: 'A faixa de módulo fica só com o gradiente institucional. A foto entrava apenas na faixa direita (min(65vw,580px), object-right) e, em hero baixo, a borda esquerda dela virava uma emenda reta no meio do gradiente; a silhueta SVG lia como um vulto chapado no canto.' },
+      {
+        type: 'breaking',
+        description:
+          'PageHero perde as props `decorationSrc` e `showTrainSilhouette`, e a constante `PAGE_HERO_DEFAULT_DECORATION` deixa de ser exportada. Quem passava qualquer uma delas precisa remover a prop; quem quiser arte no topo desenha no children.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'A faixa de módulo fica só com o gradiente institucional. A foto entrava apenas na faixa direita (min(65vw,580px), object-right) e, em hero baixo, a borda esquerda dela virava uma emenda reta no meio do gradiente; a silhueta SVG lia como um vulto chapado no canto.',
+      },
+    ],
+  },
+  {
+    version: '0.15.0',
+    date: '2026-09-29',
+    title: 'Atalhos do hero abrem no hover com o nome',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `HeroAtalho` + `HeroAtalhos` no pacote. Parado mostra só o ícone, 30px, no `inverseOutline`. No hover ou no foco abre e mostra o nome dentro do botão, com o realce de `docHeaderChrome` e o shimmer dos azulejos do header. Mesmo padrão da intranet (FIPS-400) e do Obrigações (FIPS-933).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Home do DS: Explorar componentes e Governança viram `HeroAtalho`, com os mesmos nomes e destinos. A demo e a página `/docs/patterns/hero` ganham a seção Atalhos do hero com exemplo e props.',
+      },
+      {
+        type: 'feature',
+        description: 'Nova constante `docHeaderNeuAccentGloss`: brilho na metade de cima do azulejo realçado.',
+      },
+    ],
+  },
+  {
+    version: '0.14.1',
+    date: '2026-10-01',
+    title: 'Favicon App FIPS padronizado',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`public/icons/` espelha OPA-MOBILE (192, 512, maskable). Regra em `docs/favicon.md`. Vitrine `index.html` usa `/icons/icon-192.png`.',
+      },
+    ],
+  },
+  {
+    version: '0.14.0',
+    date: '2026-09-24',
+    title: 'Padrão Filtro, anexos Registro (pin + fotos) e paridade OPA nos composites',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Página `/docs/patterns/filtro`: spec completa (toolbar ListingFilterToolbar, FilterDrawer 400px, chips, catálogo 15 dimensões, anti-patterns). Hero navy + seções alinhadas a Data Listing. Spec escrita em `docs/specs/pattern-filtro.md`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Composites exportados: `ListingFilterToolbar`, `FilterDrawer`, `PillGroup`, `PillFilter`, `ScopeSegment` na toolbar, `ActiveFilterChips` documentados no pacote.',
+      },
+      {
+        type: 'fix',
+        description:
+          '§08 Fluxo de dados: separado pipeline B (Período → Busca → Alçada → Drawer) de consumidores paralelos (KPIs/tabela/gráficos) e ordem UI vs layout — correção pós-review.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Anexo Registro no DS: `LocationPinButtons` em Select `#location-pin-buttons`; `PhotoEvidenceDropzone` + `FormSectionCard` em Input `#photo-evidence-dropzone` e Form Workspace (seções 3–4).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Paridade byte a byte OPA em fotos: `alt` «Foto do OPA», erro via `Alert tone="danger" size="xs"`, botão Ver sempre visível, `Lightbox` interno quando `onViewPhoto` omitido. `Alert` e `Lightbox` entraram no pacote.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Data Listing §06: regra da toolbar cita Alçada entre Filtros e Busca. Tutorial contextual `filtro` inclui passo do fluxo.',
+      },
     ],
   },
   {

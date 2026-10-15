@@ -40,6 +40,7 @@ const ModalWorkflowDemo = lazy(() => import('./docs/pages/patterns/ModalWorkflow
 const HeroHeaderDoc = lazy(() => import('./docs/pages/patterns/HeroHeaderDoc'))
 const HeroBannerDoc = lazy(() => import('./docs/pages/patterns/HeroBannerDoc'))
 const ConfiguracoesDemo = lazy(() => import('./docs/pages/patterns/ConfiguracoesDemo'))
+const FiltroDemo = lazy(() => import('./docs/pages/patterns/FiltroDemo'))
 const LoginClaudeLab = lazy(() => import('./docs/pages/LoginClaudeLab'))
 function RouteFallback() {
   return (
@@ -86,11 +87,33 @@ export default function App() {
         <Route path="components/toast" element={renderLazyRoute(<ToastDoc />)} />
         <Route path="components/tooltip" element={renderLazyRoute(<TooltipDoc />)} />
         <Route path="components/circular-command-menu" element={renderLazyRoute(<CircularCommandMenuDoc />)} />
+        <Route
+          path="components/app-fips-header-logo"
+          element={<Navigate to="/docs/components/header#header-app-fips-logo" replace />}
+        />
+        <Route
+          path="components/scope-segment"
+          element={<Navigate to="/docs/patterns/data-listing#scope-segment" replace />}
+        />
+        <Route
+          path="components/location-pin-buttons"
+          element={<Navigate to="/docs/components/select#location-pin-buttons" replace />}
+        />
+        <Route
+          path="components/photo-evidence-dropzone"
+          element={<Navigate to="/docs/components/input#photo-evidence-dropzone" replace />}
+        />
+        <Route
+          path="components/form-section-card"
+          element={<Navigate to="/docs/components/card#form-section-card" replace />}
+        />
         <Route path="motion/brand-loader" element={renderLazyRoute(<BrandLoaderDoc />)} />
         <Route path="patterns/application-shell" element={renderLazyRoute(<ApplicationShellDemo />)} />
         <Route path="patterns/dashboard" element={renderLazyRoute(<DashboardDemo />)} />
         <Route path="patterns/data-listing" element={renderLazyRoute(<DataListingDemo />)} />
+        <Route path="patterns/filtro" element={renderLazyRoute(<FiltroDemo />)} />
         <Route path="patterns/form-workspace" element={renderLazyRoute(<FormWorkspaceDemo />)} />
+        <Route path="patterns/opa-gestao-ui" element={<Navigate to="/docs/components/header#header-app-fips-logo" replace />} />
         <Route path="patterns/modal-workflow" element={renderLazyRoute(<ModalWorkflowDemo />)} />
         <Route path="patterns/hero" element={renderLazyRoute(<HeroHeaderDoc />)} />
         <Route path="patterns/hero-banner" element={renderLazyRoute(<HeroBannerDoc />)} />

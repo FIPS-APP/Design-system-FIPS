@@ -13,6 +13,8 @@ type FipsTabBarProps = {
   tabs: FipsTabItem[]
   activeId: string
   onChange: (id: string) => void
+  /** true = barra ocupa a largura do pai; abas dividem o espaço (sem largura fixa). */
+  stretch?: boolean
   className?: string
   'data-tutorial'?: string
 }
@@ -58,6 +60,7 @@ export function FipsTabBar({
   tabs,
   activeId,
   onChange,
+  stretch = false,
   className,
   'data-tutorial': dataTutorial,
 }: FipsTabBarProps) {
@@ -65,7 +68,11 @@ export function FipsTabBar({
     <div
       data-tutorial={dataTutorial}
       role="tablist"
-      className={cn('flex w-fit items-center gap-0.5 p-1', className)}
+      className={cn(
+        'flex items-center gap-0.5 p-1',
+        stretch ? 'w-full min-w-0' : 'w-fit',
+        className,
+      )}
       style={{
         background: 'var(--color-surface)',
         border: '1px solid var(--color-border)',
@@ -84,7 +91,10 @@ export function FipsTabBar({
             title={tab.title ?? tab.label}
             disabled={tab.disabled}
             onClick={() => !tab.disabled && onChange(tab.id)}
-            className="relative flex items-center gap-1.5 px-4 py-2 text-[11px] font-semibold transition-all"
+            className={cn(
+              'relative flex items-center gap-1.5 px-4 py-2 text-[11px] font-semibold transition-all',
+              stretch && 'min-w-0 flex-1 justify-center',
+            )}
             style={tabButtonStyle(isActive, tab.disabled)}
           >
             {tab.icon}
