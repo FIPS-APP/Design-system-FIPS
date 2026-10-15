@@ -25,6 +25,38 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.3',
+    date: '2026-10-15',
+    title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O título de coluna da `Table` (`TableHead`) usava `--color-fg-muted` sobre a faixa `--color-surface-muted`: 4,29:1 no claro, abaixo dos 4,5:1 de texto de 9px a 14px. Passa a `--color-fg`: 10,70:1. Faixa e borda de 2px não mudam. Nenhum token novo.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`AdminTableSortHeader`: o título inativo passa a `--color-fg`, igual ao ativo (antes 4,29:1 no claro). A seta segue distinguindo ativo (`--color-secondary`) de inativo (`--color-border-strong`).',
+      },
+      {
+        type: 'fix',
+        description:
+          '`ExportPreviewModal`: título de coluna da prévia em `--color-fg` (era `--color-fg-muted`, 4,29:1 no claro). `ExportModal`: fundo, borda e cor do cabeçalho da prévia eram hex próprios (3,63 a 4,24:1 no claro e 2,88 a 3,43:1 no escuro) e passam a `--color-surface-muted`, `--color-border` e `--color-fg` (10,70:1 no claro), nos dois temas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`exports/table/DSTable.tsx` e as demos de Table, Data Listing e Dashboard trocam `cinzaChumbo` por `cinzaEscuro` no título de coluna, inclusive nos códigos de exemplo copiáveis.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Referência portátil (`patterns.md`): `TableHead` e `AdminTableSortHeader` descritos com `--color-fg`. Pacote em `public/downloads` regerado.',
+      },
+    ],
+  },
+  {
     version: '0.15.0',
     date: '2026-09-29',
     title: 'Atalhos do hero abrem no hover com o nome',

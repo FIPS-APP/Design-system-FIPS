@@ -294,7 +294,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             <tr style={{background:C.bg}}>
               {selectable&&<th style={{padding:`${py}px ${D.padX}px`,width:36,...(borderedS?{borderRight:`1px solid ${C.cardBorder}`}:{})}}><input type="checkbox" checked={allSelected} onChange={toggleAll} style={{cursor:"pointer",}}/></th>}
               {visibleCols.map((col,ci)=>(
-                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,cursor:col.sortable!==false&&sortableS?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
+                <th key={col.key} onClick={()=>col.sortable!==false&&toggleSort(col.key)} style={{padding:`${py}px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,cursor:col.sortable!==false&&sortableS?"pointer":"default",userSelect:"none",borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",transition:"color .15s",...(borderedS&&ci<visibleCols.length-1?{borderRight:`1px solid ${C.cardBorder}`}:{}),...(col.width?{width:col.width}:{})}}>
                   <span style={{display:"inline-flex",alignItems:"center",gap:4}}>
                     {col.label}
                     {sortableS&&col.sortable!==false&&(sortCol===col.key?sortDir==="asc"?Ic.sortAsc(12,C.azulProfundo):Ic.sortDesc(12,C.azulProfundo):Ic.sortNone(12))}
@@ -562,7 +562,7 @@ export function DSTable({
             <tr style={{ background: C.bg, borderBottom: \`2px solid \${C.cardBorder}\` }}>
               {columns.map((col) => (
                 <th key={col.key} onClick={() => sortable && toggleSort(col.key)}
-                  style={{ padding: \`\${py}px 16px\`, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: C.cinzaChumbo, fontFamily: Fn.title, textAlign: "center", cursor: sortable ? "pointer" : "default", whiteSpace: "nowrap", width: col.width, userSelect: "none" }}>
+                  style={{ padding: \`\${py}px 16px\`, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: C.cinzaEscuro, fontFamily: Fn.title, textAlign: "center", cursor: sortable ? "pointer" : "default", whiteSpace: "nowrap", width: col.width, userSelect: "none" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                     {col.label}{sortable && <SortIcon col={col.key} />}
                   </span>
@@ -763,7 +763,7 @@ export default function TableDoc() {
               </div>
               <div style={{border:`1px solid ${C.cardBorder}`,borderRadius:"12px 12px 12px 24px",overflow:"hidden",background:C.cardBg}}>
                 <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
-                  <thead><tr style={{background:C.bg}}>{["Código","Solicitante","Status","Valor"].map(h=><th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`}}>{h}</th>)}</tr></thead>
+                  <thead><tr style={{background:C.bg}}>{["Código","Solicitante","Status","Valor"].map(h=><th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`}}>{h}</th>)}</tr></thead>
                   <tbody>
                     <tr><td colSpan={4} style={{padding:"56px 16px",textAlign:"center"}}>
                       <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
@@ -797,7 +797,7 @@ export default function TableDoc() {
                 <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
                   <thead><tr style={{background:C.bg}}>
                     <th style={{padding:"10px 12px 10px 16px",width:36}}><input type="checkbox" checked={false} readOnly style={{cursor:"pointer"}}/></th>
-                    {["Código","Solicitante","Status"].map(h=><th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`}}>{h}</th>)}
+                    {["Código","Solicitante","Status"].map(h=><th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`}}>{h}</th>)}
                   </tr></thead>
                   <tbody>
                     {[{id:"REQ-4025",n:"Carlos Santos",s:"Pendente",sel:false},{id:"REQ-4024",n:"Ana Costa",s:"Aprovada",sel:true},{id:"REQ-4023",n:"Marcos Oliveira",s:"Aprovada",sel:true},{id:"REQ-4022",n:"Julia Ferreira",s:"Rejeitada",sel:false}].map((r,i)=>(
@@ -899,7 +899,7 @@ export default function TableDoc() {
                   <thead>
                     <tr style={{background:C.bg}}>
                       {["Código","Solicitante","Depto","Valor","Status"].map(h=>(
-                        <th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`1px solid ${C.cardBorder}`}}>{h}</th>
+                        <th key={h} style={{padding:"10px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,borderBottom:`1px solid ${C.cardBorder}`}}>{h}</th>
                       ))}
                     </tr>
                   </thead>

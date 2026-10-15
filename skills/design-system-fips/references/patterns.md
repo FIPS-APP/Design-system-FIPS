@@ -265,9 +265,11 @@ Três densidades (`compact | normal | comfortable`, default `comfortable`) + qua
 
 **`TableHeader`** — `bg-[var(--color-surface-muted)] border-b-2 border-[var(--color-border)]`.
 
-**`TableHead`** — `px-4 text-[var(--color-fg-muted)]`; por densidade:
+**`TableHead`** — `px-4 text-[var(--color-fg)]`; por densidade:
 - `compact` e `normal` → `text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]`; py-2 (compact) / py-2.5 (normal)
 - `comfortable` → `text-sm font-semibold`; `h-14`
+
+O título de coluna usa `--color-fg`: 10,70:1 sobre a faixa `--color-surface-muted` no claro. `--color-fg-muted` mede 4,29:1 ali e não serve para título de coluna. Vale também para o texto dentro do título (botão de ordenação, spans) e para a prévia de exportação.
 
 **`TableCell`** — `px-4 text-[var(--color-fg)]`; por densidade:
 - `compact` → `py-1.5 text-[11px]`
@@ -324,7 +326,7 @@ Footer da listagem (fora do `<Table>`, abaixo do card):
 
 #### `AdminTableSortHeader`
 
-`<button>` inline-flex com ícone de caret: ativo = `ArrowUp / ArrowDown` 12px `secondary`; inativo = `ArrowUpDown` 12px `border-strong`.
+`<button>` inline-flex com ícone de caret: ativo = `ArrowUp / ArrowDown` 12px `secondary`; inativo = `ArrowUpDown` 12px `border-strong`. O título, ativo ou inativo, usa `--color-fg`; só a seta muda de estado.
 
 #### Row clicável → Dialog de detalhe
 
