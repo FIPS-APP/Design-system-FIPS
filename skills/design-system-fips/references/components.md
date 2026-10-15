@@ -203,6 +203,8 @@ Composição recomendada:
 </Field>
 ```
 
+Teclado e formulário (`Select` e `ChipSelect`): no gatilho, ArrowDown/ArrowUp abrem e movem o realce, Home/End vão ao primeiro/último, Enter ou Espaço selecionam, Escape fecha sem mudar o valor (e não fecha o Dialog/Drawer em volta), Tab fecha. O realce é anunciado por `aria-activedescendant`, com `aria-controls` no listbox. `Select` aceita `name` e entra no `FormData` do submit nativo por um input oculto. No `ChipSelect` com busca, as mesmas teclas funcionam no campo, e o foco automático no campo só acontece com ponteiro fino (no toque não abre o teclado virtual; o gatilho vira o combobox e anuncia o realce). A opção realçada pelo teclado ganha barra lateral de 3px (contraste de pelo menos 3:1 contra a lista nos dois temas) e só o teclado rola a lista: abrir com clique e passar o mouse não rolam nada.
+
 Cuidado — o dropdown do `Select` é `absolute` (sem portal). Ancestral com `overflow-hidden` corta a lista "pra dentro". Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. Nunca corrija no `Select` do DS (é sincronizado); corrija no consumidor.
 
 ### Tipos de seleção (catálogo — qual usar quando)
