@@ -206,6 +206,8 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             else abrir(selectedIndex, false)
           }}
           onKeyDown={onKeyDown}
+          // Firefox clica o botão no keyup do Espaço, mesmo com preventDefault no keydown.
+          onKeyUp={(e) => { if (e.key === ' ') e.preventDefault() }}
           className={cn(
             'flex w-full items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-border-strong)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/25',
             isCompact ? 'h-8 px-2.5 text-[13px]' : 'h-12 px-4 text-[1.08rem]',
@@ -262,8 +264,10 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
                   role="option"
                   aria-selected={sel}
                   onClick={() => select(o.value)}
-                  onMouseEnter={() => { setTeclado(false); setHi(i) }}
-                  onMouseLeave={() => setHi(-1)}
+                  // onMouseMove, não onMouseEnter: a lista que rola sob o ponteiro parado dispara mouseenter
+                  // e puxaria o realce do teclado de volta. Só movimento real do mouse move o realce.
+                  onMouseMove={() => { if (teclado || hi !== i) { setTeclado(false); setHi(i) } }}
+                  onMouseLeave={() => { if (!teclado) setHi(-1) }}
                   className={cn(
                     'flex cursor-pointer items-center gap-2 transition-colors duration-100',
                     isCompact ? 'px-3 py-1.5 text-sm' : 'px-4 py-2.5 text-[0.95rem]',

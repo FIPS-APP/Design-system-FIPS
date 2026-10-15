@@ -32,7 +32,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          'Select e ChipSelect funcionam por teclado (setas, Home, End, Enter, Escape, aria-activedescendant); o Escape da lista não fecha mais o Dialog ou o Drawer em volta. Número provisório: renumera na ordem de entrada da fila (o PR #25 já declara 0.17.0).',
+          'Select e ChipSelect funcionam por teclado (setas, Home, End, Enter, Escape, aria-activedescendant); o Escape da lista não fecha mais o Dialog ou o Drawer em volta; o realce do teclado não volta ao item sob o ponteiro parado; a busca do ChipSelect ganha anel de foco com 8,47:1 no claro e 8,06:1 no escuro.',
       },
       {
         type: 'feature',
