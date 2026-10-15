@@ -184,6 +184,8 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
         type="button"
         onClick={() => (open ? setOpen(false) : abrir(options.findIndex((o) => o.value === value), false))}
         onKeyDown={onKeyDown}
+        // Firefox clica o botão no keyup do Espaço, mesmo com preventDefault no keydown.
+        onKeyUp={(e) => { if (e.key === ' ') e.preventDefault() }}
         aria-label={ariaLabel}
         // Sem busca, ou com a busca sem foco (toque), o foco fica no gatilho: ele é o combobox e anuncia o realce.
         role={comBusca && focaBusca ? undefined : 'combobox'}
@@ -234,7 +236,10 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
                   role="option"
                   aria-selected={active}
                   onClick={() => escolher(o.value)}
-                  onMouseEnter={() => { setTeclado(false); setHi(i) }}
+                  // onMouseMove, não onMouseEnter: a lista que rola sob o ponteiro parado dispara mouseenter
+                  // e puxaria o realce do teclado de volta. Só movimento real do mouse move o realce.
+                  onMouseMove={() => { if (teclado || hi !== i) { setTeclado(false); setHi(i) } }}
+                  onMouseLeave={() => { if (!teclado) setHi(-1) }}
                   className={cn(
                     chipOptionCls(active),
                     i === hi && !active && 'bg-[var(--color-surface-muted)]',
