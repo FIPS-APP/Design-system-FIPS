@@ -219,7 +219,7 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
                 onKeyDown={onKeyDown}
                 placeholder={`Buscar ${fieldLabel.toLowerCase()}…`}
                 aria-label={`Buscar em ${fieldLabel}`}
-                className="min-w-0 flex-1 rounded-sm border-none bg-transparent text-[11px] font-medium text-[var(--color-fg)] outline-none placeholder:font-normal placeholder:text-[var(--color-fg-muted)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25"
+                className="min-w-0 flex-1 rounded-sm border-none bg-transparent text-[11px] font-medium text-[var(--color-fg)] outline-none placeholder:font-normal placeholder:text-[var(--color-fg-muted)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] dark:focus-visible:ring-[var(--color-fips-blue-400)]"
               />
             </div>
           )}
