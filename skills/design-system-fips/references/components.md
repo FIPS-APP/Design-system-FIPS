@@ -205,7 +205,7 @@ Composição recomendada:
 
 `FieldMessage` sai com `role="alert"` no tom `danger` (erro anunciado na hora) e `aria-live="polite"` nos tons `default` e `success`. Ligue o campo à mensagem com `aria-describedby` apontando para o `id` dela.
 
-Nome acessível obrigatório pelo tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` só compilam com `aria-label` ou `aria-labelledby` (o `Button` com `asChild` leva o nome no filho). No `AdminTableColumnMenu`, o nome da coluna é o rótulo do checkbox, o texto da aparência é o rótulo do switch, e a alça move a coluna com ArrowUp/ArrowDown (sem passar por coluna fixa).
+Nome acessível obrigatório pelo tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` só compilam com `aria-label` ou `aria-labelledby` (o `Button` com `asChild` leva o nome no filho; no `Switch` vale também um `id` ligado a um `<label htmlFor>`, que é o rótulo clicável ao lado). Sem nome, o `tsc` acusa TS2322 no próprio componente e a mensagem cita `AccessibleName` ou `asChild`, não o `aria-label`: a correção é passar o nome. No `AdminTableColumnMenu`, o nome da coluna é o rótulo do checkbox, o texto da aparência é o rótulo do switch, e a alça move a coluna com ArrowUp/ArrowDown (sem passar por coluna fixa).
 
 Cuidado — o dropdown do `Select` é `absolute` (sem portal). Ancestral com `overflow-hidden` corta a lista "pra dentro". Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. Nunca corrija no `Select` do DS (é sincronizado); corrija no consumidor.
 

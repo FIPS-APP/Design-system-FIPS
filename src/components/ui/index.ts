@@ -83,4 +83,4 @@ export {
   TooltipProvider,
   TooltipTrigger,
 } from './tooltip'
-export { Switch, type SwitchProps } from './switch'
+export { Switch, type SwitchProps, type SwitchName } from './switch'
