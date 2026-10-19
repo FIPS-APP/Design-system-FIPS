@@ -814,7 +814,7 @@ function FormWorkspacePage() {
           </h2>
         </div>
         <CardContent>
-          <Progress value={82} aria-label="Progresso do formulario" />
+          <Progress value={82} aria-label="Progresso do formulário" />
         </CardContent>
       </Card>
 

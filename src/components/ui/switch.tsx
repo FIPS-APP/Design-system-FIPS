@@ -11,6 +11,10 @@ export type SwitchProps = React.ComponentPropsWithoutRef<typeof SwitchPrimitives
  */
 export type SwitchName = AccessibleName | { id: string }
 
+/**
+ * Interruptor. Exige nome acessível pelo tipo: `aria-label`, `aria-labelledby` ou `id` ligado
+ * a um `<label htmlFor>` (o rótulo clicável ao lado é o nome).
+ */
 const Switch = React.forwardRef<React.ComponentRef<typeof SwitchPrimitives.Root>, SwitchProps & SwitchName>(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     ref={ref}
