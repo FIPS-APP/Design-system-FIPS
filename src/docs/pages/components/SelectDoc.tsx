@@ -5,6 +5,7 @@ import { FormSectionCard, FormSectionHeader } from '../../../components/composit
 import { LocationPinButtons } from '../../../components/composites/LocationPinButtons'
 import { Field, FieldLabel } from '../../../components/ui/field'
 import { Select } from '../../../components/ui/select'
+import { Button } from '../../../components/ui/button'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C = {
@@ -1575,6 +1576,8 @@ export function DSSelect({
 export default function SelectDoc() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
   const [cidadeOpa, setCidadeOpa] = useState<string | null>(null)
+  const [turnoForm, setTurnoForm] = useState('')
+  const [formEnviado, setFormEnviado] = useState<string | null>(null)
   useEffect(() => {
     const h = () => setW(window.innerWidth)
     window.addEventListener('resize', h)
@@ -1980,6 +1983,59 @@ input::placeholder{color:${C.textLight}}
             </a>
             .
           </p>
+        </Section>
+
+        <Section
+          id="select-em-formulario"
+          n="01-H"
+          title="Select em formulário nativo"
+          desc="Com a prop name, o valor escolhido entra no FormData do submit. Select desabilitado fica de fora."
+        >
+          <FormSectionCard>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                setFormEnviado(JSON.stringify(Array.from(new FormData(e.currentTarget).entries())))
+              }}
+            >
+              <div className="mb-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                <Field inset="control" density="compact">
+                  <FieldLabel>Turno</FieldLabel>
+                  <Select
+                    density="compact"
+                    name="turno"
+                    placeholder="Selecione o turno"
+                    value={turnoForm}
+                    onChange={setTurnoForm}
+                    options={[
+                      { value: 'manha', label: 'Manhã' },
+                      { value: 'tarde', label: 'Tarde' },
+                      { value: 'noite', label: 'Noite' },
+                    ]}
+                  />
+                </Field>
+                <Field inset="control" density="compact">
+                  <FieldLabel>Setor (desabilitado)</FieldLabel>
+                  <Select
+                    density="compact"
+                    name="setor"
+                    value="ssma"
+                    onChange={() => {}}
+                    options={[{ value: 'ssma', label: 'SSMA' }]}
+                    disabled
+                  />
+                </Field>
+              </div>
+              <Button type="submit">Ver o que o formulário envia</Button>
+            </form>
+          </FormSectionCard>
+          <p style={{ fontSize: 12, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55, fontFamily: F.body }}>
+            Envio simulado, nada sai da página. FormData:{' '}
+            <code>{formEnviado ?? 'ainda não enviado'}</code>
+          </p>
+          <pre style={{ fontSize: 12, color: C.cinzaEscuro, margin: '12px 0 0', overflowX: 'auto', fontFamily: 'monospace' }}>
+            {`<form onSubmit={...}>\n  <Select name="turno" value={turno} onChange={setTurno} options={opcoes} />\n</form>`}
+          </pre>
         </Section>
 
         <Section n="02" title="Guia de uso por tipo" desc="Significado, regras e exemplos FIPS para cada componente de seleção.">
