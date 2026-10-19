@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.2',
+    date: '2026-10-19',
+    title: 'BrandLoader sem retângulo preto no Safari',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`BrandLoader` anima com o APNG em `<img>` e não usa mais `<video>` WebM: o Safari não compõe o alfa do WebM e pintava o fundo de preto, e o `<img>` de reserva dentro do `<video>` nunca era exibido (#30). Com `prefers-reduced-motion` continua o quadro estático.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
