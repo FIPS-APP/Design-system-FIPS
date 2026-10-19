@@ -25,8 +25,8 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.20.3',
-    date: '2026-10-15',
+    version: '0.15.1',
+    date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
     entries: [
       {
