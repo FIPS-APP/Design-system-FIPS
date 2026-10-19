@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.15.2`
+## Versão atual: `v0.15.3`
 
 ## Favicon e ícones de app
 
@@ -82,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.15.3 | 2026-10-19 | Docs: a coluna do `DocLayout` ganha `min-w-0` abaixo de `lg`; a 375 px as rotas que rolam de lado caem de 22 para 11 de 37 |
 | 0.15.2 | 2026-10-19 | `BrandLoader` anima com o APNG em `<img>` e deixa de usar `<video>` WebM, que no Safari pintava o alfa de preto (retângulo preto, #30). Com `prefers-reduced-motion` continua o quadro estático |
 | 0.15.1 | 2026-10-18 | `TableHead`, `AdminTableSortHeader` e a prévia de exportação usam `--color-fg` no título de coluna: de 4,29:1 para 10,70:1 sobre a faixa no claro. Faixa e borda não mudam. `DSTable`, demos e referência portátil alinhados |
 | 0.15.0 | 2026-09-29 | `HeroAtalho` + `HeroAtalhos`: atalho do hero que mostra só o ícone e abre com o nome no hover ou no foco, com o realce do header. Home do DS e página Hero passam a usar |

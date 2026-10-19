@@ -19,7 +19,7 @@ import { GuidedTour } from '../components/domain/GuidedTour'
 import { useTour } from '../hooks/useTour'
 import { DS_TOUR_STEPS, DS_TOUR_STORAGE_KEY } from '../data/tourSteps'
 
-const DOC_VERSION = 'v0.15.2'
+const DOC_VERSION = 'v0.15.3'
 
 export function DocLayout() {
   const { dark, toggle } = useFipsTheme()
@@ -132,7 +132,7 @@ export function DocLayout() {
         />
       ) : null}
 
-      <div className="flex min-h-svh flex-1 flex-col bg-[var(--color-surface-muted)] lg:min-w-0">
+      <div className="flex min-h-svh flex-1 flex-col bg-[var(--color-surface-muted)] min-w-0">
         <header
           className={cn(
             'sticky top-0 z-20 isolate overflow-hidden',
