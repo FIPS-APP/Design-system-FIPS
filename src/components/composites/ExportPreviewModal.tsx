@@ -430,7 +430,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                         {previewColumns.map((col) => (
                           <th
                             key={col.key}
-                            className="border-b-2 border-[var(--color-border)] px-3 py-2 font-heading text-[9px] font-bold tracking-wider text-[var(--color-fg-muted)] uppercase"
+                            className="border-b-2 border-[var(--color-border)] px-3 py-2 font-heading text-[9px] font-bold tracking-wider text-[var(--color-fg)] uppercase"
                           >
                             {col.label}
                           </th>

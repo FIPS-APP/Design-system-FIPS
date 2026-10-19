@@ -254,12 +254,12 @@ export function DataListingTable() {
       </div>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
-          <tr style={{ background: '#F3F6FB' }}>
-            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: '#333B41', textAlign: 'center' }}>Codigo</th>
-            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: '#333B41', textAlign: 'center' }}>Solicitante</th>
-            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: '#333B41', textAlign: 'center' }}>Status</th>
-            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: '#333B41', textAlign: 'center' }}>Prioridade</th>
-            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: '#333B41', textAlign: 'center' }}>Valor</th>
+          <tr style={{ background: 'var(--color-surface-muted)' }}>
+            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: 'var(--color-fg)', textAlign: 'center' }}>Codigo</th>
+            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: 'var(--color-fg)', textAlign: 'center' }}>Solicitante</th>
+            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: 'var(--color-fg)', textAlign: 'center' }}>Status</th>
+            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: 'var(--color-fg)', textAlign: 'center' }}>Prioridade</th>
+            <th style={{ padding: '8px 16px', fontSize: 11, fontWeight: 700, color: 'var(--color-fg)', textAlign: 'center' }}>Valor</th>
           </tr>
         </thead>
         <tbody>
@@ -871,11 +871,11 @@ export default function DataListingDemo() {
                 <thead><tr style={{background:C.bg}}>
                   <th style={{padding:`8px ${D.padX}px`,textAlign:"left",width:36,borderBottom:`2px solid ${C.cardBorder}`}}><Checkbox checked={selected.size===data.length&&selected.size>0} onChange={toggleAll} size={14}/></th>
                   {visibleColumnList.filter(c=>c.id!=="actions").map(col=>(
-                    <th key={col.id} onClick={()=>sortableS&&setSortBy(s=>({col:col.id,dir:s.col===col.id&&s.dir==="asc"?"desc":"asc"}))} style={{padding:`8px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",cursor:sortableS?"pointer":"default",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>
+                    <th key={col.id} onClick={()=>sortableS&&setSortBy(s=>({col:col.id,dir:s.col===col.id&&s.dir==="asc"?"desc":"asc"}))} style={{padding:`8px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap",cursor:sortableS?"pointer":"default",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>
                       <span style={{display:"inline-flex",alignItems:"center",gap:4}}>{col.label}{sortableS&&(sortBy.col===col.id?(sortBy.dir==="asc"?Ic.sortAsc(10):Ic.sortDesc(10)):Ic.sortNone(10))}</span>
                     </th>
                   ))}
-                  {visibleCols.has("actions")&&<th style={{padding:`8px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,width:80}}>Ações</th>}
+                  {visibleCols.has("actions")&&<th style={{padding:`8px ${D.padX}px`,textAlign:"center",fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,width:80}}>Ações</th>}
                 </tr></thead>
                 <tbody>{data.map((r,i)=>{
                   const isSel=selected.has(r.id);
