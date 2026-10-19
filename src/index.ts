@@ -64,6 +64,10 @@ export {
   type FilterGroup,
   type FilterChip,
 } from './components/composites/FilterDrawer'
+export {
+  FilterBlock,
+  type FilterBlockProps,
+} from './components/composites/FilterBlock'
 export { PillFilter, type PillOption } from './components/composites/PillFilter'
 export { PillGroup } from './components/composites/PillGroup'
 export {

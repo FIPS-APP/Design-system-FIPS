@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.19.0',
+    date: '2026-10-19',
+    title: 'FilterBlock: bloco de filtros no pacote',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `FilterBlock` no pacote: botão Filtros que abre o drawer, busca e vaga única de exportar (`actions`: par Excel/PDF, PDF sozinho ou botão desabilitado). Card 10/10/10/18, controles de 30px. Para telas sem alçada nem período; com alçada ou período segue o `ListingFilterToolbar`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'A busca faz parte do padrão: `search` e `onSearchChange` são obrigatórios na tipagem, e o bloco sempre mostra o campo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O botão Filtros é o `DrawerTrigger` do drawer, então o foco volta para ele ao fechar com Esc ou com "Ver N resultados". No celular os controles quebram de linha e a busca ocupa no mínimo 160px.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Seção 10 em `/docs/patterns/filtro` com o exemplo e o código; Anti-patterns passa a seção 11.',
+      },
+    ],
+  },
+  {
     version: '0.18.0',
     date: '2026-10-19',
     title: 'AbasDeSecao: faixa de abas de seção, com variante de celular no rodapé',

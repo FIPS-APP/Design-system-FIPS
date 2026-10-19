@@ -15,6 +15,7 @@ Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 - `AbasDeSecao`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
+- `FilterBlock`, `FilterBlockProps` (Filtros + busca + exportar; ver Padrões → Bloco enxuto)
 - `CircularCommandMenu` · `RowActionsMenu`
 - `ExcelIcon`, `PdfIcon`
 
