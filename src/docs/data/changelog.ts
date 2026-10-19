@@ -44,6 +44,11 @@ export const CHANGELOG: ChangelogVersion[] = [
         description:
           'O traço da aba ativa e a separação ficam dentro da caixa da faixa e trocam de lado juntos com a posição. O `overflow-x` da faixa recortaria o traço se ele saísse da caixa.',
       },
+      {
+        type: 'fix',
+        description:
+          'A página da AbasDeSecao não rola de lado no celular: as molduras encolhem até a largura da coluna e o aviso quebra os nomes longos de variável.',
+      },
     ],
   },
   {

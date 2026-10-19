@@ -47,6 +47,7 @@ function Moldura({
   const [ativa, setAtiva] = useState(ativaInicial ?? abas[0].id)
   const estilo = {
     width: largura,
+    maxWidth: '100%',
     height: 560,
     transform: 'translateZ(0)',
     '--barra-inferior-altura': '46px',
@@ -134,7 +135,7 @@ export default function AbasDeSecaoDoc() {
         embaixo. As molduras abaixo têm 375px e 412px de largura.
       </p>
 
-      <div className="mt-4 max-w-3xl rounded-2xl border border-[var(--color-semantic-critico-border)] bg-[var(--color-semantic-critico-bg)] p-4 text-sm leading-relaxed text-[var(--color-semantic-critico-fg)]">
+      <div className="mt-4 max-w-3xl rounded-2xl border border-[var(--color-semantic-critico-border)] bg-[var(--color-semantic-critico-bg)] p-4 text-sm leading-relaxed [overflow-wrap:anywhere] text-[var(--color-semantic-critico-fg)]">
         <strong>Sem <code>--barra-inferior-altura</code> a faixa some.</strong> O app tem de publicar a altura da
         própria barra. Sem ela a faixa fica em <code>bottom: 0</code>, por baixo da barra. No OPA-MOBILE:{' '}
         <code>--barra-inferior-altura: var(--barra-abas-altura)</code> e{' '}
