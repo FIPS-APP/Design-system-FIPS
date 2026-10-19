@@ -227,7 +227,7 @@ Fonte: `src/docs/pages/components/SelectDoc.tsx` (Seção 01, **9 tipos**). Só 
 
 ## Tabs, Table, Dialog, Drawer, Tooltip, Progress
 
-Movimento: nenhum componente usa `transition-all` (transição só de cor, opacidade, sombra, transform e filter). Com `prefers-reduced-motion: reduce`, um bloco global em `globals.css` zera duração de animação e transição (spinner parado, sem shimmer, Dialog sem escala, Drawer sem deslizar); o `CircularCommandMenu` usa `MotionConfig reducedMotion="user"` e abre sem animar nem a opacidade dos itens. `Progress` anima por `transform` (com `background-size` na mesma duração e curva) e o toggle do menu de colunas por `translateX`. Anel de foco dos botões de fechar (Drawer, Modal hero), do `TabsContent` e do gatilho do menu radial só aparece com `focus-visible` (teclado).
+Movimento: nenhum componente de `ui` e `composites` usa `transition-all` (transição só de cor, opacidade, sombra, transform e filter). Com `prefers-reduced-motion: reduce`, um bloco global em `globals.css` zera duração de animação e transição (spinner parado, sem shimmer, Dialog sem escala, Drawer sem deslizar); o `CircularCommandMenu` usa `MotionConfig reducedMotion="user"` e abre sem animar nem a opacidade dos itens. `Progress` anima por `transform` (com `background-size` na mesma duração e curva) e o toggle do menu de colunas por `translateX`. Anel de foco dos botões de fechar (Drawer, Modal hero), do `TabsContent` e do gatilho do menu radial só aparece com `focus-visible` (teclado).
 
 Fontes:
 

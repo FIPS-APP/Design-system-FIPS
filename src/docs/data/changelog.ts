@@ -32,7 +32,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          'Componentes sem `transition-all` (cada transição lista as propriedades) e animações que respeitam `prefers-reduced-motion`. Número provisório: renumera na ordem de entrada da fila.',
+          'Componentes de `ui` e `composites` sem `transition-all` (cada transição lista as propriedades) e animações que respeitam `prefers-reduced-motion`.',
       },
       {
         type: 'improvement',

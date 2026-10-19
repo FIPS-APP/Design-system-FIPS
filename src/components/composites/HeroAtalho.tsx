@@ -59,7 +59,7 @@ export function HeroAtalho({
     }),
     paddingRight: realcado ? 9 : 6.5,
     // Lista explícita: só o que muda entre repouso e realce.
-    transition: ['background-color', 'border-color', 'color', 'box-shadow', 'transform', 'padding-right']
+    transition: ['background-color', 'border-color', 'color', 'box-shadow', 'transform', 'scale', 'padding-right']
       .map((p) => `${p} ${realcado ? '0.3s' : '0.25s'} ease`)
       .join(', '),
   }
