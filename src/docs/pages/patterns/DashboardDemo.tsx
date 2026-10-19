@@ -733,7 +733,7 @@ export default function DSFIPSDashboard(){
               <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
                 <thead><tr style={{background:C.bg}}>
                   {(mob?["Código","Status","SLA"]:["Código","Solicitante","Depto","Status","SLA","Valor"]).map(h=>(
-                    <th key={h} style={{padding:"12px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaChumbo,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap"}}>{h}</th>
+                    <th key={h} style={{padding:"12px 16px",textAlign:"center",fontSize:10,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.cinzaEscuro,fontFamily:Fn.title,borderBottom:`2px solid ${C.cardBorder}`,whiteSpace:"nowrap"}}>{h}</th>
                   ))}
                 </tr></thead>
                 <tbody>

@@ -79,7 +79,7 @@ export function DSTable({
             <tr style={{ background: C.bg, borderBottom: `2px solid ${C.cardBorder}` }}>
               {columns.map((col) => (
                 <th key={col.key} onClick={() => sortable && toggleSort(col.key)}
-                  style={{ padding: `${py}px 16px`, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: C.cinzaChumbo, fontFamily: Fn.title, textAlign: col.align || "left", cursor: sortable ? "pointer" : "default", whiteSpace: "nowrap", width: col.width, userSelect: "none" }}>
+                  style={{ padding: `${py}px 16px`, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: C.cinzaEscuro, fontFamily: Fn.title, textAlign: col.align || "left", cursor: sortable ? "pointer" : "default", whiteSpace: "nowrap", width: col.width, userSelect: "none" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                     {col.label}{sortable && <SortIcon col={col.key} />}
                   </span>
