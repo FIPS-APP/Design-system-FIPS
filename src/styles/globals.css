@@ -164,8 +164,8 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
-    /* 6,47:1 sobre branco. Texto vermelho pequeno. */
-    --color-danger-text: #b91c1c;
+    /* Alias de --color-danger-strong: um vermelho só para texto pequeno (6,47:1 sobre branco). */
+    --color-danger-text: var(--color-danger-strong);
     --color-success-fill: var(--color-fips-green-700);
     --color-neutral-fill: var(--color-fg-muted);
     /* Botão sólido: fundo, hover e texto. No claro repetem os valores de antes. */
@@ -229,8 +229,8 @@
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);
-    /* 8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão. */
-    --color-danger-text: #fca5a5;
+    /* Alias de --color-danger-strong (8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão). */
+    --color-danger-text: var(--color-danger-strong);
     /* 4,56:1 com texto branco. */
     --color-success-fill: #008842;
     --color-neutral-fill: #5b6470;

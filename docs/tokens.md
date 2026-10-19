@@ -1,6 +1,6 @@
 # Tokens — Design System FIPS
 
-> Gerado automaticamente a partir de `src/tokens/` em 2026-10-12. Não edite à mão — rode `npm run tokens:gen` para regenerar.
+> Gerado automaticamente a partir de `src/tokens/` em 2026-10-13. Não edite à mão — rode `npm run tokens:gen` para regenerar.
 
 ## Paleta oficial (Brandbook)
 

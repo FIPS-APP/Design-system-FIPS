@@ -85,7 +85,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-fg-muted: #6b7784;
   --color-border-control: var(--color-border);
   --color-primary-text: var(--color-primary);
-  --color-danger-text: #b91c1c;
+  --color-danger-text: var(--color-danger-strong);
   --color-success-fill: var(--color-fips-green-700);
   --color-neutral-fill: var(--color-fg-muted);
   --color-ring: var(--color-fips-sky-600);
@@ -110,12 +110,12 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-fg` | gray-900 | `#e8e8e8` |
 | `--color-fg-muted` | `#6b7784` | `#9ca3af` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |
-| `--color-danger-text` (vermelho de texto pequeno) | `#b91c1c` | `#fca5a5` |
+| `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
+| `--color-danger-text` (alias de `--color-danger-strong`) | `--color-danger-strong` | `--color-danger-strong` |
 | `--color-success-strong` (**cor de texto**) | green-700 | `#8be5ad` |
 | `--color-success-fill` (fundo cheio com texto branco) | green-700 | `#008842` (4,56:1) |
 | `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
-| `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
 | `--color-ring` | sky-600 | yellow-600 |
 
 Botões sólidos leem seis tokens próprios, com texto acima de 4,5:1 no escuro. No claro repetem os valores de antes:
