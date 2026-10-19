@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-19',
+    title: 'Tokens do azulejo neumórfico e linha de preferência com escolha',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo composite `SettingsPreferenceRowSelect`: a mesma linha do `SettingsPreferenceRow` (canto 10/10/10/18, rótulo 14/500, descrição 12 apagada) com um `Select` no lugar do interruptor, para preferência que não é sim ou não. O `Select` do pacote não tem portal; dentro de modal ou gaveta com `overflow` a lista pode ser cortada.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Entram catorze tokens `--neu-*` no `globals.css`, só do azulejo neumórfico do header e da sidebar (não são cor de superfície). `docHeaderNeuLight*`, `docHeaderNeuDark*`, `docHeaderNeuAccentBgHover`, `docHeaderNeuAccentIcon` e `docHeaderNeuAccentGloss` passam a ler os tokens. Os valores são os mesmos de antes, nenhum pixel muda. Os campos `*Hex` de `docHeaderTabsUnderlineMd` continuam em hexadecimal, porque a HeaderDoc os exibe como texto.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
