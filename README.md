@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.16.1`
+## Versão atual: `v0.17.0`
 
 ## Favicon e ícones de app
 
@@ -82,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.17.0 | 2026-10-19 | `HeroFileira`: fileira de atalhos do hero com um aberto por vez e o primeiro aberto no repouso. O estado e o saiu moram na fileira, para atravessar sem piscar. `HeroAtalho` aceita `aberto` e `aoApontar` |
 | 0.16.1 | 2026-10-19 | Menu do topo: `paddingX` dos itens de 24 para 18px (`docHeaderTabsUnderlineMd`), no nav e na réplica da doc. O token não sai no pacote: é padrão documentado, cada app copia o valor. Tutorial e exemplo de `/docs/components/header` passam a 18px |
 | 0.16.0 | 2026-10-19 | Tema escuro segue o Gestão OPA: cartão `#1a1a1a`, soft `#1f1f1f`, página `#252525`. Borda de campo `--color-border-control` `#666666` (3,03:1), usada por `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup`. Divisor continua `#2e2e2e`. Entram `--color-primary-text`, `--color-danger-text` (`#b91c1c` no claro, `#fca5a5` no escuro), `--color-success-fill` e `--color-neutral-fill`. No escuro `--color-success-strong` é cor de texto; fundo verde com texto branco é `--color-success-fill`. Botões no escuro com texto acima de 4,5:1: `outline` e `link` usam `--color-primary-text`, e `success`, `save`, `successStrong`, `danger` e `accent` leem os tokens `--color-btn-*`; o claro não muda. Quem sobrescrevia `--color-success-strong`, `--color-danger` ou `--color-primary` dentro do botão perde a sobrescrita |
 | 0.15.3 | 2026-10-19 | Docs: a coluna do `DocLayout` ganha `min-w-0` abaixo de `lg`; a 375 px as rotas que rolam de lado caem de 22 para 11 de 37 |

@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.17.0',
+    date: '2026-10-19',
+    title: 'HeroFileira: fileira de atalhos com um aberto por vez',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `HeroFileira` no pacote. Agrupa os `HeroAtalho`: um aberto por vez, o primeiro é o principal e fica aberto no repouso, apontar outro fecha o principal e sair da fileira volta a ele.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`HeroAtalho` aceita `aberto` e `aoApontar` para ser controlado de fora. Sem `aberto`, continua decidindo sozinho, como antes.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Doc do padrão Hero explica por que o estado e o saiu moram na fileira: com o `onMouseLeave` em cada atalho, o vão de 8px zera o estado por um quadro e o principal reabre no meio do caminho.',
+      },
+    ],
+  },
+  {
     version: '0.16.1',
     date: '2026-10-19',
     title: 'Menu do topo com itens de 18px',
