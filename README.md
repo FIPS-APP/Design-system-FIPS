@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.19.0`
+## Versão atual: `v0.19.1`
 
 ## Favicon e ícones de app
 
@@ -82,6 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.19.1 | 2026-10-19 | `Alert` info lê os tokens `--color-semantic-info-*`: no escuro o texto passa de 1,51:1 para 6,00:1 sobre o fundo. Claro sem mudança |
 | 0.19.0 | 2026-10-19 | `FilterBlock`: bloco de filtros da casa no pacote (Filtros com drawer, busca obrigatória e vaga única de exportar), com a seção 10 em `/docs/patterns/filtro` |
 | 0.18.0 | 2026-10-19 | `AbasDeSecao`: faixa de abas de seção no topo ou fixa acima da barra de navegação inferior (celular). Traço da aba ativa e separação dentro da caixa, altura em `--abas-secao-altura`, `--abas-secao-empilha` para outro elemento fixo no mesmo vão |
 | 0.17.0 | 2026-10-19 | `HeroFileira`: fileira de atalhos do hero com um aberto por vez e o primeiro aberto no repouso. O estado e o saiu moram na fileira, para atravessar sem piscar. `HeroAtalho` aceita `aberto` e `aoApontar` |
