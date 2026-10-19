@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-19',
+    title: 'Select e ChipSelect por teclado',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Select e ChipSelect funcionam por teclado (setas, Home, End, Enter, Escape, aria-activedescendant); o Escape da lista não fecha mais o Dialog ou o Drawer em volta. Número provisório: renumera na ordem de entrada da fila (o PR #25 já declara 0.17.0).',
+      },
+      {
+        type: 'feature',
+        description:
+          'Select ganha a prop `name`: o valor escolhido entra no submit de um `<form>` nativo.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
