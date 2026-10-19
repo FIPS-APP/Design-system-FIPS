@@ -43,6 +43,11 @@ export const semanticColors = {
   accentStrong: '#F6921E',
   success: '#00C64C',
   successStrong: '#00904C',
+  borderControl: '#C0CCD2',
+  primaryText: '#004B9B',
+  dangerText: '#B91C1C',
+  successFill: '#00904C',
+  neutralFill: '#6B7784',
   surface: '#FFFFFF',
   surfaceMuted: '#E8EBFF',
   border: '#C0CCD2',
@@ -76,6 +81,11 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-border-strong: var(--color-fips-gray-400);
   --color-fg: var(--color-fips-gray-900);
   --color-fg-muted: #6b7784;
+  --color-border-control: var(--color-border);
+  --color-primary-text: var(--color-primary);
+  --color-danger-text: #b91c1c;
+  --color-success-fill: var(--color-fips-green-700);
+  --color-neutral-fill: var(--color-fg-muted);
   --color-ring: var(--color-fips-sky-600);
   --color-sidebar: var(--color-fips-blue-950);
   --color-gov-gradient-from: #004B9B;
@@ -85,21 +95,42 @@ Fonte: `src/styles/globals.css` (`@layer base`)
 
 ### Dark mode — o que muda e o que **não** muda
 
-Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `localStorage` chave `fips-theme`). O bloco `.dark` redefine **só a camada de superfície**:
+Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `localStorage` chave `fips-theme`). Os neutros seguem o Gestão OPA: cartão `#1a1a1a` sobre página `#252525`. O bloco `.dark` redefine a camada de superfície, a borda de campo e os papéis de texto e de fundo cheio:
 
 | Token | Light | Dark |
 | --- | --- | --- |
-| `--color-surface` | `#ffffff` | `#222222` |
-| `--color-surface-soft` | neutral-25 | `#252525` |
-| `--color-surface-muted` | neutral-50 | `#1A1A1A` |
-| `--color-border` | `#d7e0ea` | `#2E2E2E` |
+| `--color-surface` (cartão) | `#ffffff` | `#1a1a1a` |
+| `--color-surface-soft` | neutral-25 | `#1f1f1f` |
+| `--color-surface-muted` (página) | neutral-50 | `#252525` |
+| `--color-border` (divisor) | `#d7e0ea` | `#2e2e2e` |
 | `--color-border-strong` | gray-400 | `#3a3a3a` |
-| `--color-fg` | gray-900 | `#E2E2E8` |
-| `--color-fg-muted` | `#6b7784` | `#A1A1AA` |
+| `--color-border-control` (campo) | igual a `--color-border` | `#666666` (3,03:1 sobre o cartão) |
+| `--color-fg` | gray-900 | `#e8e8e8` |
+| `--color-fg-muted` | `#6b7784` | `#9ca3af` |
+| `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |
+| `--color-danger-text` (vermelho de texto pequeno) | `#b91c1c` | `#fca5a5` |
+| `--color-success-strong` (**cor de texto**) | green-700 | `#8be5ad` |
+| `--color-success-fill` (fundo cheio com texto branco) | green-700 | `#008842` (4,56:1) |
+| `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
 | `--color-ring` | sky-600 | yellow-600 |
 
-**Regra crítica:** `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` são **idênticos** nos dois temas. Por isso todo uso de `--color-primary` como **acento** (borda em foco, anel, borda do dropdown aberto, opção selecionada, botão outline) precisa do par manual `dark:…-[#93BDE4]` — sem ele o acento fica com contraste baixo no escuro. Esses `dark:` não são resíduo: são o substituto funcional do token dark que não existe.
+Botões sólidos leem seis tokens próprios, com texto acima de 4,5:1 no escuro. No claro repetem os valores de antes:
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `--color-btn-success` | `--color-success` | `--color-success-fill` (`#008842`) |
+| `--color-btn-success-hover` | `--color-success-strong` | `#006d35` |
+| `--color-btn-danger` | `--color-danger` | `#dc2626` |
+| `--color-btn-danger-hover` | `#c82333` | `#b91c1c` |
+| `--color-btn-accent-fg` | `#ffffff` | `--color-primary-hover` (`#002a68`) |
+| `--color-btn-accent-hover` | `--color-warning` | `--color-accent` (`#fdc24e`) |
+
+`outline` e `link` usam `--color-primary-text`. Não sobrescreva os tokens do botão fora do pacote.
+
+**Regra crítica:** no escuro `--color-success-strong` é cor de **texto**. Fundo verde com texto branco usa `--color-success-fill`; `success-strong` como fundo dá 1,51:1 com branco.
+
+`--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` continuam **idênticos** nos dois temas. Para **texto e contorno** de ação use `--color-primary-text`. Para **acento** de foco (borda em foco, anel, borda do dropdown aberto, opção selecionada) o par manual `dark:…-[#93BDE4]` continua necessário: `--color-primary` não muda no escuro, e sem o par o acento fica com contraste baixo. Esses `dark:` não são resíduo.
 
 Já os tokens `--color-gov-*` (usados em páginas de doc/governança) **invertem** no dark — `--color-gov-azul-profundo` vira `#93BDE4`. Não usá-los como fundo cheio com texto branco por cima: no escuro o fundo clareia e o texto some (foi a causa dos pills do drawer de filtros usarem hex fixo).
 

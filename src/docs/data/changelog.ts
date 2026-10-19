@@ -25,6 +25,48 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-19',
+    title: 'Tema escuro segue o Gestão OPA',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O `.dark` troca o desenho dos neutros: cartão `#1a1a1a`, soft `#1f1f1f`, página `#252525`, texto `#e8e8e8`, texto apagado `#9ca3af`. O desenho anterior (cartão `#222222` sobre página `#1a1a1a`) sai. Quem não sobrescrevia os neutros passa a ver a diferença, e o hover do `secondary` agora clareia em vez de escurecer.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`--color-border-control` separa a borda de campo da borda de divisor. `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup` usam o token. No escuro o campo é `#666666` (3,03:1 sobre o cartão) e o divisor fica `#2e2e2e` (1,28:1); o hover do campo sobe para `--color-fg-muted`. No claro os dois apontam para a mesma borda.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Entram no pacote `--color-primary-text`, `--color-danger-text`, `--color-success-fill` (`#008842` no escuro, 4,56:1 com branco) e `--color-neutral-fill`. `--color-danger-text` vale `#b91c1c` no claro (6,47:1 sobre branco) e `#fca5a5` no escuro (9,17:1 sobre o cartão). `FieldMessage` de erro e o texto do `Alert` de erro passam a usar o token; no claro o vermelho desses textos fica mais escuro.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'No escuro `--color-success-strong` é cor de texto (`#8be5ad`). Fundo verde com texto branco usa `--color-success-fill`. `src/tokens/colors.ts` e a página Cores acompanham os valores do CSS.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Botões no escuro com texto acima de 4,5:1. `outline` e `link` usam `--color-primary-text` (`#93bde4`, 8,82:1 sobre o cartão; eram 2,06:1). `success`, `save`, `successStrong`, `danger` e `accent` passam a ler seis tokens novos, `--color-btn-success`, `--color-btn-success-hover`, `--color-btn-danger`, `--color-btn-danger-hover`, `--color-btn-accent-fg` e `--color-btn-accent-hover`: verde `#008842` e `#006d35`, vermelho `#dc2626` e `#b91c1c`, e o `accent` laranja com texto azul `#002a68` (5,91:1) e hover `#fdc24e`. O hover de `ghost` e de `outline` ganha cor própria no escuro e a borda do `secondary` usa `--color-border-control`. O claro fica igual: os seis tokens repetem os valores de antes.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Quem sobrescreve `--color-success-strong`, `--color-danger` ou `--color-primary` dentro do botão (por exemplo as regras de botão de um `tema-escuro.css` próprio) perde a sobrescrita: o botão agora lê os tokens `--color-btn-*` e `--color-primary-text`. `FilterDrawer` (Limpar tudo) e `ListingKpiRow` (Limpar filtro) passam a usar `--color-primary-text` no texto.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'App com `tema-escuro.css` próprio tira as sobrescritas dos tokens acima ao atualizar e mantém só o que é dele e difere do pacote, como `--color-ring`, os fundos dos badges, `--color-semantic-atencao-fg` e os tokens da casca.',
+      },
+    ],
+  },
+  {
     version: '0.15.3',
     date: '2026-10-19',
     title: 'Site de docs sem rolagem lateral em 11 rotas a 375 px',
