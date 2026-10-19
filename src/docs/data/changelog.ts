@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-19',
+    title: 'Nome acessível obrigatório e erro anunciado',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Quebra de tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` passam a exigir nome acessível pelo tipo (`aria-label` ou `aria-labelledby`; no `Switch` vale também um `id` ligado a um `<label htmlFor>`; no `Button`, `asChild` com o nome no filho). Quem atualizar o pacote e não passar o nome recebe erro do `tsc` nessas chamadas. `size` dinâmico não é cobrado. Pacote 0.x: a quebra vai como `improvement` com este aviso, em vez de `breaking`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`FieldMessage` sem `tone` passa a `role="alert"` (erro anunciado na hora, também para quem usava como aviso informativo); os tons `default` e `success` usam `aria-live="polite"`. Ligue o campo à mensagem com `aria-describedby`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Menu de colunas do `AdminTable`: o nome da coluna é o rótulo do checkbox e a linha da aparência é o rótulo do switch (clicáveis). A alça de reordenar vira botão que move a coluna com ArrowUp e ArrowDown, e o arrasto não seleciona texto. Ícones decorativos de `Input` e `FieldTrigger` saem com `aria-hidden`.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
