@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-19',
+    title: 'PageHero passa a ser só o gradiente',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'A faixa de módulo fica só com o gradiente institucional. A foto entrava apenas na faixa direita (min(65vw,580px), object-right) e, em hero baixo, a borda esquerda dela virava uma emenda reta no meio do gradiente; a silhueta SVG lia como um vulto chapado no canto.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Aviso: a arte saiu; as props `decorationSrc` e `showTrainSilhouette` não fazem mais nada e somem na 1.0.0. Elas e a constante `PAGE_HERO_DEFAULT_DECORATION` seguem exportadas só por esta versão, marcadas `@deprecated`, então quem ainda passa alguma continua compilando. Quem quiser arte no topo desenha no children.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',

@@ -59,7 +59,7 @@ export * from './tokens'           // fipsPalette, semanticColors, fontFamilies,
 export { cn } from './lib/cn'
 export * from './components/ui'    // todos os primitives + AdminListing
 export { FipsLogo } from './components/brand/FipsLogo'
-export { PageHero, PAGE_HERO_DEFAULT_DECORATION } from './composites'
+export { PageHero, PAGE_HERO_DEFAULT_DECORATION } from './composites'  // a constante é @deprecated e some na 1.0.0
 ```
 
 ### Inventário de primitives em `src/components/ui/`

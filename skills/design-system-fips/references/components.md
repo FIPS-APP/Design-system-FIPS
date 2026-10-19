@@ -10,7 +10,7 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 
 Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
-- `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
+- `FipsLogo` · `PageHero` (a constante `PAGE_HERO_DEFAULT_DECORATION` está `@deprecated`: não use)
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
 - `CircularCommandMenu` · `RowActionsMenu`
@@ -444,11 +444,7 @@ Um único componente, dois presets:
 
 Fonte: `src/composites/PageHero.tsx`
 
-Header oficial para páginas de módulo:
-
-```ts
-export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.png'
-```
+Header oficial para páginas de módulo. Props: `children` e `className`.
 
 Uso:
 
@@ -464,9 +460,8 @@ import { PageHero } from 'ds-fips'
 
 Comportamento:
 
-- gradiente azul institucional
-- foto/trilho sutil à direita por padrão
-- fallback opcional para `showTrainSilhouette`
+- gradiente azul institucional, e só
+- sem foto nem silhueta de trem desde a 0.16.0: `decorationSrc`, `showTrainSilhouette` e `PAGE_HERO_DEFAULT_DECORATION` seguem por mais uma versão, `@deprecated`, aceitos e ignorados (não passe), e somem na 1.0.0; arte no topo vai no `children`
 
 ## FipsLogo e marca do menu (sidebar header)
 

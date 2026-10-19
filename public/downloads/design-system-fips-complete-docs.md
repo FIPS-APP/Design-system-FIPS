@@ -233,11 +233,7 @@ Arquivos:
 
 Arquivo: `src/composites/PageHero.tsx`
 
-Constante:
-
-```ts
-export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.png'
-```
+Só o gradiente institucional (sem arte de trem desde a 0.16.0). Props: `children` e `className`. `decorationSrc`, `showTrainSilhouette` e a constante `PAGE_HERO_DEFAULT_DECORATION` seguem por mais uma versão, `@deprecated`, aceitos e ignorados; somem na 1.0.0.
 
 Uso:
 

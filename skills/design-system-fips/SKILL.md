@@ -67,7 +67,7 @@ import { UserRound } from 'lucide-react'
 
 Use these searches when the repository is available:
 
-- `rg -n "PAGE_HERO_DEFAULT_DECORATION|PageHero" src`
+- `rg -n "PageHero" src`
 - `rg -n "buttonVariants|badgeVariants" src/components/ui`
 - `rg -n -- "--color-primary|--color-accent|--shadow-card|--font-heading" src/styles/globals.css`
 - `rg -n "DocPage|PatternGuidelines" src/docs`
