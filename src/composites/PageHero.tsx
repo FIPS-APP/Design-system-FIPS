@@ -1,9 +1,25 @@
 import type { ReactNode } from 'react'
 import { cn } from '../lib/cn'
 
+/**
+ * @deprecated A arte saiu: nada mais lê esta constante. Segue exportada por
+ * uma versão só para o import antigo não quebrar, e some na 1.0.0.
+ */
+export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.png'
+
 export type PageHeroProps = {
   children: ReactNode
   className?: string
+  /**
+   * @deprecated A arte saiu: a prop é aceita e ignorada, não faz mais nada.
+   * Some na 1.0.0.
+   */
+  decorationSrc?: string | null
+  /**
+   * @deprecated A arte saiu: a prop é aceita e ignorada, não faz mais nada.
+   * Some na 1.0.0.
+   */
+  showTrainSilhouette?: boolean
 }
 
 /**
@@ -20,6 +36,10 @@ export type PageHeroProps = {
  *
  * Quem precisar de arte no topo desenha no `children`, onde dá para controlar
  * recorte e altura. O hero entrega o fundo, não a ilustração.
+ *
+ * `decorationSrc`, `showTrainSilhouette` e `PAGE_HERO_DEFAULT_DECORATION`
+ * ficam por mais uma versão, aceitos e ignorados, para quem ainda os passa
+ * continuar compilando. Somem na 1.0.0.
  */
 export function PageHero({ children, className }: PageHeroProps) {
   return (

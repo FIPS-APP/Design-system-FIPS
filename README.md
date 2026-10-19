@@ -82,7 +82,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.16.0 | 2026-10-15 | **Breaking:** `PageHero` passa a ser só o gradiente institucional. Saem as props `decorationSrc` e `showTrainSilhouette` e o export `PAGE_HERO_DEFAULT_DECORATION`; quem passava alguma delas precisa remover da chamada |
+| 0.16.0 | 2026-10-19 | `PageHero` passa a ser só o gradiente institucional: a arte de trem saiu. As props `decorationSrc` e `showTrainSilhouette` e a constante `PAGE_HERO_DEFAULT_DECORATION` seguem exportadas por esta versão, `@deprecated`, aceitas e ignoradas: não fazem mais nada e somem na 1.0.0 |
 | 0.15.1 | 2026-10-18 | `TableHead`, `AdminTableSortHeader` e a prévia de exportação usam `--color-fg` no título de coluna: de 4,29:1 para 10,70:1 sobre a faixa no claro. Faixa e borda não mudam. `DSTable`, demos e referência portátil alinhados |
 | 0.15.0 | 2026-09-29 | `HeroAtalho` + `HeroAtalhos`: atalho do hero que mostra só o ícone e abre com o nome no hover ou no foco, com o realce do header. Home do DS e página Hero passam a usar |
 | 0.14.1 | 2026-10-01 | Padrão de favicon App FIPS: `public/icons/`, `docs/favicon.md`, vitrine `index.html` alinhada ao OPA-MOBILE |

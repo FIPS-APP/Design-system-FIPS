@@ -10,7 +10,7 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 
 Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
-- `FipsLogo` · `PageHero`
+- `FipsLogo` · `PageHero` (a constante `PAGE_HERO_DEFAULT_DECORATION` está `@deprecated`: não use)
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
 - `CircularCommandMenu` · `RowActionsMenu`
@@ -461,7 +461,7 @@ import { PageHero } from 'ds-fips'
 Comportamento:
 
 - gradiente azul institucional, e só
-- sem foto nem silhueta de trem desde a 0.16.0: saíram `decorationSrc`, `showTrainSilhouette` e `PAGE_HERO_DEFAULT_DECORATION`; arte no topo vai no `children`
+- sem foto nem silhueta de trem desde a 0.16.0: `decorationSrc`, `showTrainSilhouette` e `PAGE_HERO_DEFAULT_DECORATION` seguem por mais uma versão, `@deprecated`, aceitos e ignorados (não passe), e somem na 1.0.0; arte no topo vai no `children`
 
 ## FipsLogo e marca do menu (sidebar header)
 
