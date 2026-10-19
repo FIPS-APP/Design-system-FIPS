@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.18.0',
+    date: '2026-10-19',
+    title: 'AbasDeSecao: faixa de abas de seção, com variante de celular no rodapé',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `AbasDeSecao` no pacote. Faixa de abas de seção no topo (`posicao="topo"`) ou fixa logo acima da barra de navegação inferior (`posicao="rodape"`), para o celular.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Variáveis `--abas-secao-altura` (39px), `--abas-secao-empilha` e `--barra-inferior-altura`, e a classe `abas-secao-reserva`, que deriva o respiro da página da altura da faixa.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O traço da aba ativa e a separação ficam dentro da caixa da faixa e trocam de lado juntos com a posição. O `overflow-x` da faixa recortaria o traço se ele saísse da caixa.',
+      },
+      {
+        type: 'fix',
+        description:
+          'A página da AbasDeSecao não rola de lado no celular: as molduras encolhem até a largura da coluna e o aviso quebra os nomes longos de variável.',
+      },
+    ],
+  },
+  {
     version: '0.17.0',
     date: '2026-10-19',
     title: 'HeroFileira: fileira de atalhos com um aberto por vez',

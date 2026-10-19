@@ -106,3 +106,8 @@ export {
   type HeroFileiraAtalho,
 } from './components/composites/HeroFileira'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
+export {
+  AbasDeSecao,
+  type AbasDeSecaoProps,
+  type AbaDeSecao,
+} from './components/composites/AbasDeSecao'
