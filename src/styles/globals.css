@@ -159,6 +159,8 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-ring: var(--color-fips-sky-600);
+    --color-switch-on: var(--color-primary);
+    --color-switch-off: var(--color-fg-muted);
     --color-badge-warning-bg: var(--color-fips-orange-100);
     --color-badge-danger-bg: var(--color-fips-red-100);
     --color-sidebar: var(--color-fips-blue-950);
@@ -207,6 +209,8 @@
     --color-fg: #E2E2E8;
     --color-fg-muted: #A1A1AA;
     --color-ring: var(--color-fips-yellow-600);
+    --color-switch-on: var(--color-fips-blue-700);
+    --color-switch-off: #7a7a82;
     --color-badge-warning-bg: rgba(246, 146, 30, 0.14);
     --color-badge-danger-bg: rgba(239, 68, 68, 0.14);
     --color-sidebar: var(--color-fips-blue-950);

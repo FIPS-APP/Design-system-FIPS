@@ -92,4 +92,4 @@ export const docHeaderTabsUnderlineMd = {
 
 /** Input de busca no header claro. */
 export const docHeaderSearchInputLightClass =
-  'h-[35px] w-full rounded-lg border border-[var(--color-border)]/60 bg-[var(--color-surface)] py-0 pl-9 pr-3 font-sans text-[13px] leading-normal text-[var(--color-fg)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder:text-[var(--color-fg-muted)] focus-visible:outline-none focus-visible:border-[var(--color-border-strong)] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]/20 focus-visible:ring-offset-0'
+  'h-[35px] w-full rounded-lg border border-[var(--color-border)]/60 bg-[var(--color-surface)] py-0 pl-9 pr-3 font-sans text-[13px] leading-normal text-[var(--color-fg)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] placeholder:text-[var(--color-fg-muted)] focus-visible:outline-none focus-visible:border-[var(--color-border-strong)] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-0'

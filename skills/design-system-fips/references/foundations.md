@@ -77,6 +77,8 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-fg: var(--color-fips-gray-900);
   --color-fg-muted: #6b7784;
   --color-ring: var(--color-fips-sky-600);
+  --color-switch-on: var(--color-primary);
+  --color-switch-off: var(--color-fg-muted);
   --color-sidebar: var(--color-fips-blue-950);
   --color-gov-gradient-from: #004B9B;
   --color-gov-gradient-to: #002A68;
@@ -98,8 +100,12 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-fg-muted` | `#6b7784` | `#A1A1AA` |
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
 | `--color-ring` | sky-600 | yellow-600 |
+| `--color-switch-on` | `--color-primary` | blue-700 |
+| `--color-switch-off` | `--color-fg-muted` | `#7a7a82` |
 
 **Regra crítica:** `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` são **idênticos** nos dois temas. Por isso todo uso de `--color-primary` como **acento** (borda em foco, anel, borda do dropdown aberto, opção selecionada, botão outline) precisa do par manual `dark:…-[#93BDE4]` — sem ele o acento fica com contraste baixo no escuro. Esses `dark:` não são resíduo: são o substituto funcional do token dark que não existe.
+
+**Anel de foco e interruptor:** `--color-ring` entra sempre com opacidade cheia (`ring-2 ring-[var(--color-ring)]`, nunca `/20`) e o recuo usa `ring-offset-[var(--color-surface)]`. Os trilhos do `Switch` leem `--color-switch-on` e `--color-switch-off`, que medem 3:1 ou mais contra o cartão e contra o botão branco nos dois temas. `npm test` confere.
 
 Já os tokens `--color-gov-*` (usados em páginas de doc/governança) **invertem** no dark — `--color-gov-azul-profundo` vira `#93BDE4`. Não usá-los como fundo cheio com texto branco por cima: no escuro o fundo clareia e o texto some (foi a causa dos pills do drawer de filtros usarem hex fixo).
 

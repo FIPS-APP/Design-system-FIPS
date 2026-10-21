@@ -25,6 +25,43 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.15.2',
+    date: '2026-10-21',
+    title: 'Switch desligado e anel de foco passam de 3:1 contra o fundo',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Switch` desligado: o trilho usava `--color-fips-gray-400` (1,64:1 contra o cartão no claro) e `#3a3a3a` fixo no escuro (1,40:1). Passa a `--color-switch-off`: 4,57:1 no claro (é o `--color-fg-muted`) e 3,74:1 no escuro. O botão branco fica a 4,57:1 e 4,26:1 do trilho.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`Switch` ligado: o trilho no escuro era `#93bde4` fixo, com o botão branco a 1,97:1. Passa a `--color-switch-on`: `--color-primary` no claro (8,47:1) e `--color-fips-blue-700` no escuro (botão a 3,35:1, trilho a 4,75:1 do cartão). Nenhum hex em `switch.tsx`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Anel de foco com opacidade cheia (`ring-[var(--color-ring)]`, 2px) em `Switch`, `Button`, `Tabs`, `Dialog` (fechar) e `Drawer` (fechar), e na busca do cabeçalho de docs. Com 16% a 25% o anel media de 1,26:1 a 1,60:1 contra o fundo. Agora: 3,56:1 no claro e 6,86:1 no escuro contra o cartão, 3,34:1 e 7,50:1 contra a faixa. `Button` e `Tabs` passam de `ring-4` a `ring-2`.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`Switch`: o recuo do anel (`ring-offset-2`) não tinha cor e saía branco no escuro. Passa a `--color-surface`, como o `Button`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Tokens `--color-switch-on` e `--color-switch-off` em `globals.css` (claro e escuro). `exports/switch/Switch.tsx` e a referência portátil (`foundations.md`) acompanham.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Primeiro teste automatizado do repo: `npm test` (`scripts/contraste.test.mjs`, sem dependência nova) lê os tokens e as classes e exige 3:1 no trilho, no botão e no anel, nos dois temas, e proíbe `--color-ring` com transparência em `src` e `exports`.',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',
