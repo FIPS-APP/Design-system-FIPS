@@ -8,6 +8,25 @@ export { BrandLoader } from './components/brand/BrandLoader'
 export type { BrandLoaderProps, BrandLoaderSize } from './components/brand/BrandLoader'
 export { PageHero, PAGE_HERO_DEFAULT_DECORATION, type PageHeroProps } from './composites'
 export {
+  PageHeader,
+  type PageHeaderActionsProps,
+  type PageHeaderProps,
+  type PageHeaderStat,
+} from './components/composites/PageHeader'
+export {
+  PatternPanelHero,
+  type PatternPanelHeroProps,
+  type PatternPanelHeroStat,
+} from './components/composites/PatternPanelHero'
+export {
+  BannerJunctionLines,
+  BannerIconBox,
+  FIPS_BANNER_CONTENT_CLASS,
+  FIPS_BANNER_ICON_BOX_STYLE,
+  FIPS_BANNER_PAGE_CLASS,
+  FIPS_BANNER_PILL_STYLE,
+} from './components/composites/banner-shared'
+export {
   StatsCard,
   StatsCardGrid,
   type StatsCardProps,

@@ -25,6 +25,43 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.16.0',
+    date: '2026-10-21',
+    title: 'PageHeader: banner de página único no pacote',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `PageHeader`: o banner de página de todos os apps. Título h1 por padrão (`headingLevel`), tile de 44px a 10% e 19% do `--color-accent`, fundo, sombra e borda pelos tokens `--fips-banner-*`, trilhos de 4 caminhos na opacidade do token (0,12 no claro, 0,04 no escuro) como svg filho direto da raiz. Props: `icon`, `title`, `description`, `eyebrow`, `info`, `actions`, `actionsProps` (data-* do slot, âncora de tutorial), `stats`, `edge="bleed"`. `data-*` e `aria-*` vão para a raiz.',
+      },
+      {
+        type: 'feature',
+        description:
+          'A medida segue a largura do próprio cartão, não a da janela (container query de 560px, sem JavaScript). Abaixo de 560px: padding 12, tile 34, título 18px e as ações descem para a última linha, lado a lado com a mesma largura. Com ponteiro de toque os botões das ações têm 44px de altura (filhos diretos do slot). A 1440px o banner mede 91px com a descrição em uma linha.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`PatternPanelHero` vira apelido do `PageHeader`, com as props de antes (`subtitle`, `badge`, `badgePill`, `action`, `stats`, `compact`, `dataTutorial`). Muda o desenho: o título passa de h2 para h1, o tile de 18% e 30% para 10% e 19%, e a coluna do texto deixa de encolher para 82px a 375px. `compact` força a medida estreita.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Pacote: `PageHeader`, `PatternPanelHero`, `BannerJunctionLines`, `BannerIconBox` e as constantes `FIPS_BANNER_*` passam a sair de `@fips-app/ds-fips`. Fecha o item `PatternPanelHero` do #67. `BannerIconBox` passa a 44px e 34px (antes 44px e 38px), com a medida em CSS.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`/docs/patterns/hero-banner`: os previews do Banner de Conteúdo e do Banner de Fluxo renderizam o componente e a página tem um h1 só. O código copiável usava o gradiente invertido (#002A68 para #004B9B, o contrário do token); agora usa `--fips-banner-content-bg`, a sombra e a borda dos tokens, o tile a 10% e 19% e os trilhos pela opacidade do token. O comentário do exemplo de exportação volta a dizer from #004B9B e to #002A68.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`exports/pattern-panel-hero` regerado, agora com `PageHeader.tsx` e `page-header.css` (o CSS vai junto com o arquivo). Novos `scripts/medir-banner.mjs` (no navegador: claro e escuro, 1440 e 375 px, um h1, contraste do pior ponto atrás do texto, coluna do título de pelo menos 200 px, banner dentro da janela, fonte do título, fundo, opacidade do tile e botão de 44px com ponteiro de toque) e `scripts/testar-page-header.mjs` (sem navegador: estrutura renderizada, exports do pacote e regras do CSS).',
+      },
+    ],
+  },
+  {
     version: '0.15.1',
     date: '2026-10-18',
     title: 'Título de coluna da Table sobe de 4,29:1 para 10,70:1 no claro',

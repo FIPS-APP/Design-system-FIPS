@@ -271,7 +271,7 @@ export const PAGE_TUTORIALS: Record<string, PageTutorialStep[]> = {
 
   "hero-banner": [
     { title: "Padrão: Banner", description: "3 variantes de banner padronizado." },
-    { title: "Variantes de Banner", description: "3 tipos:\n1) Banner de Página — hero completo com título grande, badges e arte decorativa (landing pages)\n2) Banner de Conteúdo — faixa compacta com ícone + título + botão (cabeçalhos de módulo)\n3) Banner de Fluxo — badges de status + cadeia de etapas (Solicitação → Aprovação → Entrega)\n\nDegradê azul institucional obrigatório como fundo. PatternPanelHero cobre Banner de Conteúdo 2 com chips de KPI.", target: s(1) },
+    { title: "Variantes de Banner", description: "3 tipos:\n1) Banner de Página: hero completo com título grande, badges e arte decorativa (landing pages)\n2) Banner de Conteúdo: faixa compacta com ícone + título + botão (cabeçalhos de módulo)\n3) Banner de Fluxo: badges de status + cadeia de etapas (Solicitação → Aprovação → Entrega)\n\nDegradê azul institucional obrigatório como fundo. O PageHeader do pacote é o Banner de Conteúdo e o de Fluxo (com chips de KPI); PatternPanelHero é o apelido.", target: s(1) },
   ],
 
   configuracoes: [

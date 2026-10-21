@@ -65,6 +65,8 @@ Se houver conflito:
 ### Composites e padrões
 
 - `src/composites/PageHero.tsx`
+- `src/components/composites/PageHeader.tsx` · `PatternPanelHero.tsx` (apelido) · `banner-shared.tsx`: banner de página; estilos em `.fips-page-header` de `src/styles/globals.css`; cópia em `exports/pattern-panel-hero`
+- `src/docs/pages/patterns/HeroBannerDoc.tsx` (página **Banner** em `/docs/patterns/hero-banner`) · `scripts/medir-banner.mjs`
 - `src/docs/pages/patterns/ApplicationShellDemo.tsx`
 - `src/docs/pages/patterns/DashboardDemo.tsx`
 - `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + **chips de filtro ativo** + tabela + paginação (referência viva do padrão)
@@ -105,7 +107,7 @@ Se houver conflito:
 - Nome oficial: `Design System FIPS`. Evite abreviar isso em documentação externa.
 - Se existir componente no design system, use o componente. Não replique a UI com CSS local.
 - Se faltar uma variante, evolua o design system primeiro.
-- `PageHero` é o header padrão de módulo.
+- `PageHero` é o header padrão de módulo. O banner de cada página é o `PageHeader`, com o h1.
 - Formulários seguem `Field` mais controle (`Input`, `Select`, `Textarea`).
 - Botões, badges, cards e tabelas herdam tokens globais. Não troque a paleta por conveniência.
 
