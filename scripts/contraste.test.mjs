@@ -150,6 +150,22 @@ test('Exemplo portátil do Switch acompanha o componente', () => {
   assert.equal(normaliza(ler('exports/switch/Switch.tsx')), normaliza(ler(SWITCH)))
 })
 
+test('README do exemplo portátil do Switch lista os tokens lidos, com o hex dos dois temas', () => {
+  const readme = ler('exports/switch/README.md')
+  const hex = (c) => '#' + [c.r, c.g, c.b].map((n) => n.toString(16).padStart(2, '0')).join('')
+  const linhas = Object.fromEntries(
+    [...readme.matchAll(/^\|\s*`(--[\w-]+)`[^|]*\|\s*`(#[\da-f]{6})`\s*\|\s*`(#[\da-f]{6})`\s*\|/gim)].map((m) => [m[1], { claro: m[2], escuro: m[3] }]),
+  )
+  const lidos = new Set(ler('exports/switch/Switch.tsx').match(/var\(--[\w-]+\)/g).map((v) => v.slice(4, -1)))
+  assert.ok(lidos.size > 0, 'Switch portátil sem token')
+  for (const nome of lidos) {
+    assert.ok(linhas[nome], `README sem o token ${nome}, que o Switch.tsx lê`)
+    for (const t of TEMAS) {
+      assert.equal(linhas[nome][t].toLowerCase(), hex(token(nome, t)), `README: ${nome} no tema ${t} diverge de globals.css`)
+    }
+  }
+})
+
 test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CONTRASTE_RELATORIO }, () => {
   for (const t of TEMAS) {
     const linha = (rotulo, a, b) => console.log(`${t.padEnd(6)} ${rotulo.padEnd(30)} ${contraste(a, b).toFixed(2)}:1`)
