@@ -4,12 +4,13 @@
 // script sai com código 1 se algum caso falhar.
 // Uso: node scripts/testar-page-header.mjs
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { createElement as h } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { createServer } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const raiz = new URL('..', import.meta.url).pathname
+const raiz = fileURLToPath(new URL('..', import.meta.url))
 const lerArq = (p) => readFileSync(raiz + p, 'utf8')
 const falhas = []
 let n = 0
