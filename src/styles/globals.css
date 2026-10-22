@@ -21,6 +21,7 @@
 
   --color-fips-green-500: #00c64c;
   --color-fips-green-700: #00904c;
+  --color-fips-green-800: #006d35;
   --color-fips-green-300: #8be5ad;
   --color-fips-red-600: #ef4444;
   --color-fips-red-100: #fee2e2;
@@ -177,7 +178,8 @@
     --color-semantic-atencao-fg: #c2410c;
     --color-semantic-atencao-border: #fdba74;
     --color-semantic-sucesso-bg: #ecfdf5;
-    --color-semantic-sucesso-fg: #00904c;
+    /* Texto pequeno sobre o fundo claro do Badge: 6,15:1 sobre #ecfdf5 (o green-700 dava 3,91:1). */
+    --color-semantic-sucesso-fg: var(--color-fips-green-800);
     --color-semantic-sucesso-border: #a7f3d0;
     --color-semantic-critico-bg: #fef2f2;
     --color-semantic-critico-fg: #b91c1c;
