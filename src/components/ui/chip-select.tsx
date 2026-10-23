@@ -13,7 +13,7 @@ export const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u0
 // dentro do drawer de filtros. NÃO confundir com <Select> (campo de formulário).
 // Único ponto de verdade pro tamanho — mude aqui, muda em toda a barra/drawer.
 export const chipTriggerCls = (open: boolean) => cn(
-  'inline-flex items-center gap-1.5 rounded-lg border bg-[var(--color-surface)] px-3 py-[7px] text-[11px] font-semibold text-[var(--color-fg)] shadow-sm transition-all duration-150 hover:border-[var(--color-border)]',
+  'inline-flex items-center gap-1.5 rounded-lg border bg-[var(--color-surface)] px-3 py-[7px] text-[11px] font-semibold text-[var(--color-fg)] shadow-sm transition duration-150 hover:border-[var(--color-border)]',
   open ? 'border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20' : 'border-[var(--color-border)]/60',
 )
 

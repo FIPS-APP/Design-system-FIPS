@@ -77,7 +77,7 @@ function ExportColumnChip({
             onDrop={onDrop}
             onClick={onToggle}
             className={cn(
-              'group inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-semibold transition-all',
+              'group inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-semibold transition',
               selected
                 ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_12%,var(--color-surface))] text-[var(--color-primary)]'
                 : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg-muted)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-fg)]',
@@ -341,7 +341,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                       key={id}
                       type="button"
                       onClick={() => setLayout(id)}
-                      className="relative flex items-center gap-1 px-2 py-1 text-[10px] font-semibold transition-all"
+                      className="relative flex items-center gap-1 px-2 py-1 text-[10px] font-semibold transition"
                       style={{
                         borderRadius: '7px 7px 7px 12px',
                         background: isActive ? 'rgba(0,75,155,0.15)' : 'transparent',

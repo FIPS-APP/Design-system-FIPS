@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.10',
+    date: '2026-10-22',
+    title: 'Sem transition-all e com movimento reduzido',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Componentes de `ui` e `composites` sem `transition-all` (cada transição lista as propriedades) e animações que respeitam `prefers-reduced-motion`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Atenção para quem consome o pacote: o bloco global de `prefers-reduced-motion` do `styles.css` (globals.css, fora de @layer e com !important) vale para qualquer app que importe esse arquivo e zera também as animações do próprio app quando a pessoa pede menos movimento no sistema.',
+      },
+    ],
+  },
+  {
     version: '0.20.4',
     date: '2026-10-22',
     title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',

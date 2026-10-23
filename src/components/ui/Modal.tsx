@@ -102,7 +102,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {description ? <DialogDescription className="mt-0.5 text-xs leading-snug text-white/65">{description}</DialogDescription> : null}
               </div>
               <DialogClose
-                className="absolute right-3.5 top-3.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none"
+                className="absolute right-3.5 top-3.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] text-white/75 transition-colors hover:bg-white/[0.18] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                 aria-label="Fechar"
               >
                 <X className="h-4 w-4" aria-hidden />
