@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.15.2`
+## Versão atual: `v0.20.11`
 
 ## Favicon e ícones de app
 
@@ -53,6 +53,21 @@ E os componentes/utilitários onde precisar:
 import { Button, FipsLogo, cn } from '@fips-app/ds-fips'
 ```
 
+Banner de página (um por tela, com o h1):
+
+```tsx
+import { PageHeader, Button } from '@fips-app/ds-fips'
+
+<PageHeader
+  icon={<FileDown />}
+  title="Sistema de Requisições"
+  description="Gestão de compras e requisições do módulo Suprimentos"
+  actions={<Button variant="accent" size="sm">Nova solicitação</Button>}
+/>
+```
+
+A medida segue a largura do cartão (container query de 560px). `PatternPanelHero` continua exportado como apelido, com as props de antes.
+
 > Requer `react`, `react-dom`, `tailwindcss` v4 e `framer-motion` (>=11, para
 > `CircularCommandMenu` / `RowActionsMenu`) instalados no projeto consumidor
 > (declarados como `peerDependencies`).
@@ -82,7 +97,16 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.15.2 | 2026-10-21 | `Switch` desligado e anel de foco passam de 3:1 contra o fundo nos dois temas. Trilho por `--color-switch-off` e `--color-switch-on` (tokens novos), anel de foco com opacidade cheia em `Switch`, `Button`, `Tabs`, `Dialog` e `Drawer`. Primeiro teste do repo: `npm test` calcula os contrastes |
+| 0.20.11 | 2026-10-22 | `Switch` desligado e anel de foco passam de 3:1 contra o fundo nos dois temas. Trilho por `--color-switch-off` e `--color-switch-on` (tokens novos), anel de foco com opacidade cheia em `Switch`, `Button`, `Tabs`, `Dialog` e `Drawer`. Primeiro teste do repo: `npm test` calcula os contrastes |
+| 0.20.0 | 2026-10-22 | `PageHeader`: banner de página único no pacote, com h1, medida pela largura do cartão (container query de 560px) e ação na última linha abaixo disso. `PatternPanelHero` vira apelido dele. Exports do banner no pacote, previews e código copiável de `/docs/patterns/hero-banner` alinhados ao token, `exports/pattern-panel-hero` regerado e `scripts/medir-banner.mjs` |
+| 0.19.1 | 2026-10-19 | `Alert` info lê os tokens `--color-semantic-info-*`: no escuro o texto passa de 1,51:1 para 6,00:1 sobre o fundo. Claro sem mudança |
+| 0.19.0 | 2026-10-19 | `FilterBlock`: bloco de filtros da casa no pacote (Filtros com drawer, busca obrigatória e vaga única de exportar), com a seção 10 em `/docs/patterns/filtro` |
+| 0.18.0 | 2026-10-19 | `AbasDeSecao`: faixa de abas de seção no topo ou fixa acima da barra de navegação inferior (celular). Traço da aba ativa e separação dentro da caixa, altura em `--abas-secao-altura`, `--abas-secao-empilha` para outro elemento fixo no mesmo vão |
+| 0.17.0 | 2026-10-19 | `HeroFileira`: fileira de atalhos do hero com um aberto por vez e o primeiro aberto no repouso. O estado e o saiu moram na fileira, para atravessar sem piscar. `HeroAtalho` aceita `aberto` e `aoApontar` |
+| 0.16.1 | 2026-10-19 | Menu do topo: `paddingX` dos itens de 24 para 18px (`docHeaderTabsUnderlineMd`), no nav e na réplica da doc. O token não sai no pacote: é padrão documentado, cada app copia o valor. Tutorial e exemplo de `/docs/components/header` passam a 18px |
+| 0.16.0 | 2026-10-19 | Tema escuro segue o Gestão OPA: cartão `#1a1a1a`, soft `#1f1f1f`, página `#252525`. Borda de campo `--color-border-control` `#666666` (3,03:1), usada por `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup`. Divisor continua `#2e2e2e`. Entram `--color-primary-text`, `--color-danger-text` (`#b91c1c` no claro, `#fca5a5` no escuro), `--color-success-fill` e `--color-neutral-fill`. No escuro `--color-success-strong` é cor de texto; fundo verde com texto branco é `--color-success-fill`. Botões no escuro com texto acima de 4,5:1: `outline` e `link` usam `--color-primary-text`, e `success`, `save`, `successStrong`, `danger` e `accent` leem os tokens `--color-btn-*`; o claro não muda. Quem sobrescrevia `--color-success-strong`, `--color-danger` ou `--color-primary` dentro do botão perde a sobrescrita |
+| 0.15.3 | 2026-10-19 | Docs: a coluna do `DocLayout` ganha `min-w-0` abaixo de `lg`; a 375 px as rotas que rolam de lado caem de 22 para 11 de 37 |
+| 0.15.2 | 2026-10-19 | `BrandLoader` anima com o APNG em `<img>` e deixa de usar `<video>` WebM, que no Safari pintava o alfa de preto (retângulo preto, #30). Com `prefers-reduced-motion` continua o quadro estático |
 | 0.15.1 | 2026-10-18 | `TableHead`, `AdminTableSortHeader` e a prévia de exportação usam `--color-fg` no título de coluna: de 4,29:1 para 10,70:1 sobre a faixa no claro. Faixa e borda não mudam. `DSTable`, demos e referência portátil alinhados |
 | 0.15.0 | 2026-09-29 | `HeroAtalho` + `HeroAtalhos`: atalho do hero que mostra só o ícone e abre com o nome no hover ou no foco, com o realce do header. Home do DS e página Hero passam a usar |
 | 0.14.1 | 2026-10-01 | Padrão de favicon App FIPS: `public/icons/`, `docs/favicon.md`, vitrine `index.html` alinhada ao OPA-MOBILE |

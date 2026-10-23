@@ -27,6 +27,7 @@ const TableDoc = lazy(() => import('./docs/pages/components/TableDoc'))
 const DialogDoc = lazy(() => import('./docs/pages/components/DialogDoc'))
 const DrawerDoc = lazy(() => import('./docs/pages/components/DrawerDoc'))
 const HeaderDoc = lazy(() => import('./docs/pages/components/HeaderDoc'))
+const AbasDeSecaoDoc = lazy(() => import('./docs/pages/components/AbasDeSecaoDoc'))
 const SidebarDoc = lazy(() => import('./docs/pages/components/SidebarDoc'))
 const ToastDoc = lazy(() => import('./docs/pages/components/ToastDoc'))
 const TooltipDoc = lazy(() => import('./docs/pages/components/TooltipDoc'))
@@ -83,6 +84,7 @@ export default function App() {
         <Route path="components/dialog" element={renderLazyRoute(<DialogDoc />)} />
         <Route path="components/drawer" element={renderLazyRoute(<DrawerDoc />)} />
         <Route path="components/header" element={renderLazyRoute(<HeaderDoc />)} />
+        <Route path="components/abas-de-secao" element={renderLazyRoute(<AbasDeSecaoDoc />)} />
         <Route path="components/sidebar" element={renderLazyRoute(<SidebarDoc />)} />
         <Route path="components/toast" element={renderLazyRoute(<ToastDoc />)} />
         <Route path="components/tooltip" element={renderLazyRoute(<TooltipDoc />)} />
