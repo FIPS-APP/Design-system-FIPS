@@ -25,7 +25,24 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.21.17',
+    version: '0.20.20',
+    date: '2026-10-23',
+    title: 'Linha info do SettingsPreferenceRow deixa de clarear no hover',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`SettingsPreferenceRow` variante `info`: sai o `hover:bg-[color-mix(...)]`. No escuro a mistura com `--color-fips-blue-200` clareava o fundo e o trilho do `Switch` desligado caía de 3,09:1 (repouso) para 2,05:1 (hover) sobre o cartão. No claro a mistura dava a mesma cor de repouso, então o hover não mudava nada. O fundo fica fixo e o hover passa a reforçar a borda, de `--color-fips-blue-400` a 35% para cheio, nos dois temas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê as classes da linha `info`, calcula o fundo de repouso e o de hover (inclusive `color-mix`, com alfa pré-multiplicado) e exige 3:1 do trilho desligado contra os dois nos dois temas.',
+      },
+    ],
+  },
+  {
+    version: '0.20.19',
     date: '2026-10-23',
     title: 'Foco do teclado visível no atalho aberto do hero',
     entries: [
@@ -54,7 +71,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas. Confere também que `HeroAtalho`, `UserChip` e `DocHeaderNeuIconButton` pintam o fundo com `docHeaderNeuAccentBgHover`.',
+          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas.',
       },
     ],
   },
@@ -66,7 +83,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          '`--color-border-control` no escuro passa de `#666666` a `#727272`: 3,03:1, 2,87:1 e 2,67:1 viram 3,62:1, 3,43:1 e 3,19:1 sobre o cartão (`#1a1a1a`), o cartão suave (`#1f1f1f`) e a página (`#252525`). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais clara no escuro. `--color-border` (o divisor) e o claro não mudam no CSS. O hover (`--color-fg-muted`) continua mais claro que a borda. No export em TypeScript, `semanticColors.borderControl` passa de `#C0CCD2` a `#808D9A`, o mesmo valor do CSS desde a 0.20.16.',
+          '`--color-border-control` no escuro passa de `#666666` a `#727272`: 3,03:1, 2,87:1 e 2,67:1 viram 3,62:1, 3,43:1 e 3,19:1 sobre o cartão (`#1a1a1a`), o cartão suave (`#1f1f1f`) e a página (`#252525`). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais clara no escuro. `--color-border` (o divisor) e o claro não mudam. O hover (`--color-fg-muted`) continua mais claro que a borda.',
       },
       {
         type: 'improvement',
@@ -148,6 +165,23 @@ export const CHANGELOG: ChangelogVersion[] = [
         type: 'improvement',
         description:
           'Primeiro teste automatizado do repo: `npm test` (`scripts/contraste.test.mjs`, sem dependência nova) lê os tokens e as classes e exige 3:1 no trilho, no botão e no anel, nos dois temas, e proíbe `--color-ring` com transparência em `src` e `exports` (inclui `color-mix` e `/[0.2]`). A cor do botão vem da classe de `switch.tsx`, e o teste cobre também o gradiente do `Dialog` e a linha info do `SettingsPreferenceRow` em repouso.',
+      },
+    ],
+  },
+  {
+    version: '0.21.17',
+    date: '2026-10-23',
+    title: 'Foco do teclado visível no atalho aberto do hero',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho`: o foco do teclado passa a ser um `outline` sólido branco de 3px com recuo de 2px. Antes era `focus-visible:ring-4` (uma `box-shadow`), que o `boxShadow` em linha do atalho aberto sobrescrevia: Tab no atalho ficava igual ao repouso, e todo foco de teclado abre o atalho. O contorno branco mede mais de 3:1 contra o fundo do `PageHero` nos dois temas. Apps que tinham CSS local para desenhar esse foco podem removê-lo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` exige que a classe do atalho use `outline` sem `ring` e calcula o contraste do contorno contra o gradiente do `PageHero` (com a película branca de 8%) e contra o fundo escuro.',
       },
     ],
   },
