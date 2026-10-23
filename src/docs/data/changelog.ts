@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.18',
+    date: '2026-10-23',
+    title: 'Rótulo do atalho aberto do hero passa de 4,5:1 em todo o degradê',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`docHeaderNeuAccentBgHover`: o último ponto do degradê passa de `#cf730d` a `#dc8212`. O rótulo e o ícone `#002A68` sobre esse ponto vão de 3,99:1 a 4,73:1; os outros três pontos (`#FFD37B` 9,70:1, `#f7ad45` 7,20:1 e `#F6921E` 5,91:1) não mudam. Muda o pixel do canto inferior direito do azulejo no hover de `HeroAtalho`, `HeroFileira`, `UserChip` e `DocHeaderNeuIconButton`: fica mais claro.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas.',
+      },
+    ],
+  },
+  {
     version: '0.20.17',
     date: '2026-10-23',
     title: 'Borda de campo do tema escuro passa de 3:1 em todas as superfícies',

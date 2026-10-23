@@ -47,7 +47,7 @@ export const docHeaderNeuLightIconIdle = 'rgba(55,55,55,0.82)'
 
 /* ─── Neumorphic: hover/active amarelo FIPS — mesma força do azulejo do Menu ─── */
 export const docHeaderNeuAccentBorderHover = 'rgba(246,146,30,0.55)'
-export const docHeaderNeuAccentBgHover = 'linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#cf730d 100%)'
+export const docHeaderNeuAccentBgHover = 'linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#dc8212 100%)'
 export const docHeaderNeuAccentShadowHover =
   '0 6px 22px -4px rgba(246,146,30,0.5), 0 3px 10px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.12) inset, 0 -1px 0 rgba(0,0,0,0.35) inset'
 export const docHeaderNeuAccentIcon = '#002A68'
