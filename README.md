@@ -97,7 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.20.4 | 2026-10-22 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` não sai no pacote; a regra vale para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
+| 0.20.4 | 2026-10-22 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.0 | 2026-10-22 | `PageHeader`: banner de página único no pacote, com h1, medida pela largura do cartão (container query de 560px) e ação na última linha abaixo disso. `PatternPanelHero` vira apelido dele. Exports do banner no pacote, previews e código copiável de `/docs/patterns/hero-banner` alinhados ao token, `exports/pattern-panel-hero` regerado e `scripts/medir-banner.mjs` |
 | 0.19.1 | 2026-10-19 | `Alert` info lê os tokens `--color-semantic-info-*`: no escuro o texto passa de 1,51:1 para 6,00:1 sobre o fundo. Claro sem mudança |
 | 0.19.0 | 2026-10-19 | `FilterBlock`: bloco de filtros da casa no pacote (Filtros com drawer, busca obrigatória e vaga única de exportar), com a seção 10 em `/docs/patterns/filtro` |
