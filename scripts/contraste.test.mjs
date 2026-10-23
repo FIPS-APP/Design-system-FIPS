@@ -309,3 +309,38 @@ for (const t of TEMAS) {
     verifica(`${texto} contra ${fundo}`, cor(texto, t), cor(fundo, t), MINIMO_TEXTO)
   })
 }
+
+// ─── Foco do atalho do hero ────────────────────────────────────────────────
+// O atalho aberto leva boxShadow em `style`, que vence qualquer classe de sombra (ring). O foco
+// do teclado precisa ser outline, que a sombra em linha não cobre.
+const HERO_ATALHO = 'src/components/composites/HeroAtalho.tsx'
+
+function classesDoAtalho() {
+  const m = ler(HERO_ATALHO).match(/className: cn\(\s*'([^']+)'/)
+  assert.ok(m, `${HERO_ATALHO}: className do atalho não encontrada`)
+  return m[1].split(/\s+/)
+}
+
+test('Atalho do hero: foco por outline de 3px, sem ring (a sombra em linha o cobriria)', () => {
+  const classes = classesDoAtalho()
+  assert.ok(classes.includes('focus-visible:outline-solid'), 'sem focus-visible:outline-solid')
+  assert.ok(classes.includes('focus-visible:outline-[3px]'), 'sem focus-visible:outline-[3px]')
+  assert.ok(classes.some((c) => /^focus-visible:outline-offset-\d+$/.test(c)), 'sem recuo do contorno')
+  assert.equal(classes.filter((c) => /^focus-visible:ring/.test(c)).length, 0, 'ring no atalho: o boxShadow em style o esconde')
+  assert.ok(!classes.includes('focus-visible:outline-none'), 'focus-visible:outline-none apaga o contorno')
+})
+
+test('Atalho do hero: contorno de foco contra o fundo do PageHero, 3:1 nos dois temas', () => {
+  const cls = classesDoAtalho().find((c) => /^focus-visible:outline-(white|black|\[#[\da-f]{6}\])$/i.test(c))
+  assert.ok(cls, 'cor do contorno de foco não reconhecida (white, black ou hex)')
+  const nome = cls.replace('focus-visible:outline-', '')
+  const contorno = nome === 'white' ? BRANCO : nome === 'black' ? { r: 0, g: 0, b: 0 } : cor(nome.slice(1, -1), 'claro')
+  const hero = ler('src/composites/PageHero.tsx')
+  const m = hero.match(/bg-gradient-to-br from-\[(#[\da-f]{6})\] via-\[(var\(--[\w-]+\))\] to-\[(#[\da-f]{6})\] dark:bg-\[(#[\da-f]{6})\]/i)
+  assert.ok(m, 'gradiente do PageHero não encontrado em PageHero.tsx')
+  // Pior caso: a película branca de 8% do PageHero clareia o fundo.
+  const clareado = (c) => ({ r: Math.round(c.r * 0.92 + 255 * 0.08), g: Math.round(c.g * 0.92 + 255 * 0.08), b: Math.round(c.b * 0.92 + 255 * 0.08) })
+  for (const [rotuloFundo, valor, t] of [['início', m[1], 'claro'], ['meio', m[2], 'claro'], ['fim', m[3], 'claro'], ['escuro', m[4], 'escuro']]) {
+    verifica(`contorno ${nome} contra o ${rotuloFundo} do hero (${valor})`, contorno, clareado(cor(valor, t)))
+  }
+})
