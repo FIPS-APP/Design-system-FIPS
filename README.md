@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.19.1`
+## Versão atual: `v0.20.0`
 
 ## Favicon e ícones de app
 
@@ -53,6 +53,21 @@ E os componentes/utilitários onde precisar:
 import { Button, FipsLogo, cn } from '@fips-app/ds-fips'
 ```
 
+Banner de página (um por tela, com o h1):
+
+```tsx
+import { PageHeader, Button } from '@fips-app/ds-fips'
+
+<PageHeader
+  icon={<FileDown />}
+  title="Sistema de Requisições"
+  description="Gestão de compras e requisições do módulo Suprimentos"
+  actions={<Button variant="accent" size="sm">Nova solicitação</Button>}
+/>
+```
+
+A medida segue a largura do cartão (container query de 560px). `PatternPanelHero` continua exportado como apelido, com as props de antes.
+
 > Requer `react`, `react-dom`, `tailwindcss` v4 e `framer-motion` (>=11, para
 > `CircularCommandMenu` / `RowActionsMenu`) instalados no projeto consumidor
 > (declarados como `peerDependencies`).
@@ -82,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.0 | 2026-10-22 | `PageHeader`: banner de página único no pacote, com h1, medida pela largura do cartão (container query de 560px) e ação na última linha abaixo disso. `PatternPanelHero` vira apelido dele. Exports do banner no pacote, previews e código copiável de `/docs/patterns/hero-banner` alinhados ao token, `exports/pattern-panel-hero` regerado e `scripts/medir-banner.mjs` |
 | 0.19.1 | 2026-10-19 | `Alert` info lê os tokens `--color-semantic-info-*`: no escuro o texto passa de 1,51:1 para 6,00:1 sobre o fundo. Claro sem mudança |
 | 0.19.0 | 2026-10-19 | `FilterBlock`: bloco de filtros da casa no pacote (Filtros com drawer, busca obrigatória e vaga única de exportar), com a seção 10 em `/docs/patterns/filtro` |
 | 0.18.0 | 2026-10-19 | `AbasDeSecao`: faixa de abas de seção no topo ou fixa acima da barra de navegação inferior (celular). Traço da aba ativa e separação dentro da caixa, altura em `--abas-secao-altura`, `--abas-secao-empilha` para outro elemento fixo no mesmo vão |

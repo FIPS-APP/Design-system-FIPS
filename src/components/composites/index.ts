@@ -3,13 +3,17 @@ export type { FipsTabItem } from './FipsTabBar'
 export { SettingsPreferenceRow } from './SettingsPreferenceRow'
 export { BuscarPessoaModal, type Pessoa } from './BuscarPessoaModal'
 export { BuscarUsuarioModal } from './BuscarUsuarioModal'
+export { PageHeader } from './PageHeader'
+export type { PageHeaderActionsProps, PageHeaderProps, PageHeaderStat } from './PageHeader'
 export { PatternPanelHero } from './PatternPanelHero'
 export type { PatternPanelHeroProps, PatternPanelHeroStat } from './PatternPanelHero'
 export {
   BannerJunctionLines,
   BannerIconBox,
   FIPS_BANNER_CONTENT_CLASS,
+  FIPS_BANNER_ICON_BOX_STYLE,
   FIPS_BANNER_PAGE_CLASS,
+  FIPS_BANNER_PILL_STYLE,
 } from './banner-shared'
 export { ExportModal } from './ExportModal'
 export type { ExportModalProps } from './ExportModal'

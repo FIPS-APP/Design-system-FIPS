@@ -421,6 +421,22 @@ Regras:
 - home pode usar hero mais editorial
 - manter trilhos/trem como textura secundária, nunca como ruído dominante
 
+## Banner de página
+
+Fontes:
+
+- `src/components/composites/PageHeader.tsx` (componente) e `banner-shared.tsx`
+- `src/docs/pages/patterns/HeroBannerDoc.tsx` (página **Banner** em `/docs/patterns/hero-banner`: Regra 1 banner de página grande, Regra 2 Banner de Conteúdo, Regra 3 Banner de Fluxo)
+
+Regras:
+
+- o banner de cada página do app é o `PageHeader`, um por tela, com o h1; `PageHero` é a faixa de módulo e de Home
+- Banner de Fluxo é o mesmo `PageHeader` com `stats`
+- a medida segue a largura do cartão (560px), não a da janela; abaixo disso as ações descem para a última linha
+- `eyebrow` é rótulo de seção em texto; `badge` do `PatternPanelHero` é só para estado da tela, nunca o nome do sistema
+- gradiente na ordem do token (`#004B9B` para `#002A68` para `#001A4A`); nunca invertido
+- conferência no navegador: `node scripts/medir-banner.mjs <url>` (um h1, contraste do pior ponto atrás do texto, coluna do título, botão de 44px com toque, fundo, tile, fonte do título); sem navegador: `node scripts/testar-page-header.mjs` (estrutura renderizada, exports e regras do CSS)
+
 ## Loading — Abertura da marca (BrandLoader)
 
 Fonte: `FIPS-APP/fips-qlp` — `client/src/App.tsx` (`AberturaGate`/`LoadingScreen`) e `client/src/components/brand/BrandLoader.tsx`. Componente e API: ver `components.md` ("BrandLoader (Motion)").

@@ -275,7 +275,7 @@
     --color-semantic-critico-border: rgba(239, 68, 68, 0.28);
   }
 
-  /* Banners — PatternPanelHero / Suprimentos */
+  /* Banners: PageHeader, PatternPanelHero e Suprimentos */
   :root {
     --fips-banner-page-bg: linear-gradient(
       135deg,
@@ -320,6 +320,224 @@
 
   .fips-banner-junction {
     opacity: var(--fips-banner-junction-opacity);
+  }
+
+  /* ─── Tile do ícone do banner ───
+     44x44 e raio 11; `--compact` (34x34 e raio 9) é a medida estreita. Fundo e borda a 10% e 19%
+     do --color-accent vêm do estilo inline (FIPS_BANNER_ICON_BOX_STYLE). */
+  .fips-banner-icon-box {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    color: var(--color-accent);
+  }
+  .fips-banner-icon-box > svg {
+    width: 20px;
+    height: 20px;
+  }
+  .fips-banner-icon-box--compact {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+  .fips-banner-icon-box--compact > svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* ─── PageHeader ───
+     A medida segue a largura do próprio cartão, não a da janela: `.fips-page-header` é o contêiner
+     (container query de 560px, sem JavaScript) e `.fips-page-header__banner` é o banner, que leva
+     também `.fips-banner-shell--content` (fundo, sombra, borda, tokens). Um contêiner não estiliza
+     a si mesmo, por isso são dois elementos. Sem suporte a container query vale a medida estreita.
+
+     Abaixo de 560px: grade de duas colunas. Tile e título na primeira linha, resumo e chips em
+     largura total, ações por último, em largura total e lado a lado. A partir de 560px: uma linha
+     (tile, texto, ações), e as ações descem sozinhas se o texto ficar com menos de 256px.
+     `--compact` mantém a medida estreita em qualquer largura. */
+  .fips-page-header {
+    container: fips-page-header / inline-size;
+    width: 100%;
+  }
+
+  .fips-page-header .fips-page-header__banner {
+    box-sizing: border-box;
+    padding: 12px;
+    border-radius: 10px 10px 10px 18px;
+    color: var(--color-white, #fff);
+  }
+
+  .fips-page-header--bleed .fips-page-header__banner {
+    border-radius: 0;
+  }
+
+  .fips-page-header__trilhos {
+    position: absolute;
+    top: -10px;
+    right: -20px;
+    width: 180px;
+    height: 200px;
+  }
+
+  .fips-page-header__corpo {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 6px;
+  }
+
+  .fips-page-header__texto {
+    display: contents;
+  }
+
+  .fips-page-header__cabeca {
+    min-width: 0;
+  }
+
+  .fips-page-header--sem-icone .fips-page-header__cabeca,
+  .fips-page-header__descricao,
+  .fips-page-header__stats,
+  .fips-page-header__acoes {
+    grid-column: 1 / -1;
+  }
+
+  .fips-page-header__eyebrow {
+    margin: 0 0 2px;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .fips-page-header__linha-titulo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .fips-page-header__titulo {
+    margin: 0;
+    min-width: 0;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.2px;
+    color: var(--color-white, #fff);
+    overflow-wrap: break-word;
+  }
+
+  .fips-page-header__descricao {
+    margin: 0;
+    max-width: 840px;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    line-height: 1.3;
+    color: color-mix(in srgb, var(--color-white, #fff) 67%, transparent);
+  }
+
+  .fips-page-header__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .fips-page-header__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .fips-page-header__acoes > * {
+    flex: 1 1 0%;
+  }
+
+  /* Toque: alvo de 44px nas ações, em qualquer largura do cartão. Os botões têm de ser filhos diretos do slot. */
+  @media (pointer: coarse) {
+    .fips-page-header__acoes > * {
+      min-height: 44px !important; /* vence o min-h do Button, que é utilitário */
+    }
+  }
+
+  /* Dentro do PageHeader a medida do tile segue o cartão (a de `.fips-banner-icon-box--compact`). */
+  .fips-page-header .fips-banner-icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+  .fips-page-header .fips-banner-icon-box > svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  @container fips-page-header (min-width: 560px) {
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__banner {
+      padding: 22px 26px;
+      border-radius: 12px 12px 12px 24px;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__trilhos {
+      width: 360px;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__corpo {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 16px;
+      row-gap: 8px;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-banner-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+    }
+    .fips-page-header:not(.fips-page-header--compact) .fips-banner-icon-box > svg {
+      width: 20px;
+      height: 20px;
+    }
+    .fips-page-header--stats:not(.fips-page-header--compact) .fips-banner-icon-box {
+      align-self: flex-start;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__texto {
+      display: block;
+      flex: 1 1 256px;
+      min-width: 0;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__titulo {
+      font-size: 21px;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__descricao {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__stats {
+      margin-top: 10px;
+    }
+
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__acoes {
+      flex: none;
+      margin-left: auto;
+    }
+    .fips-page-header:not(.fips-page-header--compact) .fips-page-header__acoes > * {
+      flex: none;
+    }
   }
 
   /* ─── Dark mode: hero banner das doc pages ─── */
