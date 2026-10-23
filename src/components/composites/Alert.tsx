@@ -15,13 +15,13 @@ const alertVariants = cva(
     variants: {
       tone: {
         info:
-          'bg-[var(--color-fips-blue-200)] border-[var(--color-fips-blue-400)] text-[var(--color-fips-blue-950)] dark:border-[var(--color-fips-blue-700)] dark:text-[var(--color-fips-blue-400)]',
+          'bg-[var(--color-semantic-info-bg)] border-[var(--color-semantic-info-border)] text-[var(--color-semantic-info-fg)]',
         success:
           'bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.40)] text-[var(--color-success-strong)]',
         warning:
           'bg-[var(--color-badge-warning-bg)] border-[var(--color-accent-strong)] text-[var(--color-accent-strong)]',
         danger:
-          'bg-[var(--color-badge-danger-bg)] border-[var(--color-danger)] text-[var(--color-danger)]',
+          'bg-[var(--color-badge-danger-bg)] border-[var(--color-danger)] text-[var(--color-danger-text)]',
       },
       size: {
         xs: 'gap-1.5 px-2 py-1 text-[10.5px]',
