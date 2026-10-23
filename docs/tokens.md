@@ -1,6 +1,6 @@
 # Tokens — Design System FIPS
 
-> Gerado automaticamente a partir de `src/tokens/` em 2026-10-12. Não edite à mão — rode `npm run tokens:gen` para regenerar.
+> Gerado automaticamente a partir de `src/tokens/` em 2026-10-13. Não edite à mão — rode `npm run tokens:gen` para regenerar.
 
 ## Paleta oficial (Brandbook)
 
@@ -34,6 +34,7 @@
 | `accentStrong` | <span style="display:inline-block;width:80px;height:36px;background:#F6921E;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#F6921E</span> | `#F6921E` |
 | `success` | <span style="display:inline-block;width:80px;height:36px;background:#00C64C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00C64C</span> | `#00C64C` |
 | `successStrong` | <span style="display:inline-block;width:80px;height:36px;background:#00904C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00904C</span> | `#00904C` |
+| `dangerStrong` | <span style="display:inline-block;width:80px;height:36px;background:#B91C1C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#B91C1C</span> | `#B91C1C` |
 | `info` | <span style="display:inline-block;width:80px;height:36px;background:#93BDE4;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#93BDE4</span> | `#93BDE4` |
 | `surface` | <span style="display:inline-block;width:80px;height:36px;background:#FFFFFF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FFFFFF</span> | `#FFFFFF` |
 | `surfaceMuted` | <span style="display:inline-block;width:80px;height:36px;background:#E8EBFF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#E8EBFF</span> | `#E8EBFF` |
@@ -72,6 +73,7 @@
 | `success` | <span style="display:inline-block;width:80px;height:36px;background:#8BE5AD;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#8BE5AD</span> | `#8BE5AD` |
 | `successStrong` | <span style="display:inline-block;width:80px;height:36px;background:#8BE5AD;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#8BE5AD</span> | `#8BE5AD` |
 | `danger` | <span style="display:inline-block;width:80px;height:36px;background:#FCA5A5;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FCA5A5</span> | `#FCA5A5` |
+| `dangerStrong` | <span style="display:inline-block;width:80px;height:36px;background:#FCA5A5;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FCA5A5</span> | `#FCA5A5` |
 | `info` | <span style="display:inline-block;width:80px;height:36px;background:#93BDE4;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#93BDE4</span> | `#93BDE4` |
 | `warning` | <span style="display:inline-block;width:80px;height:36px;background:#FDC24E;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FDC24E</span> | `#FDC24E` |
 | `sidebar` | <span style="display:inline-block;width:80px;height:36px;background:#1A1A1A;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#1A1A1A</span> | `#1A1A1A` |
