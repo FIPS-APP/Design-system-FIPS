@@ -32,6 +32,7 @@ export const semanticColors = {
   accentStrong: fipsPalette.amareloOuroEscuro,
   success: fipsPalette.verdeFloresta,
   successStrong: fipsPalette.verdeFlorestaEscuro,
+  dangerStrong: '#B91C1C',
   info: fipsPalette.azulCeu,
   surface: fipsPalette.branco,
   surfaceMuted: fipsPalette.neutroClaro,
@@ -42,7 +43,7 @@ export const semanticColors = {
   borderControl: fipsPalette.cinzaMetal,
   /** Texto e contorno de ação. */
   primaryText: fipsPalette.azulProfundo,
-  /** Texto vermelho pequeno. 6,47:1 sobre branco. */
+  /** Alias de dangerStrong: texto vermelho pequeno, 6,47:1 sobre branco. */
   dangerText: '#B91C1C',
   /** Verde de fundo com texto branco. */
   successFill: fipsPalette.verdeFlorestaEscuro,
@@ -68,7 +69,7 @@ export const darkSemanticColors = {
   borderControl: '#666666',
   /** Texto e contorno de ação. 8,82:1 sobre o cartão. */
   primaryText: '#93BDE4',
-  /** Texto vermelho pequeno. 9,17:1 sobre o cartão. */
+  /** Alias de dangerStrong: texto vermelho pequeno, 9,17:1 sobre o cartão. */
   dangerText: '#FCA5A5',
   /** Verde de fundo com texto branco. 4,56:1. */
   successFill: '#008842',
@@ -83,6 +84,7 @@ export const darkSemanticColors = {
   /** No escuro é cor de texto. Fundo com texto branco usa successFill. */
   successStrong: '#8BE5AD',
   danger: '#FCA5A5',
+  dangerStrong: '#FCA5A5',
   info: '#93BDE4',
   warning: '#FDC24E',
   sidebar: '#1A1A1A',

@@ -1,9 +1,9 @@
 import { useRef, useState, type FocusEvent, type MouseEvent } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
-import { HeroAtalho, type HeroAtalhoVariante } from './HeroAtalho'
+import { HeroAtalho, type HeroAtalhoAtributos, type HeroAtalhoVariante } from './HeroAtalho'
 
-export interface HeroFileiraAtalho {
+export interface HeroFileiraAtalho extends HeroAtalhoAtributos {
   /** Único na fileira. */
   id: string
   icon: LucideIcon
@@ -12,6 +12,9 @@ export interface HeroFileiraAtalho {
   variante?: HeroAtalhoVariante
   href?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  /** Repassado ao HeroAtalho: `aria-pressed` no `<button>` (sem `href`), sem mudar o visual. */
+  pressionado?: boolean
+  // Os `data-*` e `aria-*` do item (ex. `'data-tutorial': 'novo'`) chegam ao <a>/<button>.
 }
 
 export interface HeroFileiraProps {
@@ -19,6 +22,15 @@ export interface HeroFileiraProps {
   /** Nome da faixa para leitor de tela. */
   label?: string
   className?: string
+}
+
+function focoDeTeclado(el: HTMLElement): boolean {
+  try {
+    return el.matches(':focus-visible')
+  } catch {
+    // Safari antes do 15.4 não conhece o seletor: não segura o foco.
+    return false
+  }
 }
 
 /**
@@ -30,9 +42,12 @@ export interface HeroFileiraProps {
  * meio do caminho: atravessar a fileira pisca. Aqui o último apontado segura
  * até outro assumir, e só sair da fileira volta ao repouso. Se o teclado ainda
  * está num atalho, sair com o mouse não derruba esse foco: o aberto volta para
- * o atalho focado, não para o principal. Pelo teclado, o blur olha o
- * `relatedTarget`. No Safari esse alvo vem nulo mesmo no Tab entre irmãos, então
- * a fileira espera um instante e lê o foco real antes de voltar ao repouso.
+ * o atalho focado, não para o principal. Só conta foco de teclado
+ * (`:focus-visible`): clicar com o mouse também foca o botão no Chrome, e esse
+ * foco não segura nada. Pelo teclado, o blur olha o `relatedTarget`. No Safari
+ * esse alvo vem nulo no Tab entre irmãos e também ao clicar (o Safari não foca
+ * botão no clique), então a fileira espera um instante e lê o foco real. Com o
+ * ponteiro dentro da fileira, o blur não mexe no atalho apontado.
  *
  * A fileira é centrada. Como o atalho aberto é bem mais largo que o fechado,
  * os vizinhos andam quando o aberto muda, e o atalho apontado pode sair de baixo
@@ -42,6 +57,7 @@ function idSobFoco(nav: HTMLElement, ids: string[]): string | null {
   const ativo = document.activeElement
   if (!(ativo instanceof HTMLElement) || !nav.contains(ativo)) return null
   const botoes = [...nav.querySelectorAll<HTMLElement>('a,button')]
+  if (!focoDeTeclado(ativo)) return null
   const i = botoes.indexOf(ativo)
   return i >= 0 ? ids[i] ?? null : null
 }
@@ -49,6 +65,7 @@ function idSobFoco(nav: HTMLElement, ids: string[]): string | null {
 export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFileiraProps) {
   const [apontado, setApontado] = useState<string | null>(null)
   const esperaFoco = useRef<number | null>(null)
+  const ponteiroDentro = useRef(false)
   if (atalhos.length === 0) return null
   // Id que sumiu da lista (a lista mudou) cai no principal, em vez de deixar todos fechados.
   const aberto = atalhos.some((a) => a.id === apontado) ? apontado : atalhos[0].id
@@ -66,6 +83,7 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
   }
 
   function aoSairComMouse(e: MouseEvent<HTMLElement>) {
+    ponteiroDentro.current = false
     soltarEspera()
     voltarAoFocoOuRepouso(e.currentTarget)
   }
@@ -78,6 +96,7 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
     // Safari entrega relatedTarget nulo quando o Tab só troca de atalho.
     esperaFoco.current = window.setTimeout(() => {
       esperaFoco.current = null
+      if (ponteiroDentro.current) return
       voltarAoFocoOuRepouso(nav)
     }, 0)
   }
@@ -86,19 +105,24 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
     <nav
       aria-label={label}
       className={cn('flex flex-wrap items-center justify-center gap-2 pt-1', className)}
+      onMouseEnter={() => {
+        ponteiroDentro.current = true
+      }}
       onMouseLeave={aoSairComMouse}
       onBlur={aoDesfocar}
     >
-      {atalhos.map((a) => (
+      {atalhos.map(({ id, icon, label: nome, variante, href, onClick, pressionado, ...atributos }) => (
         <HeroAtalho
-          key={a.id}
-          icon={a.icon}
-          label={a.label}
-          variante={a.variante}
-          href={a.href}
-          onClick={a.onClick}
-          aberto={a.id === aberto}
-          aoApontar={() => setApontado(a.id)}
+          {...atributos}
+          key={id}
+          icon={icon}
+          label={nome}
+          variante={variante}
+          href={href}
+          onClick={onClick}
+          pressionado={pressionado}
+          aberto={id === aberto}
+          aoApontar={() => setApontado(id)}
         />
       ))}
     </nav>

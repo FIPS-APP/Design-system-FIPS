@@ -24,6 +24,8 @@
   --color-fips-green-300: #8be5ad;
   --color-fips-red-600: #ef4444;
   --color-fips-red-100: #fee2e2;
+  --color-fips-red-700: #b91c1c;
+  --color-fips-red-300: #fca5a5;
   --color-fips-orange-100: #fff0d6;
 
   --color-fips-gray-900: #333b41;
@@ -147,10 +149,70 @@
 }
 
 @layer base {
+  /*
+    Modos de uso: normal (escritório) e fácil (pátio, com luva). Mesmos nomes e
+    valores do app de campo. Sem `data-modo`, vale o normal, e nenhum token
+    resolve vazio.
+
+    ARMADILHA: uma propriedade que referencia outra (`--alvo-toque` lê
+    `--modo-alvo-min`) resolve NO ELEMENTO onde foi declarada. Declarada só em
+    `:root`, um contêiner interno com `data-modo="facil"` herdaria o 35px da
+    raiz. Por isso `--alvo-toque` e `--abas-secao-altura` ficam nos mesmos
+    blocos que `--modo-alvo-min`, para `:root` e para todo `[data-modo]`.
+  */
+  :root,
+  [data-modo='normal'] {
+    --modo-alvo-min: 35px;
+    --modo-texto-campo: 13px;
+    --modo-texto-base: 1.08rem;
+    --modo-texto-rotulo: 0.75rem;
+    --modo-espaco: 1rem;
+    --modo-borda-largura: 1px;
+    --modo-borda-cartao: 1px solid var(--color-border);
+    --modo-sombra-cartao: var(--shadow-card);
+    --modo-raio-controle: var(--radius-lg);
+    --modo-raio-cartao: var(--radius-2xl);
+    --modo-texto-titulo: 1.25rem;
+    --modo-peso: 600;
+  }
+
+  [data-modo='facil'] {
+    --modo-alvo-min: 48px;
+    --modo-texto-campo: 14px;
+    --modo-texto-base: 1.35rem;
+    --modo-texto-rotulo: 1rem;
+    --modo-espaco: 1.25rem;
+    --modo-borda-largura: 2px;
+    --modo-borda-cartao: 2px solid var(--color-fg);
+    --modo-sombra-cartao: none;
+    --modo-raio-controle: var(--radius-xl);
+    --modo-raio-cartao: var(--radius-2xl);
+    --modo-texto-titulo: 1.65rem;
+    --modo-peso: 700;
+  }
+
+  /*
+    Alvo de toque: acima de 767px vale o token do modo (35 e 48). No aparelho o
+    alvo segue o dedo, com piso de 44px: 44 no normal e 48 no fácil.
+  */
+  :root,
+  [data-modo] {
+    --alvo-toque: var(--modo-alvo-min);
+    /* Abas de seção: a altura mora num lugar só e a reserva da página deriva dela. */
+    --abas-secao-altura: max(39px, var(--alvo-toque));
+  }
+
+  @media (max-width: 767px) {
+    :root,
+    [data-modo] {
+      --alvo-toque: max(44px, var(--modo-alvo-min));
+    }
+  }
+}
+
+@layer base {
   :root {
     color-scheme: light;
-    /* Abas de seção: a altura mora num lugar só; a reserva da página deriva dela. */
-    --abas-secao-altura: 39px;
     --color-primary: var(--color-fips-blue-900);
     --color-primary-hover: var(--color-fips-blue-950);
     --color-secondary: var(--color-fips-sky-600);
@@ -161,6 +223,7 @@
     --color-success-strong: var(--color-fips-green-700);
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
+    --color-danger-strong: var(--color-fips-red-700);
     --color-surface: #ffffff;
     --color-surface-soft: var(--color-fips-neutral-25);
     --color-surface-muted: var(--color-fips-neutral-50);
@@ -172,8 +235,8 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
-    /* 6,47:1 sobre branco. Texto vermelho pequeno. */
-    --color-danger-text: #b91c1c;
+    /* Alias de --color-danger-strong: um vermelho só para texto pequeno (6,47:1 sobre branco). */
+    --color-danger-text: var(--color-danger-strong);
     --color-success-fill: var(--color-fips-green-700);
     --color-neutral-fill: var(--color-fg-muted);
     /* Botão sólido: fundo, hover e texto. No claro repetem os valores de antes. */
@@ -207,7 +270,7 @@
     --color-semantic-sucesso-fg: #00904c;
     --color-semantic-sucesso-border: #a7f3d0;
     --color-semantic-critico-bg: #fef2f2;
-    --color-semantic-critico-fg: #b91c1c;
+    --color-semantic-critico-fg: var(--color-danger-strong);
     --color-semantic-critico-border: #fecaca;
     --shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
   }
@@ -226,6 +289,7 @@
     --color-success-strong: #8be5ad;
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
+    --color-danger-strong: var(--color-fips-red-300);
     --color-surface: #1a1a1a;
     --color-surface-soft: #1f1f1f;
     --color-surface-muted: #252525;
@@ -238,8 +302,8 @@
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);
-    /* 8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão. */
-    --color-danger-text: #fca5a5;
+    /* Alias de --color-danger-strong (8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão). */
+    --color-danger-text: var(--color-danger-strong);
     /* 4,56:1 com texto branco. */
     --color-success-fill: #008842;
     --color-neutral-fill: #5b6470;
@@ -275,7 +339,7 @@
     --color-semantic-sucesso-fg: #8be5ad;
     --color-semantic-sucesso-border: rgba(0, 198, 76, 0.28);
     --color-semantic-critico-bg: rgba(239, 68, 68, 0.14);
-    --color-semantic-critico-fg: #fca5a5;
+    --color-semantic-critico-fg: var(--color-danger-strong);
     --color-semantic-critico-border: rgba(239, 68, 68, 0.28);
   }
 

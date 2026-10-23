@@ -43,6 +43,7 @@ export const semanticColors = {
   accentStrong: '#F6921E',
   success: '#00C64C',
   successStrong: '#00904C',
+  dangerStrong: '#B91C1C',
   borderControl: '#C0CCD2',
   primaryText: '#004B9B',
   dangerText: '#B91C1C',
@@ -73,6 +74,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-success-strong: var(--color-fips-green-700);
   --color-warning: var(--color-fips-yellow-600);
   --color-danger: var(--color-fips-red-600);
+  --color-danger-strong: var(--color-fips-red-700);
   --color-surface: #ffffff;
   --color-surface-soft: var(--color-fips-neutral-25);
   --color-surface-muted: var(--color-fips-neutral-50);
@@ -83,7 +85,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-fg-muted: #6b7784;
   --color-border-control: var(--color-border);
   --color-primary-text: var(--color-primary);
-  --color-danger-text: #b91c1c;
+  --color-danger-text: var(--color-danger-strong);
   --color-success-fill: var(--color-fips-green-700);
   --color-neutral-fill: var(--color-fg-muted);
   --color-ring: var(--color-fips-sky-600);
@@ -110,7 +112,8 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-fg` | gray-900 | `#e8e8e8` |
 | `--color-fg-muted` | `#6b7784` | `#9ca3af` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |
-| `--color-danger-text` (vermelho de texto pequeno) | `#b91c1c` | `#fca5a5` |
+| `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
+| `--color-danger-text` (alias de `--color-danger-strong`) | `--color-danger-strong` | `--color-danger-strong` |
 | `--color-success-strong` (**cor de texto**) | green-700 | `#8be5ad` |
 | `--color-success-fill` (fundo cheio com texto branco) | green-700 | `#008842` (4,56:1) |
 | `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |

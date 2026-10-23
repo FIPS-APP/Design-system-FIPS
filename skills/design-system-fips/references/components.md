@@ -492,7 +492,9 @@ import { HeroFileira } from '@fips-app/ds-fips'
 />
 ```
 
-Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos, e a fileira espera um instante. Sair com o mouse não derruba um atalho que ainda tem foco de teclado.
+`data-*` e `aria-*` de `HeroAtalho` e de cada item da `HeroFileira` chegam ao `<a>`/`<button>` (ex. `'data-tutorial': 'novo'` como alvo de tutorial). `aria-label` e `data-state` são do componente. `pressionado` (boolean) vira `aria-pressed` no `<button>`, para o atalho que liga e desliga um filtro; sem `href`, sem mudar o visual. `id`, `className`, `target` e `rel` ainda não passam.
+
+Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos e ao clicar (o Safari não foca botão no clique), e a fileira espera um instante; com o ponteiro dentro, o blur não mexe no atalho apontado. Sair com o mouse não derruba um atalho que ainda tem foco de teclado, mas foco vindo de clique do mouse não segura nada (só `:focus-visible` conta).
 
 ## AbasDeSecao
 
@@ -520,7 +522,7 @@ const [aba, setAba] = useState('modo')
 
 Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `posicao?`, `label?`, `className?`. Aba com `href` vira `<a>` e recarrega a página sem router; sem `href` é `<button>`.
 
-**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura` (39px), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
+**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura`, que vale `max(39px, var(--alvo-toque))` (39px no escritório, 44px ou 48px no celular), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
 
 Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
 
@@ -553,6 +555,18 @@ Valores fixos (todos por token, nenhum token novo):
 - `edge="bleed"` tira o raio abaixo de 560px; a margem lateral é do pai
 
 Regras: a página tem um h1 só (nos outros banners, `headingLevel={2}`); não sobrescreva cor, raio ou medida por classe do app; o componente ocupa a largura do pai (não o ponha em flex em linha). `PatternPanelHero` continua exportado como apelido, com as props de antes (`subtitle`, `badge`, `badgePill`, `action`, `stats`, `compact`, `dataTutorial`). Cópia para app sem o pacote: `exports/pattern-panel-hero` (leva `page-header.css`). Conferência: `node scripts/medir-banner.mjs <url>`.
+
+## Modos de uso (`data-modo`)
+
+Fonte: `src/styles/globals.css`.
+
+App de campo tem dois modos: `data-modo="normal"` (escritório) e `data-modo="facil"` (pátio, com luva). O atributo vai no `<html>` ou em qualquer contêiner. Sem ele vale o normal, e nenhum token resolve vazio.
+
+Tokens `--modo-*` (mesmos nomes e valores do app de campo): `--modo-alvo-min` (35px e 48px), `--modo-texto-campo` (13px e 14px), `--modo-texto-base`, `--modo-texto-rotulo`, `--modo-texto-titulo`, `--modo-espaco`, `--modo-borda-largura` (1px e 2px), `--modo-borda-cartao`, `--modo-sombra-cartao`, `--modo-raio-controle`, `--modo-raio-cartao`, `--modo-peso` (600 e 700).
+
+`--alvo-toque` é o alvo de toque do aparelho: o token do modo acima de 767px e `max(44px, --modo-alvo-min)` até 767px (44px normal, 48px fácil). Use `min-height: var(--alvo-toque)` em controle de toque.
+
+**Armadilha:** propriedade que lê outra (`--alvo-toque` lê `--modo-alvo-min`) resolve no elemento onde foi declarada. `--alvo-toque` e `--abas-secao-altura` ficam declaradas junto de cada `[data-modo]`; declarar só em `:root` faz um contêiner interno em modo fácil herdar o 35px da raiz.
 
 ## FipsLogo e marca do menu (sidebar header)
 
