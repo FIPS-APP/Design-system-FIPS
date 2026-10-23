@@ -17,7 +17,7 @@ const C = {
   neutro: "var(--color-surface-soft)", branco: "#FFFFFF",
   bg: "var(--color-surface-muted)", cardBg: "var(--color-surface)", cardBorder: "var(--color-border)",
   textMuted: "var(--color-fg-muted)", textLight: "var(--color-fg-muted)",
-  inputBorder: "var(--color-border)", inputBorderHover: "#93BDE4",
+  inputBorder: "var(--color-border-control)", inputBorderHover: "#93BDE4",
   inputBg: "var(--color-surface)", inputBgDisabled: "var(--color-surface-muted)",
 };
 const F = { title: "'Saira Expanded', sans-serif", body: "'Open Sans', sans-serif", mono: "'Fira Code', monospace" };

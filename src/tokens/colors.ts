@@ -38,6 +38,16 @@ export const semanticColors = {
   border: fipsPalette.cinzaMetal,
   foreground: fipsPalette.cinzaChumbo,
   foregroundMuted: '#4b5563',
+  /** Borda de campo. No claro é a mesma do divisor. */
+  borderControl: fipsPalette.cinzaMetal,
+  /** Texto e contorno de ação. */
+  primaryText: fipsPalette.azulProfundo,
+  /** Texto vermelho pequeno. 6,47:1 sobre branco. */
+  dangerText: '#B91C1C',
+  /** Verde de fundo com texto branco. */
+  successFill: fipsPalette.verdeFlorestaEscuro,
+  /** Cinza de fundo com texto branco. */
+  neutralFill: '#6B7784',
   sidebar: fipsPalette.azulProfundo,
   sidebarMuted: fipsPalette.azulProfundoDark,
 } as const
@@ -47,30 +57,40 @@ export const semanticColors = {
  * Mapeia cada token do light mode para o valor equivalente no tema escuro.
  */
 export const darkSemanticColors = {
-  surface: '#222222',
-  surfaceSoft: '#252525',
-  surfaceMuted: '#1A1A1A',
+  surface: '#1A1A1A',
+  surfaceSoft: '#1F1F1F',
+  surfaceMuted: '#252525',
   border: '#2E2E2E',
   borderStrong: '#3a3a3a',
-  foreground: '#E2E2E8',
-  foregroundMuted: '#A1A1AA',
+  foreground: '#E8E8E8',
+  foregroundMuted: '#9CA3AF',
+  /** Campo, select, textarea e gatilho de campo. 3,03:1 sobre o cartão. */
+  borderControl: '#666666',
+  /** Texto e contorno de ação. 8,82:1 sobre o cartão. */
+  primaryText: '#93BDE4',
+  /** Texto vermelho pequeno. 9,17:1 sobre o cartão. */
+  dangerText: '#FCA5A5',
+  /** Verde de fundo com texto branco. 4,56:1. */
+  successFill: '#008842',
+  /** Cinza de fundo com texto branco. */
+  neutralFill: '#5B6470',
   primary: '#93BDE4',
   primaryHover: '#658EC9',
   secondary: '#0090D0',
   accent: '#FDC24E',
   accentStrong: '#F6921E',
   success: '#8BE5AD',
-  successStrong: '#00C64C',
+  /** No escuro é cor de texto. Fundo com texto branco usa successFill. */
+  successStrong: '#8BE5AD',
   danger: '#FCA5A5',
   info: '#93BDE4',
   warning: '#FDC24E',
   sidebar: '#1A1A1A',
   sidebarDeep: '#0a0c10',
   sidebarSoft: '#222222',
-  inputBorder: '#3a3a3a',
-  inputBorderHover: '#4a4a4a',
+  inputBorderHover: '#9CA3AF',
   inputBorderFocus: '#93BDE4',
-  inputBg: '#252525',
+  inputBg: '#1A1A1A',
   badgeSuccessBg: 'rgba(0,198,76,0.14)',
   badgeWarningBg: 'rgba(246,146,30,0.14)',
   badgeDangerBg: 'rgba(239,68,68,0.14)',

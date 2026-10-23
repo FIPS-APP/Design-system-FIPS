@@ -109,7 +109,7 @@ export interface FieldMessageProps extends React.HTMLAttributes<HTMLParagraphEle
 
 const fieldMessageToneClasses: Record<NonNullable<FieldMessageProps['tone']>, string> = {
   default: 'text-[var(--color-fg-muted)]',
-  danger: 'text-[var(--color-danger)]',
+  danger: 'text-[var(--color-danger-text)]',
   success: 'text-[var(--color-success-strong)]',
 }
 
