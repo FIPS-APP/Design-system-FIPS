@@ -263,3 +263,49 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }
 })
+
+// ─── Rótulo do atalho do hero sobre o degradê laranja ──────────────────────
+const CHROME = 'src/lib/docHeaderChrome.ts'
+
+function constanteDoChrome(nome) {
+  const m = ler(CHROME).match(new RegExp(`export const ${nome}\\s*=\\s*'([^']+)'`))
+  assert.ok(m, `${CHROME}: constante ${nome} não encontrada`)
+  return m[1]
+}
+
+// Lê `linear-gradient(135deg,#a,#b 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
+function paradasDoDegrade(valor) {
+  const itens = valor.match(/linear-gradient\([^,]+,(.+)\)$/)[1].split(/,(?![^(]*\))/).map((s) => s.trim())
+  const paradas = itens.map((item, i) => {
+    const [hex, pos] = item.split(/\s+/)
+    assert.match(hex, /^#[\da-f]{6}$/i, `parada fora de hex de 6 dígitos: ${item}`)
+    return [cor(hex, 'claro'), pos ? Number(pos.replace('%', '')) : i === 0 ? 0 : i === itens.length - 1 ? 100 : NaN]
+  })
+  paradas.forEach(([, p]) => assert.ok(!Number.isNaN(p), `parada sem posição em ${valor}`))
+  return paradas
+}
+
+function corNoDegrade(paradas, pct) {
+  let k = 0
+  while (k < paradas.length - 2 && pct > paradas[k + 1][1]) k++
+  const [a, pa] = paradas[k]
+  const [b, pb] = paradas[k + 1]
+  const t = Math.min(1, Math.max(0, (pct - pa) / (pb - pa)))
+  const mistura = (x, y) => Math.round(x + (y - x) * t)
+  return { r: mistura(a.r, b.r), g: mistura(a.g, b.g), b: mistura(a.b, b.b) }
+}
+
+test('Atalho aberto do hero: rótulo contra o degradê laranja, 4,5:1 em todo o degradê', () => {
+  const rotulo = cor(constanteDoChrome('docHeaderNeuAccentIcon'), 'claro')
+  const paradas = paradasDoDegrade(constanteDoChrome('docHeaderNeuAccentBgHover'))
+  for (let pct = 0; pct <= 100; pct++) verifica(`rótulo contra o degradê a ${pct}%`, rotulo, corNoDegrade(paradas, pct), MINIMO_TEXTO)
+})
+
+for (const t of TEMAS) {
+  test(`Atalho ouro do hero em repouso, tema ${t}: texto contra o fundo`, () => {
+    const classes = ler('src/components/composites/HeroAtalho.tsx').match(/const repousoOuro =\s*'([^']+)'/)[1]
+    const fundo = classes.match(/\bbg-\[(var\(--[\w-]+\))\]/)[1]
+    const texto = classes.match(/\btext-\[(var\(--[\w-]+\))\]/)[1]
+    verifica(`${texto} contra ${fundo}`, cor(texto, t), cor(fundo, t), MINIMO_TEXTO)
+  })
+}
