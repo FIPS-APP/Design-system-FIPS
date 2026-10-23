@@ -583,9 +583,9 @@ export function ExportModal({
                 disabled={!someChecked}
                 title="Baixar planilha Excel (.xlsx) com colunas ajustadas"
                 className="flex items-center gap-1.5 rounded-lg px-3.5 py-[7px] text-[12px] font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-                style={{ background: someChecked ? "var(--color-success-strong)" : "color-mix(in srgb, var(--color-success-strong) 50%, transparent)" }}
-                onMouseEnter={e => { if (someChecked) e.currentTarget.style.background = "var(--color-success)"; }}
-                onMouseLeave={e => { if (someChecked) e.currentTarget.style.background = "var(--color-success-strong)"; }}
+                style={{ background: someChecked ? "var(--color-btn-success-hover)" : "color-mix(in srgb, var(--color-btn-success-hover) 50%, transparent)" }}
+                onMouseEnter={e => { if (someChecked) e.currentTarget.style.background = "var(--color-btn-success)"; }}
+                onMouseLeave={e => { if (someChecked) e.currentTarget.style.background = "var(--color-btn-success-hover)"; }}
               >
                 <FileSpreadsheet className="h-3.5 w-3.5" />
                 Planilha

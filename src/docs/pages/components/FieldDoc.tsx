@@ -15,7 +15,7 @@ const C = {
   neutro:"var(--color-surface-soft)", branco:"#FFFFFF",
   bg:"var(--color-surface-muted)", cardBg:"var(--color-surface)", cardBorder:"var(--color-border)",
   textMuted:"var(--color-fg-muted)", textLight:"var(--color-fg-muted)",
-  inputBorder:"var(--color-border)", inputBg:"var(--color-surface)", inputBgDisabled:"var(--color-surface-muted)",
+  inputBorder:"var(--color-border-control)", inputBg:"var(--color-surface)", inputBgDisabled:"var(--color-surface-muted)",
   focusRing:"rgba(147,189,228,0.35)",
 };
 const F = { title:"'Saira Expanded',sans-serif", body:"'Open Sans',sans-serif", mono:"'Fira Code',monospace" };
@@ -84,7 +84,7 @@ function FTextarea({label,placeholder,rows=3,compact,cols}:{label?:string,placeh
   return(
     <div style={{display:"flex",flexDirection:"column",minWidth:0,gridColumn:cols?`span ${cols}`:undefined}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:F.body,marginBottom:1,marginLeft:7}}>{label}</label>}
-      <textarea placeholder={placeholder} rows={rows} style={{padding:"8px 12px",borderRadius:8,border:`1.5px solid ${C.inputBorder}`,background:C.branco,fontFamily:F.body,fontSize:compact?12:13,color:C.cinzaEscuro,outline:"none",resize:"vertical",transition:"all .18s"}} onFocus={e=>{e.target.style.borderColor=C.azulProfundo;e.target.style.boxShadow=`0 0 0 3px ${C.focusRing}`}} onBlur={e=>{e.target.style.borderColor=C.inputBorder;e.target.style.boxShadow="none"}}/>
+      <textarea placeholder={placeholder} rows={rows} style={{padding:"8px 12px",borderRadius:8,border:`1.5px solid ${C.inputBorder}`,background:C.inputBg,fontFamily:F.body,fontSize:compact?12:13,color:C.cinzaEscuro,outline:"none",resize:"vertical",transition:"all .18s"}} onFocus={e=>{e.target.style.borderColor=C.azulProfundo;e.target.style.boxShadow=`0 0 0 3px ${C.focusRing}`}} onBlur={e=>{e.target.style.borderColor=C.inputBorder;e.target.style.boxShadow="none"}}/>
     </div>
   );
 }
