@@ -25,6 +25,35 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.15',
+    date: '2026-10-23',
+    title: 'Badge warning legível no tema claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre o fundo `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). Nenhum valor novo no sistema: é o token que o `RuleTile` com tom `atencao` já lê. Fundo e borda não mudam. No escuro o texto também lê o token, no mesmo `#fdc24e` de antes (8,47:1 sobre o cartão `#1a1a1a`, 8,00:1 sobre o suave `#1f1f1f`, 7,44:1 sobre a faixa `#252525`), e a classe `dark:text-[#FDC24E]` sai de `badge-variants.ts`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir também o `warning`: texto contra o fundo em cartão, cartão suave e faixa, nos dois temas, e nenhuma cor fixa nas classes.',
+      },
+    ],
+  },
+  {
+    version: '0.20.7',
+    date: '2026-10-22',
+    title: 'Badge success legível no tema claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Badge` com `variant="success"` no claro: o texto passa de `#00904c` para `#006d35` (novo primitivo `--color-fips-green-800`, lido por `--color-semantic-sucesso-fg`). Contraste de 3,91:1 para 6,15:1 sobre o fundo `#ecfdf5`. Fundo, borda e tema escuro não mudam (escuro: 9,18:1 sobre o cartão `#1a1a1a`, 8,65:1 sobre o suave `#1f1f1f`, 8,03:1 sobre a faixa `#252525`). O `RuleTile` com tom `sucesso` lê o mesmo par e melhora junto. As cópias em `exports/badge/Badge.tsx` e na doc do Badge acompanham o valor.',
+      },
+    ],
+  },
+  {
     version: '0.21.16',
     date: '2026-10-23',
     title: 'Badge warning legível no tema claro',
