@@ -3,13 +3,17 @@ export type { FipsTabItem } from './FipsTabBar'
 export { SettingsPreferenceRow } from './SettingsPreferenceRow'
 export { BuscarPessoaModal, type Pessoa } from './BuscarPessoaModal'
 export { BuscarUsuarioModal } from './BuscarUsuarioModal'
+export { PageHeader } from './PageHeader'
+export type { PageHeaderActionsProps, PageHeaderProps, PageHeaderStat } from './PageHeader'
 export { PatternPanelHero } from './PatternPanelHero'
 export type { PatternPanelHeroProps, PatternPanelHeroStat } from './PatternPanelHero'
 export {
   BannerJunctionLines,
   BannerIconBox,
   FIPS_BANNER_CONTENT_CLASS,
+  FIPS_BANNER_ICON_BOX_STYLE,
   FIPS_BANNER_PAGE_CLASS,
+  FIPS_BANNER_PILL_STYLE,
 } from './banner-shared'
 export { ExportModal } from './ExportModal'
 export type { ExportModalProps } from './ExportModal'
@@ -50,6 +54,8 @@ export type { AlertProps } from './Alert'
 export { Lightbox } from './Lightbox'
 export type { LightboxProps } from './Lightbox'
 export { FilterDrawer } from './FilterDrawer'
+export { FilterBlock } from './FilterBlock'
+export type { FilterBlockProps } from './FilterBlock'
 export { ListingFilterToolbar, LISTING_PERIOD_PRESETS } from './ListingFilterToolbar'
 export { PillFilter } from './PillFilter'
 export { PillGroup } from './PillGroup'
@@ -57,3 +63,5 @@ export { AbasDeSecao } from './AbasDeSecao'
 export type { AbasDeSecaoProps, AbaDeSecao } from './AbasDeSecao'
 export { HeroAtalho, HeroAtalhos } from './HeroAtalho'
 export type { HeroAtalhoProps, HeroAtalhosProps } from './HeroAtalho'
+export { HeroFileira } from './HeroFileira'
+export type { HeroFileiraProps, HeroFileiraAtalho } from './HeroFileira'

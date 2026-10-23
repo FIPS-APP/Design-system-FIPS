@@ -217,6 +217,15 @@ Não faça:
 - dar realce de foco ou teto de largura ao campo de busca — ele preenche o vão
 - trocar os ícones lucide por glifos SVG custom
 
+### Bloco enxuto (`FilterBlock`)
+
+Fonte: `src/components/composites/FilterBlock.tsx` · demo: Filtro §10 (`src/docs/pages/patterns/FiltroDemo.tsx`). Para telas **sem alçada nem período**; com alçada ou período use `ListingFilterToolbar`.
+
+- Ordem: **Filtros** (botão `outline` `sm` que é o `DrawerTrigger` do drawer à esquerda) · **Busca** · `trailing` · `actions`. Card `rounded-[10px_10px_10px_18px]`, controles de 30px, `flex-wrap`, busca `min-w-[160px] flex-1`.
+- **`search` e `onSearchChange` são obrigatórios**: toda tela com o bloco tem busca. Não existe versão sem o campo. `filters` e `actions` são opcionais.
+- Exportar é **uma vaga só** (`actions`): `ExportButtons` (par Excel/PDF), um PDF sozinho ou um botão desabilitado enquanto a exportação não existe.
+- Drawer: `DrawerHero` + miolo rolável + rodapé `Limpar tudo` (desabilitado sem filtro nem busca) e `Ver N resultado(s)`. `activeCount` vira o badge do botão.
+
 ### Drawer de Filtros (padrão QLP)
 
 O botão **Filtros** abre um **Drawer pela esquerda** que cobre a sidebar — `position fixed`, `left 0`, `width 400` (`maxWidth 90vw`), `height 100vh`, `box-shadow 4px 0 24px rgba(0,0,0,.12)`, animação `dlSlideLeft .3s cubic-bezier(.4,0,.2,1)` sobre overlay `rgba(0,42,104,.35)` (`dlFade .2s`). Três zonas:
@@ -411,6 +420,22 @@ Regras:
 - módulos de produto usam `PageHero`
 - home pode usar hero mais editorial
 - manter trilhos/trem como textura secundária, nunca como ruído dominante
+
+## Banner de página
+
+Fontes:
+
+- `src/components/composites/PageHeader.tsx` (componente) e `banner-shared.tsx`
+- `src/docs/pages/patterns/HeroBannerDoc.tsx` (página **Banner** em `/docs/patterns/hero-banner`: Regra 1 banner de página grande, Regra 2 Banner de Conteúdo, Regra 3 Banner de Fluxo)
+
+Regras:
+
+- o banner de cada página do app é o `PageHeader`, um por tela, com o h1; `PageHero` é a faixa de módulo e de Home
+- Banner de Fluxo é o mesmo `PageHeader` com `stats`
+- a medida segue a largura do cartão (560px), não a da janela; abaixo disso as ações descem para a última linha
+- `eyebrow` é rótulo de seção em texto; `badge` do `PatternPanelHero` é só para estado da tela, nunca o nome do sistema
+- gradiente na ordem do token (`#004B9B` para `#002A68` para `#001A4A`); nunca invertido
+- conferência no navegador: `node scripts/medir-banner.mjs <url>` (um h1, contraste do pior ponto atrás do texto, coluna do título, botão de 44px com toque, fundo, tile, fonte do título); sem navegador: `node scripts/testar-page-header.mjs` (estrutura renderizada, exports e regras do CSS)
 
 ## Loading — Abertura da marca (BrandLoader)
 

@@ -196,7 +196,7 @@ export function AppHeader({
               onClick={() => onSectionChange?.(s.label)}
               style={{
                 display: "inline-flex", alignItems: "center", gap: 7,
-                padding: "8px 24px", height: "100%",
+                padding: "8px 18px", height: "100%",
                 fontSize: 13, fontWeight: isActive ? 600 : 400,
                 fontFamily: "'Open Sans', sans-serif",
                 color: isActive ? "#002A68" : "#7B8C96",
@@ -442,7 +442,7 @@ export default function HeaderDoc() {
               {[
                 { label: 'Altura da nav', value: '39px', token: 'navHeightPx' },
                 { label: 'Padding vertical (tab)', value: '8px', token: 'paddingYPx' },
-                { label: 'Padding horizontal (tab)', value: '24px', token: 'paddingXPx' },
+                { label: 'Padding horizontal (tab)', value: '18px', token: 'paddingXPx' },
                 { label: 'Font size', value: '13px', token: 'fontSizePx' },
                 { label: 'Gap ícone–label', value: '7px', token: 'iconGapPx' },
                 { label: 'Tamanho do ícone', value: '14px', token: 'iconSizePx' },
@@ -464,6 +464,7 @@ export default function HeaderDoc() {
             </div>
             <p style={{...gt,fontSize:11,color:C.textMuted,marginTop:12}}>
               Tokens definidos em <code style={gk}>docHeaderChrome.ts</code> → objeto <code style={gk}>docHeaderTabsUnderlineMd</code>.
+              Esse objeto não sai no pacote <code style={gk}>@fips-app/ds-fips</code>: é um padrão documentado, e cada app copia estes valores (padding horizontal de <strong>18px</strong>).
               O wrapper da nav usa <code style={gk}>pt-0 pb-0</code> sem padding extra — a altura visual total é exatamente <strong>39px</strong>.
             </p>
           </div>
