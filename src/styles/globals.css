@@ -235,6 +235,8 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
+    /* Azul escuro de texto: igual ao hover do primary no claro (13,72:1 sobre branco). */
+    --color-primary-hover-text: var(--color-primary-hover);
     /* Alias de --color-danger-strong: um vermelho só para texto pequeno (6,47:1 sobre branco). */
     --color-danger-text: var(--color-danger-strong);
     --color-success-fill: var(--color-fips-green-700);
@@ -302,6 +304,8 @@
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);
+    /* No escuro o hover do primary (#002a68) mede 1,27:1 sobre o cartão; este mede 8,82:1. */
+    --color-primary-hover-text: var(--color-fips-blue-400);
     /* Alias de --color-danger-strong (8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão). */
     --color-danger-text: var(--color-danger-strong);
     /* 4,56:1 com texto branco. */

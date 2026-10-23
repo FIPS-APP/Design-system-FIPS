@@ -154,6 +154,7 @@ export default function ColorsPage() {
                   { token: 'foreground', light: '#333B41', dark: '#E8E8E8' },
                   { token: 'fg-muted', light: '#6B7784', dark: '#9CA3AF' },
                   { token: 'primary-text', light: '#004B9B', dark: '#93BDE4' },
+                  { token: 'primary-hover-text', light: '#002A68', dark: '#93BDE4' },
                   { token: 'accent', light: '#FDC24E', dark: '#FDC24E' },
                   { token: 'success-strong', light: '#00904C', dark: '#8BE5AD' },
                   { token: 'success-fill', light: '#00904C', dark: '#008842' },

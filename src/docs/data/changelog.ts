@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.13',
+    date: '2026-10-23',
+    title: '--color-primary-hover-text: azul escuro de texto nos dois temas',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Token `--color-primary-hover-text` em `globals.css`, no mesmo desenho do `--color-primary-text`: `var(--color-primary-hover)` no claro (`#002a68`, 13,72:1 sobre `--color-surface`) e `var(--color-fips-blue-400)` no escuro (`#93bde4`, 8,82:1 sobre o cartão `#1a1a1a`). Quem lia o `--color-primary-hover` como cor de texto no escuro tinha 1,27:1. Nenhum componente do pacote lê o token ainda, então o claro não muda.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` ganha o caso do token: exige 4,5:1 contra `--color-surface` nos dois temas e confere que o claro vale o mesmo que `--color-primary-hover`. Referência (`foundations.md`) e página de cores do site acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.20.11',
     date: '2026-10-22',
     title: 'Switch desligado e anel de foco passam de 3:1 contra o fundo',

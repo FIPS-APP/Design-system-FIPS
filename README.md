@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.11`
+## Versão atual: `v0.20.13`
 
 ## Favicon e ícones de app
 
@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.13 | 2026-10-23 | Token novo `--color-primary-hover-text`, o azul escuro de texto: `--color-primary-hover` no claro (`#002a68`, 13,72:1 sobre branco, sem mudar o claro) e `--color-fips-blue-400` no escuro (8,82:1 sobre o cartão). No escuro o `--color-primary-hover` mede 1,27:1 sobre o cartão. `npm test` exige 4,5:1 nos dois temas |
 | 0.20.11 | 2026-10-22 | `Switch` desligado e anel de foco passam de 3:1 contra o fundo nos dois temas. Trilho por `--color-switch-off` e `--color-switch-on` (tokens novos), anel de foco com opacidade cheia em `Switch`, `Button`, `Tabs`, `Dialog` e `Drawer`. Primeiro teste do repo: `npm test` calcula os contrastes |
 | 0.20.4 | 2026-10-22 | Modos de uso: `data-modo` (`normal` e `facil`), tokens `--modo-*` iguais aos do app de campo e `--alvo-toque` (44px normal e 48px fácil no celular). `--abas-secao-altura` deriva do alvo |
 | 0.20.3 | 2026-10-22 | `--color-danger-strong`, o par vermelho de `--color-success-strong` para texto pequeno: `#b91c1c` no claro (6,47:1 sobre branco, mínimo de 5,30:1 nas superfícies) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1). `--color-danger-text` (0.16.0) e `--color-semantic-critico-fg` passam a ler o token, sem mudar nenhum pixel |
