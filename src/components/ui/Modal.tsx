@@ -94,7 +94,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               ) : null}
               <div className="min-w-0 flex-1">
                 {eyebrow ? (
-                  <span className="block font-heading text-[11px] font-semibold uppercase leading-tight tracking-[0.14em] text-[var(--color-accent-strong)]">{eyebrow}</span>
+                  <span className="block font-heading text-[11px] font-semibold uppercase leading-tight tracking-[0.14em] text-[var(--color-accent)]">{eyebrow}</span>
                 ) : null}
                 {title ? (
                   <DialogTitle className="font-heading text-[21px] font-bold leading-tight tracking-[-0.2px] text-white">{title}</DialogTitle>
