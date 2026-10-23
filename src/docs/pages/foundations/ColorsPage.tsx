@@ -158,6 +158,7 @@ export default function ColorsPage() {
                   { token: 'success-strong', light: '#00904C', dark: '#8BE5AD' },
                   { token: 'success-fill', light: '#00904C', dark: '#008842' },
                   { token: 'danger-text', light: '#B91C1C', dark: '#FCA5A5' },
+                  { token: 'danger-strong', light: '#B91C1C', dark: '#FCA5A5' },
                   { token: 'neutral-fill', light: '#6B7784', dark: '#5B6470' },
                   { token: 'input-focus', light: '#004B9B', dark: '#93BDE4' },
                   { token: 'badge-success-bg', light: 'rgba(0,198,76,0.14)', dark: 'rgba(0,198,76,0.14)' },
@@ -188,7 +189,8 @@ export default function ColorsPage() {
             <code> --color-border-control</code> (#666666) é a borda de campo, select, textarea e gatilho de campo: 3,03:1 sobre o mesmo cartão.
             <code> --color-success-strong</code> (#8BE5AD) é cor de texto no escuro; fundo verde com texto branco usa
             <code> --color-success-fill</code> (#008842): 4,56:1.
-            <code> --color-danger-text</code> é o vermelho de texto pequeno: 6,47:1 sobre branco e 9,17:1 sobre o cartão escuro.
+            <code> --color-danger-strong</code> é o vermelho de texto pequeno: 6,47:1 sobre branco e 9,17:1 sobre o cartão escuro.
+            <code> --color-danger-text</code> é alias dele (<code>var(--color-danger-strong)</code>), por isso as duas linhas têm o mesmo valor.
           </p>
         </Section>
 

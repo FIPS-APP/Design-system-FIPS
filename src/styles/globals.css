@@ -24,6 +24,8 @@
   --color-fips-green-300: #8be5ad;
   --color-fips-red-600: #ef4444;
   --color-fips-red-100: #fee2e2;
+  --color-fips-red-700: #b91c1c;
+  --color-fips-red-300: #fca5a5;
   --color-fips-orange-100: #fff0d6;
 
   --color-fips-gray-900: #333b41;
@@ -161,6 +163,7 @@
     --color-success-strong: var(--color-fips-green-700);
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
+    --color-danger-strong: var(--color-fips-red-700);
     --color-surface: #ffffff;
     --color-surface-soft: var(--color-fips-neutral-25);
     --color-surface-muted: var(--color-fips-neutral-50);
@@ -172,8 +175,8 @@
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
-    /* 6,47:1 sobre branco. Texto vermelho pequeno. */
-    --color-danger-text: #b91c1c;
+    /* Alias de --color-danger-strong: um vermelho só para texto pequeno (6,47:1 sobre branco). */
+    --color-danger-text: var(--color-danger-strong);
     --color-success-fill: var(--color-fips-green-700);
     --color-neutral-fill: var(--color-fg-muted);
     /* Botão sólido: fundo, hover e texto. No claro repetem os valores de antes. */
@@ -205,7 +208,7 @@
     --color-semantic-sucesso-fg: #00904c;
     --color-semantic-sucesso-border: #a7f3d0;
     --color-semantic-critico-bg: #fef2f2;
-    --color-semantic-critico-fg: #b91c1c;
+    --color-semantic-critico-fg: var(--color-danger-strong);
     --color-semantic-critico-border: #fecaca;
     --shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
   }
@@ -224,6 +227,7 @@
     --color-success-strong: #8be5ad;
     --color-warning: var(--color-fips-yellow-600);
     --color-danger: var(--color-fips-red-600);
+    --color-danger-strong: var(--color-fips-red-300);
     --color-surface: #1a1a1a;
     --color-surface-soft: #1f1f1f;
     --color-surface-muted: #252525;
@@ -236,8 +240,8 @@
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);
-    /* 8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão. */
-    --color-danger-text: #fca5a5;
+    /* Alias de --color-danger-strong (8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão). */
+    --color-danger-text: var(--color-danger-strong);
     /* 4,56:1 com texto branco. */
     --color-success-fill: #008842;
     --color-neutral-fill: #5b6470;
@@ -271,7 +275,7 @@
     --color-semantic-sucesso-fg: #8be5ad;
     --color-semantic-sucesso-border: rgba(0, 198, 76, 0.28);
     --color-semantic-critico-bg: rgba(239, 68, 68, 0.14);
-    --color-semantic-critico-fg: #fca5a5;
+    --color-semantic-critico-fg: var(--color-danger-strong);
     --color-semantic-critico-border: rgba(239, 68, 68, 0.28);
   }
 
