@@ -395,3 +395,46 @@ for (const t of TEMAS) {
 test('Linha info do SettingsPreferenceRow: o hover muda a borda, já que o fundo não pode clarear', () => {
   assert.ok(classesDaLinhaInfo().some((c) => /^hover:border-/.test(c)), 'linha info sem hover de borda')
 })
+
+// ─── Anéis de foco do cabeçalho ────────────────────────────────────────────
+const ANEIS = {
+  userChip: 'src/components/layout/UserChip.tsx',
+  botao: 'src/components/layout/DocHeaderNeuIconButton.tsx',
+  secoes: 'src/components/layout/DocHeaderSectionNav.tsx',
+}
+
+test('Anéis do cabeçalho: nenhum ring com hex ou rgba, nem com transparência (/NN)', () => {
+  const achados = []
+  for (const arquivo of Object.values(ANEIS)) {
+    ler(arquivo).split('\n').forEach((linha, i) => {
+      for (const m of linha.matchAll(/focus-visible:ring-\[([^\]\s]+)\](\/(?:\[[^\]]+\]|[\w.]+))?/g)) {
+        if (m[2] || /rgba?\(|transparent|color-mix/.test(m[1])) achados.push(`${arquivo}:${i + 1} (${m[0]})`)
+      }
+    })
+  }
+  assert.deepEqual(achados, [], `anel com transparência:\n${achados.join('\n')}`)
+})
+
+test('DocHeaderNeuIconButton: foco por outline em --color-ring (o boxShadow em style cobriria um ring)', () => {
+  const m = ler(ANEIS.botao).match(/'relative flex shrink-0[^']*'/)
+  assert.ok(m, 'className do botão não encontrada')
+  const classes = m[0].slice(1, -1).split(/\s+/)
+  for (const c of ['focus-visible:outline-solid', 'focus-visible:outline-2', 'focus-visible:outline-offset-2', 'focus-visible:outline-[var(--color-ring)]']) {
+    assert.ok(classes.includes(c), `sem ${c}`)
+  }
+  assert.equal(classes.filter((c) => /^focus-visible:ring/.test(c) || c === 'focus-visible:outline-none').length, 0, 'ring ou outline-none no botão')
+})
+
+test('DocHeaderSectionNav: ramo escuro com anel #F6921E contra o recuo #1A1A1A, 3:1', () => {
+  const fonte = ler(ANEIS.secoes)
+  const recuo = fonte.match(/focus-visible:ring-offset-\[(#[\da-f]{6})\]/i)
+  assert.ok(recuo, 'recuo do ramo escuro não encontrado')
+  const aneis = new Set([...fonte.matchAll(/focus-visible:ring-\[(#[\da-f]{6})\]/gi)].map((m) => m[1]))
+  assert.ok(aneis.size > 0, 'anel hex do ramo escuro não encontrado')
+  for (const hex of aneis) verifica(`anel ${hex} contra o recuo ${recuo[1]}`, cor(hex, 'claro'), cor(recuo[1], 'claro'))
+})
+
+test('Anéis do cabeçalho: UserChip e ramo claro das seções leem --color-ring cheio', () => {
+  assert.match(ler(ANEIS.userChip), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'UserChip sem --color-ring cheio')
+  assert.match(ler(ANEIS.secoes), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'ramo claro das seções sem --color-ring cheio')
+})

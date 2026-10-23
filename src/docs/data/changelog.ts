@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.21',
+    date: '2026-10-23',
+    title: 'Anéis de foco do cabeçalho passam de 3:1',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o anel de foco em hex com transparência. `ring-[#2563EB]/25` media 1,43:1 sobre branco e 1,26:1 sobre `#1a1a1a`; `ring-[#F6921E]` de 28% a 40% media de 1,27:1 a 1,40:1 no claro e de 1,71:1 a 2,25:1 no escuro. `UserChip` e o ramo claro das seções passam a `--color-ring` cheio; o ramo escuro das seções passa a `#F6921E` cheio (7,50:1 sobre `#1a1a1a`).',
+      },
+      {
+        type: 'fix',
+        description:
+          '`DocHeaderNeuIconButton`: o anel de foco nunca aparecia, porque o botão leva `boxShadow` em `style` e o estilo em linha vence `focus-visible:ring-2`. O foco passa a `outline` sólido de 2px com recuo de 2px em `--color-ring`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` recusa `ring-[...]` com hex, `rgba` ou transparência nos três arquivos, confere o contorno do botão e o contraste do anel do ramo escuro contra o recuo `#1A1A1A`.',
+      },
+    ],
+  },
+  {
     version: '0.20.20',
     date: '2026-10-23',
     title: 'Linha info do SettingsPreferenceRow deixa de clarear no hover',
