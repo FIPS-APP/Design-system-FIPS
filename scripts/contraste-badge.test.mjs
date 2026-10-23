@@ -1,5 +1,5 @@
 /**
- * Contraste do texto do Badge success, nos dois temas (WCAG 1.4.3, mínimo 4,5:1).
+ * Contraste do texto do Badge success e warning, nos dois temas (WCAG 1.4.3, mínimo 4,5:1).
  * O Badge usa texto de 10 e 12 px, então não vale a régua de texto grande.
  * Lê os tokens de src/styles/globals.css e as classes de badge-variants.ts, sem dependência.
  * Rodar: node --test scripts/contraste-badge.test.mjs
@@ -85,34 +85,38 @@ function contraste(a, b) {
   return (x + 0.05) / (y + 0.05)
 }
 
-// ─── Badge success ─────────────────────────────────────────────────────────
+// ─── Badge success e warning ───────────────────────────────────────────────
 const VARIANTES = 'src/components/ui/badge-variants.ts'
-const linha = ler(VARIANTES).match(/success:\s*'([^']+)'/)
-assert.ok(linha, `${VARIANTES}: variante success não encontrada`)
-const classes = linha[1]
-const pegar = (prefixo) => {
-  const m = classes.match(new RegExp(`(?:^|\\s)${prefixo}-\\[var\\((--[\\w-]+)\\)\\]`))
-  assert.ok(m, `${VARIANTES}: classe ${prefixo}-[var(--...)] não encontrada em success`)
-  return m[1]
-}
-const TEXTO = pegar('text')
-const FUNDO = pegar('bg')
+const fonte = ler(VARIANTES)
 
 // Superfícies onde o Badge aparece: cartão, cartão suave e faixa.
 const SUPERFICIES = ['--color-surface', '--color-surface-soft', '--color-surface-muted']
 
-test('Badge success: nenhuma cor fixa nas classes, só token', () => {
-  assert.equal(classes.match(/#[\da-f]{3,8}\b|rgba?\(/gi), null, `cor fixa em success: ${classes}`)
-})
+for (const variante of ['success', 'warning']) {
+  const linha = fonte.match(new RegExp(`${variante}:\\s*\n?\\s*'([^']+)'`))
+  assert.ok(linha, `${VARIANTES}: variante ${variante} não encontrada`)
+  const classes = linha[1]
+  const pegar = (prefixo) => {
+    const m = classes.match(new RegExp(`(?:^|\\s)${prefixo}-\\[var\\((--[\\w-]+)\\)\\]`))
+    assert.ok(m, `${VARIANTES}: classe ${prefixo}-[var(--...)] não encontrada em ${variante}`)
+    return m[1]
+  }
+  const TEXTO = pegar('text')
+  const FUNDO = pegar('bg')
 
-for (const t of ['claro', 'escuro']) {
-  test(`Badge success, tema ${t}: texto contra o fundo em todas as superfícies (>= ${MINIMO}:1)`, () => {
-    const texto = token(TEXTO, t)
-    const fundo = token(FUNDO, t)
-    for (const superficie of SUPERFICIES) {
-      const base = token(superficie, t)
-      const c = contraste(sobre(texto, sobre(fundo, base)), sobre(fundo, base))
-      assert.ok(c >= MINIMO, `${TEXTO} sobre ${FUNDO} em ${superficie}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
-    }
+  test(`Badge ${variante}: nenhuma cor fixa nas classes, só token`, () => {
+    assert.equal(classes.match(/#[\da-f]{3,8}\b|rgba?\(/gi), null, `cor fixa em ${variante}: ${classes}`)
   })
+
+  for (const t of ['claro', 'escuro']) {
+    test(`Badge ${variante}, tema ${t}: texto contra o fundo em todas as superfícies (>= ${MINIMO}:1)`, () => {
+      const texto = token(TEXTO, t)
+      const fundo = token(FUNDO, t)
+      for (const superficie of SUPERFICIES) {
+        const base = token(superficie, t)
+        const c = contraste(sobre(texto, sobre(fundo, base)), sobre(fundo, base))
+        assert.ok(c >= MINIMO, `${TEXTO} sobre ${FUNDO} em ${superficie}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+      }
+    })
+  }
 }

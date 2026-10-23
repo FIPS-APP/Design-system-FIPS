@@ -12,7 +12,7 @@ export const badgeVariants = cva(
         success:
           'border-[var(--color-semantic-sucesso-border)] bg-[var(--color-semantic-sucesso-bg)] text-[var(--color-semantic-sucesso-fg)]',
         warning:
-          'border-[var(--color-fips-yellow-400)] bg-[var(--color-badge-warning-bg)] text-[var(--color-accent-strong)] dark:text-[#FDC24E]',
+          'border-[var(--color-fips-yellow-400)] bg-[var(--color-badge-warning-bg)] text-[var(--color-semantic-atencao-fg)]',
         danger:
           'border-[var(--color-semantic-critico-border)] bg-[var(--color-semantic-critico-bg)] text-[var(--color-semantic-critico-fg)]',
         outline: 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg)]',
