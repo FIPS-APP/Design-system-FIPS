@@ -47,6 +47,84 @@ export const CHANGELOG: ChangelogVersion[] = [
     ],
   },
   {
+    version: '0.20.4',
+    date: '2026-10-22',
+    title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Atributo `data-modo` (`normal` e `facil`) e tokens `--modo-*` (alvo, texto, borda, raio, peso, espaço), com os mesmos nomes e valores do app de campo. Sem `data-modo` vale o normal.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Token `--alvo-toque`: o token do modo acima de 767px (35px normal, 48px fácil) e, no celular, `max(44px, --modo-alvo-min)` (44px normal, 48px fácil). Fica declarado junto de cada `[data-modo]`, porque propriedade que lê outra resolve no elemento onde foi declarada.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`--abas-secao-altura` passa a ser `max(39px, --alvo-toque)`: a faixa de `AbasDeSecao` sobe de 39px para 44px ou 48px no celular. Acima de 767px no modo normal segue em 39px.',
+      },
+    ],
+  },
+  {
+    version: '0.20.3',
+    date: '2026-10-22',
+    title: 'Par vermelho do success-strong para texto pequeno',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Entra `--color-danger-strong`: `#b91c1c` no claro (6,47:1 sobre branco; 5,30:1 sobre o fundo do badge de perigo) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1 nas superfícies do tema). É o vermelho de texto pequeno, como `--color-success-strong` é o verde. Também em `src/tokens/colors.ts` e na página Cores.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`--color-danger-text`, da 0.16.0, passa a ser alias de `--color-danger-strong` nos dois temas: o valor é o mesmo (`#b91c1c` no claro, `#fca5a5` no escuro), então quem já usa o nome não vê diferença. O nome novo é o `--color-danger-strong`. `--color-semantic-critico-fg` também lê `--color-danger-strong`, para o Badge de perigo e o texto vermelho nunca divergirem. Nenhum pixel muda.',
+      },
+    ],
+  },
+  {
+    version: '0.20.2',
+    date: '2026-10-22',
+    title: 'HeroAtalho e HeroFileira repassam data-* e aria-*',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`HeroAtalho` e cada item da `HeroFileira` repassam `data-*` e `aria-*` ao `<a>`/`<button>` renderizado, aberto ou fechado. Apps cujo tutorial aponta para `data-tutorial="novo"` não perdem o alvo. Tipo novo `HeroAtalhoAtributos`.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`HeroAtalho` e cada item da `HeroFileira` aceitam `pressionado` (boolean), que vira `aria-pressed` no `<button>` para o atalho que liga e desliga um filtro. Opcional, sem mudar o visual de quem não usa. Com `href` (link) é ignorado.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`aria-label` (vem de `label`) e `data-state` continuam do componente: o consumidor não os sobrescreve. `id`, `className`, `target` e `rel` ainda não são repassados.',
+      },
+    ],
+  },
+  {
+    version: '0.20.1',
+    date: '2026-10-22',
+    title: 'HeroFileira: foco por teclado ao sair com o mouse e blur no Safari',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Sair da fileira com o mouse só mantém aberto o atalho com foco de teclado (`:focus-visible`). Antes, clicar num atalho no Chrome ou Firefox o focava e ele ficava aberto depois de o mouse sair, em vez de o principal voltar.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Safari: com o foco de teclado num atalho e o mouse em outro, o clique tira o foco com `relatedTarget` nulo (o Safari não foca botão no clique). A fileira derrubava o atalho apontado e reabria o principal com o cursor em cima. Agora o blur não mexe no atalho apontado enquanto o ponteiro está dentro da fileira.',
+      },
+    ],
+  },
+  {
     version: '0.20.0',
     date: '2026-10-22',
     title: 'PageHeader: banner de página único no pacote',
