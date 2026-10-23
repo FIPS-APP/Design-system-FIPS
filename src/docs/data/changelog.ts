@@ -25,8 +25,8 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.16.2',
-    date: '2026-10-12',
+    version: '0.20.6',
+    date: '2026-10-22',
     title: 'Par vermelho do success-strong para texto pequeno',
     entries: [
       {
@@ -42,8 +42,155 @@ export const CHANGELOG: ChangelogVersion[] = [
     ],
   },
   {
+    version: '0.20.0',
+    date: '2026-10-22',
+    title: 'PageHeader: banner de página único no pacote',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `PageHeader`: o banner de página de todos os apps. Título h1 por padrão (`headingLevel`), tile de 44px a 10% e 19% do `--color-accent`, fundo, sombra e borda pelos tokens `--fips-banner-*`, trilhos de 4 caminhos na opacidade do token (0,12 no claro, 0,04 no escuro) como svg filho direto da raiz. Props: `icon`, `title`, `description`, `eyebrow`, `info`, `actions`, `actionsProps` (data-* do slot, âncora de tutorial), `stats`, `edge="bleed"`. `data-*` e `aria-*` vão para a raiz.',
+      },
+      {
+        type: 'feature',
+        description:
+          'A medida segue a largura do próprio cartão, não a da janela (container query de 560px, sem JavaScript). Abaixo de 560px: padding 12, tile 34, título 18px e as ações descem para a última linha, lado a lado com a mesma largura. Com ponteiro de toque os botões das ações têm 44px de altura (filhos diretos do slot). A 1440px o banner mede 91px com a descrição em uma linha.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`PatternPanelHero` vira apelido do `PageHeader`, com as props de antes (`subtitle`, `badge`, `badgePill`, `action`, `stats`, `compact`, `dataTutorial`). Muda o desenho: o título passa de h2 para h1, o tile de 18% e 30% para 10% e 19%, e a coluna do texto deixa de encolher para 82px a 375px. `compact` força a medida estreita.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Pacote: `PageHeader`, `PatternPanelHero`, `BannerJunctionLines`, `BannerIconBox` e as constantes `FIPS_BANNER_*` passam a sair de `@fips-app/ds-fips`. Fecha o item `PatternPanelHero` do #67. `BannerIconBox` passa a 44px e 34px (antes 44px e 38px), com a medida em CSS.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`/docs/patterns/hero-banner`: os previews do Banner de Conteúdo e do Banner de Fluxo renderizam o componente e a página tem um h1 só. O código copiável usava o gradiente invertido (#002A68 para #004B9B, o contrário do token); agora usa `--fips-banner-content-bg`, a sombra e a borda dos tokens, o tile a 10% e 19% e os trilhos pela opacidade do token. O comentário do exemplo de exportação volta a dizer from #004B9B e to #002A68.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`exports/pattern-panel-hero` regerado, agora com `PageHeader.tsx` e `page-header.css` (o CSS vai junto com o arquivo). Novos `scripts/medir-banner.mjs` (no navegador: claro e escuro, 1440 e 375 px, um h1, contraste do pior ponto atrás do texto, coluna do título de pelo menos 200 px, banner dentro da janela, fonte do título, fundo, opacidade do tile e botão de 44px com ponteiro de toque) e `scripts/testar-page-header.mjs` (sem navegador: estrutura renderizada, exports do pacote e regras do CSS).',
+      },
+    ],
+  },
+  {
+    version: '0.19.1',
+    date: '2026-10-19',
+    title: 'Alert info legível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Alert` com `tone="info"` usa os tokens `--color-semantic-info-bg/fg/border`, que mudam no escuro. Antes o fundo ficava em `blue-200` nos dois temas e o texto virava `blue-400`: 1,51:1 no escuro; agora 6,00:1. No claro os valores não mudam (10,49:1).',
+      },
+    ],
+  },
+  {
+    version: '0.19.0',
+    date: '2026-10-19',
+    title: 'FilterBlock: bloco de filtros no pacote',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `FilterBlock` no pacote: botão Filtros que abre o drawer, busca e vaga única de exportar (`actions`: par Excel/PDF, PDF sozinho ou botão desabilitado). Card 10/10/10/18, controles de 30px. Para telas sem alçada nem período; com alçada ou período segue o `ListingFilterToolbar`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'A busca faz parte do padrão: `search` e `onSearchChange` são obrigatórios na tipagem, e o bloco sempre mostra o campo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O botão Filtros é o `DrawerTrigger` do drawer, então o foco volta para ele ao fechar com Esc ou com "Ver N resultados". No celular os controles quebram de linha e a busca ocupa no mínimo 160px.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Seção 10 em `/docs/patterns/filtro` com o exemplo e o código; Anti-patterns passa a seção 11.',
+      },
+    ],
+  },
+  {
+    version: '0.18.0',
+    date: '2026-10-19',
+    title: 'AbasDeSecao: faixa de abas de seção, com variante de celular no rodapé',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `AbasDeSecao` no pacote. Faixa de abas de seção no topo (`posicao="topo"`) ou fixa logo acima da barra de navegação inferior (`posicao="rodape"`), para o celular.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Variáveis `--abas-secao-altura` (39px), `--abas-secao-empilha` e `--barra-inferior-altura`, e a classe `abas-secao-reserva`, que deriva o respiro da página da altura da faixa.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'O traço da aba ativa e a separação ficam dentro da caixa da faixa e trocam de lado juntos com a posição. O `overflow-x` da faixa recortaria o traço se ele saísse da caixa.',
+      },
+      {
+        type: 'fix',
+        description:
+          'A página da AbasDeSecao não rola de lado no celular: as molduras encolhem até a largura da coluna e o aviso quebra os nomes longos de variável.',
+      },
+    ],
+  },
+  {
+    version: '0.17.0',
+    date: '2026-10-19',
+    title: 'HeroFileira: fileira de atalhos com um aberto por vez',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Composite `HeroFileira` no pacote. Agrupa os `HeroAtalho`: um aberto por vez, o primeiro é o principal e fica aberto no repouso, apontar outro fecha o principal e sair da fileira volta a ele.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`HeroAtalho` aceita `aberto` e `aoApontar` para ser controlado de fora. Sem `aberto`, continua decidindo sozinho, como antes.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Doc do padrão Hero explica por que o estado e o saiu moram na fileira: com o `onMouseLeave` em cada atalho, o vão de 8px zera o estado por um quadro e o principal reabre no meio do caminho.',
+      },
+    ],
+  },
+  {
+    version: '0.16.1',
+    date: '2026-10-19',
+    title: 'Menu do topo com itens de 18px',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Menu do topo: `paddingX` dos itens passa de 24 para 18px em `docHeaderTabsUnderlineMd`, lido pelo `DocHeaderSectionNav` e pela réplica da doc.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`docHeaderTabsUnderlineMd` e `DocHeaderSectionNav` não saem no pacote `@fips-app/ds-fips`. O valor de 18px é padrão documentado em `/docs/components/header` e cada app copia.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Tutorial e exemplo de código de `/docs/components/header` ainda diziam 24px de padding horizontal da aba. Passam a 18px, igual à tabela da seção 04.',
+      },
+    ],
+  },
+  {
     version: '0.16.0',
-    date: '2026-10-06',
+    date: '2026-10-19',
     title: 'Tema escuro segue o Gestão OPA',
     entries: [
       {
@@ -80,6 +227,30 @@ export const CHANGELOG: ChangelogVersion[] = [
         type: 'improvement',
         description:
           'App com `tema-escuro.css` próprio tira as sobrescritas dos tokens acima ao atualizar e mantém só o que é dele e difere do pacote, como `--color-ring`, os fundos dos badges, `--color-semantic-atencao-fg` e os tokens da casca.',
+      },
+    ],
+  },
+  {
+    version: '0.15.3',
+    date: '2026-10-19',
+    title: 'Site de docs sem rolagem lateral em 11 rotas a 375 px',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'A coluna de conteúdo do `DocLayout` só tinha `min-w-0` a partir de `lg`: abaixo disso o filho flex crescia até a largura do conteúdo e a página rolava de lado. Agora `min-w-0` vale em todas as larguras. A 375 px, as rotas de docs com rolagem lateral caem de 22 para 11 de 37; as 11 restantes vêm de demos de largura fixa dentro das páginas.',
+      },
+    ],
+  },
+  {
+    version: '0.15.2',
+    date: '2026-10-19',
+    title: 'BrandLoader sem retângulo preto no Safari',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`BrandLoader` anima com o APNG em `<img>` e não usa mais `<video>` WebM: o Safari não compõe o alfa do WebM e pintava o fundo de preto, e o `<img>` de reserva dentro do `<video>` nunca era exibido (#30). Com `prefers-reduced-motion` continua o quadro estático.',
       },
     ],
   },

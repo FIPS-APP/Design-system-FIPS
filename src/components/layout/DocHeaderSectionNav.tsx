@@ -136,7 +136,7 @@ export function DocHeaderSectionNav({
   return (
     <nav
       ref={navRef}
-      className={cn('no-scrollbar relative flex w-full min-w-0 items-center gap-0 overflow-x-auto', navSkin)}
+      className={cn('no-scrollbar relative flex w-full min-w-0 items-center gap-0 overflow-x-auto pl-1.5', navSkin)}
       style={{ height: U.navHeightPx }}
       aria-label="Seções principais"
     >
@@ -210,7 +210,7 @@ export function DocHeaderSectionNavDemo({
   return (
     <nav
       ref={navRef}
-      className={cn('no-scrollbar relative flex w-full min-w-0 items-center gap-0 overflow-x-auto', navSkin)}
+      className={cn('no-scrollbar relative flex w-full min-w-0 items-center gap-0 overflow-x-auto pl-1.5', navSkin)}
       style={{ height: U.navHeightPx }}
       aria-label="Demo — seções"
     >
