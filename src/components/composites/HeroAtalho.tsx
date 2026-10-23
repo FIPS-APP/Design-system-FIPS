@@ -13,7 +13,26 @@ import {
 
 export type HeroAtalhoVariante = 'ouro' | 'inverseOutline'
 
-export interface HeroAtalhoProps {
+/**
+ * Atributos `data-*` e `aria-*` repassados ao `<a>`/`<button>` renderizado.
+ * Serve para alvo de tutorial (`data-tutorial="novo"`), teste e acessibilidade.
+ * `aria-label` (vem de `label`) e `data-state` (aberto/fechado) são do
+ * componente e não são sobrescritos.
+ */
+export type HeroAtalhoAtributos = {
+  [K in `data-${string}` | `aria-${string}`]?: string | number | boolean | undefined
+}
+
+/** Separa só as chaves `data-*` e `aria-*`: nada mais passa por aqui. */
+function atributosRepassados(props: object): Record<string, unknown> {
+  const fora: Record<string, unknown> = {}
+  for (const [chave, valor] of Object.entries(props)) {
+    if (chave.startsWith('data-') || chave.startsWith('aria-')) fora[chave] = valor
+  }
+  return fora
+}
+
+export interface HeroAtalhoProps extends HeroAtalhoAtributos {
   icon: LucideIcon
   label: string
   /** `ouro` para o atalho primário do hero (mesmo fill do Button ouro). Padrão `inverseOutline`. */
@@ -21,6 +40,12 @@ export interface HeroAtalhoProps {
   /** Com `href` vira `<a>`. Sem ele é `<button type="button">`. */
   href?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  /**
+   * Estado ligado/desligado anunciado ao leitor de tela (`aria-pressed`), para o atalho que
+   * liga e desliga algo, como um filtro. Não muda o visual. Só vale no `<button>`: com `href`
+   * é link e `aria-pressed` não se aplica, então é ignorado. Indefinido, nada é anunciado.
+   */
+  pressionado?: boolean
   /** Controle de fora (usado pela HeroFileira). Definido, o atalho não guarda estado próprio. */
   aberto?: boolean
   /** Chamado ao apontar ou focar, quando controlado. */
@@ -42,15 +67,17 @@ const repousoInverse =
 const repousoOuro =
   'border-transparent bg-[var(--color-accent)] text-[var(--color-primary-hover)] shadow-[var(--shadow-card)]'
 
-export function HeroAtalho({
-  icon: Icone,
-  label,
-  variante = 'inverseOutline',
-  href,
-  onClick,
-  aberto,
-  aoApontar,
-}: HeroAtalhoProps) {
+export function HeroAtalho(props: HeroAtalhoProps) {
+  const {
+    icon: Icone,
+    label,
+    variante = 'inverseOutline',
+    href,
+    onClick,
+    pressionado,
+    aberto,
+    aoApontar,
+  } = props
   const [apontado, setApontado] = useState(false)
   const [focado, setFocado] = useState(false)
   const controlado = aberto !== undefined
@@ -72,6 +99,7 @@ export function HeroAtalho({
   }
 
   const comum = {
+    ...atributosRepassados(props),
     'aria-label': label,
     'data-state': realcado ? 'open' : 'closed',
     onClick,
@@ -128,7 +156,7 @@ export function HeroAtalho({
       {conteudo}
     </a>
   ) : (
-    <button type="button" {...comum}>
+    <button type="button" {...comum} {...(pressionado !== undefined && { 'aria-pressed': pressionado })}>
       {conteudo}
     </button>
   )
