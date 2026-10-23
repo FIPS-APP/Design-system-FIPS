@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.6 | 2026-10-22 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.4 | 2026-10-22 | Modos de uso: `data-modo` (`normal` e `facil`), tokens `--modo-*` iguais aos do app de campo e `--alvo-toque` (44px normal e 48px fácil no celular). `--abas-secao-altura` deriva do alvo |
 | 0.20.3 | 2026-10-22 | `--color-danger-strong`, o par vermelho de `--color-success-strong` para texto pequeno: `#b91c1c` no claro (6,47:1 sobre branco, mínimo de 5,30:1 nas superfícies) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1). `--color-danger-text` (0.16.0) e `--color-semantic-critico-fg` passam a ler o token, sem mudar nenhum pixel |
 | 0.20.2 | 2026-10-22 | `HeroAtalho` e cada item da `HeroFileira` repassam `data-*` e `aria-*` ao `<a>`/`<button>` (ex. `data-tutorial="novo"` como alvo de tutorial). `aria-label` e `data-state` continuam do componente. Tipo novo `HeroAtalhoAtributos`. Prop opcional `pressionado` vira `aria-pressed` no `<button>` (atalho que liga e desliga um filtro), sem mudar o visual |

@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.6',
+    date: '2026-10-22',
+    title: 'badgePill do PatternPanelHero deprecado',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela (ex.: "Passo 2 de 4"), nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam, e o `@deprecated` aparece riscado no editor de quem usa essa cópia. Nada quebra: a pílula segue funcionando para quem mostra estado nela.',
+      },
+    ],
+  },
+  {
     version: '0.20.4',
     date: '2026-10-22',
     title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',
