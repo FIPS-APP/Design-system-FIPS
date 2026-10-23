@@ -30,7 +30,7 @@ Fontes: `src/components/layout/DocHeaderStandard.tsx` (`DocHeaderStandardPreview
 Duas faixas empilhadas num único `<header overflow-hidden>` (o `overflow-hidden` clipa o art decorativo de fundo — mesmo motivo pelo qual o painel do `UserAccountMenu` precisa de portal, ver abaixo):
 
 1. **Faixa superior** (`docHeaderBarTop`, sempre visível) — `flex items-center gap-3 py-3 pr-3 pl-4 sm:pr-5 sm:pl-6` (padding direito um degrau menor que o esquerdo, decisão intencional). Da esquerda pra direita: botão hambúrguer (`lg:hidden`, abre a sidebar mobile) → `DocHeaderNeuIconButton` recolher/expandir sidebar (`hidden sm:inline-flex`) → `DocHeaderPageTrail` (`flex-1`) → `SearchPill` (`hidden md:block`) → cluster de ações (ícones + divisor `h-6 w-px` `hidden sm:block` + `UserChip variant="docHeader"`).
-2. **Faixa de tabs** (`docHeaderBarTabs`, `hidden lg:block`) — `DocHeaderSectionNav`; some completamente abaixo de `lg` (navegação mobile vive só na sidebar).
+2. **Faixa de tabs** (`docHeaderBarTabs`, `hidden lg:block`) — `DocHeaderSectionNav`; some completamente abaixo de `lg` (navegação mobile vive só na sidebar). Nos apps de campo, a faixa de seção no celular é o `AbasDeSecao` da biblioteca, com `posicao="rodape"`.
 
 Não faça:
 
@@ -216,6 +216,15 @@ Não faça:
 - pintar o botão Filtros condicionalmente (outline no FIPS é intrinsecamente azul — a cor não muda com o estado; só o badge aparece/some)
 - dar realce de foco ou teto de largura ao campo de busca — ele preenche o vão
 - trocar os ícones lucide por glifos SVG custom
+
+### Bloco enxuto (`FilterBlock`)
+
+Fonte: `src/components/composites/FilterBlock.tsx` · demo: Filtro §10 (`src/docs/pages/patterns/FiltroDemo.tsx`). Para telas **sem alçada nem período**; com alçada ou período use `ListingFilterToolbar`.
+
+- Ordem: **Filtros** (botão `outline` `sm` que é o `DrawerTrigger` do drawer à esquerda) · **Busca** · `trailing` · `actions`. Card `rounded-[10px_10px_10px_18px]`, controles de 30px, `flex-wrap`, busca `min-w-[160px] flex-1`.
+- **`search` e `onSearchChange` são obrigatórios**: toda tela com o bloco tem busca. Não existe versão sem o campo. `filters` e `actions` são opcionais.
+- Exportar é **uma vaga só** (`actions`): `ExportButtons` (par Excel/PDF), um PDF sozinho ou um botão desabilitado enquanto a exportação não existe.
+- Drawer: `DrawerHero` + miolo rolável + rodapé `Limpar tudo` (desabilitado sem filtro nem busca) e `Ver N resultado(s)`. `activeCount` vira o badge do botão.
 
 ### Drawer de Filtros (padrão QLP)
 

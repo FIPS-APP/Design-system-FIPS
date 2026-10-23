@@ -95,7 +95,7 @@ export function FilterDrawer({
             type="button"
             onClick={onClear}
             disabled={activeCount === 0}
-            className="inline-flex h-9 flex-1 items-center justify-center rounded-lg border border-[var(--color-primary)]/20 bg-transparent text-[12px] font-semibold text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)]/6 disabled:opacity-50"
+            className="inline-flex h-9 flex-1 items-center justify-center rounded-lg border border-[var(--color-primary)]/20 bg-transparent text-[12px] font-semibold text-[var(--color-primary-text)] transition-colors hover:bg-[var(--color-primary-text)]/6 disabled:opacity-50"
           >
             Limpar tudo
           </button>

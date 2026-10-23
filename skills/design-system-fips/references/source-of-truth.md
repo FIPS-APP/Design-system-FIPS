@@ -68,6 +68,7 @@ Se houver conflito:
 - `src/docs/pages/patterns/ApplicationShellDemo.tsx`
 - `src/docs/pages/patterns/DashboardDemo.tsx`
 - `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + **chips de filtro ativo** + tabela + paginação (referência viva do padrão)
+- `src/components/composites/AbasDeSecao.tsx`
 - `src/components/composites/ExportButtons.tsx`
 - `src/components/composites/ExportPreviewModal.tsx`
 - `src/components/composites/ListingKpiRow.tsx` · `StatsCard.tsx` · `HowItWorksCard.tsx` · `RuleTile.tsx`

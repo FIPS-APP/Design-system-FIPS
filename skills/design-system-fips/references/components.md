@@ -11,8 +11,11 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
+- `HeroAtalho`, `HeroAtalhos`, `HeroFileira`
+- `AbasDeSecao`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
+- `FilterBlock`, `FilterBlockProps` (Filtros + busca + exportar; ver Padrões → Bloco enxuto)
 - `CircularCommandMenu` · `RowActionsMenu`
 - `ExcelIcon`, `PdfIcon`
 
@@ -45,7 +48,7 @@ Variantes exatas:
 - `accent`
 - `inverseOutline`
 - `success`
-- `successStrong` (verde escuro — `--color-success-strong`; hover pro `success` normal, inverso da variante `success`)
+- `successStrong` (verde escuro — `--color-btn-success-hover` em repouso e `--color-btn-success` no hover, inverso da variante `success`; no escuro `--color-success-strong` é cor de texto e não serve de fundo)
 - `ouro`
 - `danger`
 - `link`
@@ -186,7 +189,7 @@ Heights reais:
 Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
 
 - **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
-- **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `globals.css`, light `--color-fips-gray-400` / dark `#3a3a3a`).
+- **Borda**: `border border-[var(--color-border-control)]` (1px, sólida, sem alpha). No claro é a mesma cor de `--color-border`; no escuro é `#666666` (3,03:1 sobre o cartão). Hover: `--color-border-strong` no claro e `--color-fg-muted` no escuro.
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
 - **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
 - **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
@@ -453,7 +456,7 @@ export const PAGE_HERO_DEFAULT_DECORATION = '/backgrounds/app-shell-home-trains.
 Uso:
 
 ```tsx
-import { PageHero } from 'ds-fips'
+import { PageHero } from '@fips-app/ds-fips'
 
 <PageHero>
   <div className="px-8 py-10">
@@ -467,6 +470,58 @@ Comportamento:
 - gradiente azul institucional
 - foto/trilho sutil à direita por padrão
 - fallback opcional para `showTrainSilhouette`
+
+## HeroAtalho e HeroFileira
+
+Fonte: `src/components/composites/HeroAtalho.tsx` e `HeroFileira.tsx`
+
+Atalhos do hero da Home. `HeroAtalho` parado mostra só o ícone (30px); no hover ou no foco abre e mostra o nome dentro do botão. Cor, sombra e shimmer vêm de `docHeaderChrome`: nenhuma cor nova.
+
+Para vários atalhos, use `HeroFileira`: um aberto por vez, o primeiro é o principal e fica aberto no repouso, apontar outro fecha o principal, sair da fileira volta a ele.
+
+```tsx
+import { HeroFileira } from '@fips-app/ds-fips'
+
+<HeroFileira
+  label="Atalhos da Home"
+  atalhos={[
+    { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', href: '/painel' },
+    { id: 'config', icon: Settings, label: 'Configurações', href: '/configuracoes' },
+  ]}
+/>
+```
+
+Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos, e a fileira espera um instante. Sair com o mouse não derruba um atalho que ainda tem foco de teclado.
+
+## AbasDeSecao
+
+Fonte: `src/components/composites/AbasDeSecao.tsx`
+
+Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
+
+```tsx
+import { useState } from 'react'
+import { AbasDeSecao } from '@fips-app/ds-fips'
+
+const [aba, setAba] = useState('modo')
+
+<>
+  <main className="abas-secao-reserva">…</main>
+  <AbasDeSecao
+    posicao="rodape"
+    label="Configurações"
+    abas={[{ id: 'modo', label: 'Modo' }, { id: 'tema', label: 'Tema' }]}
+    ativa={aba}
+    onSelecionar={setAba}
+  />
+</>
+```
+
+Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `posicao?`, `label?`, `className?`. Aba com `href` vira `<a>` e recarrega a página sem router; sem `href` é `<button>`.
+
+**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura` (39px), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
+
+Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
 
 ## FipsLogo e marca do menu (sidebar header)
 
