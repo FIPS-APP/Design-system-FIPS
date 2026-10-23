@@ -21,6 +21,10 @@ export interface HeroAtalhoProps {
   /** Com `href` vira `<a>`. Sem ele é `<button type="button">`. */
   href?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  /** Controle de fora (usado pela HeroFileira). Definido, o atalho não guarda estado próprio. */
+  aberto?: boolean
+  /** Chamado ao apontar ou focar, quando controlado. */
+  aoApontar?: () => void
 }
 
 /**
@@ -44,10 +48,13 @@ export function HeroAtalho({
   variante = 'inverseOutline',
   href,
   onClick,
+  aberto,
+  aoApontar,
 }: HeroAtalhoProps) {
   const [apontado, setApontado] = useState(false)
   const [focado, setFocado] = useState(false)
-  const realcado = apontado || focado
+  const controlado = aberto !== undefined
+  const realcado = aberto ?? (apontado || focado)
 
   const style: CSSProperties = {
     ...(realcado && {
@@ -63,11 +70,16 @@ export function HeroAtalho({
 
   const comum = {
     'aria-label': label,
+    'data-state': realcado ? 'open' : 'closed',
     onClick,
-    onMouseEnter: () => setApontado(true),
-    onMouseLeave: () => setApontado(false),
-    onFocus: () => setFocado(true),
-    onBlur: () => setFocado(false),
+    onMouseEnter: () => (controlado ? aoApontar?.() : setApontado(true)),
+    onMouseLeave: () => {
+      if (!controlado) setApontado(false)
+    },
+    onFocus: () => (controlado ? aoApontar?.() : setFocado(true)),
+    onBlur: () => {
+      if (!controlado) setFocado(false)
+    },
     className: cn(
       'relative inline-flex h-[30px] cursor-pointer items-center justify-center overflow-hidden rounded-md pl-[6.5px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-accent)]/40 active:scale-[0.97]',
       realcado ? 'border-[1.5px]' : variante === 'ouro' ? repousoOuro : repousoInverse,
