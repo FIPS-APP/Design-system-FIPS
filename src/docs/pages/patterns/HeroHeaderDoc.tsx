@@ -389,8 +389,10 @@ export default function HeroHeaderDoc() {
           cada atalho, atravessar a fileira pisca: o vão de 8px entre os botões zera o estado por um quadro
           e o principal reabre no meio do caminho. Na fileira, o último apontado segura até outro assumir.
           Pelo teclado vale o mesmo. O blur testa o <code>relatedTarget</code>. No Safari esse alvo vem nulo
-          no Tab entre irmãos, e a fileira espera um instante antes de voltar ao repouso. Sair com o mouse
-          enquanto o teclado está num atalho não derruba esse foco.
+          no Tab entre irmãos e ao clicar (o Safari não foca botão no clique), e a fileira espera um instante
+          antes de voltar ao repouso. Com o ponteiro dentro da fileira, o blur não mexe no atalho apontado.
+          Sair com o mouse enquanto o teclado está num atalho não derruba esse foco, mas foco vindo de
+          clique do mouse não segura nada: só conta <code>:focus-visible</code>.
         </div>
         <p style={{ fontSize: 13, color: '#7B8C96', marginTop: 12, lineHeight: 1.55 }}>
           A fileira é centrada. Como o atalho aberto é bem mais largo que o fechado, os vizinhos andam

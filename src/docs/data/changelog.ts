@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.1',
+    date: '2026-10-22',
+    title: 'HeroFileira: foco por teclado ao sair com o mouse e blur no Safari',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Sair da fileira com o mouse só mantém aberto o atalho com foco de teclado (`:focus-visible`). Antes, clicar num atalho no Chrome ou Firefox o focava e ele ficava aberto depois de o mouse sair, em vez de o principal voltar.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Safari: com o foco de teclado num atalho e o mouse em outro, o clique tira o foco com `relatedTarget` nulo (o Safari não foca botão no clique). A fileira derrubava o atalho apontado e reabria o principal com o cursor em cima. Agora o blur não mexe no atalho apontado enquanto o ponteiro está dentro da fileira.',
+      },
+    ],
+  },
+  {
     version: '0.20.0',
     date: '2026-10-22',
     title: 'PageHeader: banner de página único no pacote',

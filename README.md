@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.0`
+## Versão atual: `v0.20.1`
 
 ## Favicon e ícones de app
 
@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.1 | 2026-10-22 | `HeroFileira`: só foco de teclado (`:focus-visible`) segura o atalho ao sair com o mouse, e o blur sem `relatedTarget` (Safari) não derruba o atalho apontado com o ponteiro dentro da fileira |
 | 0.20.0 | 2026-10-22 | `PageHeader`: banner de página único no pacote, com h1, medida pela largura do cartão (container query de 560px) e ação na última linha abaixo disso. `PatternPanelHero` vira apelido dele. Exports do banner no pacote, previews e código copiável de `/docs/patterns/hero-banner` alinhados ao token, `exports/pattern-panel-hero` regerado e `scripts/medir-banner.mjs` |
 | 0.19.1 | 2026-10-19 | `Alert` info lê os tokens `--color-semantic-info-*`: no escuro o texto passa de 1,51:1 para 6,00:1 sobre o fundo. Claro sem mudança |
 | 0.19.0 | 2026-10-19 | `FilterBlock`: bloco de filtros da casa no pacote (Filtros com drawer, busca obrigatória e vaga única de exportar), com a seção 10 em `/docs/patterns/filtro` |
