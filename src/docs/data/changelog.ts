@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.5',
+    date: '2026-10-22',
+    title: 'Site sem scripts de localhost',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O `index.html` do site carregava dois scripts de `localhost:3000` desde 23/06; eles saem do HTML de produção. Número provisório: renumera na ordem de entrada da fila.',
+      },
+    ],
+  },
+  {
     version: '0.20.4',
     date: '2026-10-22',
     title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',
