@@ -5,8 +5,8 @@ export const FIPS_BANNER_PAGE_CLASS = 'fips-banner-shell--page'
 export const FIPS_BANNER_CONTENT_CLASS = 'fips-banner-shell--content'
 
 export const FIPS_BANNER_ICON_BOX_STYLE: CSSProperties = {
-  background: 'color-mix(in srgb, var(--color-accent) 18%, transparent)',
-  border: '1px solid color-mix(in srgb, var(--color-accent) 30%, transparent)',
+  background: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
+  border: '1px solid color-mix(in srgb, var(--color-accent) 19%, transparent)',
 }
 
 export const FIPS_BANNER_PILL_STYLE: CSSProperties = {
@@ -39,12 +39,16 @@ export function BannerJunctionLines({
   )
 }
 
+/**
+ * Tile do ícone do banner: 44x44 e raio 11 (34x34 e raio 9 com `compact`).
+ * A medida mora em `.fips-banner-icon-box` (globals.css) para o PageHeader trocá-la
+ * pela largura do cartão. Dentro do PageHeader o `compact` não é preciso.
+ */
 export function BannerIconBox({ children, compact }: { children: ReactNode; compact?: boolean }) {
-  const size = compact ? 38 : 44
   return (
     <div
-      className="flex shrink-0 items-center justify-center"
-      style={{ width: size, height: size, borderRadius: 11, ...FIPS_BANNER_ICON_BOX_STYLE }}
+      className={cn('fips-banner-icon-box', compact && 'fips-banner-icon-box--compact')}
+      style={FIPS_BANNER_ICON_BOX_STYLE}
     >
       {children}
     </div>
