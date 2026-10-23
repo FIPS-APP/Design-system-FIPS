@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.14',
+    date: '2026-10-23',
+    title: 'Borda de campo e de controle do tema claro passa de 3:1',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-border-control` no claro passa de `#d7e0ea` a `#808d9a`: 1,33:1 vira 3,39:1 sobre `--color-surface` (3,32:1 sobre o cartão suave, 3,18:1 sobre a página). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais escura no claro. `--color-border` (o divisor) continua `#d7e0ea` e o escuro continua `#666666` (3,03:1).',
+      },
+      {
+        type: 'fix',
+        description:
+          'O hover da borda de `Input`, `Select`, `Textarea` e `FieldTrigger` passa a `--color-fg-muted` nos dois temas (no claro era `--color-border-strong`, `#c0ccd2`, mais claro que a borda nova). No escuro o valor é o mesmo de antes.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` ganha a borda de campo: lê `--color-border-control` nos dois temas e exige 3:1 sobre `--color-surface`, confere que o divisor não mudou e que o hover do campo é mais escuro que a borda no claro. Referência (`foundations.md`, `components.md`) e página de cores do site acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.20.13',
     date: '2026-10-23',
     title: '--color-primary-hover-text: azul escuro de texto nos dois temas',
