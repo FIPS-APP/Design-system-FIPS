@@ -1,4 +1,4 @@
-import { useRef, useState, type FocusEvent, type MouseEvent } from 'react'
+import { useRef, useState, type FocusEvent, type HTMLAttributeAnchorTarget, type MouseEvent } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import { HeroAtalho, type HeroAtalhoAtributos, type HeroAtalhoVariante } from './HeroAtalho'
@@ -11,6 +11,10 @@ export interface HeroFileiraAtalho extends HeroAtalhoAtributos {
   /** Repassado ao HeroAtalho. Use `ouro` no primário visual (ex. Facilities). */
   variante?: HeroAtalhoVariante
   href?: string
+  /** Repassado ao HeroAtalho (só com `href`). Com `_blank` e sem `rel`, sai `rel="noopener noreferrer"`. */
+  target?: HTMLAttributeAnchorTarget
+  /** Repassado ao HeroAtalho (só com `href`). Informado, vale como veio. */
+  rel?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
   /** Repassado ao HeroAtalho: `aria-pressed` no `<button>` (sem `href`), sem mudar o visual. */
   pressionado?: boolean
@@ -111,7 +115,7 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
       onMouseLeave={aoSairComMouse}
       onBlur={aoDesfocar}
     >
-      {atalhos.map(({ id, icon, label: nome, variante, href, onClick, pressionado, ...atributos }) => (
+      {atalhos.map(({ id, icon, label: nome, variante, href, target, rel, onClick, pressionado, ...atributos }) => (
         <HeroAtalho
           {...atributos}
           key={id}
@@ -119,6 +123,8 @@ export function HeroFileira({ atalhos, label = 'Atalhos', className }: HeroFilei
           label={nome}
           variante={variante}
           href={href}
+          target={target}
+          rel={rel}
           onClick={onClick}
           pressionado={pressionado}
           aberto={id === aberto}
