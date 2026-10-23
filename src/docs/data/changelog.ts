@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.16',
+    date: '2026-10-23',
+    title: 'xlsx 0.20.3: sem as duas vulnerabilidades altas',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`xlsx` passa de `^0.18.5`, do npm, para `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`, com integridade sha512 no lockfile. A 0.18.5 tem GHSA-4r6h-8v6p-xvw6 (prototype pollution) e GHSA-5pgg-2g8v-p4x9 (ReDoS), ambas altas e sem correção no npm: a SheetJS não publica mais lá. `npm audit --omit=dev` passa de 1 vulnerabilidade alta para 0. O pacote só gera planilha (`utils/exportData.ts`, `ExportModal`, `ExportButtons`) e as chamadas são as mesmas na 0.20.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:xlsx` (`scripts/xlsx.test.mjs`): exige a URL do CDN em versão 0.20.2 ou maior em `package.json`, a mesma versão com sha512 no lockfile, e gera e relê uma planilha com as chamadas de `exportData.ts`.',
+      },
+    ],
+  },
+  {
     version: '0.20.4',
     date: '2026-10-22',
     title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',
