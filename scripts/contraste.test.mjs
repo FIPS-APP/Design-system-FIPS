@@ -344,3 +344,54 @@ test('Atalho do hero: contorno de foco contra o fundo do PageHero, 3:1 nos dois 
     verifica(`contorno ${nome} contra o ${rotuloFundo} do hero (${valor})`, contorno, clareado(cor(valor, t)))
   }
 })
+
+// ─── Linha info do SettingsPreferenceRow: trilho desligado no hover ────────
+const LINHA = 'src/components/composites/SettingsPreferenceRow.tsx'
+
+// Cor com alfa de um token, hex ou rgba(), para o tema t.
+function rgbaDe(valor, t) {
+  const v = resolver(valor, t)
+  const m = v.match(/^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/)
+  if (m) return { r: +m[1], g: +m[2], b: +m[3], a: Number(m[4]) }
+  return { ...cor(valor, t), a: 1 }
+}
+
+// Aceita `var(--x)` e `color-mix(in_srgb,var(--a)_P%,var(--b))` (mistura com alfa pré-multiplicado, como no CSS).
+function fundoDaClasse(expr, t) {
+  const simples = expr.match(/^var\((--[\w-]+)\)$/)
+  const cm = expr.match(/^color-mix\(in_srgb,var\((--[\w-]+)\)_(\d+)%,var\((--[\w-]+)\)\)$/)
+  assert.ok(simples || cm, `fundo fora do que o teste entende: ${expr}`)
+  let c
+  if (simples) c = rgbaDe(`var(${simples[1]})`, t)
+  else {
+    const [x, y, p] = [rgbaDe(`var(${cm[1]})`, t), rgbaDe(`var(${cm[3]})`, t), Number(cm[2]) / 100]
+    const a = x.a * p + y.a * (1 - p)
+    const canal = (k) => (x[k] * x.a * p + y[k] * y.a * (1 - p)) / a
+    c = { r: canal('r'), g: canal('g'), b: canal('b'), a }
+  }
+  const base = token('--color-surface', t)
+  const sobre = (k) => Math.round(c[k] * c.a + base[k] * (1 - c.a))
+  return { r: sobre('r'), g: sobre('g'), b: sobre('b') }
+}
+
+function classesDaLinhaInfo() {
+  const m = ler(LINHA).match(/variant === 'info'\s*\?\s*'([^']+)'/)
+  assert.ok(m, `${LINHA}: classes da linha info não encontradas`)
+  return m[1].split(/\s+/)
+}
+
+for (const t of TEMAS) {
+  test(`Linha info do SettingsPreferenceRow, tema ${t}: trilho desligado contra o fundo em repouso e no hover`, () => {
+    const classes = classesDaLinhaInfo()
+    const repouso = classes.find((c) => /^bg-\[.+\]$/.test(c))
+    assert.ok(repouso, 'linha info sem fundo bg-[...]')
+    const hover = classes.find((c) => /^hover:bg-\[.+\]$/.test(c))
+    const trilho = token('--color-switch-off', t)
+    verifica('trilho contra o fundo em repouso', trilho, fundoDaClasse(repouso.slice(4, -1), t))
+    if (hover) verifica(`trilho contra o fundo de hover (${hover})`, trilho, fundoDaClasse(hover.slice(10, -1), t))
+  })
+}
+
+test('Linha info do SettingsPreferenceRow: o hover muda a borda, já que o fundo não pode clarear', () => {
+  assert.ok(classesDaLinhaInfo().some((c) => /^hover:border-/.test(c)), 'linha info sem hover de borda')
+})

@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.20',
+    date: '2026-10-23',
+    title: 'Linha info do SettingsPreferenceRow deixa de clarear no hover',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`SettingsPreferenceRow` variante `info`: sai o `hover:bg-[color-mix(...)]`. No escuro a mistura com `--color-fips-blue-200` clareava o fundo e o trilho do `Switch` desligado caía de 3,09:1 (repouso) para 2,05:1 (hover) sobre o cartão. No claro a mistura dava a mesma cor de repouso, então o hover não mudava nada. O fundo fica fixo e o hover passa a reforçar a borda, de `--color-fips-blue-400` a 35% para cheio, nos dois temas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê as classes da linha `info`, calcula o fundo de repouso e o de hover (inclusive `color-mix`, com alfa pré-multiplicado) e exige 3:1 do trilho desligado contra os dois nos dois temas.',
+      },
+    ],
+  },
+  {
     version: '0.20.19',
     date: '2026-10-23',
     title: 'Foco do teclado visível no atalho aberto do hero',
