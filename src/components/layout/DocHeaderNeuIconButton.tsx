@@ -45,7 +45,7 @@ export function DocHeaderNeuIconButton({
       type="button"
       aria-label={ariaLabel}
       className={cn(
-        'relative flex shrink-0 items-center justify-center overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:ring-offset-0',
+        'relative flex shrink-0 items-center justify-center overflow-hidden focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]',
         className,
       )}
       {...rest}
