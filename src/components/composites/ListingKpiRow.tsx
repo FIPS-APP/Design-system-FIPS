@@ -57,7 +57,7 @@ export function ListingKpiRow({
           <button
             type="button"
             onClick={onClear}
-            className="rounded-md bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--color-primary)] hover:bg-[color-mix(in_srgb,var(--color-primary)_18%,transparent)]"
+            className="rounded-md bg-[color-mix(in_srgb,var(--color-primary-text)_10%,transparent)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--color-primary-text)] hover:bg-[color-mix(in_srgb,var(--color-primary-text)_18%,transparent)]"
           >
             ✕ Limpar filtro
           </button>

@@ -34,6 +34,10 @@ Calcular sobre **período + busca + drawer**, **sem** aplicar o recorte minha/to
 - Export só ícones 34×34 à direita; desabilitar se `resultCount === 0`.
 - Período: listbox na toolbar, nunca no drawer.
 
+### Bloco enxuto (`FilterBlock`, Filtro §10)
+
+Para telas sem alçada nem período: Filtros (drawer) → Busca → Exportar. A busca é obrigatória (`search` e `onSearchChange` sem valor padrão); a vaga de exportar (`actions`) é única e opcional.
+
 ## 4. Drawer
 
 - `side="left"`, 400px, hero + miolo rolável + rodapé.
@@ -47,7 +51,7 @@ Calcular sobre **período + busca + drawer**, **sem** aplicar o recorte minha/to
 ## 6. Doc site (`FiltroDemo.tsx`)
 
 - Hero navy + JunctionLines (igual Login / Data Listing).
-- Corpo `maxWidth: 1200`, seções 01–10.
+- Corpo `maxWidth: 1200`, seções 01 a 11 (§10 FilterBlock, §11 Anti-patterns).
 - §08: **dois** blocos visuais — pipeline B + consumidores paralelos + nota toolbar A.
 
 ## 7. Entregas relacionadas (feed do dia)

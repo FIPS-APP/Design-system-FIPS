@@ -8,6 +8,25 @@ export { BrandLoader } from './components/brand/BrandLoader'
 export type { BrandLoaderProps, BrandLoaderSize } from './components/brand/BrandLoader'
 export { PageHero, PAGE_HERO_DEFAULT_DECORATION, type PageHeroProps } from './composites'
 export {
+  PageHeader,
+  type PageHeaderActionsProps,
+  type PageHeaderProps,
+  type PageHeaderStat,
+} from './components/composites/PageHeader'
+export {
+  PatternPanelHero,
+  type PatternPanelHeroProps,
+  type PatternPanelHeroStat,
+} from './components/composites/PatternPanelHero'
+export {
+  BannerJunctionLines,
+  BannerIconBox,
+  FIPS_BANNER_CONTENT_CLASS,
+  FIPS_BANNER_ICON_BOX_STYLE,
+  FIPS_BANNER_PAGE_CLASS,
+  FIPS_BANNER_PILL_STYLE,
+} from './components/composites/banner-shared'
+export {
   StatsCard,
   StatsCardGrid,
   type StatsCardProps,
@@ -69,6 +88,10 @@ export {
   type FilterGroup,
   type FilterChip,
 } from './components/composites/FilterDrawer'
+export {
+  FilterBlock,
+  type FilterBlockProps,
+} from './components/composites/FilterBlock'
 export { PillFilter, type PillOption } from './components/composites/PillFilter'
 export { PillGroup } from './components/composites/PillGroup'
 export {
@@ -105,4 +128,14 @@ export {
   type HeroAtalhoProps,
   type HeroAtalhosProps,
 } from './components/composites/HeroAtalho'
+export {
+  HeroFileira,
+  type HeroFileiraProps,
+  type HeroFileiraAtalho,
+} from './components/composites/HeroFileira'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
+export {
+  AbasDeSecao,
+  type AbasDeSecaoProps,
+  type AbaDeSecao,
+} from './components/composites/AbasDeSecao'
