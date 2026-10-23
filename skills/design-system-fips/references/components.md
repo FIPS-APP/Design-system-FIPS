@@ -12,8 +12,11 @@ Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
 - `HeroAtalho`, `HeroAtalhos`, `HeroFileira`
+- `AbasDeSecao`
+- `PageHeader` (+ `PageHeaderProps`, `PageHeaderStat`, `PageHeaderActionsProps`) · `PatternPanelHero` (apelido do PageHeader) · `BannerJunctionLines`, `BannerIconBox`, `FIPS_BANNER_*`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
+- `FilterBlock`, `FilterBlockProps` (Filtros + busca + exportar; ver Padrões → Bloco enxuto)
 - `CircularCommandMenu` · `RowActionsMenu`
 - `ExcelIcon`, `PdfIcon`
 
@@ -46,7 +49,7 @@ Variantes exatas:
 - `accent`
 - `inverseOutline`
 - `success`
-- `successStrong` (verde escuro — `--color-success-strong`; hover pro `success` normal, inverso da variante `success`)
+- `successStrong` (verde escuro — `--color-btn-success-hover` em repouso e `--color-btn-success` no hover, inverso da variante `success`; no escuro `--color-success-strong` é cor de texto e não serve de fundo)
 - `ouro`
 - `danger`
 - `link`
@@ -187,7 +190,7 @@ Heights reais:
 Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
 
 - **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
-- **Borda**: `border border-[var(--color-border)]` (1px, sólida, sem alpha). Hover: `hover:border-[var(--color-border-strong)]` (token já existe em `globals.css`, light `--color-fips-gray-400` / dark `#3a3a3a`).
+- **Borda**: `border border-[var(--color-border-control)]` (1px, sólida, sem alpha). No claro é a mesma cor de `--color-border`; no escuro é `#666666` (3,03:1 sobre o cartão). Hover: `--color-border-strong` no claro e `--color-fg-muted` no escuro.
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
 - **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
 - **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
@@ -490,6 +493,66 @@ import { HeroFileira } from '@fips-app/ds-fips'
 ```
 
 Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos e ao clicar (o Safari não foca botão no clique), e a fileira espera um instante; com o ponteiro dentro, o blur não mexe no atalho apontado. Sair com o mouse não derruba um atalho que ainda tem foco de teclado, mas foco vindo de clique do mouse não segura nada (só `:focus-visible` conta).
+
+## AbasDeSecao
+
+Fonte: `src/components/composites/AbasDeSecao.tsx`
+
+Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
+
+```tsx
+import { useState } from 'react'
+import { AbasDeSecao } from '@fips-app/ds-fips'
+
+const [aba, setAba] = useState('modo')
+
+<>
+  <main className="abas-secao-reserva">…</main>
+  <AbasDeSecao
+    posicao="rodape"
+    label="Configurações"
+    abas={[{ id: 'modo', label: 'Modo' }, { id: 'tema', label: 'Tema' }]}
+    ativa={aba}
+    onSelecionar={setAba}
+  />
+</>
+```
+
+Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `posicao?`, `label?`, `className?`. Aba com `href` vira `<a>` e recarrega a página sem router; sem `href` é `<button>`.
+
+**Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura` (39px), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
+
+Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
+
+## PageHeader
+
+Fonte: `src/components/composites/PageHeader.tsx` (+ `banner-shared.tsx`; estilos em `.fips-page-header` de `src/styles/globals.css`)
+
+Banner de página (Banner de Conteúdo): um por tela, com o h1. Não confundir com `PageHero`, que é a faixa de módulo e de Home.
+
+```tsx
+import { PageHeader, Button } from '@fips-app/ds-fips'
+
+<PageHeader
+  icon={<FileDown />}
+  title="Sistema de Requisições"
+  description="Gestão de compras e requisições do módulo Suprimentos"
+  actions={<Button variant="accent" size="sm">Nova solicitação</Button>}
+  actionsProps={{ 'data-tour-step': 'banner-acoes' }}
+  data-tour-step="banner"
+/>
+```
+
+Props: `title` (vira o h1), `description`, `icon`, `eyebrow` (rótulo de seção em texto, sem pílula), `info` (ao lado do título), `actions` (botões como filhos diretos, sem div em volta; com mais de dois a linha quebra), `actionsProps` (só `data-*`, vai para o slot de ações), `stats` (`{ label, value, dotColor? }[]`), `headingLevel` (1 a 6, padrão 1), `edge` (`card` ou `bleed`), `compact` (força a medida estreita; só para o apelido). `data-*`, `aria-*`, `className`, `style`, `id` e `ref` vão para a raiz.
+
+Valores fixos (todos por token, nenhum token novo):
+
+- fundo `var(--fips-banner-content-bg)`; sombra e borda dos tokens `--fips-banner-content-*`; trilhos de 4 caminhos na opacidade `--fips-banner-junction-opacity` (0,12 no claro, 0,04 no escuro)
+- a medida segue a largura do próprio cartão (container query de 560px, sem JavaScript): 560px ou mais, raio 12/12/12/24, padding 22/26, tile 44 (raio 11), título 21px, descrição 12px; abaixo, raio 10/10/10/18, padding 12, tile 34 (raio 9), título 18px, descrição 11,5px e as ações vão para a última linha, lado a lado, com a mesma largura
+- tile com fundo e borda a 10% e 19% de `--color-accent`; título em `font-heading`, 700, branco; descrição a 67% de branco, teto de 840px
+- `edge="bleed"` tira o raio abaixo de 560px; a margem lateral é do pai
+
+Regras: a página tem um h1 só (nos outros banners, `headingLevel={2}`); não sobrescreva cor, raio ou medida por classe do app; o componente ocupa a largura do pai (não o ponha em flex em linha). `PatternPanelHero` continua exportado como apelido, com as props de antes (`subtitle`, `badge`, `badgePill`, `action`, `stats`, `compact`, `dataTutorial`). Cópia para app sem o pacote: `exports/pattern-panel-hero` (leva `page-header.css`). Conferência: `node scripts/medir-banner.mjs <url>`.
 
 ## FipsLogo e marca do menu (sidebar header)
 
