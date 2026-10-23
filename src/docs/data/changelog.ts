@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.2',
+    date: '2026-10-22',
+    title: 'HeroAtalho e HeroFileira repassam data-* e aria-*',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`HeroAtalho` e cada item da `HeroFileira` repassam `data-*` e `aria-*` ao `<a>`/`<button>` renderizado, aberto ou fechado. Apps cujo tutorial aponta para `data-tutorial="novo"` não perdem o alvo. Tipo novo `HeroAtalhoAtributos`.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`HeroAtalho` e cada item da `HeroFileira` aceitam `pressionado` (boolean), que vira `aria-pressed` no `<button>` para o atalho que liga e desliga um filtro. Opcional, sem mudar o visual de quem não usa. Com `href` (link) é ignorado.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`aria-label` (vem de `label`) e `data-state` continuam do componente: o consumidor não os sobrescreve. `id`, `className`, `target` e `rel` ainda não são repassados.',
+      },
+    ],
+  },
+  {
     version: '0.20.1',
     date: '2026-10-22',
     title: 'HeroFileira: foco por teclado ao sair com o mouse e blur no Safari',

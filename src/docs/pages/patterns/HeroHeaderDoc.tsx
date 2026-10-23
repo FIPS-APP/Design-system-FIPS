@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { ShieldCheck, AlertTriangle, ArrowUpFromLine, LayoutGrid, ClipboardList, Settings, Sparkles } from 'lucide-react'
+import { ShieldCheck, AlertTriangle, ArrowUpFromLine, LayoutGrid, ClipboardList, Settings, Sparkles, Filter } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 import { RuleCards } from '../../components/RuleCards'
@@ -12,6 +12,12 @@ import { cn } from '../../../lib/cn'
 const HOME_BACKGROUND = '/backgrounds/app-shell-home-trains.png'
 
 // ─── Mini demo interativa ────────────────────────────────────────────────────
+
+/** Atalho que liga e desliga um filtro: `pressionado` anuncia o estado ao leitor de tela, sem mudar o visual. */
+function AtalhoLigaDesliga() {
+  const [ligado, setLigado] = useState(false)
+  return <HeroAtalho icon={Filter} label="Área atual" pressionado={ligado} onClick={() => setLigado((v) => !v)} />
+}
 
 function HeroHeaderDemo() {
   const [scrolled, setScrolled] = useState(false)
@@ -167,15 +173,19 @@ export function HeroWithAdaptiveHeader() {
 function codeHeroAtalhos() {
   return `// DS-FIPS — Atalhos do hero da Home
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
+import { Sparkles, ShieldCheck, Filter } from 'lucide-react'
 import { HeroAtalho, HeroAtalhos } from '@fips-app/ds-fips'
 
 export function AtalhosDaHome() {
   const navigate = useNavigate()
+  const [soAreaAtual, setSoAreaAtual] = useState(false)
   return (
     <HeroAtalhos label="Atalhos da Home">
-      <HeroAtalho icon={Sparkles} label="Explorar componentes" onClick={() => navigate('/docs')} />
+      <HeroAtalho icon={Sparkles} label="Explorar componentes" data-tutorial="novo" onClick={() => navigate('/docs')} />
       <HeroAtalho icon={ShieldCheck} label="Governança" onClick={() => navigate('/docs/governance')} />
+      {/* Liga e desliga um filtro: pressionado vira aria-pressed (só no <button>, sem href). */}
+      <HeroAtalho icon={Filter} label="Área atual" pressionado={soAreaAtual} onClick={() => setSoAreaAtual((v) => !v)} />
     </HeroAtalhos>
   )
 }`
@@ -193,7 +203,8 @@ export function AtalhosDaHome() {
     <HeroFileira
       label="Atalhos da Home"
       atalhos={[
-        { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', variante: 'ouro', onClick: () => navigate('/painel') },
+        // data-* e aria-* do item chegam ao <a>/<button> (alvo de tutorial, por exemplo).
+        { id: 'painel', icon: ClipboardList, label: 'Painel de Ações', variante: 'ouro', 'data-tutorial': 'novo', onClick: () => navigate('/painel') },
         { id: 'config', icon: Settings, label: 'Configurações', onClick: () => navigate('/configuracoes') },
       ]}
     />
@@ -312,9 +323,10 @@ export default function HeroHeaderDoc() {
             <PageHero>
               <div className="px-6 py-8">
                 <HeroAtalhos label="Atalhos de exemplo">
-                  <HeroAtalho icon={Sparkles} label="Explorar componentes" />
+                  <HeroAtalho icon={Sparkles} label="Explorar componentes" data-tutorial="novo" />
                   <HeroAtalho icon={ShieldCheck} label="Governança" />
                   <HeroAtalho icon={Settings} label="Configurações" />
+                  <AtalhoLigaDesliga />
                 </HeroAtalhos>
               </div>
             </PageHero>
@@ -337,6 +349,8 @@ export default function HeroHeaderDoc() {
                 ['onClick', 'Opcional. Use para navegar pelo router do app.'],
                 ['aberto', 'Opcional. Definido, o atalho é controlado de fora e não guarda estado próprio. É o que a HeroFileira usa. Aparece como data-state="open" ou "closed".'],
                 ['aoApontar', 'Opcional. Chamado ao apontar ou focar, só quando controlado.'],
+                ['pressionado', 'Opcional. Estado ligado ou desligado anunciado ao leitor de tela (aria-pressed), para o atalho que liga e desliga algo, como um filtro. Não muda o visual. Só no <button>: com href é link e o valor é ignorado. Indefinido, nada é anunciado.'],
+                ['data-*, aria-*', 'Opcional. Chegam ao <a>/<button> renderizado, por exemplo data-tutorial="novo" como alvo de tutorial. aria-label (vem de label) e data-state (aberto ou fechado) são do componente e não mudam.'],
                 ['HeroAtalhos label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
               ].map(([prop, uso]) => (
                 <tr key={prop} className="bg-[var(--color-surface)]">
@@ -372,7 +386,7 @@ export default function HeroHeaderDoc() {
                 <HeroFileira
                   label="Fileira de demonstração"
                   atalhos={[
-                    { id: 'a', icon: ClipboardList, label: 'Ação primária', variante: 'ouro' },
+                    { id: 'a', icon: ClipboardList, label: 'Ação primária', variante: 'ouro', 'data-tutorial': 'novo' },
                     { id: 'b', icon: Settings, label: 'Secundária' },
                     { id: 'c', icon: Sparkles, label: 'Terceira' },
                     { id: 'd', icon: ShieldCheck, label: 'Quarta' },
@@ -408,7 +422,7 @@ export default function HeroHeaderDoc() {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {[
-                ['atalhos', 'Lista de { id, icon, label, variante?, href?, onClick? }. O primeiro é o principal (aberto no repouso). variante repassa ao HeroAtalho (ex. ouro no primário visual).'],
+                ['atalhos', 'Lista de { id, icon, label, variante?, href?, onClick?, pressionado?, data-*?, aria-*? }. O primeiro é o principal (aberto no repouso). variante repassa ao HeroAtalho (ex. ouro no primário visual). Os data-* e aria-* de cada item chegam ao <a>/<button> do atalho, aberto ou fechado.'],
                 ['label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
                 ['className', 'Opcional. Só para layout externo.'],
               ].map(([prop, uso]) => (

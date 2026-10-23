@@ -492,6 +492,8 @@ import { HeroFileira } from '@fips-app/ds-fips'
 />
 ```
 
+`data-*` e `aria-*` de `HeroAtalho` e de cada item da `HeroFileira` chegam ao `<a>`/`<button>` (ex. `'data-tutorial': 'novo'` como alvo de tutorial). `aria-label` e `data-state` são do componente. `pressionado` (boolean) vira `aria-pressed` no `<button>`, para o atalho que liga e desliga um filtro; sem `href`, sem mudar o visual. `id`, `className`, `target` e `rel` ainda não passam.
+
 Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `onMouseLeave` em cada um, o vão de 8px entre os botões zera o estado por um quadro e o principal reabre no meio do caminho. Pelo teclado, o blur testa o `relatedTarget`. No Safari esse alvo vem nulo no Tab entre irmãos e ao clicar (o Safari não foca botão no clique), e a fileira espera um instante; com o ponteiro dentro, o blur não mexe no atalho apontado. Sair com o mouse não derruba um atalho que ainda tem foco de teclado, mas foco vindo de clique do mouse não segura nada (só `:focus-visible` conta).
 
 ## AbasDeSecao
