@@ -83,6 +83,10 @@ export {
   type FilterGroup,
   type FilterChip,
 } from './components/composites/FilterDrawer'
+export {
+  FilterBlock,
+  type FilterBlockProps,
+} from './components/composites/FilterBlock'
 export { PillFilter, type PillOption } from './components/composites/PillFilter'
 export { PillGroup } from './components/composites/PillGroup'
 export {
@@ -119,4 +123,14 @@ export {
   type HeroAtalhoProps,
   type HeroAtalhosProps,
 } from './components/composites/HeroAtalho'
+export {
+  HeroFileira,
+  type HeroFileiraProps,
+  type HeroFileiraAtalho,
+} from './components/composites/HeroFileira'
 export { ExcelIcon, PdfIcon } from './components/icons/FileIcons'
+export {
+  AbasDeSecao,
+  type AbasDeSecaoProps,
+  type AbaDeSecao,
+} from './components/composites/AbasDeSecao'

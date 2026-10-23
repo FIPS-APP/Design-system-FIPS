@@ -16,6 +16,9 @@ import {
 } from 'lucide-react'
 import { ActiveFilterChips, MAX_FILTER_CHIPS } from '../../../components/composites/ActiveFilterChips'
 import { FilterDrawer } from '../../../components/composites/FilterDrawer'
+import { FilterBlock } from '../../../components/composites/FilterBlock'
+import { ExportButtons } from '../../../components/composites/ExportButtons'
+import { PillGroup } from '../../../components/composites/PillGroup'
 import {
   LISTING_PERIOD_PRESETS,
   ListingFilterToolbar,
@@ -449,6 +452,38 @@ function AntiPatternCard({ title, body }: { title: string; body: string }) {
       <div style={{ fontSize: 12, fontWeight: 700, color: C.danger, fontFamily: Fn.title, marginBottom: 6 }}>{title}</div>
       <div style={{ fontSize: 11, color: C.cinzaChumbo, lineHeight: 1.55, fontFamily: Fn.body }}>{body}</div>
     </div>
+  )
+}
+
+const BLOCK_STATUS = ['Aberto', 'Em análise', 'Concluído']
+
+function FilterBlockPreview() {
+  const [status, setStatus] = useState('')
+  const [search, setSearch] = useState('')
+  const active = status ? 1 : 0
+
+  return (
+    <FilterBlock
+      eyebrow="Pátios"
+      activeCount={active}
+      resultCount={status ? 12 : 40}
+      onClear={() => {
+        setStatus('')
+        setSearch('')
+      }}
+      search={search}
+      onSearchChange={setSearch}
+      filters={
+        <PillGroup
+          icon={CircleCheck}
+          label="Situação"
+          options={[{ value: '', label: 'Todos' }, ...BLOCK_STATUS.map((o) => ({ value: o, label: o }))]}
+          value={status}
+          onChange={setStatus}
+        />
+      }
+      actions={<ExportButtons onExcel={() => undefined} onPdf={() => undefined} />}
+    />
   )
 }
 
@@ -1117,6 +1152,7 @@ export default function FiltroDemo() {
           <CodeBlock>{`import {
   ListingFilterToolbar,
   FilterDrawer,
+  FilterBlock,
   ActiveFilterChips,
   ScopeSegment,
   PillGroup,
@@ -1125,10 +1161,30 @@ export default function FiltroDemo() {
 } from '@fips-app/ds-fips'`}</CodeBlock>
         </PatternSection>
 
-        {/* 10 — Anti-patterns */}
+        {/* 10 — Bloco enxuto */}
+        <PatternSection
+          id="bloco-enxuto"
+          n="10"
+          title="FilterBlock: Filtros, busca e exportar"
+          desc="Para telas sem alçada nem período. Botão Filtros abre o drawer, a busca é obrigatória (search e onSearchChange) e exportar é uma vaga única: par Excel/PDF, um PDF sozinho ou um botão desabilitado."
+        >
+          <FilterBlockPreview />
+          <CodeBlock>{`<FilterBlock
+  eyebrow="Mapa de Pátios"
+  activeCount={ativos}
+  resultCount={total}
+  onClear={limpar}
+  filters={<PillGroup ... />}
+  search={busca}
+  onSearchChange={setBusca}
+  actions={<ExportButtons onExcel={...} onPdf={...} />}
+/>`}</CodeBlock>
+        </PatternSection>
+
+        {/* 11 — Anti-patterns */}
         <PatternSection
           id="anti"
-          n="10"
+          n="11"
           title="Anti-patterns"
           desc="Erros recorrentes em PRs — evite."
         >
