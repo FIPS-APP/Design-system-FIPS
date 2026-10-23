@@ -218,10 +218,12 @@ for (const t of TEMAS) {
   })
 }
 
-// Só o claro cobre também o cartão suave e a página. No escuro a borda #666666 mede 2,87:1 sobre o cartão suave: fora do escopo.
-test('--color-border-control, tema claro: borda contra o cartão suave e a página', () => {
-  for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', 'claro'), token(fundo, 'claro'))
-})
+// Campo aparece sobre o cartão, o cartão suave e a página, nos dois temas.
+for (const t of TEMAS) {
+  test(`--color-border-control, tema ${t}: borda contra o cartão suave e a página`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', t), token(fundo, t))
+  })
+}
 
 test('--color-border (divisor) segue como estava: o --color-border-control não o reaproveita', () => {
   assert.equal(TOKENS.claro['--color-border'], '#d7e0ea')
