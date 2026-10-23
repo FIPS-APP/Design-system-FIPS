@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.3`
+## Versão atual: `v0.20.5`
 
 ## Favicon e ícones de app
 
@@ -97,7 +97,11 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.20.3 | 2026-10-22 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |
+| 0.20.5 | 2026-10-22 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |
+| 0.20.4 | 2026-10-22 | Modos de uso: `data-modo` (`normal` e `facil`), tokens `--modo-*` iguais aos do app de campo e `--alvo-toque` (44px normal e 48px fácil no celular). `--abas-secao-altura` deriva do alvo |
+| 0.20.3 | 2026-10-22 | `--color-danger-strong`, o par vermelho de `--color-success-strong` para texto pequeno: `#b91c1c` no claro (6,47:1 sobre branco, mínimo de 5,30:1 nas superfícies) e `#fca5a5` no escuro (de 7,03:1 a 9,17:1). `--color-danger-text` (0.16.0) e `--color-semantic-critico-fg` passam a ler o token, sem mudar nenhum pixel |
+| 0.20.2 | 2026-10-22 | `HeroAtalho` e cada item da `HeroFileira` repassam `data-*` e `aria-*` ao `<a>`/`<button>` (ex. `data-tutorial="novo"` como alvo de tutorial). `aria-label` e `data-state` continuam do componente. Tipo novo `HeroAtalhoAtributos`. Prop opcional `pressionado` vira `aria-pressed` no `<button>` (atalho que liga e desliga um filtro), sem mudar o visual |
+| 0.20.1 | 2026-10-22 | `HeroFileira`: só foco de teclado (`:focus-visible`) segura o atalho ao sair com o mouse, e o blur sem `relatedTarget` (Safari) não derruba o atalho apontado com o ponteiro dentro da fileira |
 | 0.20.0 | 2026-10-22 | `PageHeader`: banner de página único no pacote, com h1, medida pela largura do cartão (container query de 560px) e ação na última linha abaixo disso. `PatternPanelHero` vira apelido dele. Exports do banner no pacote, previews e código copiável de `/docs/patterns/hero-banner` alinhados ao token, `exports/pattern-panel-hero` regerado e `scripts/medir-banner.mjs` |
 | 0.19.1 | 2026-10-19 | `Alert` info lê os tokens `--color-semantic-info-*`: no escuro o texto passa de 1,51:1 para 6,00:1 sobre o fundo. Claro sem mudança |
 | 0.19.0 | 2026-10-19 | `FilterBlock`: bloco de filtros da casa no pacote (Filtros com drawer, busca obrigatória e vaga única de exportar), com a seção 10 em `/docs/patterns/filtro` |
