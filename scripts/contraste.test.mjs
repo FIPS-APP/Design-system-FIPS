@@ -78,6 +78,16 @@ const TEMAS = ['claro', 'escuro']
 // Fundos onde o controle pode aparecer: cartão, cartão suave e faixa.
 const FUNDOS = ['--color-surface', '--color-surface-soft', '--color-surface-muted']
 
+// Cor com alfa (rgba) composta sobre o cartão do tema.
+function compor(valor, t) {
+  const m = resolver(valor, t).match(/^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/)
+  if (!m) return cor(valor, t)
+  const base = token('--color-surface', t)
+  const a = Number(m[4])
+  const mistura = (f, b) => Math.round(f * a + b * (1 - a))
+  return { r: mistura(+m[1], base.r), g: mistura(+m[2], base.g), b: mistura(+m[3], base.b) }
+}
+
 function classe(arquivo, padrao) {
   const m = ler(arquivo).match(padrao)
   assert.ok(m, `${arquivo}: classe não encontrada (${padrao})`)
@@ -92,6 +102,15 @@ function verifica(rotulo, a, b) {
 // ─── Switch ────────────────────────────────────────────────────────────────
 const SWITCH = 'src/components/ui/switch.tsx'
 
+// Cor do botão (Thumb), lida da classe bg-* do próprio componente.
+function corDoBotao() {
+  const m = ler(SWITCH).match(/Thumb[\s\S]*?\bbg-(white|black|\[#[\da-f]{3,6}\])/i)
+  assert.ok(m, `${SWITCH}: classe de fundo do botão (Thumb) não encontrada ou fora de white, black e hex`)
+  if (m[1] === 'white') return BRANCO
+  if (m[1] === 'black') return { r: 0, g: 0, b: 0 }
+  return cor(m[1].slice(1, -1), 'claro')
+}
+
 test('Switch: nenhuma cor fixa no arquivo, só token', () => {
   const hex = ler(SWITCH).match(/#[\da-f]{3,8}\b/gi)
   assert.equal(hex, null, `hex em ${SWITCH}: ${hex}`)
@@ -103,7 +122,7 @@ for (const [estado, atributo] of [['desligado', 'unchecked'], ['ligado', 'checke
     test(`Switch ${estado}, tema ${t}: trilho contra o fundo e botão contra o trilho`, () => {
       const trilho = token(nome, t)
       for (const fundo of FUNDOS) verifica(`trilho ${nome} contra ${fundo}`, trilho, token(fundo, t))
-      verifica(`botão branco contra o trilho ${nome}`, BRANCO, trilho)
+      verifica(`botão contra o trilho ${nome}`, corDoBotao(), trilho)
     })
   }
 }
@@ -122,8 +141,10 @@ test('Anel de foco: nenhum arquivo usa --color-ring com transparência', () => {
   const achados = []
   for (const arquivo of [...arquivos('src'), ...arquivos('exports')]) {
     ler(arquivo).split('\n').forEach((linha, i) => {
-      for (const m of linha.matchAll(/ring-\[var\(--color-ring\)\]\/(\d+)/g)) {
-        achados.push(`${arquivo}:${i + 1} (${m[0]})`)
+      // ring-[...] que cita --color-ring e termina em /NN, /[0.2] ou usa color-mix, rgba ou transparent.
+      for (const m of linha.matchAll(/ring-\[([^\]\s]+)\](\/(?:\[[^\]]+\]|[\w.]+))?/g)) {
+        if (!m[1].includes('--color-ring')) continue
+        if (m[2] || /color-mix|rgba?\(|transparent|\/\d/.test(m[1])) achados.push(`${arquivo}:${i + 1} (${m[0]})`)
       }
     })
   }
@@ -133,6 +154,21 @@ test('Anel de foco: nenhum arquivo usa --color-ring com transparência', () => {
 for (const t of TEMAS) {
   test(`Anel de foco, tema ${t}: --color-ring contra cada fundo`, () => {
     for (const fundo of FUNDOS) verifica(`--color-ring contra ${fundo}`, token('--color-ring', t), token(fundo, t))
+  })
+}
+
+// Fundos fora do conjunto de superfícies: o gradiente do Dialog e a linha info do SettingsPreferenceRow.
+test('Anel de foco, tema claro: fechar do Dialog contra o gradiente (ponto médio, onde o canto superior direito cai)', () => {
+  const m = ler('src/components/ui/dialog.tsx').match(/(?<!dark:)from-\[#[\da-f]{6}\] via-\[(#[\da-f]{6})\] to-\[#[\da-f]{6}\]/i)
+  assert.ok(m, 'gradiente do Dialog não encontrado em dialog.tsx')
+  verifica(`--color-ring contra o gradiente do Dialog ${m[1]}`, token('--color-ring', 'claro'), cor(m[1], 'claro'))
+})
+
+// Em repouso. O hover da linha (cor da faixa) não se resolve por token: o trilho tem teto de luminância contra o botão branco.
+for (const t of TEMAS) {
+  test(`Switch desligado, tema ${t}: trilho contra a linha info em repouso`, () => {
+    const fundo = compor(TOKENS[t]['--color-semantic-info-bg'], t)
+    verifica('trilho --color-switch-off contra --color-semantic-info-bg', token('--color-switch-off', t), fundo)
   })
 }
 
@@ -176,5 +212,6 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('botão / trilho ligado', BRANCO, token('--color-switch-on', t))
     linha('anel de foco / cartão', token('--color-ring', t), cartao)
     linha('anel de foco / faixa', token('--color-ring', t), token('--color-surface-muted', t))
+    linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }
 })

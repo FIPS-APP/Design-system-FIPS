@@ -42,7 +42,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          'Anel de foco com opacidade cheia (`ring-[var(--color-ring)]`, 2px) em `Switch`, `Button`, `Tabs`, `Dialog` (fechar) e `Drawer` (fechar), e na busca do cabeçalho de docs. Com 16% a 25% o anel media de 1,26:1 a 1,60:1 contra o fundo. Agora: 3,56:1 no claro e 7,50:1 no escuro contra o cartão, 3,34:1 e 6,60:1 contra a faixa. `Button` e `Tabs` passam de `ring-4` a `ring-2`.',
+          'Anel de foco com opacidade cheia (`ring-[var(--color-ring)]`, 2px) em `Switch`, `Button`, `Tabs`, `Dialog` (fechar) e `Drawer` (fechar), e na busca do cabeçalho de docs, nos ramos claro e escuro (o escuro mede 7,93:1 sobre o fundo da busca). O fechar do `Drawer` passa de `focus:` a `focus-visible:`, para o anel não aparecer ao abrir com o mouse. Com 16% a 25% o anel media de 1,26:1 a 1,60:1 contra o fundo. Agora: 3,56:1 no claro e 7,50:1 no escuro contra o cartão, 3,34:1 e 6,60:1 contra a faixa. `Button` e `Tabs` passam de `ring-4` a `ring-2`.',
       },
       {
         type: 'fix',
@@ -57,7 +57,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          'Primeiro teste automatizado do repo: `npm test` (`scripts/contraste.test.mjs`, sem dependência nova) lê os tokens e as classes e exige 3:1 no trilho, no botão e no anel, nos dois temas, e proíbe `--color-ring` com transparência em `src` e `exports`.',
+          'Primeiro teste automatizado do repo: `npm test` (`scripts/contraste.test.mjs`, sem dependência nova) lê os tokens e as classes e exige 3:1 no trilho, no botão e no anel, nos dois temas, e proíbe `--color-ring` com transparência em `src` e `exports` (inclui `color-mix` e `/[0.2]`). A cor do botão vem da classe de `switch.tsx`, e o teste cobre também o gradiente do `Dialog` e a linha info do `SettingsPreferenceRow` em repouso.',
       },
     ],
   },
