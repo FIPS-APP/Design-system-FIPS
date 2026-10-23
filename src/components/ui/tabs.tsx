@@ -26,7 +26,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-3.5 py-2.5 text-sm font-medium whitespace-nowrap transition duration-200 focus-visible:ring-4 focus-visible:ring-[var(--color-ring)]/20 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[var(--color-surface)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-[var(--shadow-card)]',
+      'inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-3.5 py-2.5 text-sm font-medium whitespace-nowrap transition duration-200 focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[var(--color-surface)] data-[state=active]:text-[var(--color-primary)] data-[state=active]:shadow-[var(--shadow-card)]',
       className,
     )}
     {...props}
@@ -41,7 +41,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      'mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]/25 focus-visible:outline-none',
+      'mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:outline-none',
       className,
     )}
     {...props}

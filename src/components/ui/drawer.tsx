@@ -43,7 +43,7 @@ const DrawerContent = React.forwardRef<
       {children}
       {showCloseButton ? (
         <DialogPrimitive.Close
-          className="absolute top-5 right-5 rounded-lg border border-transparent p-1.5 text-[var(--color-fg-muted)] hover:border-[var(--color-border)] hover:bg-[var(--color-surface-soft)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-ring)]/16"
+          className="absolute top-5 right-5 rounded-lg border border-transparent p-1.5 text-[var(--color-fg-muted)] hover:border-[var(--color-border)] hover:bg-[var(--color-surface-soft)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
           aria-label="Fechar painel"
         >
           <X className="h-5 w-5" aria-hidden />
