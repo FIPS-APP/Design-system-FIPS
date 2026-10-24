@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
+import { useState, type CSSProperties, type HTMLAttributeAnchorTarget, type MouseEvent, type ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import {
@@ -39,6 +39,10 @@ export interface HeroAtalhoProps extends HeroAtalhoAtributos {
   variante?: HeroAtalhoVariante
   /** Com `href` vira `<a>`. Sem ele é `<button type="button">`. */
   href?: string
+  /** Só vale com `href`, repassado ao `<a>`. Com `_blank` e sem `rel`, o link sai com `rel="noopener noreferrer"`. */
+  target?: HTMLAttributeAnchorTarget
+  /** Só vale com `href`, repassado ao `<a>`. Informado, vale como veio e substitui o padrão seguro de `target="_blank"`. */
+  rel?: string
   onClick?: (event: MouseEvent<HTMLElement>) => void
   /**
    * Estado ligado/desligado anunciado ao leitor de tela (`aria-pressed`), para o atalho que
@@ -73,6 +77,8 @@ export function HeroAtalho(props: HeroAtalhoProps) {
     label,
     variante = 'inverseOutline',
     href,
+    target,
+    rel,
     onClick,
     pressionado,
     aberto,
@@ -149,7 +155,7 @@ export function HeroAtalho(props: HeroAtalhoProps) {
   )
 
   return href ? (
-    <a href={href} {...comum}>
+    <a href={href} target={target} rel={rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)} {...comum}>
       {conteudo}
     </a>
   ) : (

@@ -346,6 +346,7 @@ export default function HeroHeaderDoc() {
                 ['label', 'Nome que aparece ao abrir. Também é o nome para leitor de tela.'],
                 ['variante', 'Opcional. `ouro` no primário do hero; padrão `inverseOutline`. O realce no hover é igual nos dois.'],
                 ['href', 'Opcional. Com ele o atalho vira link <a> (recarrega a página). Apps com router usam `onClick`.'],
+                ['target, rel', 'Opcionais, só com href: chegam ao <a>. Com target="_blank" e sem rel, o link sai com rel="noopener noreferrer"; rel informado vale como veio. No <button> são ignorados.'],
                 ['onClick', 'Opcional. Use para navegar pelo router do app.'],
                 ['aberto', 'Opcional. Definido, o atalho é controlado de fora e não guarda estado próprio. É o que a HeroFileira usa. Aparece como data-state="open" ou "closed".'],
                 ['aoApontar', 'Opcional. Chamado ao apontar ou focar, só quando controlado.'],
@@ -422,7 +423,7 @@ export default function HeroHeaderDoc() {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {[
-                ['atalhos', 'Lista de { id, icon, label, variante?, href?, onClick?, pressionado?, data-*?, aria-*? }. O primeiro é o principal (aberto no repouso). variante repassa ao HeroAtalho (ex. ouro no primário visual). Os data-* e aria-* de cada item chegam ao <a>/<button> do atalho, aberto ou fechado.'],
+                ['atalhos', 'Lista de { id, icon, label, variante?, href?, target?, rel?, onClick?, pressionado?, data-*?, aria-*? }. O primeiro é o principal (aberto no repouso). variante repassa ao HeroAtalho (ex. ouro no primário visual). Os data-* e aria-* de cada item chegam ao <a>/<button> do atalho, aberto ou fechado.'],
                 ['label', 'Nome da faixa (<nav>) para leitor de tela. Padrão "Atalhos".'],
                 ['className', 'Opcional. Só para layout externo.'],
               ].map(([prop, uso]) => (

@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.20.4",
+  "version": "0.20.22",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,6 +30,7 @@
     "build:site": "tsc -b && vite build",
     "build:downloads": "bash scripts/build-ai-downloads.sh",
     "lint": "eslint .",
+    "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {

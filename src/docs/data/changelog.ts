@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.22',
+    date: '2026-10-23',
+    title: 'HeroAtalho e HeroFileira repassam target e rel ao link',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`HeroAtalho` e cada item da `HeroFileira` aceitam `target` e `rel` e os repassam ao `<a>`. Antes só `data-*` e `aria-*` chegavam ao elemento, e quem abria em aba nova usava `window.open` no `onClick`, sem `rel`. Com `target="_blank"` e `rel` indefinido, o link sai com `rel="noopener noreferrer"`; `rel` informado vale como veio. No `<button>` (sem `href`) os dois são ignorados.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`scripts/hero-atalho.test.mjs` (`npm run test:hero`) faz o build em memória do componente, renderiza com `react-dom/server` e lê o HTML: seis casos para `HeroAtalho` e os mesmos seis para `HeroFileira`. Página do componente e referência da skill acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.20.4',
     date: '2026-10-22',
     title: 'Modos de uso: data-modo, tokens --modo-* e alvo de toque por aparelho',
