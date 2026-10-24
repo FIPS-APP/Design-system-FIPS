@@ -34,7 +34,7 @@ Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 - `Drawer` (+ `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerClose`)
 - `Tooltip`, `TooltipProvider`, `TooltipTrigger`, `TooltipContent`
 
-**Exportado sem página de doc:** `Switch` (Radix, `src/components/ui/switch.tsx`). A página `/docs/components/switch` foi removida na v0.11.20 — o primitive e o composite `SettingsPreferenceRow` continuam funcionando em qualquer app consumidor, só ficaram sem doc dedicada.
+**Exportado sem página de doc:** `Switch` (Radix, `src/components/ui/switch.tsx`; trilho em `--color-switch-on`/`--color-switch-off`, anel `--color-ring` cheio com recuo `--color-surface`). A página `/docs/components/switch` foi removida na v0.11.20 — o primitive e o composite `SettingsPreferenceRow` continuam funcionando em qualquer app consumidor, só ficaram sem doc dedicada.
 
 ## Button
 

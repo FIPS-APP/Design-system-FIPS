@@ -10,10 +10,9 @@ const Switch = React.forwardRef<
     ref={ref}
     className={cn(
       'peer inline-flex h-6 w-[42px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]/25 focus-visible:ring-offset-2',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]',
       'disabled:cursor-not-allowed disabled:opacity-50',
-      'data-[state=checked]:bg-[var(--color-primary)] data-[state=unchecked]:bg-[var(--color-fips-gray-400)]',
-      'dark:data-[state=checked]:bg-[#93bde4] dark:data-[state=unchecked]:bg-[#3a3a3a]',
+      'data-[state=checked]:bg-[var(--color-switch-on)] data-[state=unchecked]:bg-[var(--color-switch-off)]',
       className,
     )}
     {...props}

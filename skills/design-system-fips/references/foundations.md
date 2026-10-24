@@ -89,6 +89,8 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-success-fill: var(--color-fips-green-700);
   --color-neutral-fill: var(--color-fg-muted);
   --color-ring: var(--color-fips-sky-600);
+  --color-switch-on: var(--color-primary);
+  --color-switch-off: var(--color-fg-muted);
   --color-sidebar: var(--color-fips-blue-950);
   --color-gov-gradient-from: #004B9B;
   --color-gov-gradient-to: #002A68;
@@ -117,6 +119,8 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |
 | `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
 | `--color-ring` | sky-600 | yellow-600 |
+| `--color-switch-on` | `--color-primary` | blue-700 |
+| `--color-switch-off` | `--color-fg-muted` | `#7a7a82` |
 
 Botões sólidos leem seis tokens próprios, com texto acima de 4,5:1 no escuro. No claro repetem os valores de antes:
 
@@ -134,6 +138,8 @@ Botões sólidos leem seis tokens próprios, com texto acima de 4,5:1 no escuro.
 **Regra crítica:** no escuro `--color-success-strong` é cor de **texto**. Fundo verde com texto branco usa `--color-success-fill`; `success-strong` como fundo dá 1,51:1 com branco.
 
 `--color-primary`, `--color-accent`, `--color-success`, `--color-warning`, `--color-danger` e `--color-sidebar` continuam **idênticos** nos dois temas. Para **texto e contorno** de ação use `--color-primary-text`. Para **acento** de foco (borda em foco, anel, borda do dropdown aberto, opção selecionada) o par manual `dark:…-[#93BDE4]` continua necessário: `--color-primary` não muda no escuro, e sem o par o acento fica com contraste baixo. Esses `dark:` não são resíduo.
+
+**Anel de foco e interruptor:** `--color-ring` entra sempre com opacidade cheia (`ring-2 ring-[var(--color-ring)]`, nunca `/20`) e o recuo usa `ring-offset-[var(--color-surface)]`. Os trilhos do `Switch` leem `--color-switch-on` e `--color-switch-off`, que medem 3:1 ou mais contra o cartão e contra o botão branco nos dois temas. `npm test` confere.
 
 Já os tokens `--color-gov-*` (usados em páginas de doc/governança) **invertem** no dark — `--color-gov-azul-profundo` vira `#93BDE4`. Não usá-los como fundo cheio com texto branco por cima: no escuro o fundo clareia e o texto some (foi a causa dos pills do drawer de filtros usarem hex fixo).
 
