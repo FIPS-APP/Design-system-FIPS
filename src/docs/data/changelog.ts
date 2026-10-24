@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.27',
+    date: '2026-10-24',
+    title: 'Site sem scripts de localhost',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O `index.html` do site carregava dois scripts de `localhost:3000` desde 23/06; eles saem do HTML de produção.',
+      },
+    ],
+  },
+  {
     version: '0.20.26',
     date: '2026-10-24',
     title: 'Borda de campo e de controle do tema claro passa de 3:1',
