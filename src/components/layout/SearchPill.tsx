@@ -34,7 +34,7 @@ export function SearchPill({
           type="search"
           placeholder={ph}
           aria-label={ariaLabel ?? 'Buscar'}
-          className="h-[35px] w-full rounded-lg border border-[#3F3F46] bg-[#141416] py-0 pl-9 pr-3 font-sans text-[13px] leading-normal text-[#E2E2E8] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] placeholder:text-[#71717A] backdrop-blur-sm focus-visible:outline-none focus-visible:border-[#F6921E]/50 focus-visible:ring-2 focus-visible:ring-[#F6921E]/20 focus-visible:ring-offset-0"
+          className="h-[35px] w-full rounded-lg border border-[#3F3F46] bg-[#141416] py-0 pl-9 pr-3 font-sans text-[13px] leading-normal text-[#E2E2E8] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] placeholder:text-[#71717A] backdrop-blur-sm focus-visible:outline-none focus-visible:border-[#F6921E] focus-visible:ring-2 focus-visible:ring-[#F6921E] focus-visible:ring-offset-0"
         />
       </div>
     )

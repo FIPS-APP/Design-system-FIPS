@@ -25,6 +25,99 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.26',
+    date: '2026-10-24',
+    title: 'Borda de campo e de controle do tema claro passa de 3:1',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-border-control` no claro passa de `#d7e0ea` a `#808d9a`: 1,33:1 vira 3,39:1 sobre `--color-surface` (3,32:1 sobre o cartão suave, 3,18:1 sobre a página). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais escura no claro. `--color-border` (o divisor) continua `#d7e0ea` e o escuro continua `#666666` (3,03:1).',
+      },
+      {
+        type: 'fix',
+        description:
+          'O hover da borda de `Input`, `Select`, `Textarea` e `FieldTrigger` passa a `--color-fg-muted` nos dois temas (no claro era `--color-border-strong`, `#c0ccd2`, mais claro que a borda nova). No escuro o valor é o mesmo de antes.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` ganha a borda de campo: lê `--color-border-control` nos dois temas e exige 3:1 sobre `--color-surface`, confere que o divisor não mudou e que o hover do campo é mais escuro que a borda no claro. Referência (`foundations.md`, `components.md`) e página de cores do site acompanham.',
+      },
+    ],
+  },
+  {
+    version: '0.20.25',
+    date: '2026-10-24',
+    title: '--color-primary-hover-text: azul escuro de texto nos dois temas',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Token `--color-primary-hover-text` em `globals.css`, no mesmo desenho do `--color-primary-text`: `var(--color-primary-hover)` no claro (`#002a68`, 13,72:1 sobre `--color-surface`) e `var(--color-fips-blue-400)` no escuro (`#93bde4`, 8,82:1 sobre o cartão `#1a1a1a`). Quem lia o `--color-primary-hover` como cor de texto no escuro tinha 1,27:1. Nenhum componente do pacote lê o token ainda, então o claro não muda.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` ganha o caso do token: exige 4,5:1 contra `--color-surface` nos dois temas e confere que o claro vale o mesmo que `--color-primary-hover`. Referência (`foundations.md`) e página de cores do site acompanham.',
+      },
+    ],
+  },
+  {
+    version: '0.20.24',
+    date: '2026-10-24',
+    title: 'Switch desligado e anel de foco passam de 3:1 contra o fundo',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Switch` desligado: o trilho usava `--color-fips-gray-400` (1,64:1 contra o cartão no claro) e `#3a3a3a` fixo no escuro (1,40:1). Passa a `--color-switch-off`: 4,57:1 no claro (é o `--color-fg-muted`) e 4,09:1 no escuro. O botão branco fica a 4,57:1 e 4,26:1 do trilho.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`Switch` ligado: o trilho no escuro era `#93bde4` fixo, com o botão branco a 1,97:1. Passa a `--color-switch-on`: `--color-primary` no claro (8,47:1) e `--color-fips-blue-700` no escuro (botão a 3,35:1, trilho a 5,19:1 do cartão). Nenhum hex em `switch.tsx`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Anel de foco com opacidade cheia (`ring-[var(--color-ring)]`, 2px) em `Switch`, `Button`, `Tabs`, `Dialog` (fechar) e `Drawer` (fechar), e na busca do cabeçalho de docs, nos ramos claro e escuro (o escuro mede 7,93:1 sobre o fundo da busca). O fechar do `Drawer` passa de `focus:` a `focus-visible:`, para o anel não aparecer ao abrir com o mouse. Com 16% a 25% o anel media de 1,26:1 a 1,60:1 contra o fundo. Agora: 3,56:1 no claro e 7,50:1 no escuro contra o cartão, 3,34:1 e 6,60:1 contra a faixa. `Button` e `Tabs` passam de `ring-4` a `ring-2`.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`Switch`: o recuo do anel (`ring-offset-2`) não tinha cor e saía branco no escuro. Passa a `--color-surface`, como o `Button`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Tokens `--color-switch-on` e `--color-switch-off` em `globals.css` (claro e escuro). `exports/switch/Switch.tsx` e a referência portátil (`foundations.md`) acompanham.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Primeiro teste automatizado do repo: `npm test` (`scripts/contraste.test.mjs`, sem dependência nova) lê os tokens e as classes e exige 3:1 no trilho, no botão e no anel, nos dois temas, e proíbe `--color-ring` com transparência em `src` e `exports` (inclui `color-mix` e `/[0.2]`). A cor do botão vem da classe de `switch.tsx`, e o teste cobre também o gradiente do `Dialog` e a linha info do `SettingsPreferenceRow` em repouso.',
+      },
+    ],
+  },
+  {
+    version: '0.20.23',
+    date: '2026-10-24',
+    title: 'xlsx 0.20.3: sem as duas vulnerabilidades altas',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`xlsx` passa de `^0.18.5`, do npm, para `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`, com integridade sha512 no lockfile. A 0.18.5 tem GHSA-4r6h-8v6p-xvw6 (prototype pollution) e GHSA-5pgg-2g8v-p4x9 (ReDoS), ambas altas e sem correção no npm: a SheetJS não publica mais lá. `npm audit --omit=dev` passa de 1 vulnerabilidade alta para 0. O pacote só gera planilha (`utils/exportData.ts`, `ExportModal`, `ExportButtons`) e as chamadas são as mesmas na 0.20.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:xlsx` (`scripts/xlsx.test.mjs`): exige a URL do CDN em versão 0.20.2 ou maior em `package.json`, a mesma versão com sha512 no lockfile, e gera e relê uma planilha com as chamadas de `exportData.ts`.',
+      },
+    ],
+  },
+  {
     version: '0.20.22',
     date: '2026-10-23',
     title: 'HeroAtalho e HeroFileira repassam target e rel ao link',

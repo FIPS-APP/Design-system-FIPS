@@ -72,7 +72,7 @@ const DialogContent = React.forwardRef<
             'hover:border-[color-mix(in_srgb,var(--color-primary)_35%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] hover:text-[var(--color-primary)]',
             'dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400',
             'dark:hover:text-[var(--color-fips-blue-200)]',
-            'focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]/25 focus-visible:outline-none',
+            'focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:outline-none',
           )}
           aria-label="Fechar"
         >

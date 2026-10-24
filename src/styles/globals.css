@@ -230,11 +230,13 @@
     --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
     --color-border: #d7e0ea;
     --color-border-strong: var(--color-fips-gray-400);
-    /* No claro a borda de campo é a mesma do divisor. */
-    --color-border-control: var(--color-border);
+    /* Borda de campo e de controle: 3,39:1 sobre #ffffff, 3,32:1 sobre o cartão suave e 3,18:1 sobre a página. O divisor (--color-border) não muda. */
+    --color-border-control: #808d9a;
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
+    /* Azul escuro de texto: igual ao hover do primary no claro (13,72:1 sobre branco). */
+    --color-primary-hover-text: var(--color-primary-hover);
     /* Alias de --color-danger-strong: um vermelho só para texto pequeno (6,47:1 sobre branco). */
     --color-danger-text: var(--color-danger-strong);
     --color-success-fill: var(--color-fips-green-700);
@@ -247,6 +249,8 @@
     --color-btn-accent-fg: #ffffff;
     --color-btn-accent-hover: var(--color-warning);
     --color-ring: var(--color-fips-sky-600);
+    --color-switch-on: var(--color-primary);
+    --color-switch-off: var(--color-fg-muted);
     --color-badge-warning-bg: var(--color-fips-orange-100);
     --color-badge-danger-bg: var(--color-fips-red-100);
     --color-sidebar: var(--color-fips-blue-950);
@@ -300,6 +304,8 @@
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);
+    /* No escuro o hover do primary (#002a68) mede 1,27:1 sobre o cartão; este mede 8,82:1. */
+    --color-primary-hover-text: var(--color-fips-blue-400);
     /* Alias de --color-danger-strong (8,08:1 sobre a página #252525 e 9,17:1 sobre o cartão). */
     --color-danger-text: var(--color-danger-strong);
     /* 4,56:1 com texto branco. */
@@ -313,6 +319,8 @@
     --color-btn-accent-fg: var(--color-primary-hover);
     --color-btn-accent-hover: var(--color-accent);
     --color-ring: var(--color-fips-yellow-600);
+    --color-switch-on: var(--color-fips-blue-700);
+    --color-switch-off: #7a7a82;
     --color-badge-warning-bg: rgba(246, 146, 30, 0.14);
     --color-badge-danger-bg: rgba(239, 68, 68, 0.14);
     --color-sidebar: var(--color-fips-blue-950);

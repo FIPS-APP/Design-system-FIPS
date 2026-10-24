@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.20.22",
+  "version": "0.20.26",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -28,9 +28,11 @@
     "dev": "vite",
     "build": "vite build --config vite.config.lib.ts && tsc -p tsconfig.lib.json --emitDeclarationOnly --declaration --outDir dist",
     "build:site": "tsc -b && vite build",
+    "test:xlsx": "node --test scripts/xlsx.test.mjs",
     "build:downloads": "bash scripts/build-ai-downloads.sh",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {
@@ -51,7 +53,7 @@
     "lucide-react": "^1.6.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
