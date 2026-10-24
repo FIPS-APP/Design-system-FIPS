@@ -1,5 +1,6 @@
 /**
- * Contraste do Switch e do anel de foco, nos dois temas (WCAG 1.4.11, mínimo 3:1).
+ * Contraste do Switch, do anel de foco e do azul escuro de texto, nos dois temas
+ * (WCAG 1.4.11, mínimo 3:1; texto, 1.4.3, mínimo 4,5:1).
  * Lê os tokens de src/styles/globals.css e as classes dos componentes, sem dependência.
  * Rodar: npm test
  */
@@ -12,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 const RAIZ = join(fileURLToPath(new URL('.', import.meta.url)), '..')
 const ler = (caminho) => readFileSync(join(RAIZ, caminho), 'utf8')
 const MINIMO = 3
+const MINIMO_TEXTO = 4.5
 
 // ─── Tokens ────────────────────────────────────────────────────────────────
 const css = ler('src/styles/globals.css')
@@ -94,9 +96,9 @@ function classe(arquivo, padrao) {
   return m[1]
 }
 
-function verifica(rotulo, a, b) {
+function verifica(rotulo, a, b, minimo = MINIMO) {
   const c = contraste(a, b)
-  assert.ok(c >= MINIMO, `${rotulo}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+  assert.ok(c >= minimo, `${rotulo}: ${c.toFixed(2)}:1, mínimo ${minimo}:1`)
 }
 
 // ─── Switch ────────────────────────────────────────────────────────────────
@@ -202,6 +204,17 @@ test('README do exemplo portátil do Switch lista os tokens lidos, com o hex dos
   }
 })
 
+// ─── Azul escuro de texto ──────────────────────────────────────────────────
+for (const t of TEMAS) {
+  test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {
+    verifica('--color-primary-hover-text contra --color-surface', token('--color-primary-hover-text', t), token('--color-surface', t), MINIMO_TEXTO)
+  })
+}
+
+test('--color-primary-hover-text no claro vale o mesmo que --color-primary-hover', () => {
+  assert.deepEqual(token('--color-primary-hover-text', 'claro'), token('--color-primary-hover', 'claro'))
+})
+
 test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CONTRASTE_RELATORIO }, () => {
   for (const t of TEMAS) {
     const linha = (rotulo, a, b) => console.log(`${t.padEnd(6)} ${rotulo.padEnd(30)} ${contraste(a, b).toFixed(2)}:1`)
@@ -212,6 +225,7 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('botão / trilho ligado', BRANCO, token('--color-switch-on', t))
     linha('anel de foco / cartão', token('--color-ring', t), cartao)
     linha('anel de foco / faixa', token('--color-ring', t), token('--color-surface-muted', t))
+    linha('azul de texto / cartão', token('--color-primary-hover-text', t), cartao)
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }
 })

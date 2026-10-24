@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.24`
+## Versão atual: `v0.20.25`
 
 ## Favicon e ícones de app
 
@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.25 | 2026-10-24 | Token novo `--color-primary-hover-text`, o azul escuro de texto: `--color-primary-hover` no claro (`#002a68`, 13,72:1 sobre branco, sem mudar o claro) e `--color-fips-blue-400` no escuro (8,82:1 sobre o cartão). No escuro o `--color-primary-hover` mede 1,27:1 sobre o cartão. `npm test` exige 4,5:1 nos dois temas |
 | 0.20.24 | 2026-10-24 | `Switch` desligado e anel de foco passam de 3:1 contra o fundo nos dois temas. Trilho por `--color-switch-off` e `--color-switch-on` (tokens novos), anel de foco com opacidade cheia em `Switch`, `Button`, `Tabs`, `Dialog` e `Drawer`. Primeiro teste do repo: `npm test` calcula os contrastes |
 | 0.20.23 | 2026-10-24 | `xlsx` passa de `^0.18.5` (npm) para a 0.20.3 do CDN da SheetJS, com integridade sha512 no lockfile. A 0.18.5 tem GHSA-4r6h-8v6p-xvw6 (prototype pollution) e GHSA-5pgg-2g8v-p4x9 (ReDoS), ambas altas, e todo app que instala o pacote herdava as duas. `npm audit --omit=dev`: de 1 alta para 0. `npm run test:xlsx` confere versão, lockfile e as chamadas de exportação |
 | 0.20.22 | 2026-10-23 | `HeroAtalho` e cada item da `HeroFileira` repassam `target` e `rel` ao `<a>` (só com `href`). Com `target="_blank"` e sem `rel`, o link sai com `rel="noopener noreferrer"`; `rel` informado vale como veio. No `<button>` são ignorados. Quem abria em aba nova com `window.open` no `onClick` pode passar `href` e `target`. `npm run test:hero` renderiza o componente e lê o HTML |

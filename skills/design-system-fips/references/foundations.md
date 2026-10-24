@@ -85,6 +85,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-fg-muted: #6b7784;
   --color-border-control: var(--color-border);
   --color-primary-text: var(--color-primary);
+  --color-primary-hover-text: var(--color-primary-hover);
   --color-danger-text: var(--color-danger-strong);
   --color-success-fill: var(--color-fips-green-700);
   --color-neutral-fill: var(--color-fg-muted);
@@ -112,6 +113,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-fg` | gray-900 | `#e8e8e8` |
 | `--color-fg-muted` | `#6b7784` | `#9ca3af` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |
+| `--color-primary-hover-text` (azul escuro de texto) | `--color-primary-hover` (`#002a68`, 13,72:1) | `#93bde4` (8,82:1) |
 | `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
 | `--color-danger-text` (alias de `--color-danger-strong`) | `--color-danger-strong` | `--color-danger-strong` |
 | `--color-success-strong` (**cor de texto**) | green-700 | `#8be5ad` |
