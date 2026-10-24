@@ -83,7 +83,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-border-strong: var(--color-fips-gray-400);
   --color-fg: var(--color-fips-gray-900);
   --color-fg-muted: #6b7784;
-  --color-border-control: var(--color-border);
+  --color-border-control: #808d9a;
   --color-primary-text: var(--color-primary);
   --color-primary-hover-text: var(--color-primary-hover);
   --color-danger-text: var(--color-danger-strong);
@@ -109,7 +109,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-surface-muted` (página) | neutral-50 | `#252525` |
 | `--color-border` (divisor) | `#d7e0ea` | `#2e2e2e` |
 | `--color-border-strong` | gray-400 | `#3a3a3a` |
-| `--color-border-control` (campo) | igual a `--color-border` | `#666666` (3,03:1 sobre o cartão) |
+| `--color-border-control` (campo) | `#808d9a` (3,39:1 sobre branco) | `#666666` (3,03:1 sobre o cartão) |
 | `--color-fg` | gray-900 | `#e8e8e8` |
 | `--color-fg-muted` | `#6b7784` | `#9ca3af` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |

@@ -211,6 +211,38 @@ for (const t of TEMAS) {
   })
 }
 
+// ─── Borda de campo e de controle ──────────────────────────────────────────
+for (const t of TEMAS) {
+  test(`--color-border-control, tema ${t}: borda contra o cartão`, () => {
+    verifica('--color-border-control contra --color-surface', token('--color-border-control', t), token('--color-surface', t))
+  })
+}
+
+// Só o claro cobre também o cartão suave e a página. No escuro a borda #666666 mede 2,87:1 sobre o cartão suave: fora do escopo.
+test('--color-border-control, tema claro: borda contra o cartão suave e a página', () => {
+  for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', 'claro'), token(fundo, 'claro'))
+})
+
+test('--color-border (divisor) segue como estava: o --color-border-control não o reaproveita', () => {
+  assert.equal(TOKENS.claro['--color-border'], '#d7e0ea')
+  assert.equal(TOKENS.escuro['--color-border'], '#2e2e2e')
+  assert.notEqual(TOKENS.claro['--color-border-control'], 'var(--color-border)')
+})
+
+test('Campos: o hover da borda é mais escuro que a borda em repouso no claro (e mais claro no escuro)', () => {
+  for (const arquivo of ['input', 'textarea', 'select', 'field-trigger']) {
+    const fonte = ler(`src/components/ui/${arquivo}.tsx`)
+    assert.match(fonte, /(?<![:\w-])hover:border-\[var\(--color-fg-muted\)\]/, `${arquivo}.tsx sem hover:border-[var(--color-fg-muted)]`)
+    assert.doesNotMatch(fonte, /hover:border-\[var\(--color-border-strong\)\]/, `${arquivo}.tsx: hover com --color-border-strong é mais claro que a borda no claro`)
+  }
+  for (const t of TEMAS) {
+    const repouso = luminancia(token('--color-border-control', t))
+    const hover = luminancia(token('--color-fg-muted', t))
+    if (t === 'claro') assert.ok(hover < repouso, 'claro: o hover deve ser mais escuro que a borda')
+    else assert.ok(hover > repouso, 'escuro: o hover deve ser mais claro que a borda')
+  }
+})
+
 test('--color-primary-hover-text no claro vale o mesmo que --color-primary-hover', () => {
   assert.deepEqual(token('--color-primary-hover-text', 'claro'), token('--color-primary-hover', 'claro'))
 })

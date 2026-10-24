@@ -230,8 +230,8 @@
     --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
     --color-border: #d7e0ea;
     --color-border-strong: var(--color-fips-gray-400);
-    /* No claro a borda de campo é a mesma do divisor. */
-    --color-border-control: var(--color-border);
+    /* Borda de campo e de controle: 3,39:1 sobre #ffffff, 3,32:1 sobre o cartão suave e 3,18:1 sobre a página. O divisor (--color-border) não muda. */
+    --color-border-control: #808d9a;
     --color-fg: var(--color-fips-gray-900);
     --color-fg-muted: #6b7784;
     --color-primary-text: var(--color-primary);
