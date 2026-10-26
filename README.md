@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.16.0`
+## Versão atual: `v1.0.0`
 
 ## Favicon e ícones de app
 
@@ -111,7 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.16.0 | 2026-10-19 | Quebra de tipo: `Progress`, `Switch` e `Button`/`InputGroupButton` só-ícone passam a exigir nome acessível (`aria-label` ou `aria-labelledby`; no `Switch` vale também `id` ligado a um `<label htmlFor>`). `FieldMessage` sem `tone` vira alerta. Menu de colunas com rótulos clicáveis e reordenação por teclado |
+| 1.0.0 | 2026-10-26 | Quebra de tipo: `Progress`, `Switch` e `Button`/`InputGroupButton` só-ícone passam a exigir nome acessível (`aria-label` ou `aria-labelledby`; no `Switch` vale também `id` ligado a um `<label htmlFor>`). `FieldMessage` sem `tone` vira alerta. Menu de colunas com rótulos clicáveis e reordenação por teclado |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
