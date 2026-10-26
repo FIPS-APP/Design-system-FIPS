@@ -1,25 +1,53 @@
-name: Publish to GitHub Packages
+name: Publish to npm
 
+# Publica no npmjs.com sempre que a versão do package.json chega na main sem
+# existir no registry. A tag vX.Y.Z é criada aqui, depois do publish — não é
+# mais preciso empurrar tag à mão.
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+    paths: ['package.json']
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      contents: write # criar a tag
+      id-token: write # trusted publishing (OIDC) + provenance no npm
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@fips-app'
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # npm >= 11.5 é exigido pelo trusted publishing.
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Versão já publicada?
+        id: versao
+        run: |
+          NOME=$(node -p "require('./package.json').name")
+          VERSAO=$(node -p "require('./package.json').version")
+          echo "versao=$VERSAO" >> "$GITHUB_OUTPUT"
+          if npm view "$NOME@$VERSAO" version >/dev/null 2>&1; then
+            echo "$NOME@$VERSAO já está no npm, nada a fazer"
+            echo "publicar=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publicar=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.versao.outputs.publicar == 'true'
+        run: npm ci
+
+      # prepublishOnly roda npm test + build + check:pack antes de enviar.
+      - if: steps.versao.outputs.publicar == 'true'
+        run: npm publish --access public --provenance
+
+      - if: steps.versao.outputs.publicar == 'true'
+        run: |
+          git tag "v${{ steps.versao.outputs.versao }}"
+          git push origin "v${{ steps.versao.outputs.versao }}"

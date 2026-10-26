@@ -2,6 +2,8 @@
  * xlsx: versão corrigida e as chamadas que o pacote usa para gerar planilha.
  * A 0.18.5 tem GHSA-4r6h-8v6p-xvw6 (prototype pollution) e GHSA-5pgg-2g8v-p4x9 (ReDoS);
  * a correção está na 0.20.2 e só existe no CDN da SheetJS, não no npm.
+ * Fica em devDependencies: nenhum export público usa o xlsx, e uma URL de CDN em
+ * dependencies quebra o install do consumidor no npm 12 (EALLOWREMOTE).
  * Rodar: npm run test:xlsx
  */
 import { test } from 'node:test'
@@ -20,8 +22,10 @@ const nao_menor = (a, b) => {
   return true
 }
 
-test('package.json aponta o xlsx para o CDN da SheetJS, em versão corrigida', () => {
-  const spec = JSON.parse(ler('package.json')).dependencies.xlsx
+test('package.json aponta o xlsx para o CDN da SheetJS, em versão corrigida, só em dev', () => {
+  const pkg = JSON.parse(ler('package.json'))
+  assert.equal(pkg.dependencies?.xlsx, undefined, 'xlsx não pode ir para dependencies')
+  const spec = pkg.devDependencies.xlsx
   const m = spec.match(/^https:\/\/cdn\.sheetjs\.com\/xlsx-(\d+\.\d+\.\d+)\/xlsx-\1\.tgz$/)
   assert.ok(m, `xlsx em package.json: ${spec}`)
   assert.ok(nao_menor(versao(m[1]), MINIMA), `xlsx ${m[1]} abaixo de ${MINIMA.join('.')}`)

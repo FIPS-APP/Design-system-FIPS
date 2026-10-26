@@ -1,10 +1,10 @@
 # Design System FIPS (`@fips-app/ds-fips`)
 
 Biblioteca oficial de componentes, tokens e estilos para construir interfaces
-do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
-Packages.
+do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no npm
+público.
 
-## Versão atual: `v0.20.26`
+## Versão atual: `v0.21.0`
 
 ## Favicon e ícones de app
 
@@ -12,28 +12,33 @@ Apps FIPS usam o lockup **App FIPS** na aba. Bytes e nomes canônicos vêm do **
 
 ## Consumindo a biblioteca
 
-### 1. Autenticação no GitHub Packages
-
-Crie um `.npmrc` no projeto consumidor (commitar é seguro — o token vem do
-ambiente):
-
-```
-@fips-app:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-```
-
-Exporte um Personal Access Token com escopo `read:packages` na sua shell ou
-no CI:
-
-```bash
-export GITHUB_TOKEN=ghp_xxx
-```
-
-### 2. Instalação
+### 1. Instalação
 
 ```bash
 npm install @fips-app/ds-fips
 ```
+
+Não precisa de `.npmrc`, token nem tarball: o pacote vem do npmjs.com como
+qualquer outra dependência. Apps que ainda têm o DS copiado (`vendor/`,
+`*.tgz`, `file:` no `package.json`) migram assim:
+
+```bash
+npm uninstall @fips-app/ds-fips
+rm -rf vendor/ds-fips *.tgz            # a cópia antiga, onde estiver
+npm install @fips-app/ds-fips@^0.21.0
+```
+
+Apague também do `.npmrc` as linhas `@fips-app:registry=…` e
+`//npm.pkg.github.com/…`: elas mandariam o npm procurar o pacote no GitHub
+Packages. Para receber versões novas, use Dependabot ou Renovate no app.
+
+### 2. Dependências do app
+
+`react` e `react-dom` (18.3 ou 19), `tailwindcss` 4 e `framer-motion` 11 ou 12
+são `peerDependencies`: o app instala e o DS usa a mesma cópia. Radix,
+`lucide-react`, `class-variance-authority`, `clsx` e `tailwind-merge` vêm como
+`dependencies` e não vão embutidos no bundle, então o app resolve uma cópia só
+de cada um.
 
 ### 3. Uso
 
@@ -68,10 +73,6 @@ import { PageHeader, Button } from '@fips-app/ds-fips'
 
 A medida segue a largura do cartão (container query de 560px). `PatternPanelHero` continua exportado como apelido, com as props de antes.
 
-> Requer `react`, `react-dom`, `tailwindcss` v4 e `framer-motion` (>=11, para
-> `CircularCommandMenu` / `RowActionsMenu`) instalados no projeto consumidor
-> (declarados como `peerDependencies`).
-
 ## Versionamento
 
 O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualizar a versão em `package.json` antes do commit.
@@ -87,16 +88,14 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 1. Edite o campo `"version"` no `package.json`
 2. Atualize a seção "Versão atual" neste README
 3. Commit com mensagem no padrão: `chore: bump version to X.Y.Z`
-4. Após merge na `main`, crie e empurre a tag para disparar a publicação:
-   ```bash
-   git tag vX.Y.Z
-   git push --tags
-   ```
+4. Após o merge na `main`, o workflow publica a versão no npm e cria a tag
+   `vX.Y.Z` sozinho. Não empurre tag à mão.
 
 ## Histórico de versões
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.0 | 2026-10-26 | Pacote passa a sair no npm público (`registry.npmjs.org`, `access: public`, com provenance) em vez do GitHub Packages, e o workflow publica sozinho quando a versão muda na `main` (antes dependia de tag manual, e da 0.20.1 à 0.20.25 nada foi publicado). Radix, `lucide-react`, `cva`, `clsx` e `tailwind-merge` deixam de ir embutidos no `dist/` (o app resolve uma cópia só; `index.js` de 311 kB para 150 kB). `xlsx` e `sonner` saem de `dependencies`: nenhum export usa, e a URL de CDN do `xlsx` fazia o npm 12 recusar o install (`EALLOWREMOTE`). Peers deixam de aceitar qualquer major futura: `react`/`react-dom` `^18.3 \|\| ^19`, `framer-motion` `^11 \|\| ^12`, `tailwindcss` `^4`. `.d.ts` só do que o `src/index.ts` exporta. `npm run check:pack` barra publish com dependência fora do registry, import não declarado ou pacote embutido |
 | 0.20.26 | 2026-10-24 | Borda de campo e de controle no claro: `--color-border-control` passa de `#d7e0ea` (1,33:1 sobre branco, igual ao divisor) a `#808d9a` (3,39:1). O pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` fica mais escuro em todo app que usa o pacote. O hover da borda do campo passa a `--color-fg-muted` nos dois temas. `--color-border` (divisor) e o escuro não mudam. `npm test` exige 3:1 |
 | 0.20.25 | 2026-10-24 | Token novo `--color-primary-hover-text`, o azul escuro de texto: `--color-primary-hover` no claro (`#002a68`, 13,72:1 sobre branco, sem mudar o claro) e `--color-fips-blue-400` no escuro (8,82:1 sobre o cartão). No escuro o `--color-primary-hover` mede 1,27:1 sobre o cartão. `npm test` exige 4,5:1 nos dois temas |
 | 0.20.24 | 2026-10-24 | `Switch` desligado e anel de foco passam de 3:1 contra o fundo nos dois temas. Trilho por `--color-switch-off` e `--color-switch-on` (tokens novos), anel de foco com opacidade cheia em `Switch`, `Button`, `Tabs`, `Dialog` e `Drawer`. Primeiro teste do repo: `npm test` calcula os contrastes |
@@ -190,10 +189,18 @@ npm run build    # gera dist/ (lib em ESM + CJS + .d.ts + styles.css)
 
 ### Publicação
 
-A publicação é automática via GitHub Actions ao empurrar uma tag `v*`. O
-workflow em `.github/workflows/publish.yml` autentica com `GITHUB_TOKEN`,
-roda `npm run build` e publica em `npm.pkg.github.com` com escopo
-`@fips-app`.
+`.github/workflows/publish.yml` roda a cada push na `main` que mexe no
+`package.json`. Se a versão ainda não existe no npm, ele roda `npm publish`
+(o `prepublishOnly` faz `npm test`, `npm run build` e `npm run check:pack`) e
+cria a tag `vX.Y.Z`. A autenticação é por trusted publishing (OIDC do GitHub
+Actions), sem token guardado no repo.
+
+Para conferir o pacote antes de abrir PR:
+
+```bash
+npm run build && npm run check:pack
+npm pack --dry-run   # lista o que vai para o registry
+```
 
 ## Stack
 

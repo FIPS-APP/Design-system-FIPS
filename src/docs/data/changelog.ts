@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.0',
+    date: '2026-10-26',
+    title: 'Pacote no npm público, sem tarball copiado',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`@fips-app/ds-fips` passa a sair no npm público (`npm install @fips-app/ds-fips`, sem `.npmrc` nem token). O workflow publica sozinho quando a versão muda na `main` e cria a tag; antes dependia de tag manual, e da 0.20.1 à 0.20.25 nada chegou ao registry.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Radix, `lucide-react`, `class-variance-authority`, `clsx` e `tailwind-merge` deixam de ir embutidos no `dist/`: o app resolve uma cópia só de cada um, e `TooltipProvider`/`Dialog` do app e do DS passam a usar o mesmo context. `index.js` cai de 311 kB para 150 kB.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`xlsx` e `sonner` saem de `dependencies` (nenhum export usa). A URL de CDN do `xlsx` fazia o npm 12 recusar o install do pacote com `EALLOWREMOTE`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Peers com faixa fechada: `react`/`react-dom` `^18.3 || ^19`, `framer-motion` `^11 || ^12`, `tailwindcss` `^4`. Tipos `.d.ts` só do que `src/index.ts` exporta. `npm run check:pack` barra publish com dependência fora do registry, import não declarado ou pacote embutido.',
+      },
+    ],
+  },
+  {
     version: '0.20.26',
     date: '2026-10-24',
     title: 'Borda de campo e de controle do tema claro passa de 3:1',
