@@ -542,7 +542,7 @@ export default function BadgeDoc(){
                 {token:"Default bg",light:"#004B9B",dark:"#1A6FC4"},
                 {token:"Default text",light:"#FFFFFF",dark:"#FFFFFF"},
                 {token:"Sucesso bg",light:"#ECFDF5",dark:"rgba(0,168,62,0.15)"},
-                {token:"Sucesso text",light:"#00904C",dark:"#4ADE80"},
+                {token:"Sucesso text",light:"#006D35",dark:"#8BE5AD"},
                 {token:"Atenção bg",light:"#FFF7ED",dark:"rgba(251,191,36,0.15)"},
                 {token:"Atenção text",light:"#C2410C",dark:"#FBBF24"},
                 {token:"Crítico bg",light:"#FEF2F2",dark:"rgba(248,113,113,0.15)"},

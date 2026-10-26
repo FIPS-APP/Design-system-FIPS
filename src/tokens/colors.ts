@@ -17,6 +17,8 @@ export const fipsPalette = {
   verdeClaro: '#8BE5AD',
   verdeFloresta: '#00C64C',
   verdeFlorestaEscuro: '#00904C',
+  /** Texto do Badge success no tema claro: 6,15:1 sobre #ECFDF5 (o verdeFlorestaEscuro dá 3,91:1). */
+  verdeFlorestaProfundo: '#006D35',
   branco: '#FFFFFF',
   neutroClaro: '#E8EBFF',
 } as const
