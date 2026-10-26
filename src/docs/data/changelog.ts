@@ -25,17 +25,17 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.20.9',
-    date: '2026-10-22',
+    version: '1.0.0',
+    date: '2026-10-26',
     title: 'Nome acessível obrigatório e erro anunciado',
     entries: [
       {
-        type: 'improvement',
+        type: 'breaking',
         description:
-          'Quebra de tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` passam a exigir nome acessível pelo tipo (`aria-label` ou `aria-labelledby`; no `Switch` vale também um `id` ligado a um `<label htmlFor>`; no `Button`, `asChild` com o nome no filho). Quem atualizar o pacote e não passar o nome recebe erro do `tsc` nessas chamadas. `size` dinâmico não é cobrado. Pacote 0.x: a quebra vai como `improvement` com este aviso, em vez de `breaking`.',
+          'Quebra de tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` passam a exigir nome acessível pelo tipo (`aria-label` ou `aria-labelledby`; no `Switch` vale também um `id` ligado a um `<label htmlFor>`; no `Button`, `asChild` com o nome no filho). Quem atualizar o pacote e não passar o nome recebe erro do `tsc` nessas chamadas. `size` dinâmico não é cobrado. Ajuste nos apps: OPA-MOBILE#158 e MANUTENCAO_GESTAO#51.',
       },
       {
-        type: 'improvement',
+        type: 'breaking',
         description:
           '`FieldMessage` sem `tone` passa a `role="alert"` (erro anunciado na hora, também para quem usava como aviso informativo); os tons `default` e `success` usam `aria-live="polite"`. Ligue o campo à mensagem com `aria-describedby`.',
       },
