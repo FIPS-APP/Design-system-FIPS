@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.lib.tsbuildinfo",
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
@@ -8,19 +9,8 @@
     "noEmit": false,
     "rootDir": "src"
   },
-  "include": ["src"],
-  "exclude": [
-    "src/app",
-    "src/routes",
-    "src/data",
-    "src/docs",
-    "src/hooks",
-    "src/themes",
-    "src/types",
-    "src/assets",
-    "src/components/layout",
-    "src/components/domain",
-    "src/main.tsx",
-    "src/App.tsx"
-  ]
+  // Só o que o entry alcança: o tsc segue os imports a partir daqui. Com
+  // "include": ["src"] saíam .d.ts de docs, hooks e composites não exportados.
+  "files": ["src/index.ts"],
+  "include": []
 }
