@@ -225,6 +225,27 @@ for (const t of TEMAS) {
   })
 }
 
+// A fonte em TypeScript (src/tokens/colors.ts) é lida pelo site e pelo docs/tokens.md e escrita à mão:
+// não pode divergir do globals.css, que é o que o pacote entrega.
+const TS_TOKENS = ler('src/tokens/colors.ts')
+function borderControlDoTs(objeto) {
+  const m = TS_TOKENS.match(new RegExp(`export const ${objeto}\\s*=\\s*\\{([\\s\\S]*?)\\}\\s*as const`))
+  assert.ok(m, `colors.ts: objeto ${objeto} não encontrado`)
+  const v = m[1].match(/^\s*borderControl:\s*(?:'(#[\da-f]{6})'|fipsPalette\.(\w+))/im)
+  assert.ok(v, `colors.ts: borderControl não encontrado em ${objeto}`)
+  if (v[1]) return v[1]
+  const p = TS_TOKENS.match(new RegExp(`^\\s*${v[2]}:\\s*'(#[\\da-f]{6})'`, 'im'))
+  assert.ok(p, `colors.ts: fipsPalette.${v[2]} não encontrado`)
+  return p[1]
+}
+
+for (const [t, objeto] of [['claro', 'semanticColors'], ['escuro', 'darkSemanticColors']]) {
+  test(`colors.ts: borderControl de ${objeto} é o --color-border-control do globals.css, tema ${t}`, () => {
+    const ts = borderControlDoTs(objeto)
+    assert.deepEqual(cor(ts, t), token('--color-border-control', t), `colors.ts ${ts} diverge de globals.css ${TOKENS[t]['--color-border-control']}`)
+  })
+}
+
 test('--color-border (divisor) segue como estava: o --color-border-control não o reaproveita', () => {
   assert.equal(TOKENS.claro['--color-border'], '#d7e0ea')
   assert.equal(TOKENS.escuro['--color-border'], '#2e2e2e')
