@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.20.26",
+  "version": "0.21.0",
   "description": "Design System FIPS: tokens, estilos e componentes React da Ferrovia Interna do Porto de Santos.",
   "license": "UNLICENSED",
   "type": "module",
