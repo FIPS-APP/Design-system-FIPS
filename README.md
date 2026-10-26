@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.18`
+## Versão atual: `v0.20.19`
 
 ## Favicon e ícones de app
 
@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.19 | 2026-10-23 | `HeroAtalho` e `HeroFileira`: o foco do teclado aparece no atalho aberto. O anel (`ring`) nunca chegava à tela porque o `boxShadow` em linha do atalho aberto o cobria; passa a contorno branco (`outline`) de 3px com recuo de 2px, 3:1 ou mais contra o fundo do `PageHero` nos dois temas. `npm test` confere a classe e o contraste |
 | 0.20.18 | 2026-10-23 | Atalho aberto do hero (`HeroAtalho`, `HeroFileira`): o último ponto do degradê laranja de hover passa de `#cf730d` a `#dc8212`. O rótulo `#002A68` sobre o canto inferior direito vai de 3,99:1 a 4,73:1, e o degradê inteiro fica em 4,5:1 ou mais. A mesma constante pinta `UserChip` e `DocHeaderNeuIconButton` no hover. `npm test` amostra o degradê a cada 1% |
 | 0.20.17 | 2026-10-23 | Borda de campo no escuro: `--color-border-control` passa de `#666666` a `#727272`. Sobre o cartão suave (`#1f1f1f`) vai de 2,87:1 a 3,43:1 e sobre a página (`#252525`) de 2,67:1 a 3,19:1 (cartão: 3,03:1 a 3,62:1). A borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` fica mais clara no escuro em todo app que usa o pacote. `npm test` exige 3:1 nas três superfícies nos dois temas |
 | 0.20.14 | 2026-10-23 | Borda de campo e de controle no claro: `--color-border-control` passa de `#d7e0ea` (1,33:1 sobre branco, igual ao divisor) a `#808d9a` (3,39:1). O pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` fica mais escuro em todo app que usa o pacote. O hover da borda do campo passa a `--color-fg-muted` nos dois temas. `--color-border` (divisor) e o escuro não mudam. `npm test` exige 3:1 |
