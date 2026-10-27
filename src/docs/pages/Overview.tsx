@@ -281,7 +281,7 @@ export default function DSFIPSOverview(){
               <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Breakpoints</span>
               <TokenRow label="Mobile" value="< 640px"/><TokenRow label="Tablet" value="< 900px"/><TokenRow label="Desktop" value="≥ 900px"/>
               <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4,marginTop:8}}>Inputs</span>
-              <TokenRow label="Desktop" value="35px height"/><TokenRow label="Mobile" value="42px height"/><TokenRow label="Compacto" value="30px height"/>
+              <TokenRow label="Desktop" value="35px height"/><TokenRow label="Mobile" value="42px height"/><TokenRow label="Compacto" value="32px height"/>
             </div>
           </DSCard>
         </Section>

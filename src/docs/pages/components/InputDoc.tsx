@@ -74,7 +74,7 @@ function DSInput({ label, placeholder, icon, iconRight, type="text", inputMode, 
   const [showPw, setShowPw] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
-  const sizeMap = { desktop: { h:35, fs:13 }, mobile: { h:42, fs:14 }, compact: { h:30, fs:12 } };
+  const sizeMap = { desktop: { h:35, fs:13 }, mobile: { h:42, fs:14 }, compact: { h:32, fs:12 } };
   const resolvedSize = compact ? "compact" : size;
   const { h, fs } = sizeMap[resolvedSize] || sizeMap.desktop;
 
@@ -238,7 +238,7 @@ export function Input({
   const [showPw, setShowPw] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
-  const sizeMap = { desktop: { h: 35, fs: 13 }, mobile: { h: 42, fs: 14 }, compact: { h: 30, fs: 12 } };
+  const sizeMap = { desktop: { h: 35, fs: 13 }, mobile: { h: 42, fs: 14 }, compact: { h: 32, fs: 12 } };
   const resolvedSize = compact ? "compact" : size;
   const { h, fs } = sizeMap[resolvedSize] || sizeMap.desktop;
 
@@ -808,7 +808,7 @@ input::placeholder { color: #7B8C96; }
               </div>
               <div style={{ display:"flex",flexDirection:"column",gap:4,alignItems:"center" }}>
                 <DSInput placeholder="Compacto" icon={icons.pessoa()} compact />
-                <span style={{ fontSize:10,color:C.textLight,fontFamily:F.mono }}>30px</span>
+                <span style={{ fontSize:10,color:C.textLight,fontFamily:F.mono }}>32px</span>
               </div>
             </div>
           </Card>
@@ -851,7 +851,7 @@ input::placeholder { color: #7B8C96; }
             <div style={gc}>
               <div style={gh}>
                 <span style={{ fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:F.title }}>Compacto</span>
-                <code style={gk}>height: 30px · font: 12px</code>
+                <code style={gk}>height: 32px · font: 12px</code>
               </div>
               <div style={{...gb, display:"flex", flexDirection:"column", gap:8 }}>
                 <DSInput label="Buscar" placeholder="Buscar empresa..." icon={icons.busca()} compact />
@@ -939,7 +939,7 @@ input::placeholder { color: #7B8C96; }
               <TokenRow label="Radius" value="8px"/>
               <TokenRow label="Height desktop" value="35px"/>
               <TokenRow label="Height mobile" value="42px"/>
-              <TokenRow label="Height compacto" value="30px"/>
+              <TokenRow label="Height compacto" value="32px"/>
               <TokenRow label="Ícone" value="16px"/>
               <TokenRow label="Anel de foco" value="3px"/>
             </div>
