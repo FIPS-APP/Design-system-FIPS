@@ -244,7 +244,7 @@ Fontes:
 
 Direção de uso:
 
-- `Tabs`: navegação secundária e troca de contexto dentro da tela
+- `Tabs`: navegação secundária e troca de contexto dentro da tela. O texto da aba ativa lê `--color-primary-text` sobre `--color-surface` (`#004b9b` no claro, 8,47:1; `#93bde4` no escuro, 8,82:1); a inativa herda `--color-fg-muted` da lista. Não pinte a ativa com `--color-primary`: ele não muda no escuro e mede 2,06:1 ali
 - `Table`: listagem operacional densa, com wrapper card e hover de linha. Sistema de densidade (`compact|normal|comfortable`) + toggles de aparência (`zebra`, `verticalBorders`, `stickyHeader`, `wrapText`) e `framed`, todos via props propagadas por context. Hook `useTableDensity()` deixa descendentes (Badge) auto-ajustarem. API completa, métricas por densidade, `AdminTableColumnMenu`/`Pagination`/`SortHeader` e persistência em `localStorage`: ver **Data Listing → Tabela canônica** em `patterns.md`
 - `Dialog`: ações focadas, filtros avançados em desktop, confirmação
 - `Drawer`: detalhes e fluxos laterais, principalmente em tablet/mobile
