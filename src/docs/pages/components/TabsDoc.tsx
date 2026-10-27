@@ -480,7 +480,7 @@ export default function TabsDoc(){
             </div>
           </DSCard>
           <p style={{fontSize:12,color:C.cinzaChumbo,marginTop:12,fontFamily:Fn.body}}>
-            Ver também: <a href="/docs/patterns/configuracoes" style={{color:C.azulProfundo,fontWeight:600}}>Padrão Configurações</a> · componente em <code style={gk}>src/components/composites/FipsTabBar.tsx</code> · export em <code style={gk}>exports/fips-tab-bar/</code>
+            Ver também: <a href="/docs/patterns/configuracoes" style={{color:C.azulProfundo,fontWeight:600}}>Padrão Configurações</a> · componente em <code style={gk}>src/components/composites/FipsTabBar.tsx</code> · no app: <code style={gk}>import {'{'} FipsTabBar {'}'} from '@fips-app/ds-fips'</code> (desde a 0.21.13)
           </p>
         </Section>
 
