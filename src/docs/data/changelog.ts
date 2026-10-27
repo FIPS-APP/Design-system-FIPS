@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.4',
+    date: '2026-10-27',
+    title: 'Texto do tom sucesso do Toast e do Tooltip legível',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O texto do tom `sucesso` do `Toast` e do `Tooltip` era `#00904C` sobre `#ECFDF5`: 3,91:1, abaixo dos 4,5:1 de texto pequeno (12 e 13px). Passa a `#006D35`, 6,15:1 sobre o mesmo fundo (`verdeFlorestaProfundo` na paleta, o valor do `Badge` success). O fundo é fixo nos dois temas, então o par vale no claro e no escuro. Muda em `exports/toast/toast.tsx`, `exports/tooltip/Tooltip.tsx` e nas páginas `ToastDoc` e `TooltipDoc`, que mostram e copiam o mesmo par. Borda `#A7F3D0` e acento `#00C64C` não mudam.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 do texto do tom `sucesso` contra o fundo dele nos quatro arquivos.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',

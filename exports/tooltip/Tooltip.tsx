@@ -7,7 +7,7 @@ const C = {
   cinzaEscuro: "var(--color-fg)",
   cinzaChumbo: "var(--color-fg-muted)",
   azulCeu: "#93BDE4",
-  verdeEscuro: "#00904C",
+  verdeFlorestaProfundo: "#006D35",
   branco: "#FFFFFF",
   cardBorder: "var(--color-border)",
 };
@@ -24,7 +24,7 @@ const TTV: Record<TooltipVariant, { bg: string; color: string; border: string }>
   info: { bg: "#EFF6FF", color: C.azulEscuro, border: C.azulCeu },
   atencao: { bg: "#FFF7ED", color: "#C2410C", border: "#FDBA74" },
   erro: { bg: "#FEF2F2", color: "#B91C1C", border: "#FECACA" },
-  sucesso: { bg: "#ECFDF5", color: C.verdeEscuro, border: "#A7F3D0" },
+  sucesso: { bg: "#ECFDF5", color: C.verdeFlorestaProfundo, border: "#A7F3D0" },
 };
 
 export function Tooltip({
