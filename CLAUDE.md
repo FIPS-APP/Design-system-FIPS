@@ -53,13 +53,17 @@ Regra canônica: **`docs/favicon.md`**. Lockup App FIPS em `public/icons/` (192,
 
 ### ESLint custom rule: `governance/no-visual-overrides`
 
-Definida em `eslint.config.js`. Em qualquer arquivo de `src/**` (exceto `src/components/ui/**`), proíbe passar classes Tailwind **visuais** via `className` em primitives governados:
+Definida em `eslint.config.js`. Em qualquer arquivo de `src/**` (inclusive `src/components/ui/**`, desde a 0.21.14), proíbe passar classes Tailwind **visuais** via `className` em primitives governados:
 
 `Button`, `Input`, `Select`, `Textarea`, `TabsList`, `TabsTrigger`.
 
 Tokens visuais bloqueados (regex em `eslint.config.js:9-10`): `bg-`, `text-`, `border`, `rounded`, `shadow`, `h-`/`min-h-`/`max-h-`, `p-`/`px-`/`py-`/etc., `font-`, `leading-`, `tracking-`, `ring-`, `opacity-`.
 
 `className` nesses primitives serve **apenas para layout externo** (margins, grid placement, flex alignment). Para mudar aparência, criar/usar uma **variant** em `*-variants.ts`. Se o caso de uso não couber em variant, evoluir o DS antes de consumir.
+
+### ESLint custom rule: `governance/no-literal-colors`
+
+Definida em `eslint.config.js`. Acusa cor literal (`#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(`, `hsla(`) em texto de código dos `.tsx` de `src/components/ui/`. As outras pastas de `src/components/` ficam fora até a fatia delas (`composites/` e `icons/` na FIPS-1303; `layout/`, `domain/` e `patterns/` na FIPS-1305). Cor que ainda não tem token entra em `COLOR_EXCEPTIONS`, no próprio `eslint.config.js`, por arquivo e com o motivo. Cor nova em `ui/` não entra ali sem motivo: use `var(--color-*)`. `npm run test:lint-governanca` cobre os casos.
 
 ### Convenções de tema
 

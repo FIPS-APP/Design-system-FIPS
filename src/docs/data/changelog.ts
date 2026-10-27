@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.14',
+    date: '2026-10-27',
+    title: 'Lint acusa cor literal em ui/ e a pasta ui/ entra na regra de override visual',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Regra de lint nova, `governance/no-literal-colors`: acusa `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(` e `hsla(` em texto de código nos `.tsx` de `src/components/ui/`, inclusive dentro de valor arbitrário do Tailwind. As 47 cores distintas (62 ocorrências em 11 arquivos) que `ui/` tem hoje e ainda não têm token ficam em `COLOR_EXCEPTIONS`, no `eslint.config.js`, por arquivo e com o motivo. Cor nova em `ui/` precisa de token ou de exceção escrita. `composites/`, `icons/`, `layout/`, `domain/` e `patterns/` ficam fora até as fatias delas (FIPS-1303 e FIPS-1305).',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`src/components/ui/` deixa de ficar fora de `governance/no-visual-overrides`. As duas acusações que apareceram, `InputGroupInput` e `InputGroupTextarea` (o grupo desenha borda, raio e foco do campo, e o campo de dentro fica sem os dele), levam `eslint-disable-next-line` com o motivo. Nenhum componente muda e a aparência é a mesma. `npm run test:lint-governanca` roda o ESLint sobre trechos de código e confere seis casos.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',

@@ -37,8 +37,56 @@ function getPotentialClassTokens(classText) {
     .map((token) => token.split(':').at(-1)?.replace(/^!/, '') ?? token)
 }
 
+// Cor literal: `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(`, `hsla(` dentro de texto
+// de código (className, style, template). Cor vem de token (`var(--color-*)`); o que não tem token
+// ainda entra na lista de exceções do bloco `no-literal-colors` mais abaixo, com o motivo.
+const LITERAL_COLOR_PATTERN = /(?<![\w&])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])|(?<![A-Za-z])(?:rgba?|hsla?)\([^)]*\)/g
+const normalizeColor = (color) => color.replace(/\s+/g, '').toLowerCase()
+
 const dsGovernancePlugin = {
   rules: {
+    'no-literal-colors': {
+      meta: {
+        type: 'problem',
+        docs: {
+          description: 'Disallow literal colors (hex, rgb, hsl) in component code; use a token or list an exception.',
+        },
+        schema: [
+          {
+            type: 'object',
+            properties: { exceptions: { type: 'object', additionalProperties: { type: 'array', items: { type: 'string' } } } },
+            additionalProperties: false,
+          },
+        ],
+      },
+      create(context) {
+        const filename = context.filename.replaceAll('\\', '/')
+        const exceptions = context.options[0]?.exceptions ?? {}
+        const entry = Object.entries(exceptions).find(([file]) => filename.endsWith(file))
+        const allowed = new Set((entry?.[1] ?? []).map(normalizeColor))
+
+        function check(node, text) {
+          for (const match of text.matchAll(LITERAL_COLOR_PATTERN)) {
+            if (allowed.has(normalizeColor(match[0]))) continue
+            context.report({
+              node,
+              message:
+                `Cor literal \`${match[0]}\`. Use um token (\`var(--color-*)\`) ou registre a exceção, com o motivo, ` +
+                'em `COLOR_EXCEPTIONS` no eslint.config.js.',
+            })
+          }
+        }
+
+        return {
+          Literal(node) {
+            if (typeof node.value === 'string') check(node, node.value)
+          },
+          TemplateElement(node) {
+            check(node, node.value.raw)
+          },
+        }
+      },
+    },
     'no-visual-overrides': {
       meta: {
         type: 'problem',
@@ -80,6 +128,91 @@ const dsGovernancePlugin = {
   },
 }
 
+// Exceções da regra `governance/no-literal-colors`: arquivo -> cores que ainda não têm token, cada
+// grupo com o motivo. Cor nova em `src/components/ui/` não entra aqui sem motivo: use token.
+const COLOR_EXCEPTIONS = {
+  // faixa hero e tile do ícone do Modal: azul escuro do fim do gradiente (#001A4A) e vidro branco sobre o azul; sem token, igual nos dois temas.
+  'src/components/ui/Modal.tsx': [
+    '#001A4A',
+    'rgba(255,255,255,0.14)',
+    'rgba(255,255,255,0.06)',
+    'rgba(0,24,58,0.22)',
+    'rgba(0,42,104,0.3)',
+    'rgba(255,255,255,0.08)',
+  ],
+  // sombra do popover do chip, em azul institucional translúcido; sem token de sombra com essa cor.
+  'src/components/ui/chip-select.tsx': [
+    'rgba(0,42,104,0.18)',
+    'rgba(0,42,104,0.06)',
+  ],
+  // Dialog legado: gradientes e sombras neutras, cada cor com o par claro e escuro na mesma classe (dark:); sem tokens para esses cinzas.
+  'src/components/ui/dialog.tsx': [
+    '#fafafa',
+    '#f0f0f2',
+    '#e8e8ec',
+    'rgba(0,0,0,0.18)',
+    'rgba(255,255,255,0.8)',
+    'rgba(255,255,255,0.9)',
+    '#2e2e2e',
+    '#272727',
+    '#222222',
+    '#1d1d1d',
+    'rgba(0,0,0,0.6)',
+    'rgba(255,255,255,0.04)',
+    'rgba(255,255,255,0.06)',
+    '#004B9B',
+    '#93BDE4',
+    '#ebebeb',
+    '#e0e0e0',
+    'rgba(55,55,55,0.82)',
+    'rgba(0,0,0,0.06)',
+    'rgba(255,255,255,0.85)',
+    '#3a3a3a',
+    '#2c2c2c',
+    '#262626',
+    '#1f1f1f',
+    '#a1a1aa',
+    'rgba(0,0,0,0.55)',
+    'rgba(255,255,255,0.08)',
+    'rgba(0,0,0,0.45)',
+    '#18181b',
+  ],
+  // faixa hero do DrawerHero: mesmo fim de gradiente (#001A4A) do Modal; sem token.
+  'src/components/ui/drawer.tsx': [
+    '#001A4A',
+  ],
+  // foco do campo no escuro, azul claro (#93BDE4) no par dark:; vira token de texto/borda de foco quando o escuro for revisado.
+  'src/components/ui/field-trigger.tsx': [
+    '#93BDE4',
+  ],
+  // foco do grupo no escuro, azul claro (#93BDE4) no par dark:.
+  'src/components/ui/input-group.tsx': [
+    '#93BDE4',
+  ],
+  // foco do campo no escuro, azul claro (#93BDE4) no par dark:.
+  'src/components/ui/input.tsx': [
+    '#93BDE4',
+  ],
+  // sombra interna da trilha, cinza azulado a 6%; sem token de sombra.
+  'src/components/ui/progress.tsx': [
+    'rgba(15,23,42,0.06)',
+  ],
+  // lista aberta e opção ativa no escuro: azul claro (#93BDE4), seu fundo a 14% e o cinza #2a2a2a do par dark:.
+  'src/components/ui/select.tsx': [
+    '#93BDE4',
+    'rgba(147,189,228,0.14)',
+    '#2a2a2a',
+  ],
+  // sombra do polegar do Switch; sem token.
+  'src/components/ui/switch.tsx': [
+    'rgba(0,0,0,0.2)',
+  ],
+  // foco do campo no escuro, azul claro (#93BDE4) no par dark:.
+  'src/components/ui/textarea.tsx': [
+    '#93BDE4',
+  ],
+}
+
 export default defineConfig([
   // `exports/` são snippets copy-paste (fora do tsconfig.app, nunca compilados) — regras
   // de app como react-refresh/only-export-components não dizem nada sobre um arquivo que
@@ -101,12 +234,32 @@ export default defineConfig([
   },
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/components/ui/**/*'],
     plugins: {
       governance: dsGovernancePlugin,
     },
     rules: {
       'governance/no-visual-overrides': 'error',
+    },
+  },
+  {
+    // Cor literal em componente. Cobre hoje `src/components/ui/`. As outras pastas de
+    // `src/components/` ainda não passaram pela troca por token e saem da regra até a fatia
+    // delas: `composites/` e `icons/` na FIPS-1303, `layout/`, `domain/` e `patterns/` (código
+    // só do site, que o pacote não exporta) na FIPS-1305. Quando a fatia entrar, a pasta sai
+    // desta lista de `ignores`.
+    files: ['src/components/**/*.tsx'],
+    ignores: [
+      'src/components/composites/**',
+      'src/components/icons/**',
+      'src/components/layout/**',
+      'src/components/domain/**',
+      'src/components/patterns/**',
+    ],
+    plugins: {
+      governance: dsGovernancePlugin,
+    },
+    rules: {
+      'governance/no-literal-colors': ['error', { exceptions: COLOR_EXCEPTIONS }],
     },
   },
 ])
