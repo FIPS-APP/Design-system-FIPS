@@ -25,7 +25,7 @@ const Fn = {
 const VARIANTS: Record<string, { bg: string; color: string; border: string }> = {
   default:   { bg: C.azulProfundo, color: C.branco, border: "transparent" },
   secondary: { bg: C.surfaceMuted, color: C.fg, border: C.border },
-  sucesso:   { bg: "#ECFDF5", color: "#00904C", border: "#A7F3D0" },
+  sucesso:   { bg: "#ECFDF5", color: "#006D35", border: "#A7F3D0" },
   atencao:   { bg: "#FFF7ED", color: "#C2410C", border: "#FDBA74" },
   critico:   { bg: "#FEF2F2", color: "#B91C1C", border: "#FECACA" },
   outline:   { bg: "transparent", color: C.fg, border: "#C0CCD2" },

@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.44',
+    date: '2026-10-27',
+    title: 'Badge success legível no tema claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Badge` com `variant="success"` no claro: o texto passa de `#00904c` para `#006d35` (novo primitivo `--color-fips-green-800`, lido por `--color-semantic-sucesso-fg`). Contraste de 3,91:1 para 6,15:1 sobre o fundo `#ecfdf5`. Fundo, borda e tema escuro não mudam (escuro: 9,18:1 sobre o cartão `#1a1a1a`, 8,65:1 sobre o suave `#1f1f1f`, 8,03:1 sobre a faixa `#252525`). O `RuleTile` com tom `sucesso` lê o mesmo par e melhora junto. As cópias em `exports/badge/Badge.tsx` e na doc do Badge acompanham o valor.',
+      },
+    ],
+  },
+  {
     version: '0.20.43',
     date: '2026-10-27',
     title: 'Anéis de foco do cabeçalho passam de 3:1',

@@ -35,7 +35,7 @@ function JunctionLines({style}:{style?:React.CSSProperties}){return <svg viewBox
 const VARIANTS = {
   default:   { bg:C.azulProfundo, color:C.branco, border:"transparent" },
   secondary: { bg:C.bg, color:C.cinzaEscuro, border:C.cardBorder },
-  sucesso:   { bg:"#ECFDF5", color:C.verdeEscuro, border:"#A7F3D0" },
+  sucesso:   { bg:"#ECFDF5", color:"#006D35", border:"#A7F3D0" },
   atencao:   { bg:"#FFF7ED", color:"#C2410C", border:"#FDBA74" },
   critico:   { bg:"#FEF2F2", color:"#B91C1C", border:"#FECACA" },
   outline:   { bg:"transparent", color:C.cinzaEscuro, border:C.cinzaClaro },
@@ -108,7 +108,7 @@ const Fn = {
 const VARIANTS: Record<string, { bg: string; color: string; border: string }> = {
   default:   { bg: C.azulProfundo, color: C.branco, border: "transparent" },
   secondary: { bg: C.surfaceMuted, color: C.fg, border: C.border },
-  sucesso:   { bg: "#ECFDF5", color: "#00904C", border: "#A7F3D0" },
+  sucesso:   { bg: "#ECFDF5", color: "#006D35", border: "#A7F3D0" },
   atencao:   { bg: "#FFF7ED", color: "#C2410C", border: "#FDBA74" },
   critico:   { bg: "#FEF2F2", color: "#B91C1C", border: "#FECACA" },
   outline:   { bg: "transparent", color: C.fg, border: "#C0CCD2" },
@@ -542,7 +542,7 @@ export default function BadgeDoc(){
                 {token:"Default bg",light:"#004B9B",dark:"#1A6FC4"},
                 {token:"Default text",light:"#FFFFFF",dark:"#FFFFFF"},
                 {token:"Sucesso bg",light:"#ECFDF5",dark:"rgba(0,168,62,0.15)"},
-                {token:"Sucesso text",light:"#00904C",dark:"#4ADE80"},
+                {token:"Sucesso text",light:"#006D35",dark:"#8BE5AD"},
                 {token:"Atenção bg",light:"#FFF7ED",dark:"rgba(251,191,36,0.15)"},
                 {token:"Atenção text",light:"#C2410C",dark:"#FBBF24"},
                 {token:"Crítico bg",light:"#FEF2F2",dark:"rgba(248,113,113,0.15)"},

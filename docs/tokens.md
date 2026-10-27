@@ -20,6 +20,7 @@
 | `verdeClaro` | <span style="display:inline-block;width:80px;height:36px;background:#8BE5AD;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#8BE5AD</span> | `#8BE5AD` |
 | `verdeFloresta` | <span style="display:inline-block;width:80px;height:36px;background:#00C64C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00C64C</span> | `#00C64C` |
 | `verdeFlorestaEscuro` | <span style="display:inline-block;width:80px;height:36px;background:#00904C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00904C</span> | `#00904C` |
+| `verdeFlorestaProfundo` | <span style="display:inline-block;width:80px;height:36px;background:#006D35;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#006D35</span> | `#006D35` |
 | `branco` | <span style="display:inline-block;width:80px;height:36px;background:#FFFFFF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FFFFFF</span> | `#FFFFFF` |
 | `neutroClaro` | <span style="display:inline-block;width:80px;height:36px;background:#E8EBFF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#E8EBFF</span> | `#E8EBFF` |
 
