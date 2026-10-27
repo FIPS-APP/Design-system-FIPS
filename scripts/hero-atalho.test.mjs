@@ -80,3 +80,50 @@ for (const [nome, render] of [['HeroAtalho', atalho], ['HeroFileira', fileira]])
     assert.match(render({ href: '/x', target: '_blank', 'data-tutorial': 'novo' }), /<a [^>]*data-tutorial="novo"/)
   })
 }
+
+// ─── Borda de 1,5px nos quatro estados ─────────────────────────────────────
+// O preflight do Tailwind zera a borda de elemento sem largura declarada. O `ouro` fechado não
+// declarava: saía com borda 0 e mais estreito que o `inverseOutline` fechado e que os abertos, e
+// como a fileira é centrada os vizinhos andavam quando o principal fechava.
+const classesDaRaiz = (saida) => {
+  const tag = saida.match(/^<(?:a|button)\b[^>]*>/)
+  assert.ok(tag, `HTML sem <a> ou <button> na raiz: ${saida.slice(0, 120)}`)
+  const classe = tag[0].match(/\sclass="([^"]*)"/)
+  assert.ok(classe, `raiz sem class: ${tag[0]}`)
+  return classe[1].split(/\s+/)
+}
+// `border`, `border-2` e `border-[1.5px]` são largura; `border-transparent` e `border-white/60` são cor.
+const larguraDeBorda = (classes) => classes.filter((c) => /^border(?:-\d+|-\[[\d.]+(?:px|rem|em)?\])?$/.test(c))
+
+for (const [rotulo, props] of [
+  ['ouro fechado', { variante: 'ouro', aberto: false }],
+  ['ouro aberto', { variante: 'ouro', aberto: true }],
+  ['inverseOutline fechado', { variante: 'inverseOutline', aberto: false }],
+  ['inverseOutline aberto', { variante: 'inverseOutline', aberto: true }],
+]) {
+  test(`HeroAtalho ${rotulo}: uma largura de borda só, border-[1.5px]`, () => {
+    assert.deepEqual(larguraDeBorda(classesDaRaiz(atalho(props))), ['border-[1.5px]'])
+  })
+}
+
+test('HeroAtalho: fechado, ouro e inverseOutline têm a mesma largura de borda (a fileira não se desloca)', () => {
+  const ouro = larguraDeBorda(classesDaRaiz(atalho({ variante: 'ouro', aberto: false })))
+  const inverse = larguraDeBorda(classesDaRaiz(atalho({ variante: 'inverseOutline', aberto: false })))
+  assert.deepEqual(ouro, inverse)
+})
+
+test('HeroFileira: o principal ouro aberto e os demais fechados saem com a mesma borda', () => {
+  const saida = html(
+    React.createElement(HeroFileira, {
+      atalhos: [
+        { id: 'a', icon: Icone, label: 'Principal', variante: 'ouro' },
+        { id: 'b', icon: Icone, label: 'Segundo' },
+      ],
+    }),
+  )
+  const raizes = [...saida.matchAll(/<button\b[^>]*>/g)].map((m) => m[0])
+  assert.equal(raizes.length, 2)
+  assert.match(raizes[0], /data-state="open"/)
+  assert.match(raizes[1], /data-state="closed"/)
+  for (const raiz of raizes) assert.deepEqual(larguraDeBorda(classesDaRaiz(raiz)), ['border-[1.5px]'])
+})

@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.5',
+    date: '2026-10-27',
+    title: 'Atalho ouro fechado do hero com a borda de 1,5px',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho` com `variante="ouro"` fechado não declarava largura de borda, e o preflight do Tailwind zera a borda de elemento sem largura: o atalho saía com borda 0 e medindo 27px, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px, `/docs/patterns/hero`). Na `HeroFileira`, onde o principal `ouro` fecha quando outro atalho abre, a fileira é centrada e os vizinhos andavam 1px para cada lado. O repouso `ouro` passa a levar `border-[1.5px]`, como o do `inverseOutline` já levava: a borda segue transparente, o desenho não muda e o atalho fechado passa a medir 29px, igual ao `inverseOutline`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:hero` passa a conferir a largura de borda de `ouro` e `inverseOutline`, fechados e abertos, e o principal aberto e o segundo fechado de uma `HeroFileira`.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',

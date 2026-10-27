@@ -68,8 +68,10 @@ export interface HeroAtalhoProps extends HeroAtalhoAtributos {
  */
 const repousoInverse =
   'border-[1.5px] border-white/60 bg-white/[0.06] text-white'
+// Os dois repousos declaram a largura da borda: o preflight do Tailwind zera a borda de
+// elemento sem largura, e o `ouro` fechado ficaria mais estreito que o aberto e que o `inverseOutline`.
 const repousoOuro =
-  'border-transparent bg-[var(--color-accent)] text-[var(--color-primary-hover)] shadow-[var(--shadow-card)]'
+  'border-[1.5px] border-transparent bg-[var(--color-accent)] text-[var(--color-primary-hover)] shadow-[var(--shadow-card)]'
 
 export function HeroAtalho(props: HeroAtalhoProps) {
   const {
