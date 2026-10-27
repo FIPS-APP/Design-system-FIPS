@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.10',
+    date: '2026-10-27',
+    title: 'Altura do campo compacto: 32px registrada e páginas de doc alinhadas',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Registro da decisão: a altura do campo compacto é 32px (`h-8`), borda de 1px por token. Foi decidida na 0.11.15, que desfez os 35px da 0.11.14 (tirados de uma página de documentação, não de um app) e voltou para 32px com base no campo real do QLP. Vale para `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup` com `density="compact"`. Quem precisa de alvo maior no celular (OPA Mobile, 35px no escritório e 48px no pátio, por token do próprio app) resolve no app; densidade nova no pacote só entra com issue própria.',
+      },
+      {
+        type: 'fix',
+        description:
+          'As páginas Field, Input, Select, Visão geral e Espaçamento do site diziam "Compacto 30px"; o componente entrega 32px. Texto, `TokenRow` e a altura dos exemplos passam a 32px. Fica como estava, sem decisão: a página diz Desktop 35px e Mobile 42px, e o pacote entrega 48px na densidade padrão (`h-12`).',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',
