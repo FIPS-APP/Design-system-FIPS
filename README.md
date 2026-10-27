@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.41`
+## Versão atual: `v0.20.42`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.42 | 2026-10-27 | `SettingsPreferenceRow` variante `info`: o hover deixa de clarear o fundo da linha e passa a reforçar a borda (`--color-fips-blue-400` cheio). No escuro o trilho do `Switch` desligado contra a linha em hover vai de 2,05:1 a 3,09:1 (sobre o cartão). No claro o fundo de hover já era igual ao de repouso. `npm test` calcula o fundo de hover, inclusive `color-mix` |
 | 0.20.41 | 2026-10-27 | `HeroAtalho` e `HeroFileira`: o foco do teclado aparece no atalho aberto. O anel (`ring`) nunca chegava à tela porque o `boxShadow` em linha do atalho aberto o cobria; passa a contorno branco (`outline`) de 3px com recuo de 2px, 3:1 ou mais contra o fundo do `PageHero` nos dois temas. `npm test` confere a classe e o contraste |
 | 0.20.40 | 2026-10-27 | Atalho aberto do hero (`HeroAtalho`, `HeroFileira`): o último ponto do degradê laranja de hover passa de `#cf730d` a `#dc8212`. O rótulo `#002A68` sobre o canto inferior direito vai de 3,99:1 a 4,73:1, e o degradê inteiro fica em 4,5:1 ou mais. A mesma constante pinta `UserChip` e `DocHeaderNeuIconButton` no hover. `npm test` amostra o degradê a cada 1% |
 | 0.20.39 | 2026-10-27 | Borda de campo no escuro: `--color-border-control` passa de `#666666` a `#727272`. Sobre o cartão suave (`#1f1f1f`) vai de 2,87:1 a 3,43:1 e sobre a página (`#252525`) de 2,67:1 a 3,19:1 (cartão: 3,03:1 a 3,62:1). A borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` fica mais clara no escuro em todo app que usa o pacote. `npm test` exige 3:1 nas três superfícies nos dois temas |
