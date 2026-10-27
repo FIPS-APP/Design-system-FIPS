@@ -18,6 +18,12 @@ export {
   type PatternPanelHeroProps,
   type PatternPanelHeroStat,
 } from './components/composites/PatternPanelHero'
+export { FipsTabBar, type FipsTabItem } from './components/composites/FipsTabBar'
+export {
+  BuscarPessoaModal,
+  type BuscarPessoaModalProps,
+  type Pessoa,
+} from './components/composites/BuscarPessoaModal'
 export {
   BannerJunctionLines,
   BannerIconBox,
