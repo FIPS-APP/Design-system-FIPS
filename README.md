@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.0`
+## Versão atual: `v0.21.9`
 
 ## Favicon e ícones de app
 
@@ -101,16 +101,15 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 1. Edite o campo `"version"` no `package.json`
 2. Atualize a seção "Versão atual" neste README
 3. Commit com mensagem no padrão: `chore: bump version to X.Y.Z`
-4. Após merge na `main`, crie e empurre a tag para disparar a publicação:
-   ```bash
-   git tag vX.Y.Z
-   git push --tags
-   ```
+4. Faça o merge na `main`. **Bump de versão na `main` é publicação**: o workflow `publish.yml` publica o pacote no GitHub Packages e cria a tag `vX.Y.Z`. Não há mais publicação manual nem tag à mão.
+
+O workflow compara `package.json#version` com a do commit anterior da `main`. Versão igual: nada é publicado. Versão mudada para uma que já existe no registro: o workflow falha e diz qual versão. Uma tag `vX.Y.Z` empurrada à mão continua aceita, mas não publica de novo uma versão que já está no registro. A regra está em `scripts/publicar-decisao.mjs` (`npm run test:publicar`).
 
 ## Histórico de versões
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.9 | 2026-10-27 | `publish.yml` passa a rodar em push na `main`: quando `package.json#version` muda, publica no GitHub Packages e cria a tag `vX.Y.Z`; versão igual não publica; versão mudada para uma que já existe no registro falha dizendo qual. Tag à mão continua aceita e não publica de novo. Só `GITHUB_TOKEN` com `packages: write` e `contents: write`. `npm run test:publicar` |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
