@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.0`
+## Versão atual: `v0.21.8`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.8 | 2026-10-27 | `useFipsTheme` e o tipo `UseFipsThemeResult` saem em `src/index.ts`: `import { useFipsTheme } from '@fips-app/ds-fips'` devolve `{ dark, toggle, setDark }`, com a escolha em `localStorage` na chave `fips-theme` e a classe `.dark` aplicada ao importar. Export novo, nada removido (199 para 201 nomes em `dist/index.d.ts`). O hook não lança mais com o armazenamento bloqueado e o `toggle` lê o tema do momento do clique. `useDsTheme` sai, fundido em `useFipsTheme`. `npm run test:tema` |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
