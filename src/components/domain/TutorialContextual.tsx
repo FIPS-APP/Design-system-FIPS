@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useId, useLayoutEffect } from "react";
 import { X, ChevronRight, ChevronLeft, GraduationCap } from "lucide-react";
 import { cn } from "../../lib/cn";
+import { useResetOnChange } from "../../hooks/useResetOnChange";
 import { PAGE_TUTORIALS } from "../../data/pageTutorials";
 
 const TUTORIAL_GRAIN_BG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")`;
@@ -127,13 +128,15 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
   const isFirst = step === 0;
 
   // Reset step on open
-  useEffect(() => { if (open) setStep(0); }, [open, pageName]);
+  useResetOnChange([open, pageName], () => { if (open) setStep(0); });
 
   // Scroll to target + measure
   useEffect(() => {
     if (!open) return;
-    if (!currentStep?.target) { setTargetRect(null); return; }
+    if (!currentStep?.target) return;
 
+    // Marca o início de uma rolagem assíncrona; não há valor para derivar na renderização.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setScrolling(true);
     scrollToTarget(currentStep.target).then(() => {
       setScrolling(false);
@@ -180,9 +183,10 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
   if (!open || steps.length === 0) return null;
 
   const modalW = 420;
-  const pos = calcModalPosition(scrolling ? null : targetRect, modalW, modalH);
+  const rect = currentStep?.target ? targetRect : null;
+  const pos = calcModalPosition(scrolling ? null : rect, modalW, modalH);
   const spotPad = 8;
-  const showSpot = targetRect && !scrolling;
+  const showSpot = rect && !scrolling;
 
   return (
     <div className="fixed inset-0 z-[9999]" style={{ pointerEvents: "auto" }}>
@@ -193,10 +197,10 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
             <rect width="100%" height="100%" fill="white" />
             {showSpot && (
               <rect
-                x={targetRect.left - spotPad}
-                y={targetRect.top - spotPad}
-                width={targetRect.width + spotPad * 2}
-                height={targetRect.height + spotPad * 2}
+                x={rect.left - spotPad}
+                y={rect.top - spotPad}
+                width={rect.width + spotPad * 2}
+                height={rect.height + spotPad * 2}
                 rx={10}
                 fill="black"
               />
@@ -211,10 +215,10 @@ export function TutorialOverlay({ open, onClose, pageName }: TutorialOverlayProp
         <div
           className="pointer-events-none absolute z-0 rounded-[10px]"
           style={{
-            top: targetRect.top - spotPad,
-            left: targetRect.left - spotPad,
-            width: targetRect.width + spotPad * 2,
-            height: targetRect.height + spotPad * 2,
+            top: rect.top - spotPad,
+            left: rect.left - spotPad,
+            width: rect.width + spotPad * 2,
+            height: rect.height + spotPad * 2,
             border: `2px solid ${FIPS_BLUE}`,
             boxShadow: "0 0 20px rgba(0,75,155,0.4), 0 0 60px rgba(0,75,155,0.15)",
             transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",

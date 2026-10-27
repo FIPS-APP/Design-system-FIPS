@@ -10,6 +10,7 @@ import {
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { Dialog, DialogContent, DialogFooter, DialogClose } from '../ui/dialog'
 import { Button } from '../ui/button'
+import { useResetOnChange } from '../../hooks/useResetOnChange'
 import {
   FileSpreadsheet,
   FileText,
@@ -147,13 +148,15 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
   const [fullscreen, setFullscreen] = useState(false)
   const dragKeyRef = useRef<string | null>(null)
 
-  useEffect(() => {
+  useResetOnChange([open, columns], () => {
     if (!open) return
     setSelected(new Set(columns.map((c) => c.key)))
     setOrderedKeys(columns.map((c) => c.key))
     setLayout('table')
     setFullscreen(false)
-    dragKeyRef.current = null
+  })
+  useEffect(() => {
+    if (open) dragKeyRef.current = null
   }, [open, columns])
 
   const columnMap = useMemo(() => new Map(columns.map((c) => [c.key, c])), [columns])

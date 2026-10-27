@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '../../lib/cn'
+import { useIsClient } from '../../lib/useIsClient'
 
 export type CommandItem = {
   id: string
@@ -47,15 +48,13 @@ export function CircularCommandMenu({
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const [center, setCenter] = useState({ x: 0, y: 0 })
-  const [mounted, setMounted] = useState(false)
+  const mounted = useIsClient()
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const enabledItems = items.filter((i) => !i.disabled)
   const itemCount = enabledItems.length
   const angleStep = itemCount > 0 ? 360 / itemCount : 0
   const startAngle = -90
-
-  useEffect(() => setMounted(true), [])
 
   const computeCenter = useCallback(() => {
     const r = triggerRef.current?.getBoundingClientRect()

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useIsClient } from '../../lib/useIsClient'
 import { ArrowRight, FlaskConical } from 'lucide-react'
 
 type LoginDsShellProps = {
@@ -239,11 +240,10 @@ export function LoginDsShell({
   showTestAdmin,
   testAdminLoading = false,
 }: LoginDsShellProps) {
-  const [mounted, setMounted] = useState(false)
+  const mounted = useIsClient()
   const [signalStep, setSignalStep] = useState(0)
 
   useEffect(() => {
-    setMounted(true)
     const timer = window.setInterval(() => {
       setSignalStep((s) => (s + 1) % 4)
     }, 1200)

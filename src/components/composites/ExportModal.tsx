@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
+import { useResetOnChange } from "../../hooks/useResetOnChange";
 import { createPortal } from "react-dom";
 import {
   X,
@@ -75,17 +76,16 @@ export function ExportModal({
   const hasExpanded = useMemo(() => catalog.some((c) => c.section === "expanded"), [catalog]);
   const hasSections = hasMain && hasExpanded;
 
-  useEffect(() => {
-    if (open) {
-      setCols(
-        catalog
-          .filter((c) => c.id !== "select" && c.id !== "actions")
-          .map((c) => ({ ...c, checked: true })),
-      );
-      setSize("grande");
-      setSectionFilter("all");
-    }
-  }, [open, catalog]);
+  useResetOnChange([open, catalog], () => {
+    if (!open) return;
+    setCols(
+      catalog
+        .filter((c) => c.id !== "select" && c.id !== "actions")
+        .map((c) => ({ ...c, checked: true })),
+    );
+    setSize("grande");
+    setSectionFilter("all");
+  });
 
   // ─── Shell — dark/light (mesmo padrão do AssistenteIA) ───────────────────
   const shell = dark

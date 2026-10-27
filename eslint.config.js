@@ -100,6 +100,17 @@ export default defineConfig([
     },
   },
   {
+    // Fast refresh é uma regra de desenvolvimento do site de docs. Em `src/components/`
+    // o arquivo do componente exporta também o que é API pública do pacote (classes de
+    // variante, listas de opções, hooks de contexto, helpers puros): separar cada um em
+    // outro arquivo só para o HMR não muda nada para quem consome o pacote. Fora de
+    // `src/components/` a regra continua valendo.
+    files: ['src/components/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
     files: ['src/**/*.{ts,tsx}'],
     ignores: ['src/components/ui/**/*'],
     plugins: {
