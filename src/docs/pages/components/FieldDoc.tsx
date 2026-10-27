@@ -46,7 +46,7 @@ function JunctionLines({style}:{style?:React.CSSProperties}){return <svg viewBox
 /* ═══════════════════════════════════════════ FIELD INPUT ═══════════════════════════════════════════ */
 function FInput({label,placeholder,icon,iconRight,required,error,errorMsg,disabled,readOnly,helper,compact,value:cv,onChange,onClear,showToggle,size="desktop",cols}:{label?:string,placeholder?:string,icon?:React.ReactNode,iconRight?:React.ReactNode,required?:boolean,error?:boolean,errorMsg?:string,disabled?:boolean,readOnly?:boolean,helper?:string,compact?:boolean,value?:string,onChange?:(v:string)=>void,onClear?:()=>void,showToggle?:boolean,size?:string,cols?:number}){
   const [focused,setFocused]=useState(false);const [val,setVal]=useState(cv||"");const [showPw,setShowPw]=useState(false);const ref=useRef<HTMLInputElement>(null);
-  const sm={desktop:{h:35,fs:13},mobile:{h:42,fs:14},compact:{h:30,fs:12}};const sz=compact?sm.compact:sm[size as keyof typeof sm]||sm.desktop;
+  const sm={desktop:{h:35,fs:13},mobile:{h:42,fs:14},compact:{h:32,fs:12}};const sz=compact?sm.compact:sm[size as keyof typeof sm]||sm.desktop;
   const dv=cv!==undefined?cv:val;
   const bc=error?C.danger:focused?C.azulProfundo:C.inputBorder;
   const bg=disabled?C.inputBgDisabled:C.inputBg;
@@ -587,7 +587,7 @@ input::placeholder { color: ${C.textLight}; }
         </Section>
 
         {/* 05 — DENSIDADE COMPACTA */}
-        <Section n="05" title="Densidade compacta oficial" desc="Versão compacta do Field para modais, filtros e áreas com espaço restrito. Altura 30px, fonte 12px.">
+        <Section n="05" title="Densidade compacta oficial" desc="Versão compacta do Field para modais, filtros e áreas com espaço restrito. Altura 32px, fonte 12px.">
           <Card s={{background:C.bg}}>
             <div style={{background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:12,padding:24,maxWidth:560}}>
               <div style={{fontSize:15,fontWeight:700,color:C.cinzaEscuro,fontFamily:F.title,marginBottom:16}}>Modal de triagem</div>
@@ -682,7 +682,7 @@ input::placeholder { color: ${C.textLight}; }
             <div style={{background:C.azulCeuClaro+"40",border:`1px solid ${C.azulCeuClaro}`,borderRadius:12,padding:20,display:"flex",gap:14,alignItems:"flex-start"}}>
               <div style={{width:20,height:20,borderRadius:"50%",background:C.azulProfundo,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}><span style={{color:C.branco,fontSize:12,fontWeight:700}}>i</span></div>
               <div>
-                <p style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 6px",fontFamily:F.body}}>Tamanhos: Desktop 35px (padrão), Mobile 42px, Compacto 30px.</p>
+                <p style={{fontSize:14,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 6px",fontFamily:F.body}}>Tamanhos: Desktop 35px (padrão), Mobile 42px, Compacto 32px.</p>
                 <p style={{fontSize:13,color:C.cinzaChumbo,margin:0,lineHeight:1.5,fontFamily:F.body}}>Desktop é o default. Mobile ativa automaticamente em viewports &lt; 768px. Compacto é exclusivo para modais, filtros e toolbars. Nunca usar Compacto em formulários de cadastro principal.</p>
               </div>
             </div>
@@ -713,7 +713,7 @@ input::placeholder { color: ${C.textLight}; }
               <TokenRow label="Radius" value="8px"/>
               <TokenRow label="Desktop" value="35px"/>
               <TokenRow label="Mobile" value="42px"/>
-              <TokenRow label="Compacto" value="30px"/>
+              <TokenRow label="Compacto" value="32px"/>
               <TokenRow label="Ícone" value="16px"/>
               <TokenRow label="Anel foco" value="3px"/>
             </div>

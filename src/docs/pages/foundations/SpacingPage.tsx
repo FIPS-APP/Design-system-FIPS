@@ -305,7 +305,7 @@ export default function DSFIPSSpacing(){
               <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Inputs</span>
               <TokenRow label="Height desktop" value="35px"/>
               <TokenRow label="Height mobile" value="42px"/>
-              <TokenRow label="Height compacto" value="30px"/>
+              <TokenRow label="Height compacto" value="32px"/>
               <div style={{height:1,background:C.cardBorder,margin:"4px 0"}}/>
               <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Regra</span>
               <TokenRow label="Base unit" value="4px"/>
