@@ -5,6 +5,7 @@ import { FormSectionCard, FormSectionHeader } from '../../../components/composit
 import { LocationPinButtons } from '../../../components/composites/LocationPinButtons'
 import { Field, FieldLabel } from '../../../components/ui/field'
 import { Select } from '../../../components/ui/select'
+import { Modal, ModalFooter } from '../../../components/ui/Modal'
 import { Button } from '../../../components/ui/button'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
@@ -1578,6 +1579,8 @@ export default function SelectDoc() {
   const [cidadeOpa, setCidadeOpa] = useState<string | null>(null)
   const [turnoForm, setTurnoForm] = useState('')
   const [formEnviado, setFormEnviado] = useState<string | null>(null)
+  const [modalAberto, setModalAberto] = useState(false)
+  const [localModal, setLocalModal] = useState('')
   useEffect(() => {
     const h = () => setW(window.innerWidth)
     window.addEventListener('resize', h)
@@ -2036,6 +2039,55 @@ input::placeholder{color:${C.textLight}}
           <pre style={{ fontSize: 12, color: C.cinzaEscuro, margin: '12px 0 0', overflowX: 'auto', fontFamily: 'monospace' }}>
             {`<form onSubmit={...}>\n  <Select name="turno" value={turno} onChange={setTurno} options={opcoes} />\n</form>`}
           </pre>
+        </Section>
+
+        <Section
+          id="select-em-modal"
+          n="01-I"
+          title="Dentro de Modal, Drawer ou card com overflow"
+          desc="A lista abre num portal para o body, na coordenada do gatilho. O corpo rolável do Modal e o overflow hidden de um card não a cortam."
+        >
+          <Card mob={mob}>
+            <p style={{ fontSize: 13, color: C.cinzaChumbo, margin: '0 0 14px', lineHeight: 1.6, fontFamily: F.body }}>
+              O Select no fim do corpo do Modal, com 18 opções: a lista passa por cima do rodapé e rola por dentro. Embaixo cabem 200 px; quando
+              não cabem, ela sobe e o gatilho troca o canto arredondado de lado. Se o gatilho sai da área visível do corpo, a lista fecha.
+            </p>
+            <Button onClick={() => setModalAberto(true)}>Abrir o Modal de exemplo</Button>
+            <Modal open={modalAberto} onOpenChange={setModalAberto} title="Nova inspeção" description="Select no fim do corpo" size="md">
+              <div style={{ display: 'grid', gap: 12 }}>
+                <Field density="compact">
+                  <FieldLabel>Local da inspeção</FieldLabel>
+                  <Select
+                    density="compact"
+                    aria-label="Local da inspeção"
+                    placeholder="Selecione o local"
+                    value={localModal}
+                    onChange={setLocalModal}
+                    options={Array.from({ length: 18 }, (_, i) => ({ value: String(i + 1), label: `Pátio ${i + 1}` }))}
+                  />
+                </Field>
+              </div>
+              <ModalFooter>
+                <Button variant="secondary" onClick={() => setModalAberto(false)}>
+                  Fechar
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </Card>
+          <ul style={{ fontSize: 12, color: C.cinzaChumbo, margin: '14px 0 0', paddingLeft: 18, lineHeight: 1.7, fontFamily: F.body }}>
+            <li>A lista é filha do body, com z-index 70: fica acima do Modal e do Drawer (50) e do tour guiado (60).</li>
+            <li>
+              Modal e Drawer travam a rolagem e o clique fora deles. A lista devolve o clique e deixa a roda e o toque rolarem por dentro dela.
+            </li>
+            <li>
+              A lista leva <code>data-lista-flutuante</code>, o mesmo marcador do SelectBusca dos apps. Um componente do app que fecha ao
+              clicar fora com <code>contains</code> deve ignorar alvos dentro de <code>[data-lista-flutuante]</code>.
+            </li>
+            <li>
+              Vale a partir da v0.21.2. Em versões anteriores (e nas cópias <code>ui-sup</code>) a lista é <code>absolute</code> e o corte
+              continua: veja a regra do Select em Modal no guia da skill.
+            </li>
+          </ul>
         </Section>
 
         <Section n="02" title="Guia de uso por tipo" desc="Significado, regras e exemplos FIPS para cada componente de seleção.">

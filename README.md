@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.1`
+## Versão atual: `v0.21.2`
 
 ## Favicon e ícones de app
 
@@ -111,7 +111,8 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.1 | 2026-10-27 | `Select` e `ChipSelect` não lançam mais `scrollIntoView is not a function` onde o método não existe (jsdom, usado pelo vitest dos apps). A rolagem da opção realçada pelo teclado passa por `rolarOpcaoParaVista`, que usa `scrollIntoView?.()`: sem o método não há nada a fazer, no navegador a lista rola como antes. `npm run test:rolagem` cobre o auxiliar e a ligação dos dois componentes e também roda dentro de `npm test` |
+| 0.21.2 | 2026-10-26 | `Select` abre a lista num portal para o `body` (`position: fixed` na coordenada do gatilho, `z-[70]`): `Modal`, `Drawer` e card com `overflow-hidden` deixam de cortá-la. A 1440x900, com 24 opções no fim do corpo do `Modal`, 0 de 4 opções inteiras ficavam clicáveis; agora são 4 de 4 e a roda alcança as 24. Sobe quando embaixo não cabe (o gatilho troca `rounded-b-none` por `rounded-t-none`), encolhe e rola quando falta espaço dos dois lados, acompanha a rolagem e a janela e fecha quando o gatilho sai da vista. Props e `ref` iguais. Leva `data-lista-flutuante`. `npm run test:select` mede num Chromium sem interface (precisa do playwright). `ChipSelect` segue `absolute` |
+| 0.21.1 | 2026-10-27 | `Select` e `ChipSelect` não lançam mais `scrollIntoView is not a function` onde o método não existe (jsdom, usado pelo vitest dos apps). A rolagem da opção realçada pelo teclado passa por `rolarOpcaoParaVista`, que usa `scrollIntoView?.()`: sem o método não há nada a fazer, no navegador a lista rola como antes. `npm run test:rolagem` cobre o auxiliar e a ligação dos dois componentes |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
