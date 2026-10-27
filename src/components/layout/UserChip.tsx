@@ -67,7 +67,7 @@ export function UserChip({
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((o) => !o)}
             className={cn(
-              'relative flex h-[35px] max-w-[220px] items-center gap-2 overflow-hidden rounded-full px-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 focus-visible:ring-offset-0 sm:px-2.5 sm:backdrop-blur-sm',
+              'relative flex h-[35px] max-w-[220px] items-center gap-2 overflow-hidden rounded-full px-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-0 sm:px-2.5 sm:backdrop-blur-sm',
               'sm:border sm:[border-color:var(--user-chip-border)] sm:[background:var(--user-chip-bg)] sm:[box-shadow:var(--user-chip-shadow)]',
               className,
             )}

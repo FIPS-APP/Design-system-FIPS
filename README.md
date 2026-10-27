@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.42`
+## Versão atual: `v0.20.43`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.43 | 2026-10-27 | Anéis de foco de `UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o hex com transparência (`#2563EB` a 25% media 1,43:1 no claro e 1,26:1 no escuro; `#F6921E` de 28% a 40% media de 1,27:1 a 2,25:1). Passam a `--color-ring` cheio (claro) e `#F6921E` cheio (ramo escuro das seções). O anel do `DocHeaderNeuIconButton` nunca aparecia, porque o `boxShadow` em linha o cobria: passa a contorno `outline`. `npm test` confere |
 | 0.20.42 | 2026-10-27 | `SettingsPreferenceRow` variante `info`: o hover deixa de clarear o fundo da linha e passa a reforçar a borda (`--color-fips-blue-400` cheio). No escuro o trilho do `Switch` desligado contra a linha em hover vai de 2,05:1 a 3,09:1 (sobre o cartão). No claro o fundo de hover já era igual ao de repouso. `npm test` calcula o fundo de hover, inclusive `color-mix` |
 | 0.20.41 | 2026-10-27 | `HeroAtalho` e `HeroFileira`: o foco do teclado aparece no atalho aberto. O anel (`ring`) nunca chegava à tela porque o `boxShadow` em linha do atalho aberto o cobria; passa a contorno branco (`outline`) de 3px com recuo de 2px, 3:1 ou mais contra o fundo do `PageHero` nos dois temas. `npm test` confere a classe e o contraste |
 | 0.20.40 | 2026-10-27 | Atalho aberto do hero (`HeroAtalho`, `HeroFileira`): o último ponto do degradê laranja de hover passa de `#cf730d` a `#dc8212`. O rótulo `#002A68` sobre o canto inferior direito vai de 3,99:1 a 4,73:1, e o degradê inteiro fica em 4,5:1 ou mais. A mesma constante pinta `UserChip` e `DocHeaderNeuIconButton` no hover. `npm test` amostra o degradê a cada 1% |
