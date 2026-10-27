@@ -1,15 +1,27 @@
 name: Publish to GitHub Packages
 
+# Bump de versão na main é publicação: quando o package.json#version muda num push na main,
+# o pacote sai no GitHub Packages e a tag vX.Y.Z é criada neste mesmo workflow, sem passo
+# manual. Push na main sem mudança de versão não publica nada. Tag vX.Y.Z criada à mão
+# continua valendo, mas não publica de novo uma versão que já está no registro.
+# A regra de decisão está em scripts/publicar-decisao.mjs (npm run test:publicar).
 on:
   push:
+    branches: [main]
     tags: ['v*']
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      contents: write # criar a tag vX.Y.Z
+      packages: write # publicar no GitHub Packages
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,9 +29,52 @@ jobs:
           node-version: '22'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@fips-app'
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-      - run: npm publish
+
+      - name: Versão do commit anterior
+        if: github.ref_type == 'branch'
+        id: anterior
+        run: |
+          ANTES="${{ github.event.before }}"
+          VERSAO_ANTES=""
+          if [ -n "$ANTES" ] && [ "$ANTES" != "0000000000000000000000000000000000000000" ] \
+            && git fetch --no-tags --depth=1 origin "$ANTES" 2>/dev/null; then
+            VERSAO_ANTES=$(git show "$ANTES:package.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+          fi
+          echo "versao_antes=$VERSAO_ANTES" >> "$GITHUB_OUTPUT"
+
+      - name: Versão já está no registro?
+        id: registro
+        run: |
+          NOME=$(node -p "require('./package.json').name")
+          VERSAO=$(node -p "require('./package.json').version")
+          if [ -n "$(npm view "$NOME@$VERSAO" version 2>/dev/null)" ]; then
+            echo "ja_publicada=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ja_publicada=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Decidir
+        id: decisao
+        run: node scripts/publicar-decisao.mjs
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSAO_ANTES: ${{ steps.anterior.outputs.versao_antes }}
+          JA_PUBLICADA: ${{ steps.registro.outputs.ja_publicada }}
+
+      - name: Instalar dependências
+        if: steps.decisao.outputs.acao == 'publicar'
+        run: npm ci
+      - name: Testes
+        if: steps.decisao.outputs.acao == 'publicar'
+        run: npm test
+      - name: Build da biblioteca
+        if: steps.decisao.outputs.acao == 'publicar'
+        run: npm run build
+      - name: Publicar
+        if: steps.decisao.outputs.acao == 'publicar'
+        run: npm publish
+
+      - name: Criar a tag
+        if: steps.decisao.outputs.acao == 'publicar' && steps.decisao.outputs.criar_tag == 'true'
+        run: |
+          git tag "v${{ steps.decisao.outputs.versao }}"
+          git push origin "v${{ steps.decisao.outputs.versao }}"
