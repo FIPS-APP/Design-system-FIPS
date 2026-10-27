@@ -27,6 +27,7 @@ Fonte: `src/tokens/colors.ts`
 | `verdeClaro` | `#8BE5AD` |
 | `verdeFloresta` | `#00C64C` |
 | `verdeFlorestaEscuro` | `#00904C` |
+| `verdeFlorestaProfundo` | `#006D35` |
 | `branco` | `#FFFFFF` |
 | `neutroClaro` | `#E8EBFF` |
 
@@ -109,7 +110,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-surface-muted` (página) | neutral-50 | `#252525` |
 | `--color-border` (divisor) | `#d7e0ea` | `#2e2e2e` |
 | `--color-border-strong` | gray-400 | `#3a3a3a` |
-| `--color-border-control` (campo) | `#808d9a` (3,39:1 sobre branco) | `#666666` (3,03:1 sobre o cartão) |
+| `--color-border-control` (campo) | `#808d9a` (3,39:1 sobre branco) | `#727272` (3,62:1 sobre o cartão, 3,19:1 sobre a página) |
 | `--color-fg` | gray-900 | `#e8e8e8` |
 | `--color-fg-muted` | `#6b7784` | `#9ca3af` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |

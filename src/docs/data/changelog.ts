@@ -25,6 +25,152 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.46',
+    date: '2026-10-27',
+    title: 'Alert warning e texto laranja passam de 4,5:1 no claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Alert` com tom `warning`: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6` no claro) a `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto passa de `#f6921e` a `#fdc24e` (5,89:1 vira 8,47:1 sobre o cartão). Fundo e borda não mudam.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Mesmo token no item "Importante" do `ChangelogModal` (claro 2,14:1 vira 4,77:1) e nos ícones em hover do `UserAccountMenu` (claro 2,11:1 vira 4,71:1; escuro `#f6921e` vira `#fdc24e`).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Eyebrow de 11 px do cabeçalho de `Modal` (hero), `Drawer`, `ExportPreviewModal` e `ChangelogModal`: passa de `--color-accent-strong` a `--color-accent` (`#fdc24e`). Sobre o começo do degradê azul `#004B9B` vai de 3,65:1 a 5,24:1; no escuro, o pior ponto vai de 4,91:1 a 7,06:1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir o `Alert` warning (texto contra o fundo em cartão, cartão suave e faixa, nos dois temas), as quatro eyebrows contra o degradê do cabeçalho, o item do `ChangelogModal` e o ícone do `UserAccountMenu`, e recusa `--color-accent-strong` como cor de texto em `src` fora de `src/docs`.',
+      },
+    ],
+  },
+  {
+    version: '0.20.45',
+    date: '2026-10-27',
+    title: 'Badge warning legível no tema claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre o fundo `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). Nenhum valor novo no sistema: é o token que o `RuleTile` com tom `atencao` já lê. Fundo e borda não mudam. No escuro o texto também lê o token, no mesmo `#fdc24e` de antes (8,47:1 sobre o cartão `#1a1a1a`, 8,00:1 sobre o suave `#1f1f1f`, 7,44:1 sobre a faixa `#252525`), e a classe `dark:text-[#FDC24E]` sai de `badge-variants.ts`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir também o `warning`: texto contra o fundo em cartão, cartão suave e faixa, nos dois temas, e nenhuma cor fixa nas classes.',
+      },
+    ],
+  },
+  {
+    version: '0.20.44',
+    date: '2026-10-27',
+    title: 'Badge success legível no tema claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Badge` com `variant="success"` no claro: o texto passa de `#00904c` para `#006d35` (novo primitivo `--color-fips-green-800`, lido por `--color-semantic-sucesso-fg`). Contraste de 3,91:1 para 6,15:1 sobre o fundo `#ecfdf5`. Fundo, borda e tema escuro não mudam (escuro: 9,18:1 sobre o cartão `#1a1a1a`, 8,65:1 sobre o suave `#1f1f1f`, 8,03:1 sobre a faixa `#252525`). O `RuleTile` com tom `sucesso` lê o mesmo par e melhora junto. As cópias em `exports/badge/Badge.tsx` e na doc do Badge acompanham o valor.',
+      },
+    ],
+  },
+  {
+    version: '0.20.43',
+    date: '2026-10-27',
+    title: 'Anéis de foco do cabeçalho passam de 3:1',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o anel de foco em hex com transparência. `ring-[#2563EB]/25` media 1,43:1 sobre branco e 1,26:1 sobre `#1a1a1a`; `ring-[#F6921E]` de 28% a 40% media de 1,27:1 a 1,40:1 no claro e de 1,71:1 a 2,25:1 no escuro. `UserChip` e o ramo claro das seções passam a `--color-ring` cheio; o ramo escuro das seções passa a `#F6921E` cheio (7,50:1 sobre `#1a1a1a`).',
+      },
+      {
+        type: 'fix',
+        description:
+          '`DocHeaderNeuIconButton`: o anel de foco nunca aparecia, porque o botão leva `boxShadow` em `style` e o estilo em linha vence `focus-visible:ring-2`. O foco passa a `outline` sólido de 2px com recuo de 2px em `--color-ring`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` recusa `ring-[...]` com hex, `rgba` ou transparência nos três arquivos, confere o contorno do botão e o contraste do anel do ramo escuro contra o recuo `#1A1A1A`.',
+      },
+    ],
+  },
+  {
+    version: '0.20.42',
+    date: '2026-10-27',
+    title: 'Linha info do SettingsPreferenceRow deixa de clarear no hover',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`SettingsPreferenceRow` variante `info`: sai o `hover:bg-[color-mix(...)]`. No escuro a mistura com `--color-fips-blue-200` clareava o fundo e o trilho do `Switch` desligado caía de 3,09:1 (repouso) para 2,05:1 (hover) sobre o cartão. No claro a mistura dava a mesma cor de repouso, então o hover não mudava nada. O fundo fica fixo e o hover passa a reforçar a borda, de `--color-fips-blue-400` a 35% para cheio, nos dois temas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê as classes da linha `info`, calcula o fundo de repouso e o de hover (inclusive `color-mix`, com alfa pré-multiplicado) e exige 3:1 do trilho desligado contra os dois nos dois temas.',
+      },
+    ],
+  },
+  {
+    version: '0.20.41',
+    date: '2026-10-27',
+    title: 'Foco do teclado visível no atalho aberto do hero',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho`: o foco do teclado passa a ser um `outline` sólido branco de 3px com recuo de 2px. Antes era `focus-visible:ring-4` (uma `box-shadow`), que o `boxShadow` em linha do atalho aberto sobrescrevia: Tab no atalho ficava igual ao repouso, e todo foco de teclado abre o atalho. O contorno branco mede mais de 3:1 contra o fundo do `PageHero` nos dois temas. Apps que tinham CSS local para desenhar esse foco podem removê-lo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` exige que a classe do atalho use `outline` sem `ring` e calcula o contraste do contorno contra o gradiente do `PageHero` (com a película branca de 8%) e contra o fundo escuro.',
+      },
+    ],
+  },
+  {
+    version: '0.20.40',
+    date: '2026-10-27',
+    title: 'Rótulo do atalho aberto do hero passa de 4,5:1 em todo o degradê',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`docHeaderNeuAccentBgHover`: o último ponto do degradê passa de `#cf730d` a `#dc8212`. O rótulo e o ícone `#002A68` sobre esse ponto vão de 3,99:1 a 4,73:1; os outros três pontos (`#FFD37B` 9,70:1, `#f7ad45` 7,20:1 e `#F6921E` 5,91:1) não mudam. Muda o pixel do canto inferior direito do azulejo no hover de `HeroAtalho`, `HeroFileira`, `UserChip` e `DocHeaderNeuIconButton`: fica mais claro.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas.',
+      },
+    ],
+  },
+  {
+    version: '0.20.39',
+    date: '2026-10-27',
+    title: 'Borda de campo do tema escuro passa de 3:1 em todas as superfícies',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-border-control` no escuro passa de `#666666` a `#727272`: 3,03:1, 2,87:1 e 2,67:1 viram 3,62:1, 3,43:1 e 3,19:1 sobre o cartão (`#1a1a1a`), o cartão suave (`#1f1f1f`) e a página (`#252525`). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais clara no escuro. `--color-border` (o divisor) e o claro não mudam. O hover (`--color-fg-muted`) continua mais claro que a borda.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 3:1 da borda de campo sobre cartão, cartão suave e página nos dois temas. Referência (`foundations.md`, `components.md`) e página de cores do site acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.20.38',
     date: '2026-10-27',
     title: 'README: tgz vendorizado sai do GitHub Packages',

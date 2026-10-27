@@ -218,10 +218,33 @@ for (const t of TEMAS) {
   })
 }
 
-// Só o claro cobre também o cartão suave e a página. No escuro a borda #666666 mede 2,87:1 sobre o cartão suave: fora do escopo.
-test('--color-border-control, tema claro: borda contra o cartão suave e a página', () => {
-  for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', 'claro'), token(fundo, 'claro'))
-})
+// Campo aparece sobre o cartão, o cartão suave e a página, nos dois temas.
+for (const t of TEMAS) {
+  test(`--color-border-control, tema ${t}: borda contra o cartão suave e a página`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', t), token(fundo, t))
+  })
+}
+
+// A fonte em TypeScript (src/tokens/colors.ts) é lida pelo site e pelo docs/tokens.md e escrita à mão:
+// não pode divergir do globals.css, que é o que o pacote entrega.
+const TS_TOKENS = ler('src/tokens/colors.ts')
+function borderControlDoTs(objeto) {
+  const m = TS_TOKENS.match(new RegExp(`export const ${objeto}\\s*=\\s*\\{([\\s\\S]*?)\\}\\s*as const`))
+  assert.ok(m, `colors.ts: objeto ${objeto} não encontrado`)
+  const v = m[1].match(/^\s*borderControl:\s*(?:'(#[\da-f]{6})'|fipsPalette\.(\w+))/im)
+  assert.ok(v, `colors.ts: borderControl não encontrado em ${objeto}`)
+  if (v[1]) return v[1]
+  const p = TS_TOKENS.match(new RegExp(`^\\s*${v[2]}:\\s*'(#[\\da-f]{6})'`, 'im'))
+  assert.ok(p, `colors.ts: fipsPalette.${v[2]} não encontrado`)
+  return p[1]
+}
+
+for (const [t, objeto] of [['claro', 'semanticColors'], ['escuro', 'darkSemanticColors']]) {
+  test(`colors.ts: borderControl de ${objeto} é o --color-border-control do globals.css, tema ${t}`, () => {
+    const ts = borderControlDoTs(objeto)
+    assert.deepEqual(cor(ts, t), token('--color-border-control', t), `colors.ts ${ts} diverge de globals.css ${TOKENS[t]['--color-border-control']}`)
+  })
+}
 
 test('--color-border (divisor) segue como estava: o --color-border-control não o reaproveita', () => {
   assert.equal(TOKENS.claro['--color-border'], '#d7e0ea')
@@ -260,4 +283,179 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('azul de texto / cartão', token('--color-primary-hover-text', t), cartao)
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }
+})
+
+// ─── Rótulo do atalho do hero sobre o degradê laranja ──────────────────────
+const CHROME = 'src/lib/docHeaderChrome.ts'
+
+function constanteDoChrome(nome) {
+  const m = ler(CHROME).match(new RegExp(`export const ${nome}\\s*=\\s*'([^']+)'`))
+  assert.ok(m, `${CHROME}: constante ${nome} não encontrada`)
+  return m[1]
+}
+
+// Lê `linear-gradient(135deg,#a,#b 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
+function paradasDoDegrade(valor) {
+  const itens = valor.match(/linear-gradient\([^,]+,(.+)\)$/)[1].split(/,(?![^(]*\))/).map((s) => s.trim())
+  const paradas = itens.map((item, i) => {
+    const [hex, pos] = item.split(/\s+/)
+    assert.match(hex, /^#[\da-f]{6}$/i, `parada fora de hex de 6 dígitos: ${item}`)
+    return [cor(hex, 'claro'), pos ? Number(pos.replace('%', '')) : i === 0 ? 0 : i === itens.length - 1 ? 100 : NaN]
+  })
+  paradas.forEach(([, p]) => assert.ok(!Number.isNaN(p), `parada sem posição em ${valor}`))
+  return paradas
+}
+
+function corNoDegrade(paradas, pct) {
+  let k = 0
+  while (k < paradas.length - 2 && pct > paradas[k + 1][1]) k++
+  const [a, pa] = paradas[k]
+  const [b, pb] = paradas[k + 1]
+  const t = Math.min(1, Math.max(0, (pct - pa) / (pb - pa)))
+  const mistura = (x, y) => Math.round(x + (y - x) * t)
+  return { r: mistura(a.r, b.r), g: mistura(a.g, b.g), b: mistura(a.b, b.b) }
+}
+
+test('Atalho aberto do hero: rótulo contra o degradê laranja, 4,5:1 em todo o degradê', () => {
+  const rotulo = cor(constanteDoChrome('docHeaderNeuAccentIcon'), 'claro')
+  const paradas = paradasDoDegrade(constanteDoChrome('docHeaderNeuAccentBgHover'))
+  for (let pct = 0; pct <= 100; pct++) verifica(`rótulo contra o degradê a ${pct}%`, rotulo, corNoDegrade(paradas, pct), MINIMO_TEXTO)
+})
+
+for (const t of TEMAS) {
+  test(`Atalho ouro do hero em repouso, tema ${t}: texto contra o fundo`, () => {
+    const classes = ler('src/components/composites/HeroAtalho.tsx').match(/const repousoOuro =\s*'([^']+)'/)[1]
+    const fundo = classes.match(/\bbg-\[(var\(--[\w-]+\))\]/)[1]
+    const texto = classes.match(/\btext-\[(var\(--[\w-]+\))\]/)[1]
+    verifica(`${texto} contra ${fundo}`, cor(texto, t), cor(fundo, t), MINIMO_TEXTO)
+  })
+}
+
+// ─── Foco do atalho do hero ────────────────────────────────────────────────
+// O atalho aberto leva boxShadow em `style`, que vence qualquer classe de sombra (ring). O foco
+// do teclado precisa ser outline, que a sombra em linha não cobre.
+const HERO_ATALHO = 'src/components/composites/HeroAtalho.tsx'
+
+function classesDoAtalho() {
+  const m = ler(HERO_ATALHO).match(/className: cn\(\s*'([^']+)'/)
+  assert.ok(m, `${HERO_ATALHO}: className do atalho não encontrada`)
+  return m[1].split(/\s+/)
+}
+
+test('Atalho do hero: foco por outline de 3px, sem ring (a sombra em linha o cobriria)', () => {
+  const classes = classesDoAtalho()
+  assert.ok(classes.includes('focus-visible:outline-solid'), 'sem focus-visible:outline-solid')
+  assert.ok(classes.includes('focus-visible:outline-[3px]'), 'sem focus-visible:outline-[3px]')
+  assert.ok(classes.some((c) => /^focus-visible:outline-offset-\d+$/.test(c)), 'sem recuo do contorno')
+  assert.equal(classes.filter((c) => /^focus-visible:ring/.test(c)).length, 0, 'ring no atalho: o boxShadow em style o esconde')
+  assert.ok(!classes.includes('focus-visible:outline-none'), 'focus-visible:outline-none apaga o contorno')
+})
+
+test('Atalho do hero: contorno de foco contra o fundo do PageHero, 3:1 nos dois temas', () => {
+  const cls = classesDoAtalho().find((c) => /^focus-visible:outline-(white|black|\[#[\da-f]{6}\])$/i.test(c))
+  assert.ok(cls, 'cor do contorno de foco não reconhecida (white, black ou hex)')
+  const nome = cls.replace('focus-visible:outline-', '')
+  const contorno = nome === 'white' ? BRANCO : nome === 'black' ? { r: 0, g: 0, b: 0 } : cor(nome.slice(1, -1), 'claro')
+  const hero = ler('src/composites/PageHero.tsx')
+  const m = hero.match(/bg-gradient-to-br from-\[(#[\da-f]{6})\] via-\[(var\(--[\w-]+\))\] to-\[(#[\da-f]{6})\] dark:bg-\[(#[\da-f]{6})\]/i)
+  assert.ok(m, 'gradiente do PageHero não encontrado em PageHero.tsx')
+  // Pior caso: a película branca de 8% do PageHero clareia o fundo.
+  const clareado = (c) => ({ r: Math.round(c.r * 0.92 + 255 * 0.08), g: Math.round(c.g * 0.92 + 255 * 0.08), b: Math.round(c.b * 0.92 + 255 * 0.08) })
+  for (const [rotuloFundo, valor, t] of [['início', m[1], 'claro'], ['meio', m[2], 'claro'], ['fim', m[3], 'claro'], ['escuro', m[4], 'escuro']]) {
+    verifica(`contorno ${nome} contra o ${rotuloFundo} do hero (${valor})`, contorno, clareado(cor(valor, t)))
+  }
+})
+
+// ─── Linha info do SettingsPreferenceRow: trilho desligado no hover ────────
+const LINHA = 'src/components/composites/SettingsPreferenceRow.tsx'
+
+// Cor com alfa de um token, hex ou rgba(), para o tema t.
+function rgbaDe(valor, t) {
+  const v = resolver(valor, t)
+  const m = v.match(/^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/)
+  if (m) return { r: +m[1], g: +m[2], b: +m[3], a: Number(m[4]) }
+  return { ...cor(valor, t), a: 1 }
+}
+
+// Aceita `var(--x)` e `color-mix(in_srgb,var(--a)_P%,var(--b))` (mistura com alfa pré-multiplicado, como no CSS).
+function fundoDaClasse(expr, t) {
+  const simples = expr.match(/^var\((--[\w-]+)\)$/)
+  const cm = expr.match(/^color-mix\(in_srgb,var\((--[\w-]+)\)_(\d+)%,var\((--[\w-]+)\)\)$/)
+  assert.ok(simples || cm, `fundo fora do que o teste entende: ${expr}`)
+  let c
+  if (simples) c = rgbaDe(`var(${simples[1]})`, t)
+  else {
+    const [x, y, p] = [rgbaDe(`var(${cm[1]})`, t), rgbaDe(`var(${cm[3]})`, t), Number(cm[2]) / 100]
+    const a = x.a * p + y.a * (1 - p)
+    const canal = (k) => (x[k] * x.a * p + y[k] * y.a * (1 - p)) / a
+    c = { r: canal('r'), g: canal('g'), b: canal('b'), a }
+  }
+  const base = token('--color-surface', t)
+  const sobre = (k) => Math.round(c[k] * c.a + base[k] * (1 - c.a))
+  return { r: sobre('r'), g: sobre('g'), b: sobre('b') }
+}
+
+function classesDaLinhaInfo() {
+  const m = ler(LINHA).match(/variant === 'info'\s*\?\s*'([^']+)'/)
+  assert.ok(m, `${LINHA}: classes da linha info não encontradas`)
+  return m[1].split(/\s+/)
+}
+
+for (const t of TEMAS) {
+  test(`Linha info do SettingsPreferenceRow, tema ${t}: trilho desligado contra o fundo em repouso e no hover`, () => {
+    const classes = classesDaLinhaInfo()
+    const repouso = classes.find((c) => /^bg-\[.+\]$/.test(c))
+    assert.ok(repouso, 'linha info sem fundo bg-[...]')
+    const hover = classes.find((c) => /^hover:bg-\[.+\]$/.test(c))
+    const trilho = token('--color-switch-off', t)
+    verifica('trilho contra o fundo em repouso', trilho, fundoDaClasse(repouso.slice(4, -1), t))
+    if (hover) verifica(`trilho contra o fundo de hover (${hover})`, trilho, fundoDaClasse(hover.slice(10, -1), t))
+  })
+}
+
+test('Linha info do SettingsPreferenceRow: o hover muda a borda, já que o fundo não pode clarear', () => {
+  assert.ok(classesDaLinhaInfo().some((c) => /^hover:border-/.test(c)), 'linha info sem hover de borda')
+})
+
+// ─── Anéis de foco do cabeçalho ────────────────────────────────────────────
+const ANEIS = {
+  userChip: 'src/components/layout/UserChip.tsx',
+  botao: 'src/components/layout/DocHeaderNeuIconButton.tsx',
+  secoes: 'src/components/layout/DocHeaderSectionNav.tsx',
+}
+
+test('Anéis do cabeçalho: nenhum ring com hex ou rgba, nem com transparência (/NN)', () => {
+  const achados = []
+  for (const arquivo of Object.values(ANEIS)) {
+    ler(arquivo).split('\n').forEach((linha, i) => {
+      for (const m of linha.matchAll(/focus-visible:ring-\[([^\]\s]+)\](\/(?:\[[^\]]+\]|[\w.]+))?/g)) {
+        if (m[2] || /rgba?\(|transparent|color-mix/.test(m[1])) achados.push(`${arquivo}:${i + 1} (${m[0]})`)
+      }
+    })
+  }
+  assert.deepEqual(achados, [], `anel com transparência:\n${achados.join('\n')}`)
+})
+
+test('DocHeaderNeuIconButton: foco por outline em --color-ring (o boxShadow em style cobriria um ring)', () => {
+  const m = ler(ANEIS.botao).match(/'relative flex shrink-0[^']*'/)
+  assert.ok(m, 'className do botão não encontrada')
+  const classes = m[0].slice(1, -1).split(/\s+/)
+  for (const c of ['focus-visible:outline-solid', 'focus-visible:outline-2', 'focus-visible:outline-offset-2', 'focus-visible:outline-[var(--color-ring)]']) {
+    assert.ok(classes.includes(c), `sem ${c}`)
+  }
+  assert.equal(classes.filter((c) => /^focus-visible:ring/.test(c) || c === 'focus-visible:outline-none').length, 0, 'ring ou outline-none no botão')
+})
+
+test('DocHeaderSectionNav: ramo escuro com anel #F6921E contra o recuo #1A1A1A, 3:1', () => {
+  const fonte = ler(ANEIS.secoes)
+  const recuo = fonte.match(/focus-visible:ring-offset-\[(#[\da-f]{6})\]/i)
+  assert.ok(recuo, 'recuo do ramo escuro não encontrado')
+  const aneis = new Set([...fonte.matchAll(/focus-visible:ring-\[(#[\da-f]{6})\]/gi)].map((m) => m[1]))
+  assert.ok(aneis.size > 0, 'anel hex do ramo escuro não encontrado')
+  for (const hex of aneis) verifica(`anel ${hex} contra o recuo ${recuo[1]}`, cor(hex, 'claro'), cor(recuo[1], 'claro'))
+})
+
+test('Anéis do cabeçalho: UserChip e ramo claro das seções leem --color-ring cheio', () => {
+  assert.match(ler(ANEIS.userChip), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'UserChip sem --color-ring cheio')
+  assert.match(ler(ANEIS.secoes), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'ramo claro das seções sem --color-ring cheio')
 })

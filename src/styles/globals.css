@@ -21,6 +21,7 @@
 
   --color-fips-green-500: #00c64c;
   --color-fips-green-700: #00904c;
+  --color-fips-green-800: #006d35;
   --color-fips-green-300: #8be5ad;
   --color-fips-red-600: #ef4444;
   --color-fips-red-100: #fee2e2;
@@ -269,7 +270,8 @@
     --color-semantic-atencao-fg: #c2410c;
     --color-semantic-atencao-border: #fdba74;
     --color-semantic-sucesso-bg: #ecfdf5;
-    --color-semantic-sucesso-fg: #00904c;
+    /* Texto pequeno sobre o fundo claro do Badge: 6,15:1 sobre #ecfdf5 (o green-700 dava 3,91:1). */
+    --color-semantic-sucesso-fg: var(--color-fips-green-800);
     --color-semantic-sucesso-border: #a7f3d0;
     --color-semantic-critico-bg: #fef2f2;
     --color-semantic-critico-fg: var(--color-danger-strong);
@@ -299,8 +301,8 @@
     /* Divisor de linha e de cartão. 1,28:1 sobre o cartão. Não serve em campo. */
     --color-border: #2e2e2e;
     --color-border-strong: #3a3a3a;
-    /* Campo, select, textarea e gatilho de campo. 3,03:1 sobre #1a1a1a. */
-    --color-border-control: #666666;
+    /* Campo, select, textarea e gatilho de campo. 3,62:1 sobre #1a1a1a, 3,43:1 sobre #1f1f1f e 3,19:1 sobre #252525. */
+    --color-border-control: #727272;
     --color-fg: #e8e8e8;
     --color-fg-muted: #9ca3af;
     --color-primary-text: var(--color-fips-blue-400);

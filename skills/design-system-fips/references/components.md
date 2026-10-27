@@ -135,7 +135,7 @@ Cores por variante (claro → escuro):
 | --- | --- | --- | --- | --- |
 | `default` | `#004B9B` | `#FFFFFF` | `#1A6FC4` | `#FFFFFF` |
 | `secondary` | `#F2F4F8` | fg | — | — |
-| `success` | `#ECFDF5` | `#00904C` | `rgba(0,168,62,.15)` | `#4ADE80` |
+| `success` | `#ECFDF5` | `#006D35` | `rgba(0,168,62,.15)` | `#8BE5AD` |
 | `warning` | `#FFF7ED` | `#C2410C` | `rgba(251,191,36,.15)` | `#FBBF24` |
 | `danger` | `#FEF2F2` | `#B91C1C` | `rgba(248,113,113,.15)` | `#F87171` |
 | `outline` | transparent | fg | — | — |
@@ -190,7 +190,7 @@ Heights reais:
 Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
 
 - **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
-- **Borda**: `border border-[var(--color-border-control)]` (1px, sólida, sem alpha). No claro é `#808d9a` (3,39:1 sobre branco); no escuro é `#666666` (3,03:1 sobre o cartão). `--color-border` segue só como divisor. Hover: `--color-fg-muted` nos dois temas.
+- **Borda**: `border border-[var(--color-border-control)]` (1px, sólida, sem alpha). No claro é `#808d9a` (3,39:1 sobre branco); no escuro é `#727272` (3,62:1 sobre o cartão, 3,19:1 sobre a página). `--color-border` segue só como divisor. Hover: `--color-fg-muted` nos dois temas.
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
 - **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
 - **Dark mode do foco/borda ativa**: `--color-primary` **não muda** entre light/dark neste projeto (fica `#004B9B` fixo — só `--color-border`/`--color-surface`/`--color-fg` etc. redefinem por tema). Por isso todo estado que usa `--color-primary` como acento (borda em foco, anel de foco, borda do Select aberto, borda do dropdown, opção selecionada) precisa do par manual `dark:border-[#93BDE4] dark:ring-[#93BDE4]/25` — sem isso o acento fica com baixo contraste no escuro. Não remover esses `dark:` — não são resíduo, são o substituto funcional da falta de um `--color-primary` dark.
