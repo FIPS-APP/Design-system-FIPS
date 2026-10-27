@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.38',
+    date: '2026-10-27',
+    title: 'README: tgz vendorizado sai do GitHub Packages',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O README ganha a seção "Tgz vendorizado": o arquivo que os apps carregam em `vendor/` sai do GitHub Packages (`npm pack` contra o registro, com o `sha512` conferido), nunca de `npm pack` local, porque os comentários de caminho do build mudam os bytes e o lock de cada app passaria a apontar para um tgz diferente da mesma versão.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',
