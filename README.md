@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.45`
+## Versão atual: `v0.20.46`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.46 | 2026-10-27 | `Alert` warning passa de `--color-accent-strong` a `--color-semantic-atencao-fg` no texto: 2,07:1 vira 4,61:1 no claro (no escuro o texto passa de `#f6921e` a `#fdc24e`, 5,89:1 vira 8,47:1). O item "Importante" do `ChangelogModal` (2,14:1 a 4,77:1) e os ícones em hover do `UserAccountMenu` (2,11:1 a 4,71:1) leem o mesmo token. As eyebrows de 11 px sobre o degradê azul de `Modal`, `Drawer`, `ExportPreviewModal` e `ChangelogModal` passam a `--color-accent` (3,65:1 a 5,24:1 no pior ponto). `--color-accent-strong` fica para fundo e borda. `npm run test:badge` confere |
 | 0.20.45 | 2026-10-27 | `Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto lê o mesmo token (`#fdc24e`, valor igual ao de antes, sem hex na classe). Fundo e borda não mudam. `npm run test:badge` cobre success e warning |
 | 0.20.44 | 2026-10-27 | `Badge` success no claro: texto de `#00904c` para `#006d35` (`--color-fips-green-800`), de 3,91:1 para 6,15:1 sobre `#ecfdf5`. Fundo, borda e tema escuro sem mudança |
 | 0.20.43 | 2026-10-27 | Anéis de foco de `UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o hex com transparência (`#2563EB` a 25% media 1,43:1 no claro e 1,26:1 no escuro; `#F6921E` de 28% a 40% media de 1,27:1 a 2,25:1). Passam a `--color-ring` cheio (claro) e `#F6921E` cheio (ramo escuro das seções). O anel do `DocHeaderNeuIconButton` nunca aparecia, porque o `boxShadow` em linha o cobria: passa a contorno `outline`. `npm test` confere |
