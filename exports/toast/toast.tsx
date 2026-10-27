@@ -7,7 +7,7 @@ const C = {
   cinzaChumbo: "var(--color-fg-muted)",
   cinzaEscuro: "var(--color-fg)",
   verdeFloresta: "#00C64C",
-  verdeEscuro: "#00904C",
+  verdeFlorestaProfundo: "#006D35",
   amareloEscuro: "#F6921E",
   danger: "#DC3545",
   branco: "#FFFFFF",
@@ -23,7 +23,7 @@ const Fn = {
 type ToastVariant = "sucesso" | "erro" | "atencao" | "info" | "neutro";
 
 const TV: Record<ToastVariant, { bg: string; border: string; color: string; accent: string }> = {
-  sucesso: { bg: "#ECFDF5", border: "#A7F3D0", color: C.verdeEscuro, accent: C.verdeFloresta },
+  sucesso: { bg: "#ECFDF5", border: "#A7F3D0", color: C.verdeFlorestaProfundo, accent: C.verdeFloresta },
   erro: { bg: "#FEF2F2", border: "#FECACA", color: "#B91C1C", accent: C.danger },
   atencao: { bg: "#FFF7ED", border: "#FDBA74", color: "#C2410C", accent: C.amareloEscuro },
   info: { bg: "#D3E3F4", border: "#93BDE4", color: C.azulEscuro, accent: C.azulProfundo },
