@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.7',
+    date: '2026-10-27',
+    title: 'Texto da aba ativa do Tabs legível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`TabsTrigger` pintava o texto da aba ativa com `--color-primary`, que não muda no `.dark` (`#004b9b` nos dois temas). No escuro a aba ativa media 2,06:1 sobre `--color-surface` (`#1a1a1a`), abaixo das 6,04:1 das inativas sobre a lista (`#252525`): a seleção ficava menos legível que o resto. O texto passa a ler `--color-primary-text`, que é o `--color-primary` no claro e o `--color-fips-blue-400` (`#93bde4`) no escuro: 8,82:1. O claro não muda (`#004b9b`, 8,47:1 sobre branco). Medido nos tokens do `globals.css` (`src/components/ui/tabs.tsx:29`).',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 do texto da aba ativa sobre o fundo dela nos dois temas, que a ativa seja mais legível que a inativa e que o claro siga no azul do `--color-primary`. A referência `components.md` da skill e o zip acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',

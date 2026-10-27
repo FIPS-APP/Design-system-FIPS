@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.29`
+## Versão atual: `v0.21.7`
 
 ## Favicon e ícones de app
 
@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.7 | 2026-10-27 | Texto da aba ativa do `Tabs` passa de `--color-primary` a `--color-primary-text`. No escuro `--color-primary` não muda (`#004b9b`): a aba ativa media 2,06:1 sobre o cartão `#1a1a1a`, menos legível que as inativas (6,04:1); agora é `#93bde4`, 8,82:1. O claro não muda (`#004b9b`, 8,47:1 sobre branco). `npm test` exige 4,5:1 e que a ativa seja mais legível que a inativa |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
 | 0.20.28 | 2026-10-24 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.27 | 2026-10-24 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |
