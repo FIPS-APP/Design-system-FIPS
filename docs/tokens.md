@@ -1,6 +1,6 @@
 # Tokens — Design System FIPS
 
-> Gerado automaticamente a partir de `src/tokens/` em 2026-10-13. Não edite à mão — rode `npm run tokens:gen` para regenerar.
+> Gerado automaticamente a partir de `src/tokens/` em 2026-10-27. Não edite à mão — rode `npm run tokens:gen` para regenerar.
 
 ## Paleta oficial (Brandbook)
 
@@ -45,7 +45,7 @@
 | `primaryText` | <span style="display:inline-block;width:80px;height:36px;background:#004B9B;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#004B9B</span> | `#004B9B` |
 | `dangerText` | <span style="display:inline-block;width:80px;height:36px;background:#B91C1C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#B91C1C</span> | `#B91C1C` |
 | `successFill` | <span style="display:inline-block;width:80px;height:36px;background:#00904C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00904C</span> | `#00904C` |
-| `neutralFill` | <span style="display:inline-block;width:80px;height:36px;background:#6B7784;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#6B7784</span> | `#6B7784` |
+| `neutralFill` | <span style="display:inline-block;width:80px;height:36px;background:#64707D;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#64707D</span> | `#64707D` |
 | `sidebar` | <span style="display:inline-block;width:80px;height:36px;background:#004B9B;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#004B9B</span> | `#004B9B` |
 | `sidebarMuted` | <span style="display:inline-block;width:80px;height:36px;background:#002A68;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#002A68</span> | `#002A68` |
 
