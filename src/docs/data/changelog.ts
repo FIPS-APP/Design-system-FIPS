@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.41',
+    date: '2026-10-27',
+    title: 'Foco do teclado visível no atalho aberto do hero',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho`: o foco do teclado passa a ser um `outline` sólido branco de 3px com recuo de 2px. Antes era `focus-visible:ring-4` (uma `box-shadow`), que o `boxShadow` em linha do atalho aberto sobrescrevia: Tab no atalho ficava igual ao repouso, e todo foco de teclado abre o atalho. O contorno branco mede mais de 3:1 contra o fundo do `PageHero` nos dois temas. Apps que tinham CSS local para desenhar esse foco podem removê-lo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` exige que a classe do atalho use `outline` sem `ring` e calcula o contraste do contorno contra o gradiente do `PageHero` (com a película branca de 8%) e contra o fundo escuro.',
+      },
+    ],
+  },
+  {
     version: '0.20.40',
     date: '2026-10-27',
     title: 'Rótulo do atalho aberto do hero passa de 4,5:1 em todo o degradê',
