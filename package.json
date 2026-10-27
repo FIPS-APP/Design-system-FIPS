@@ -33,7 +33,7 @@
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test:publicar": "node --test scripts/publicar-decisao.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/publicar-decisao.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {

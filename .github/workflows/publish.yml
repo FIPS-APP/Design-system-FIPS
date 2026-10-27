@@ -2,8 +2,11 @@ name: Publish to GitHub Packages
 
 # Bump de versão na main é publicação: quando o package.json#version muda num push na main,
 # o pacote sai no GitHub Packages e a tag vX.Y.Z é criada neste mesmo workflow, sem passo
-# manual. Push na main sem mudança de versão não publica nada. Tag vX.Y.Z criada à mão
+# manual. Push na main com a versão já no registro não publica nada; com a versão fora do
+# registro (run anterior falhou ou foi cancelado), publica. Tag vX.Y.Z criada à mão
 # continua valendo, mas não publica de novo uma versão que já está no registro.
+# O token de publicação só entra nos passos que falam com o registro, e a tag sai num job
+# à parte, o único com contents: write, que não roda código do projeto nem de dependências.
 # A regra de decisão está em scripts/publicar-decisao.mjs (npm run test:publicar).
 on:
   push:
@@ -18,10 +21,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # criar a tag vX.Y.Z
+      contents: read
       packages: write # publicar no GitHub Packages
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      tag: ${{ steps.decisao.outputs.acao == 'publicar' && steps.decisao.outputs.criar_tag == 'true' && steps.decisao.outputs.versao || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,6 +47,8 @@ jobs:
 
       - name: Versão já está no registro?
         id: registro
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           NOME=$(node -p "require('./package.json').name")
           VERSAO=$(node -p "require('./package.json').version")
@@ -72,9 +77,25 @@ jobs:
       - name: Publicar
         if: steps.decisao.outputs.acao == 'publicar'
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  tag:
+    needs: publish
+    if: needs.publish.outputs.tag != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # criar a tag vX.Y.Z
+    steps:
+      - uses: actions/checkout@v4
       - name: Criar a tag
-        if: steps.decisao.outputs.acao == 'publicar' && steps.decisao.outputs.criar_tag == 'true'
+        env:
+          VERSAO: ${{ needs.publish.outputs.tag }}
         run: |
-          git tag "v${{ steps.decisao.outputs.versao }}"
-          git push origin "v${{ steps.decisao.outputs.versao }}"
+          # Tag já existe no remoto (empurrada à mão durante a publicação): não é erro.
+          if [ -n "$(git ls-remote --tags origin "refs/tags/v$VERSAO")" ]; then
+            echo "A tag v$VERSAO já existe: nada a criar."
+            exit 0
+          fi
+          git tag "v$VERSAO"
+          git push origin "v$VERSAO"

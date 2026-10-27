@@ -18,11 +18,14 @@ test('main com a versão mudada e fora do registro: publica e cria a tag', () =>
   assert.deepEqual([r.acao, r.criarTag], ['publicar', true])
 })
 
-test('main sem mudança de versão: não publica, não falha', () => {
+test('main sem mudança de versão e já no registro: não publica, não falha', () => {
   const r = decidir({ evento: 'main', versaoAntes: '0.20.30', versaoAtual: '0.20.30', jaPublicada: true })
   assert.deepEqual([r.acao, r.criarTag], ['pular', false])
-  const semRegistro = decidir({ evento: 'main', versaoAntes: '0.20.30', versaoAtual: '0.20.30', jaPublicada: false })
-  assert.equal(semRegistro.acao, 'pular')
+})
+
+test('main sem mudança de versão e fora do registro (run anterior falhou ou foi cancelado): publica', () => {
+  const r = decidir({ evento: 'main', versaoAntes: '0.20.30', versaoAtual: '0.20.30', jaPublicada: false })
+  assert.deepEqual([r.acao, r.criarTag], ['publicar', true])
 })
 
 test('main com a versão mudada para uma que já existe: falha dizendo qual versão', () => {
@@ -66,6 +69,16 @@ test('o script de linha de comando escreve as saídas e sai com 1 no caso de fal
     const falha = spawnSync('node', [SCRIPT], { cwd: dir, env: { ...base, VERSAO_ANTES: '0.20.29', JA_PUBLICADA: 'true' }, encoding: 'utf8' })
     assert.equal(falha.status, 1)
     assert.match(falha.stdout, /::error/)
+
+    // Tag empurrada à mão: o script lê GITHUB_REF_TYPE e GITHUB_REF_NAME, não trata como push na main.
+    const tag = { ...process.env, GITHUB_OUTPUT: saida, GITHUB_REF_TYPE: 'tag', JA_PUBLICADA: 'false', VERSAO_ANTES: '' }
+    writeFileSync(saida, '')
+    const tagOk = spawnSync('node', [SCRIPT], { cwd: dir, env: { ...tag, GITHUB_REF_NAME: 'v0.20.30' }, encoding: 'utf8' })
+    assert.equal(tagOk.status, 0)
+    assert.match(readFileSync(saida, 'utf8'), /acao=publicar\ncriar_tag=false\nversao=0\.20\.30\n/)
+    const tagErrada = spawnSync('node', [SCRIPT], { cwd: dir, env: { ...tag, GITHUB_REF_NAME: 'v0.20.31' }, encoding: 'utf8' })
+    assert.equal(tagErrada.status, 1)
+    assert.match(tagErrada.stdout, /não bate com a versão/)
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }

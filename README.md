@@ -87,15 +87,15 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 1. Edite o campo `"version"` no `package.json`
 2. Atualize a seção "Versão atual" neste README
 3. Commit com mensagem no padrão: `chore: bump version to X.Y.Z`
-4. Faça o merge na `main`. **Bump de versão na `main` é publicação**: o workflow `publish.yml` publica o pacote no GitHub Packages e cria a tag `vX.Y.Z`. Não há mais publicação manual nem tag à mão.
+4. Faça o merge na `main`. **Bump de versão na `main` é publicação**: o workflow `publish.yml` publica o pacote no GitHub Packages e cria a tag `vX.Y.Z`. Não é preciso publicar nem criar a tag à mão; uma tag empurrada à mão continua aceita e não publica de novo uma versão já publicada.
 
-O workflow compara `package.json#version` com a do commit anterior da `main`. Versão igual: nada é publicado. Versão mudada para uma que já existe no registro: o workflow falha e diz qual versão. Uma tag `vX.Y.Z` empurrada à mão continua aceita, mas não publica de novo uma versão que já está no registro. A regra está em `scripts/publicar-decisao.mjs` (`npm run test:publicar`).
+O workflow compara `package.json#version` com a do commit anterior da `main`. Versão igual e já no registro: nada é publicado. Versão igual e fora do registro (o run do bump falhou ou foi cancelado): publica. Versão mudada para uma que já existe no registro: o workflow falha e diz qual versão. Se a tag `vX.Y.Z` já existe no remoto, o workflow não tenta criá-la de novo. A regra está em `scripts/publicar-decisao.mjs` (`npm run test:publicar`).
 
 ## Histórico de versões
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.9 | 2026-10-27 | `publish.yml` passa a rodar em push na `main`: quando `package.json#version` muda, publica no GitHub Packages e cria a tag `vX.Y.Z`; versão igual não publica; versão mudada para uma que já existe no registro falha dizendo qual. Tag à mão continua aceita e não publica de novo. Só `GITHUB_TOKEN` com `packages: write` e `contents: write`. `npm run test:publicar` |
+| 0.21.9 | 2026-10-27 | `publish.yml` passa a rodar em push na `main`: quando `package.json#version` muda, publica no GitHub Packages e cria a tag `vX.Y.Z`; versão igual e já no registro não publica; versão igual e fora do registro publica; versão mudada para uma que já existe no registro falha dizendo qual. Tag à mão continua aceita e não publica de novo. Só `GITHUB_TOKEN`: `packages: write` no job que publica, `contents: write` só no job que cria a tag. `npm run test:publicar` |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
 | 0.20.28 | 2026-10-24 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.27 | 2026-10-24 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |

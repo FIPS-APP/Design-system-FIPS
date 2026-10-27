@@ -7,6 +7,7 @@
  * JA_PUBLICADA (`true` ou `false`: a versão atual existe no registro).
  * Saídas (GITHUB_OUTPUT): acao (`publicar` ou `pular`), criar_tag (`true` ou `false`), versao.
  * Versão que muda para uma que já existe no registro termina com código 1.
+ * Versão igual à do commit anterior só publica se o registro ainda não a tem.
  */
 import { appendFileSync, readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
@@ -34,7 +35,11 @@ export function decidir({ evento, tag, versaoAntes, versaoAtual, jaPublicada }) 
   }
 
   if (versaoAntes === versaoAtual) {
-    return { acao: 'pular', criarTag: false, mensagem: `A versão não mudou (${versaoAtual}): nada a publicar.` }
+    // Versão igual à do commit anterior: publica só se o registro ainda não a tem. Cobre o push
+    // seguinte a um run que falhou ou foi cancelado, que sem isso deixaria a versão sem publicar.
+    return jaPublicada
+      ? { acao: 'pular', criarTag: false, mensagem: `A versão não mudou (${versaoAtual}) e já está no registro: nada a publicar.` }
+      : { acao: 'publicar', criarTag: true, mensagem: `A versão não mudou (${versaoAtual}), mas não está no registro: publicando.` }
   }
 
   if (jaPublicada) {
