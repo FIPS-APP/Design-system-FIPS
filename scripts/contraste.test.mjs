@@ -204,6 +204,23 @@ test('README do exemplo portátil do Switch lista os tokens lidos, com o hex dos
   }
 })
 
+test('README do exemplo portátil do Switch: as linhas citadas da foundations.md apontam para os tokens', () => {
+  const readme = ler('exports/switch/README.md')
+  const m = readme.match(/\(`:(\d+)-(\d+)` no claro, `:(\d+)` e `:(\d+)-(\d+)` no escuro\)/)
+  assert.ok(m, 'README sem a citação de linhas da foundations.md')
+  const [claroDe, claroAte, recuo, escuroDe, escuroAte] = m.slice(1).map(Number)
+  const linhas = ler('skills/design-system-fips/references/foundations.md').split('\n')
+  const trecho = (de, ate) => linhas.slice(de - 1, ate).join('\n')
+  const tokens = ['--color-ring', '--color-switch-on', '--color-switch-off']
+  assert.equal(claroAte - claroDe + 1, tokens.length, `claro :${claroDe}-${claroAte} deveria ter ${tokens.length} linhas`)
+  assert.equal(escuroAte - escuroDe + 1, tokens.length, `escuro :${escuroDe}-${escuroAte} deveria ter ${tokens.length} linhas`)
+  for (const nome of tokens) {
+    assert.ok(trecho(claroDe, claroAte).includes(`${nome}:`), `foundations.md:${claroDe}-${claroAte} (claro) não declara ${nome}`)
+    assert.ok(trecho(escuroDe, escuroAte).includes(`\`${nome}\``), `foundations.md:${escuroDe}-${escuroAte} (escuro) não lista ${nome}`)
+  }
+  assert.ok(trecho(recuo, recuo).includes('`--color-surface`'), `foundations.md:${recuo} (escuro) não é a linha de --color-surface`)
+})
+
 // ─── Azul escuro de texto ──────────────────────────────────────────────────
 for (const t of TEMAS) {
   test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {
