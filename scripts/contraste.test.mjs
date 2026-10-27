@@ -204,6 +204,32 @@ test('README do exemplo portátil do Switch lista os tokens lidos, com o hex dos
   }
 })
 
+// ─── Toast e Tooltip: texto do tom sucesso ─────────────────────────────────
+// O fundo é fixo nos dois temas (#ECFDF5), então o par vale no claro e no escuro. #00904C sobre ele mede 3,91:1.
+const TONS_SUCESSO = [
+  'exports/toast/toast.tsx',
+  'exports/tooltip/Tooltip.tsx',
+  'src/docs/pages/components/ToastDoc.tsx',
+  'src/docs/pages/components/TooltipDoc.tsx',
+]
+
+for (const arquivo of TONS_SUCESSO) {
+  test(`${arquivo}: texto do tom sucesso contra o fundo dele, mínimo 4,5:1`, () => {
+    const fonte = ler(arquivo)
+    const paleta = Object.fromEntries([...fonte.matchAll(/(\w+)\s*:\s*"(#[\da-f]{6})"/gi)].map((m) => [m[1], m[2]]))
+    const tons = [...fonte.matchAll(/\bsucesso\s*:\s*\{([^}]*)\}/g)].map((m) => m[1])
+    assert.ok(tons.length > 0, `${arquivo}: nenhum tom sucesso encontrado`)
+    for (const corpo of tons) {
+      const bg = corpo.match(/\bbg\s*:\s*"(#[\da-f]{6})"/i)
+      const texto = corpo.match(/\bcolor\s*:\s*(?:"(#[\da-f]{6})"|C\.(\w+))/i)
+      assert.ok(bg && texto, `${arquivo}: sucesso sem bg ou color legível (${corpo.trim().slice(0, 80)})`)
+      const hex = texto[1] ?? paleta[texto[2]]
+      assert.ok(hex, `${arquivo}: C.${texto[2]} fora da paleta do arquivo`)
+      verifica(`${arquivo}: ${hex} sobre ${bg[1]}`, cor(hex, 'claro'), cor(bg[1], 'claro'), MINIMO_TEXTO)
+    }
+  })
+}
+
 // ─── Azul escuro de texto ──────────────────────────────────────────────────
 for (const t of TEMAS) {
   test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {

@@ -4,7 +4,7 @@ import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
-const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
+const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeFlorestaProfundo:"#006D35",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 
 /* ═══════════════════════════════════════════ ICONS ═══════════════════════════════════════════ */
@@ -21,7 +21,7 @@ function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" st
 
 /* ═══════════════════════════════════════════ TOAST CONFIG ═══════════════════════════════════════════ */
 const TV={
-  sucesso:{bg:"#ECFDF5",border:"#A7F3D0",color:C.verdeEscuro,accent:C.verdeFloresta,iconFn:(s)=>Ic.check(s,C.verdeFloresta)},
+  sucesso:{bg:"#ECFDF5",border:"#A7F3D0",color:C.verdeFlorestaProfundo,accent:C.verdeFloresta,iconFn:(s)=>Ic.check(s,C.verdeFloresta)},
   erro:{bg:"#FEF2F2",border:"#FECACA",color:"#B91C1C",accent:C.danger,iconFn:(s)=>Ic.errorX(s,C.danger)},
   atencao:{bg:"#FFF7ED",border:"#FDBA74",color:"#C2410C",accent:C.amareloEscuro,iconFn:(s)=>Ic.alertTri(s,C.amareloEscuro)},
   info:{bg:C.azulCeuClaro,border:C.azulCeu,color:C.azulEscuro,accent:C.azulProfundo,iconFn:(s)=>Ic.infoI(s,C.azulProfundo)},
@@ -95,7 +95,7 @@ const C = {
   cinzaChumbo: "#7B8C96",
   cinzaEscuro: "#333B41",
   verdeFloresta: "#00C64C",
-  verdeEscuro: "#00904C",
+  verdeFlorestaProfundo: "#006D35",
   amareloEscuro: "#F6921E",
   danger: "#DC3545",
   branco: "#FFFFFF",
@@ -111,7 +111,7 @@ const Fn = {
 type ToastVariant = "sucesso" | "erro" | "atencao" | "info" | "neutro";
 
 const TV: Record<ToastVariant, { bg: string; border: string; color: string; accent: string }> = {
-  sucesso: { bg: "#ECFDF5", border: "#A7F3D0", color: C.verdeEscuro, accent: C.verdeFloresta },
+  sucesso: { bg: "#ECFDF5", border: "#A7F3D0", color: C.verdeFlorestaProfundo, accent: C.verdeFloresta },
   erro: { bg: "#FEF2F2", border: "#FECACA", color: "#B91C1C", accent: C.danger },
   atencao: { bg: "#FFF7ED", border: "#FDBA74", color: "#C2410C", accent: C.amareloEscuro },
   info: { bg: "#D3E3F4", border: "#93BDE4", color: C.azulEscuro, accent: C.azulProfundo },
@@ -181,7 +181,7 @@ export function useToast() {
 /* ═══════════════════════════════════════════ COPYABLE HELPERS ═══════════════════════════════════════════ */
 function toastCode(variant: string, title: string, message: string, extra = '') {
   const colorMap: Record<string, { bg: string; border: string; color: string; accent: string }> = {
-    sucesso: { bg: "#ECFDF5", border: "#A7F3D0", color: "#00904C", accent: "#00C64C" },
+    sucesso: { bg: "#ECFDF5", border: "#A7F3D0", color: "#006D35", accent: "#00C64C" },
     erro: { bg: "#FEF2F2", border: "#FECACA", color: "#B91C1C", accent: "#DC3545" },
     atencao: { bg: "#FFF7ED", border: "#FDBA74", color: "#C2410C", accent: "#F6921E" },
     info: { bg: "#D3E3F4", border: "#93BDE4", color: "#002A68", accent: "#004B9B" },

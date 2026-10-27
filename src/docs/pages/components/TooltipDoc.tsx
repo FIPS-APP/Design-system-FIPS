@@ -4,7 +4,7 @@ import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
-const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
+const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeFlorestaProfundo:"#006D35",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
 const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono:"'Fira Code',monospace"};
 
 /* ═══════════════════════════════════════════ ICONS ═══════════════════════════════════════════ */
@@ -30,7 +30,7 @@ const TTV={
   info:{bg:"#EFF6FF",color:C.azulEscuro,border:C.azulCeu},
   atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},
   erro:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},
-  sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},
+  sucesso:{bg:"#ECFDF5",color:C.verdeFlorestaProfundo,border:"#A7F3D0"},
 };
 
 function Tooltip({children,text,title:ttl,position="top",variant="dark",delay=200,maxW=240}){
@@ -72,7 +72,7 @@ function Tooltip({children,text,title:ttl,position="top",variant="dark",delay=20
 }
 
 /* ═══════════════════════════════════════════ BADGE mini ═══════════════════════════════════════════ */
-const BV={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},default:{bg:C.azulProfundo,color:C.branco,border:"transparent"},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
+const BV={sucesso:{bg:"#ECFDF5",color:C.verdeFlorestaProfundo,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},default:{bg:C.azulProfundo,color:C.branco,border:"transparent"},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
 function Badge({variant="default",children,dot,size="md"}){const v=BV[variant]||BV.default;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
@@ -101,7 +101,7 @@ const C = {
   cinzaEscuro: "#333B41",
   cinzaChumbo: "#7B8C96",
   azulCeu: "#93BDE4",
-  verdeEscuro: "#00904C",
+  verdeFlorestaProfundo: "#006D35",
   branco: "#FFFFFF",
   cardBorder: "#E2E8F0",
 };
@@ -118,7 +118,7 @@ const TTV: Record<TooltipVariant, { bg: string; color: string; border: string }>
   info: { bg: "#EFF6FF", color: C.azulEscuro, border: C.azulCeu },
   atencao: { bg: "#FFF7ED", color: "#C2410C", border: "#FDBA74" },
   erro: { bg: "#FEF2F2", color: "#B91C1C", border: "#FECACA" },
-  sucesso: { bg: "#ECFDF5", color: C.verdeEscuro, border: "#A7F3D0" },
+  sucesso: { bg: "#ECFDF5", color: C.verdeFlorestaProfundo, border: "#A7F3D0" },
 };
 
 export function Tooltip({
@@ -183,7 +183,7 @@ function tooltipCode(variant: string, text: string, position = 'top') {
     info: { bg: "#EFF6FF", color: "#002A68", border: "#93BDE4" },
     atencao: { bg: "#FFF7ED", color: "#C2410C", border: "#FDBA74" },
     erro: { bg: "#FEF2F2", color: "#B91C1C", border: "#FECACA" },
-    sucesso: { bg: "#ECFDF5", color: "#00904C", border: "#A7F3D0" },
+    sucesso: { bg: "#ECFDF5", color: "#006D35", border: "#A7F3D0" },
   };
   const v = colorMap[variant] || colorMap.dark;
   return `// DS-FIPS — Tooltip "${variant}" (${position}) — Copy-paste ready
@@ -281,8 +281,8 @@ export default function TooltipDoc(){
               <Copyable label="Tooltip Erro" code={tooltipCode("erro","Tooltip de erro para campos inválidos.")} preview={<Tooltip text="Tooltip de erro para campos inválidos." variant="erro"><DemoPill bg="#FEF2F2" color="#B91C1C">Erro</DemoPill></Tooltip>}>
                 <Tooltip text="Tooltip de erro para campos inválidos." variant="erro"><DemoPill bg="#FEF2F2" color="#B91C1C">Erro</DemoPill></Tooltip>
               </Copyable>
-              <Copyable label="Tooltip Sucesso" code={tooltipCode("sucesso","Tooltip de sucesso para confirmações.")} preview={<Tooltip text="Tooltip de sucesso para confirmações." variant="sucesso"><DemoPill bg="#ECFDF5" color={C.verdeEscuro}>Sucesso</DemoPill></Tooltip>}>
-                <Tooltip text="Tooltip de sucesso para confirmações." variant="sucesso"><DemoPill bg="#ECFDF5" color={C.verdeEscuro}>Sucesso</DemoPill></Tooltip>
+              <Copyable label="Tooltip Sucesso" code={tooltipCode("sucesso","Tooltip de sucesso para confirmações.")} preview={<Tooltip text="Tooltip de sucesso para confirmações." variant="sucesso"><DemoPill bg="#ECFDF5" color={C.verdeFlorestaProfundo}>Sucesso</DemoPill></Tooltip>}>
+                <Tooltip text="Tooltip de sucesso para confirmações." variant="sucesso"><DemoPill bg="#ECFDF5" color={C.verdeFlorestaProfundo}>Sucesso</DemoPill></Tooltip>
               </Copyable>
             </div>
           </DSCard>
