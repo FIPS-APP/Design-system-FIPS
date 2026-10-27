@@ -1,6 +1,5 @@
-// @ts-nocheck
-import { useState, useEffect, useRef } from "react";
-import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles, Users } from "lucide-react";
+import { useState, useEffect, type CSSProperties, type MouseEventHandler, type ReactNode } from "react";
+import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles, Users, type LucideIcon } from "lucide-react";
 import { Select } from '../../../components/ui/select';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
@@ -69,26 +68,27 @@ const Ic={
   lock:(s=14,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="2" stroke={c} strokeWidth="1.5"/><path d="M7 9V6.5a3 3 0 016 0V9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
 };
 
-function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+function JunctionLines({style}:{style?:CSSProperties}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
 
 /* ═══════════════════════════════════════════ BADGE ═══════════════════════════════════════════ */
 const BV={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu}};
-function Badge({variant="info",children,dot}){const v=BV[variant]||BV.info;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:"2px 8px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
+function Badge({variant="info",children,dot}:{variant?:keyof typeof BV;children:ReactNode;dot?:boolean}){const v=BV[variant]||BV.info;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:"2px 8px",fontSize:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
 
 /* Info card — cartão da ficha de detalhe (modelo: BiDetailDialog/Governança BI): fundo suave, label uppercase discreta, valor em destaque. */
-function InfoCard({label,value}){return(<div style={{borderRadius:8,border:`1px solid ${C.cardBorder}`,background:C.bg,padding:"9px 12px",minWidth:0}}><dt style={{fontSize:10,fontWeight:600,letterSpacing:".04em",textTransform:"uppercase",color:C.textMuted,fontFamily:Fn.body}}>{label}</dt><dd style={{margin:"2px 0 0",fontSize:13,fontWeight:500,color:C.cinzaEscuro,fontFamily:Fn.body,wordBreak:"break-word"}}>{value||"—"}</dd></div>)}
+function InfoCard({label,value}:{label:ReactNode;value?:ReactNode}){return(<div style={{borderRadius:8,border:`1px solid ${C.cardBorder}`,background:C.bg,padding:"9px 12px",minWidth:0}}><dt style={{fontSize:10,fontWeight:600,letterSpacing:".04em",textTransform:"uppercase",color:C.textMuted,fontFamily:Fn.body}}>{label}</dt><dd style={{margin:"2px 0 0",fontSize:13,fontWeight:500,color:C.cinzaEscuro,fontFamily:Fn.body,wordBreak:"break-word"}}>{value||"—"}</dd></div>)}
 
 /* ═══════════════════════════════════════════
    MODAL — REFINED v2
    ═══════════════════════════════════════════ */
-function Modal({open,onClose,title,subtitle,eyebrow,eyebrowColor,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}){
+function Modal({open,onClose,title,subtitle,eyebrow,eyebrowColor,children,footer,footerBg,width=480,icon,iconBg,iconBorder,bodyBg,noPadBody,headerBg="#002A68"}:{open:boolean;onClose:()=>void;title:ReactNode;subtitle?:ReactNode;eyebrow?:ReactNode;eyebrowColor?:string;children?:ReactNode;footer?:ReactNode;footerBg?:string;width?:number;icon?:ReactNode;iconBg?:string;iconBorder?:string;bodyBg?:string;noPadBody?:boolean;headerBg?:string}){
   const [vis,setVis]=useState(false);
   const [animIn,setAnimIn]=useState(false);
   useEffect(()=>{
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- o efeito sincroniza a montagem com a animação de entrada e saída (requestAnimationFrame e timer); a chamada síncrona é o primeiro passo da sequência e não há valor derivável
     if(open){setVis(true);requestAnimationFrame(()=>requestAnimationFrame(()=>setAnimIn(true)))}
     else{setAnimIn(false);const t=setTimeout(()=>setVis(false),280);return()=>clearTimeout(t)}
   },[open]);
-  useEffect(()=>{if(!open)return;const h=e=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
+  useEffect(()=>{if(!open)return;const h=(e:KeyboardEvent)=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
   if(!vis)return null;
   const isHero=headerBg===GOV_GRAD;
   return(
@@ -126,14 +126,15 @@ const POPUP_SIZES={
   grande:{width:720,maxH:"90vh",label:"Grande"},
   "tela-cheia":{width:"92vw",maxH:"95vh",label:"Tela cheia"},
 };
-const POPUP_ORDER=["normal","grande","tela-cheia"];
+const POPUP_ORDER:(keyof typeof POPUP_SIZES)[]=["normal","grande","tela-cheia"];
 
-function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg,iconBorder,headerBg=GOV_GRAD}){
+function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg,iconBorder,headerBg=GOV_GRAD}:{open:boolean;onClose:()=>void;title:ReactNode;subtitle?:ReactNode;children?:ReactNode|((p:{size:keyof typeof POPUP_SIZES;isWide:boolean;isFullscreen:boolean})=>ReactNode);footer?:ReactNode;icon?:ReactNode;iconBg?:string;iconBorder?:string;headerBg?:string}){
   const [vis,setVis]=useState(false);
   const [animIn,setAnimIn]=useState(false);
-  const [size,setSize]=useState("normal");
+  const [size,setSize]=useState<keyof typeof POPUP_SIZES>("normal");
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- o efeito sincroniza a montagem com a animação de entrada e saída (requestAnimationFrame e timer); a chamada síncrona é o primeiro passo da sequência e não há valor derivável
   useEffect(()=>{if(open){setSize("normal");setVis(true);requestAnimationFrame(()=>requestAnimationFrame(()=>setAnimIn(true)))}else{setAnimIn(false);const t=setTimeout(()=>setVis(false),280);return()=>clearTimeout(t)}},[open]);
-  useEffect(()=>{if(!open)return;const h=e=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
+  useEffect(()=>{if(!open)return;const h=(e:KeyboardEvent)=>{if(e.key==="Escape")onClose()};document.addEventListener("keydown",h);return()=>document.removeEventListener("keydown",h)},[open,onClose]);
 
   const cycleSize=()=>{const i=POPUP_ORDER.indexOf(size);setSize(POPUP_ORDER[(i+1)%POPUP_ORDER.length])};
   const sz=POPUP_SIZES[size];
@@ -177,20 +178,20 @@ function PopupModal({open,onClose,title,subtitle,children,footer,icon,iconBg,ico
 /* ═══════════════════════════════════════════ FORM COMPONENTS ═══════════════════════════════════════════ */
 /* Focus/blur padrão DS-FIPS (compact): ring 2px primary/20 + border primary; base = shadow-sm */
 const FIELD_BASE_SHADOW="0 1px 2px rgba(0,0,0,.05)";
-const fieldFocus=el=>{el.style.borderColor=C.azulProfundo;el.style.boxShadow="0 0 0 2px rgba(0,75,155,.2)"};
-const fieldBlur=el=>{el.style.borderColor=C.inputBorder;el.style.boxShadow=FIELD_BASE_SHADOW};
-function FInput({label,placeholder,value,required,icon,type="text"}){
+const fieldFocus=(el:HTMLElement)=>{el.style.borderColor=C.azulProfundo;el.style.boxShadow="0 0 0 2px rgba(0,75,155,.2)"};
+const fieldBlur=(el:HTMLElement)=>{el.style.borderColor=C.inputBorder;el.style.boxShadow=FIELD_BASE_SHADOW};
+function FInput({label,placeholder,value,required,icon,type="text"}:{label?:ReactNode;placeholder?:string;value?:string;required?:boolean;icon?:ReactNode;type?:string}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:4}}>
       {label&&<label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}
       <div style={{display:"flex",alignItems:"center",gap:8,height:36,padding:"0 12px",border:`1px solid ${C.inputBorder}`,borderRadius:12,background:C.branco,boxShadow:FIELD_BASE_SHADOW,transition:"all .2s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
         {icon&&<span style={{display:"flex",flexShrink:0,color:C.textMuted}}>{icon}</span>}
-        <input type={type} placeholder={placeholder} defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>fieldFocus(e.target.parentElement)} onBlur={e=>fieldBlur(e.target.parentElement)}/>
+        <input type={type} placeholder={placeholder} defaultValue={value} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:14,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>fieldFocus(e.target.parentElement!)} onBlur={e=>fieldBlur(e.target.parentElement!)}/>
       </div>
     </div>
   );
 }
-function FSelect({label,options=[],value,icon}){
+function FSelect({label,options=[],value,icon}:{label?:ReactNode;options?:string[];value?:string;icon?:ReactNode}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:4}}>
       {label&&<label style={{fontSize:12,fontWeight:600,lineHeight:"16px",color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:12}}>{label}</label>}
@@ -206,22 +207,22 @@ function FSelect({label,options=[],value,icon}){
 }
 /* `fg`: cor do rótulo no botão preenchido. Default branco; fundos claros da paleta
    (ouro #FDC24E, azul céu #93BDE4) pedem texto escuro — branco sobre eles fica lavado. */
-function Btn({label,color,outline,onClick,full,danger,fg,icon:IconCmp}){
+function Btn({label,color,outline,onClick,full,danger,fg,icon:IconCmp}:{label:ReactNode;color?:string;outline?:boolean;onClick?:MouseEventHandler<HTMLButtonElement>;full?:boolean;danger?:boolean;fg?:string;icon?:LucideIcon}){
   const bg=danger?C.danger:color||C.azulProfundo;
   return <button onClick={onClick} style={{padding:"8px 20px",fontSize:12,fontWeight:600,background:outline?"transparent":bg,color:outline?danger?C.danger:color||C.cinzaChumbo:fg||C.branco,border:outline?`1.5px solid ${danger?C.danger:color||C.cinzaClaro}`:"none",borderRadius:8,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto",transition:"all .15s",...(IconCmp?{display:"inline-flex",alignItems:"center",gap:7,justifyContent:full?"center":"flex-start"}:null)}} onMouseEnter={e=>{e.currentTarget.style.opacity=".85";if(!outline)e.currentTarget.style.boxShadow=`0 2px 8px ${bg}40`}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.boxShadow="none"}}>{IconCmp&&<IconCmp size={14} strokeWidth={2.2}/>}{label}</button>;
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.azulEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
-function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
+function Section({n,title,desc,children}:{n:ReactNode;title:ReactNode;desc:ReactNode;children:ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.azulEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function DSCard({children,s,mob:m}:{children:ReactNode;s?:CSSProperties;mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",overflow:"hidden"};
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
 const gb={padding:"16px 20px 20px"};
 const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:4,marginTop:12};
 const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
 const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.body,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`};
-function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
-function Kbd({children}){return <kbd style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:26,height:24,padding:"0 7px",background:C.branco,border:`1px solid ${C.cardBorder}`,borderBottom:`2px solid ${C.cinzaClaro}`,borderRadius:5,fontSize:11,fontWeight:600,fontFamily:Fn.mono,color:C.cinzaEscuro,boxShadow:"0 1px 2px rgba(0,0,0,.06)"}}>{children}</kbd>}
+function TokenRow({label,value,color}:{label:ReactNode;value:ReactNode;color?:string}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
+function Kbd({children}:{children:ReactNode}){return <kbd style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:26,height:24,padding:"0 7px",background:C.branco,border:`1px solid ${C.cardBorder}`,borderBottom:`2px solid ${C.cinzaClaro}`,borderRadius:5,fontSize:11,fontWeight:600,fontFamily:Fn.mono,color:C.cinzaEscuro,boxShadow:"0 1px 2px rgba(0,0,0,.06)"}}>{children}</kbd>}
 
 
 
@@ -246,8 +247,8 @@ export default function DialogDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
-  const [m,setM]=useState(null);
-  const open=id=>setM(id);const close=()=>setM(null);
+  const [m,setM]=useState<string|null>(null);
+  const open=(id:string)=>setM(id);const close=()=>setM(null);
 
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
@@ -370,7 +371,7 @@ export default function DialogDoc(){
                 <span style={{fontSize:13,fontWeight:600,color:C.cinzaEscuro,display:"block"}}>{r.item}</span>
                 <span style={{fontSize:11,color:C.textMuted}}>Qtd: {r.qty}</span>
               </div>
-              <Badge variant={r.status} dot>{r.sl}</Badge>
+              <Badge variant={r.status as keyof typeof BV} dot>{r.sl}</Badge>
               <span style={{fontSize:13,fontWeight:700,color:C.azulEscuro,fontFamily:Fn.mono,minWidth:85,textAlign:"right"}}>{r.val}</span>
             </div>
           ))}

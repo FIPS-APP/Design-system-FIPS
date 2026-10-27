@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { Bell, Database, HardDrive } from "lucide-react";
 import { FipsTabBar } from '../../../components/composites/FipsTabBar';
 
@@ -24,15 +23,18 @@ const Ic={
   lock:(s=14,c="currentColor")=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="9" rx="2" stroke={c} strokeWidth="1.5"/><path d="M7 9V6a3 3 0 016 0v3" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
 };
 
-function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+function JunctionLines({style}:{style?:CSSProperties}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+
+interface TabItem{label:string;icon?:ReactNode|((c:string)=>ReactNode);count?:number;dot?:boolean;dotColor?:string;disabled?:boolean;color?:string}
+interface TabsProps{tabs?:TabItem[];active?:number;onChange?:(i:number)=>void;size?:"sm"|"md"|"lg"}
 
 /* ═══════════════════════════════════════════
    TABS — UNDERLINE (sliding indicator)
    ═══════════════════════════════════════════ */
-function TabsUnderline({tabs=[],active=0,onChange,size="md"}){
+function TabsUnderline({tabs=[],active=0,onChange,size="md"}:TabsProps){
   const sz={sm:{fs:12,py:8,px:16},md:{fs:13,py:10,px:20},lg:{fs:14,py:12,px:24}};
   const s=sz[size]||sz.md;
-  const refs=useRef([]);
+  const refs=useRef<(HTMLDivElement|null)[]>([]);
   const [line,setLine]=useState({left:0,width:0});
   useEffect(()=>{
     const el=refs.current[active];
@@ -45,7 +47,7 @@ function TabsUnderline({tabs=[],active=0,onChange,size="md"}){
         const isA=active===i;const dis=t.disabled;
         const ic=isA?C.amareloEscuro:C.cinzaChumbo;
         return(
-          <div key={i} ref={el=>refs.current[i]=el} onClick={()=>!dis&&onChange?.(i)} style={{padding:`${s.py}px ${s.px}px`,fontSize:s.fs,fontWeight:isA?600:400,fontFamily:Fn.body,color:dis?C.textLight:isA?C.azulEscuro:C.cinzaChumbo,cursor:dis?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:7,whiteSpace:"nowrap",transition:"all .2s",opacity:dis?.45:1}}
+          <div key={i} ref={el=>{refs.current[i]=el}} onClick={()=>!dis&&onChange?.(i)} style={{padding:`${s.py}px ${s.px}px`,fontSize:s.fs,fontWeight:isA?600:400,fontFamily:Fn.body,color:dis?C.textLight:isA?C.azulEscuro:C.cinzaChumbo,cursor:dis?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:7,whiteSpace:"nowrap",transition:"all .2s",opacity:dis?.45:1}}
             onMouseEnter={e=>{if(!dis&&!isA)e.currentTarget.style.color=C.cinzaEscuro}}
             onMouseLeave={e=>{if(!dis&&!isA)e.currentTarget.style.color=C.cinzaChumbo}}
           >
@@ -65,7 +67,7 @@ function TabsUnderline({tabs=[],active=0,onChange,size="md"}){
 /* ═══════════════════════════════════════════
    TABS — FILLED
    ═══════════════════════════════════════════ */
-function TabsFilled({tabs=[],active=0,onChange,size="md"}){
+function TabsFilled({tabs=[],active=0,onChange,size="md"}:TabsProps){
   const sz={sm:{fs:12,py:7,px:14},md:{fs:13,py:9,px:18},lg:{fs:14,py:11,px:22}};
   const s=sz[size]||sz.md;
   return(
@@ -91,7 +93,7 @@ function TabsFilled({tabs=[],active=0,onChange,size="md"}){
 /* ═══════════════════════════════════════════
    TABS — GUIA (folder/browser tab style)
    ═══════════════════════════════════════════ */
-function TabsGuia({tabs=[],active=0,onChange,size="md"}){
+function TabsGuia({tabs=[],active=0,onChange,size="md"}:TabsProps){
   const sz={sm:{fs:11,py:8,px:18},md:{fs:12,py:10,px:20},lg:{fs:13,py:12,px:24}};
   const s=sz[size]||sz.md;
   return(
@@ -130,7 +132,7 @@ function TabsGuia({tabs=[],active=0,onChange,size="md"}){
 /* ═══════════════════════════════════════════
    TABS — BORDERED (vertical capable)
    ═══════════════════════════════════════════ */
-function TabsBordered({tabs=[],active=0,onChange,size="md",vertical}){
+function TabsBordered({tabs=[],active=0,onChange,size="md",vertical}:TabsProps&{vertical?:boolean}){
   const sz={sm:{fs:12,py:7,px:14},md:{fs:13,py:9,px:16},lg:{fs:14,py:11,px:20}};
   const s=sz[size]||sz.md;
   return(
@@ -166,11 +168,11 @@ function TabsBordered({tabs=[],active=0,onChange,size="md",vertical}){
 }
 
 /* ═══════════════════════════════════════════ CONTENT PANEL with fade ═══════════════════════════════════════════ */
-function TabContent({children,k}){return <div key={k} style={{padding:"10px 0",fontSize:13,color:C.cinzaEscuro,fontFamily:Fn.body,lineHeight:1.6,animation:"tabFadeIn .25s ease"}}>{children}</div>}
+function TabContent({children,k}:{children?:ReactNode;k?:string|number}){return <div key={k} style={{padding:"10px 0",fontSize:13,color:C.cinzaEscuro,fontFamily:Fn.body,lineHeight:1.6,animation:"tabFadeIn .25s ease"}}>{children}</div>}
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
-function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
+function Section({n,title,desc,children}:{n:string;title:string;desc:string;children?:ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function DSCard({children,s,mob:m}:{children?:ReactNode;s?:CSSProperties;mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 
 const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",overflow:"hidden"};
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
@@ -179,7 +181,7 @@ const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"upperc
 const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
 const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.body,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`};
 const gk={fontSize:11,fontFamily:Fn.mono,color:C.cinzaChumbo,background:C.cardBg,padding:"2px 8px",borderRadius:4,border:`1px solid ${C.cardBorder}`};
-function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
+function TokenRow({label,value,color}:{label:string;value:string;color?:string}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function TabsDoc(){
@@ -202,7 +204,7 @@ export default function TabsDoc(){
     {id:"sistema",label:"Sistema",icon:<HardDrive size={14} strokeWidth={1.9}/>},
   ];
 
-  const mainTabs=[
+  const mainTabs:TabItem[]=[
     {label:"Home",icon:(c)=>Ic.home(14,c)},
     {label:"Nova Solicitação",icon:(c)=>Ic.doc(14,c)},
     {label:"Minhas Solicitações",icon:(c)=>Ic.list(14,c)},

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect } from 'react'
 import { Eye, ArrowRight, User } from 'lucide-react'
 import { CodeExportSection } from '../components/CodeExport'

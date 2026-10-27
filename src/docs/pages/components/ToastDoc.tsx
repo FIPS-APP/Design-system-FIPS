@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 
@@ -17,22 +16,26 @@ const Ic={
   grid:(s=14,c=C.amareloOuro)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke={c} strokeWidth="1.4"/></svg>,
 };
 
-function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+function JunctionLines({style}:{style?:CSSProperties}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
 
 /* ═══════════════════════════════════════════ TOAST CONFIG ═══════════════════════════════════════════ */
 const TV={
-  sucesso:{bg:"#ECFDF5",border:"#A7F3D0",color:C.verdeEscuro,accent:C.verdeFloresta,iconFn:(s)=>Ic.check(s,C.verdeFloresta)},
-  erro:{bg:"#FEF2F2",border:"#FECACA",color:"#B91C1C",accent:C.danger,iconFn:(s)=>Ic.errorX(s,C.danger)},
-  atencao:{bg:"#FFF7ED",border:"#FDBA74",color:"#C2410C",accent:C.amareloEscuro,iconFn:(s)=>Ic.alertTri(s,C.amareloEscuro)},
-  info:{bg:C.azulCeuClaro,border:C.azulCeu,color:C.azulEscuro,accent:C.azulProfundo,iconFn:(s)=>Ic.infoI(s,C.azulProfundo)},
-  neutro:{bg:C.bg,border:C.cardBorder,color:C.cinzaEscuro,accent:C.cinzaChumbo,iconFn:(s)=>Ic.infoI(s,C.cinzaChumbo)},
+  sucesso:{bg:"#ECFDF5",border:"#A7F3D0",color:C.verdeEscuro,accent:C.verdeFloresta,iconFn:(s:number)=>Ic.check(s,C.verdeFloresta)},
+  erro:{bg:"#FEF2F2",border:"#FECACA",color:"#B91C1C",accent:C.danger,iconFn:(s:number)=>Ic.errorX(s,C.danger)},
+  atencao:{bg:"#FFF7ED",border:"#FDBA74",color:"#C2410C",accent:C.amareloEscuro,iconFn:(s:number)=>Ic.alertTri(s,C.amareloEscuro)},
+  info:{bg:C.azulCeuClaro,border:C.azulCeu,color:C.azulEscuro,accent:C.azulProfundo,iconFn:(s:number)=>Ic.infoI(s,C.azulProfundo)},
+  neutro:{bg:C.bg,border:C.cardBorder,color:C.cinzaEscuro,accent:C.cinzaChumbo,iconFn:(s:number)=>Ic.infoI(s,C.cinzaChumbo)},
 };
 
+type ToastVariant=keyof typeof TV;
+interface ToastData{variant:ToastVariant;title?:string;message?:string;actionLabel?:string;duration?:number}
+type ToastItem=ToastData&{id:number};
+
 /* ═══════════════════════════════════════════ LIVE TOAST ═══════════════════════════════════════════ */
-function LiveToast({id,variant,title,message,actionLabel,duration,onClose}){
+function LiveToast({id,variant,title,message,actionLabel,duration,onClose}:ToastItem&{onClose:(id:number)=>void}){
   const v=TV[variant]||TV.info;
   const [out,setOut]=useState(false);
-  const timerId=useRef(null);
+  const timerId=useRef<ReturnType<typeof setTimeout>|null>(null);
 
   useEffect(()=>{
     if(duration){timerId.current=setTimeout(()=>{setOut(true);setTimeout(()=>onClose(id),300)},duration)}
@@ -56,7 +59,7 @@ function LiveToast({id,variant,title,message,actionLabel,duration,onClose}){
 }
 
 /* ═══════════════════════════════════════════ STATIC PREVIEW ═══════════════════════════════════════════ */
-function ToastPreview({variant,title,message,actionLabel,timer}){
+function ToastPreview({variant,title,message,actionLabel,timer}:Omit<ToastData,"duration">&{timer?:number}){
   const v=TV[variant]||TV.info;
   return(
     <div style={{background:v.bg,border:`1px solid ${v.border}`,borderRadius:10,borderLeft:`4px solid ${v.accent}`,padding:"12px 16px",display:"flex",gap:12,alignItems:"center",position:"relative",overflow:"hidden"}}>
@@ -73,8 +76,8 @@ function ToastPreview({variant,title,message,actionLabel,timer}){
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
-function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
+function Section({n,title,desc,children}:{n:string;title:string;desc:string;children?:ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function DSCard({children,s,mob:m}:{children?:ReactNode;s?:CSSProperties;mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 
 const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",overflow:"hidden"};
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
@@ -82,8 +85,8 @@ const gb={padding:"16px 20px 20px"};
 const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:4,marginTop:12};
 const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
 const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.body,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`};
-function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
-function Btn({label,color,onClick}){return <button onClick={onClick} style={{padding:"8px 18px",fontSize:12,fontWeight:600,background:color,color:C.branco,border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>{label}</button>}
+function TokenRow({label,value,color}:{label:string;value:string;color?:string}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
+function Btn({label,color,onClick}:{label:string;color:string;onClick:()=>void}){return <button onClick={onClick} style={{padding:"8px 18px",fontSize:12,fontWeight:600,background:color,color:C.branco,border:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>{label}</button>}
 
 /* ═══════════════════════════════════════════ EXPORT CODE ═══════════════════════════════════════════ */
 const toastExportCode = `// DS-FIPS — Toast Notification — Copy-paste ready
@@ -255,10 +258,10 @@ export default function ToastDoc(){
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
 
-  const [toasts,setToasts]=useState([]);
+  const [toasts,setToasts]=useState<ToastItem[]>([]);
   const nextId=useRef(0);
-  const addToast=(t)=>{const id=++nextId.current;setToasts(prev=>[{...t,id},...prev].slice(0,5))};
-  const removeToast=(id)=>{setToasts(prev=>prev.filter(t=>t.id!==id))};
+  const addToast=(t:ToastData)=>{const id=++nextId.current;setToasts(prev=>[{...t,id},...prev].slice(0,5))};
+  const removeToast=(id:number)=>{setToasts(prev=>prev.filter(t=>t.id!==id))};
 
   return(
     <PlaygroundProvider>

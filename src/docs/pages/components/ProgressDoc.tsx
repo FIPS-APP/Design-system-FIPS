@@ -50,26 +50,25 @@ function ProgressBar({ value = 0, label, helper, size = "md", color, showPercent
   value?: number; label?: string; helper?: string; size?: "sm"|"md"|"lg"; color?: string; showPercent?: boolean; indeterminate?: boolean; animated?: boolean;
 }) {
   const [animVal, setAnimVal] = useState(0);
+  const animando = !indeterminate && animated;
   useEffect(() => {
-    if (!indeterminate && animated) {
-      const t = setTimeout(() => setAnimVal(value), 100);
-      return () => clearTimeout(t);
-    } else {
-      setAnimVal(value);
-    }
-  }, [value, indeterminate, animated]);
+    if (!animando) return;
+    const t = setTimeout(() => setAnimVal(value), 100);
+    return () => clearTimeout(t);
+  }, [value, animando]);
+  const shownVal = animando ? animVal : value;
 
   const sizeMap = { sm: { h: 4, r: 2 }, md: { h: 8, r: 4 }, lg: { h: 12, r: 6 } };
   const s = sizeMap[size] || sizeMap.md;
 
-  const barColor = color || autoColor(animVal);
+  const barColor = color || autoColor(shownVal);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
       {(label || showPercent) && (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           {label && <span style={{ fontSize: 13, fontWeight: 600, color: C.cinzaEscuro, fontFamily: F.body }}>{label}</span>}
-          {showPercent && !indeterminate && <span style={{ fontSize: 12, fontWeight: 600, color: C.cinzaChumbo, fontFamily: F.mono }}>{Math.round(animVal)}%</span>}
+          {showPercent && !indeterminate && <span style={{ fontSize: 12, fontWeight: 600, color: C.cinzaChumbo, fontFamily: F.mono }}>{Math.round(shownVal)}%</span>}
           {indeterminate && <span style={{ fontSize: 11, color: C.textMuted, fontFamily: F.body }}>Processando...</span>}
         </div>
       )}
@@ -77,7 +76,7 @@ function ProgressBar({ value = 0, label, helper, size = "md", color, showPercent
         {indeterminate ? (
           <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "40%", borderRadius: s.r, background: barColor, animation: "dsIndeterminate 1.5s ease-in-out infinite" }} />
         ) : (
-          <div style={{ height: "100%", width: `${animVal}%`, borderRadius: s.r, background: barColor, transition: animated ? "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)" : "none" }} />
+          <div style={{ height: "100%", width: `${shownVal}%`, borderRadius: s.r, background: barColor, transition: animated ? "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)" : "none" }} />
         )}
       </div>
       {helper && <span style={{ fontSize: 11, color: C.textMuted, fontFamily: F.body }}>{helper}</span>}
@@ -93,16 +92,16 @@ function ProgressRing({ value = 0, size = 80, strokeWidth = 6, color, label, ani
 }) {
   const [animVal, setAnimVal] = useState(0);
   useEffect(() => {
-    if (animated) {
-      const t = setTimeout(() => setAnimVal(value), 100);
-      return () => clearTimeout(t);
-    } else { setAnimVal(value); }
+    if (!animated) return;
+    const t = setTimeout(() => setAnimVal(value), 100);
+    return () => clearTimeout(t);
   }, [value, animated]);
+  const shownVal = animated ? animVal : value;
 
   const r = (size - strokeWidth) / 2;
   const circ = 2 * Math.PI * r;
-  const offset = circ - (animVal / 100) * circ;
-  const barColor = color || autoColor(animVal);
+  const offset = circ - (shownVal / 100) * circ;
+  const barColor = color || autoColor(shownVal);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
@@ -112,7 +111,7 @@ function ProgressRing({ value = 0, size = 80, strokeWidth = 6, color, label, ani
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={barColor} strokeWidth={strokeWidth} strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" style={{ transition: animated ? "stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1)" : "none" }} />
         </svg>
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontSize: size * 0.22, fontWeight: 700, color: C.cinzaEscuro, fontFamily: F.mono }}>{Math.round(animVal)}%</span>
+          <span style={{ fontSize: size * 0.22, fontWeight: 700, color: C.cinzaEscuro, fontFamily: F.mono }}>{Math.round(shownVal)}%</span>
         </div>
       </div>
       {label && <span style={{ fontSize: 12, fontWeight: 600, color: C.cinzaEscuro, fontFamily: F.body, textAlign: "center" }}>{label}</span>}

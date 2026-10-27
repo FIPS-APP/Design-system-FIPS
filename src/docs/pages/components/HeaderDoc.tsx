@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { BookOpen, Component, Home, LayoutDashboard, Palette } from 'lucide-react'
 import { CodeExportSection } from '../../components/CodeExport'
 import { DocHeaderSectionNavDemo } from '../../../components/layout/DocHeaderSectionNav'
@@ -42,7 +41,7 @@ const Ic = {
   ),
 }
 
-function JunctionLines({ style }) {
+function JunctionLines({ style }: { style?: CSSProperties }) {
   return (
     <svg viewBox="0 0 320 200" fill="none" style={{ opacity: 0.12, ...style }}>
       <path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round" />
@@ -53,7 +52,7 @@ function JunctionLines({ style }) {
   )
 }
 
-function Section({ id, n, title, desc, children }) {
+function Section({ id, n, title, desc, children }: { id?: string; n: string; title: string; desc: string; children: ReactNode }) {
   return (
     <section id={id} style={{ marginBottom: 44, scrollMarginTop: 96 }}>
       <div
@@ -87,7 +86,7 @@ function Section({ id, n, title, desc, children }) {
   )
 }
 
-function DSCard({ children, mob: m }) {
+function DSCard({ children, mob: m }: { children: ReactNode; mob?: boolean }) {
   return (
     <div
       style={{
