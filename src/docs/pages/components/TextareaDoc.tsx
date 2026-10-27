@@ -1360,7 +1360,7 @@ textarea::placeholder{color:${C.textLight}}
                 {token:"Borda focus",light:"#004B9B",dark:"#93BDE4"},
                 {token:"Background",light:"#FFFFFF",dark:"#252525"},
                 {token:"Texto",light:"#333B41",dark:"#E2E2E8"},
-                {token:"Placeholder",light:"#6B7784",dark:"#A1A1AA"},
+                {token:"Placeholder",light:"#64707D",dark:"#A1A1AA"},
                 {token:"Ring focus",light:"rgba(147,189,228,0.35)",dark:"rgba(147,189,228,0.2)"},
                 {token:"Bg disabled",light:"#F1F5F9",dark:"#1E1E1E"},
                 {token:"Borda erro",light:"#DC3545",dark:"#F87171"},
