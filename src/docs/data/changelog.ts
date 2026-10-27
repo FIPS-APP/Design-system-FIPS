@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.1',
+    date: '2026-10-27',
+    title: 'Select e ChipSelect sem erro no jsdom',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Ao realçar uma opção pelo teclado, `Select` e `ChipSelect` chamavam `document.getElementById(...)?.scrollIntoView({ block: \'nearest\' })`. O `?.` cobre o elemento ausente, não o método ausente: no jsdom, que o vitest dos apps usa, `Element.prototype.scrollIntoView` não existe e o teste do app quebrava com `TypeError: document.getElementById(...)?.scrollIntoView is not a function`. A chamada passa a ser `scrollIntoView?.(...)`, num auxiliar interno (`src/lib/rolar-para-vista.ts`) que os dois componentes usam. No navegador a opção realçada continua rolando para a vista (`block: \'nearest\'`).',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:rolagem` chama o auxiliar com um `document` sem `scrollIntoView`, com elemento ausente e com o método presente, e confere que `select.tsx` e `chip-select.tsx` não chamam `scrollIntoView` direto.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',
