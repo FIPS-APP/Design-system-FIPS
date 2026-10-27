@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { ChevronDown, Check } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { rolarOpcaoParaVista } from '../../lib/rolar-para-vista'
 import type { FieldDensity } from './field'
 
 export type SelectOption = {
@@ -109,7 +110,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
 
     // Opção realçada pelo teclado fica visível dentro da lista rolável.
     useEffect(() => {
-      if (open && teclado && hi >= 0) document.getElementById(optId(hi))?.scrollIntoView({ block: 'nearest' })
+      if (open && teclado && hi >= 0) rolarOpcaoParaVista(optId(hi))
     }, [open, teclado, hi, optId])
 
     const selectedIndex = options.findIndex((o) => o.value === val)
