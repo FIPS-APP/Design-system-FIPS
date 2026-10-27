@@ -68,7 +68,7 @@ function FInput({label,placeholder,icon,iconRight,required,error,errorMsg,disabl
   );
 }
 function FSelect({label,icon,options=[],value,disabled,compact,cols}:{label?:string,icon?:React.ReactNode,options?:string[],value?:string,disabled?:boolean,compact?:boolean,cols?:number}){
-  const h=compact?30:35;
+  const h=compact?32:35;
   return(
     <div style={{display:"flex",flexDirection:"column",minWidth:0,gridColumn:cols?`span ${cols}`:undefined}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:F.body,marginBottom:1,marginLeft:7}}>{label}</label>}
