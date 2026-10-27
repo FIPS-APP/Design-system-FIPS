@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.29`
+## Versão atual: `v0.21.13`
 
 ## Favicon e ícones de app
 
@@ -97,6 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.13 | 2026-10-27 | `DrawerHero`, `useTableDensity`, `FipsTabBar` e `BuscarPessoaModal` (com os tipos `DrawerHeroProps`, `TableDensity`, `FipsTabItem`, `BuscarPessoaModalProps` e `Pessoa`) saem em `src/index.ts`: eram documentados no site e o app tinha de copiar o arquivo. `BuscarUsuarioModal` deixa de importar dado de `src/docs/`. `npm run test:exports` |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
 | 0.20.28 | 2026-10-24 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.27 | 2026-10-24 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |

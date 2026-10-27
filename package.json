@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.20.29",
+  "version": "0.21.13",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -32,6 +32,7 @@
     "build:downloads": "bash scripts/build-ai-downloads.sh",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
+    "test:exports": "node --test scripts/exports-site.test.mjs",
     "test": "node --test scripts/contraste.test.mjs",
     "preview": "vite preview"
   },

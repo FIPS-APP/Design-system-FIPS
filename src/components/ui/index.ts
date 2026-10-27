@@ -54,10 +54,12 @@ export {
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
+  DrawerHero,
   DrawerOverlay,
   DrawerPortal,
   DrawerTitle,
   DrawerTrigger,
+  type DrawerHeroProps,
 } from './drawer'
 export { Input, type InputProps } from './input'
 export { Avatar, AvatarImage, AvatarFallback, PessoaAvatar } from './avatar'
@@ -72,7 +74,17 @@ export {
 } from './input-group'
 export { Progress, type ProgressProps } from './progress'
 export { Select, type SelectProps } from './select'
-export { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from './table'
+export {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmpty,
+  TableHead,
+  TableHeader,
+  TableRow,
+  useTableDensity,
+  type TableDensity,
+} from './table'
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
 export { Textarea, type TextareaProps } from './textarea'
 export {

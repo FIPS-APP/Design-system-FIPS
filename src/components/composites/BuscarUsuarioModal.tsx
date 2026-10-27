@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Search, Users, X } from 'lucide-react'
-import { FIPS_ROLE_COLOR, FIPS_ROLE_LABEL, fipsUserInitials, type FipsUser } from '../../docs/data/users'
+import { FIPS_ROLE_COLOR, FIPS_ROLE_LABEL, fipsUserInitials, type FipsUser } from '../../lib/fipsUser'
 
 /**
  * BuscarUsuarioModal — "Entrar como usuário…" do menu Minha Conta.
@@ -41,6 +41,15 @@ function Avatar({ user }: { user: FipsUser }) {
   )
 }
 
+export interface BuscarUsuarioModalProps {
+  open: boolean
+  onOpenChange: (aberto: boolean) => void
+  users: FipsUser[]
+  onSelect: (user: FipsUser) => void
+  title?: string
+  descricao?: string
+}
+
 export function BuscarUsuarioModal({
   open,
   onOpenChange,
@@ -48,14 +57,7 @@ export function BuscarUsuarioModal({
   onSelect,
   title = 'Entrar como usuário',
   descricao = 'Busque pelo nome ou e-mail.',
-}: {
-  open: boolean
-  onOpenChange: (aberto: boolean) => void
-  users: FipsUser[]
-  onSelect: (user: FipsUser) => void
-  title?: string
-  descricao?: string
-}) {
+}: BuscarUsuarioModalProps) {
   const [q, setQ] = useState('')
 
   const hits = useMemo(() => {
