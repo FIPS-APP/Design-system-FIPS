@@ -29,6 +29,15 @@ export type Pessoa = {
  * ordenando por nº de liderados. Aqui (catálogo offline, sem backend nem CS real)
  * a mesma regra roda no cliente sobre o array `people`.
  */
+export interface BuscarPessoaModalProps {
+  open: boolean
+  onOpenChange: (aberto: boolean) => void
+  onSelect: (pessoa: Pessoa) => void
+  people: Pessoa[]
+  title?: string
+  descricao?: ReactNode
+}
+
 export function BuscarPessoaModal({
   open,
   onOpenChange,
@@ -36,14 +45,7 @@ export function BuscarPessoaModal({
   people,
   title = 'Buscar responsável',
   descricao = 'Busque pelo nome, cargo ou matrícula. Sem busca, a lista traz quem tem equipe.',
-}: {
-  open: boolean
-  onOpenChange: (aberto: boolean) => void
-  onSelect: (pessoa: Pessoa) => void
-  people: Pessoa[]
-  title?: string
-  descricao?: ReactNode
-}) {
+}: BuscarPessoaModalProps) {
   const [q, setQ] = useState('')
 
   const hits = useMemo(() => {
