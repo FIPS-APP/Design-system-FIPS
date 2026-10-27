@@ -1,5 +1,4 @@
 import {
-  AlignLeft,
   BarChart3,
   Building2,
   CalendarDays,
@@ -250,16 +249,16 @@ export default function ModalFormDemo() {
             <div className="space-y-4 px-6 py-4">
               {/* Tabs tipo (padrão CONTPIX) */}
               <Tabs defaultValue="atendimento" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 rounded-xl bg-[var(--color-surface-muted)] p-1">
-                  <TabsTrigger value="atendimento" className="gap-1.5 rounded-lg text-xs font-semibold">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="atendimento" className="gap-1.5">
                     <Headphones className="h-3.5 w-3.5" aria-hidden />
                     Atendimento
                   </TabsTrigger>
-                  <TabsTrigger value="tarefa" className="gap-1.5 rounded-lg text-xs font-semibold">
+                  <TabsTrigger value="tarefa" className="gap-1.5">
                     <Wrench className="h-3.5 w-3.5" aria-hidden />
                     Tarefa
                   </TabsTrigger>
-                  <TabsTrigger value="reuniao" className="gap-1.5 rounded-lg text-xs font-semibold">
+                  <TabsTrigger value="reuniao" className="gap-1.5">
                     <Video className="h-3.5 w-3.5" aria-hidden />
                     Reunião
                   </TabsTrigger>
@@ -438,11 +437,10 @@ export default function ModalFormDemo() {
                           Descrição
                         </p>
                         <div className="relative">
-                          <AlignLeft className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[var(--color-fg-muted)]" aria-hidden />
                           <Textarea
                             density="compact"
                             placeholder="Detalhes, contexto, links..."
-                            className="min-h-[60px] resize-none pl-9"
+                            className="resize-none"
                           />
                         </div>
                       </div>
@@ -454,7 +452,7 @@ export default function ModalFormDemo() {
                             <Paperclip className="h-3.5 w-3.5" aria-hidden />
                             Documentos
                           </p>
-                          <Button type="button" size="sm" variant="secondary" className="h-7 gap-1.5 rounded-xl px-2.5 text-xs">
+                          <Button type="button" size="sm" variant="secondary" className="gap-1.5">
                             <Upload className="h-3 w-3" aria-hidden />
                             Anexar
                           </Button>

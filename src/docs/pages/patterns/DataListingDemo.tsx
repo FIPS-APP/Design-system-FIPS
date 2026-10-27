@@ -1,10 +1,9 @@
-// @ts-nocheck
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2, Globe, User } from 'lucide-react'
+import { Ban, Pencil, Trash2, Filter, Search, X, Activity, Flag, Building2, Globe, User, type LucideIcon } from 'lucide-react'
 import { ScopeSegment } from '../../../components/composites/ScopeSegment'
 import { CodeExportSection } from '../../components/CodeExport'
 import { CopyableInline } from '../../components/CodePlayground'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { useFipsTheme } from '../../../hooks/useFipsTheme'
 import { ExportButtons } from '../../../components/composites/ExportButtons'
 import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
@@ -48,23 +47,23 @@ const Ic={
 function JunctionLines({ style }: { style?: CSSProperties }) {
   return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
 
-const BV_LIGHT={sucesso:{bg:"#ECFDF5",color:"#00904C",border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:"#D3E3F4",color:"#002A68",border:"#93BDE4"}};
-const BV_DARK={sucesso:{bg:"rgba(0,198,76,0.14)",color:"#8BE5AD",border:"rgba(0,198,76,0.28)"},atencao:{bg:"rgba(246,146,30,0.14)",color:"#FDC24E",border:"rgba(246,146,30,0.28)"},critico:{bg:"rgba(239,68,68,0.14)",color:"#FCA5A5",border:"rgba(239,68,68,0.28)"},info:{bg:"rgba(147,189,228,0.14)",color:"#93BDE4",border:"rgba(147,189,228,0.28)"}};
-function Badge({variant="info",children,dot,dark}){const v=(dark?BV_DARK:BV_LIGHT)[variant]||(dark?BV_DARK:BV_LIGHT).info;return(<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"2px 7px",fontSize:10,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:5,height:5,borderRadius:"50%",background:v.color}}/>}{children}</span>)}
+const BV_LIGHT:Record<string,{bg:string;color:string;border:string}>={sucesso:{bg:"#ECFDF5",color:"#00904C",border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:"#D3E3F4",color:"#002A68",border:"#93BDE4"}};
+const BV_DARK:Record<string,{bg:string;color:string;border:string}>={sucesso:{bg:"rgba(0,198,76,0.14)",color:"#8BE5AD",border:"rgba(0,198,76,0.28)"},atencao:{bg:"rgba(246,146,30,0.14)",color:"#FDC24E",border:"rgba(246,146,30,0.28)"},critico:{bg:"rgba(239,68,68,0.14)",color:"#FCA5A5",border:"rgba(239,68,68,0.28)"},info:{bg:"rgba(147,189,228,0.14)",color:"#93BDE4",border:"rgba(147,189,228,0.28)"}};
+function Badge({variant="info",children,dot,dark}:{variant?:string;children?:ReactNode;dot?:boolean;dark?:boolean}){const v=(dark?BV_DARK:BV_LIGHT)[variant]||(dark?BV_DARK:BV_LIGHT).info;return(<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"2px 7px",fontSize:10,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:5,height:5,borderRadius:"50%",background:v.color}}/>}{children}</span>)}
 
-function Avatar({name,size=28}){const p=(name||"").split(" ").filter(Boolean);const ini=p.length>=2?`${p[0][0]}${p[p.length-1][0]}`:p[0]?p[0][0]:"?";return <div style={{width:size,height:size,borderRadius:"50%",background:C.bg,border:`1px solid ${C.cardBorder}`,color:C.cinzaChumbo,display:"flex",alignItems:"center",justifyContent:"center",fontSize:Math.round(size*0.36),fontWeight:700,fontFamily:Fn.title,flexShrink:0,letterSpacing:".5px"}}>{ini.toUpperCase()}</div>}
+function Avatar({name,size=28}:{name?:string;size?:number}){const p=(name||"").split(" ").filter(Boolean);const ini=p.length>=2?`${p[0][0]}${p[p.length-1][0]}`:p[0]?p[0][0]:"?";return <div style={{width:size,height:size,borderRadius:"50%",background:C.bg,border:`1px solid ${C.cardBorder}`,color:C.cinzaChumbo,display:"flex",alignItems:"center",justifyContent:"center",fontSize:Math.round(size*0.36),fontWeight:700,fontFamily:Fn.title,flexShrink:0,letterSpacing:".5px"}}>{ini.toUpperCase()}</div>}
 
-function Checkbox({checked,onChange,size=16}){return(<div onClick={onChange} style={{width:size,height:size,borderRadius:4,border:`1.5px solid ${checked?C.azulProfundo:C.cardBorder}`,background:checked?C.azulProfundo:"var(--color-surface)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"all .12s"}}>{checked&&Ic.check(Math.round(size*0.65))}</div>)}
+function Checkbox({checked,onChange,size=16}:{checked?:boolean;onChange?:()=>void;size?:number}){return(<div onClick={onChange} style={{width:size,height:size,borderRadius:4,border:`1.5px solid ${checked?C.azulProfundo:C.cardBorder}`,background:checked?C.azulProfundo:"var(--color-surface)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"all .12s"}}>{checked&&Ic.check(Math.round(size*0.65))}</div>)}
 
-function Toggle({checked,onChange}){return(<div onClick={onChange} style={{width:30,height:18,borderRadius:9,background:checked?C.azulProfundo:C.cardBorder,position:"relative",cursor:"pointer",transition:"all .15s",flexShrink:0}}><div style={{position:"absolute",top:2,left:checked?14:2,width:14,height:14,borderRadius:"50%",background:C.branco,boxShadow:"0 1px 3px rgba(0,0,0,.15)",transition:"all .15s"}}/></div>)}
+function Toggle({checked,onChange}:{checked?:boolean;onChange?:()=>void}){return(<div onClick={onChange} style={{width:30,height:18,borderRadius:9,background:checked?C.azulProfundo:C.cardBorder,position:"relative",cursor:"pointer",transition:"all .15s",flexShrink:0}}><div style={{position:"absolute",top:2,left:checked?14:2,width:14,height:14,borderRadius:"50%",background:C.branco,boxShadow:"0 1px 3px rgba(0,0,0,.15)",transition:"all .15s"}}/></div>)}
 
 /* Rótulo ícone+texto do grupo de filtro — mesmo padrão de FilterLabel/PillGroup do QLP/Governança BI. */
-function FilterLabel({icon:Icon,children}){return(<p style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:7,fontSize:11,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}><Icon size={12} style={{flexShrink:0,color:C.cinzaChumbo}}/>{children}</p>)}
+function FilterLabel({icon:Icon,children}:{icon:LucideIcon;children?:ReactNode}){return(<p style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:7,fontSize:11,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body}}><Icon size={12} style={{flexShrink:0,color:C.cinzaChumbo}}/>{children}</p>)}
 
 /* Filtro segmentado single-select — mesmo padrão do PillFilter do QLP/Governança BI:
    "Todos" + 1 pill por opção; ativo = fundo cheio da cor + texto branco; inativo
    com cor = dot colorido (escaneável de relance); sem cor (Todos) = azul primário. */
-function PillFilter({options,value,onChange}){
+function PillFilter({options,value,onChange}:{options:{value:string;label:string;color?:string}[];value:string;onChange:(v:string)=>void}){
   return(
     <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
       {[{value:"",label:"Todos"},...options].map(o=>{
@@ -83,12 +82,12 @@ function PillFilter({options,value,onChange}){
 /* Chip de filtro — dropdown fechado "Rótulo: Valor" com radio. Mesmo padrão do
    ChipSelect do QLP/Governança BI: usar em campos de muitas opções dentro do
    drawer de filtros; formulário usa <Select>. */
-function ChipSelect({icon:Icon,label,options,value,onChange}){
+function ChipSelect({icon:Icon,label,options,value,onChange}:{icon?:LucideIcon;label:string;options:{value:string;label:string}[];value:string;onChange:(v:string)=>void}){
   const [open,setOpen]=useState(false);
-  const ref=useRef(null);
+  const ref=useRef<HTMLDivElement>(null);
   useEffect(()=>{
     if(!open)return;
-    const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};
+    const h=(e:MouseEvent)=>{if(ref.current&&!ref.current.contains(e.target as Node))setOpen(false)};
     document.addEventListener("mousedown",h);
     return()=>document.removeEventListener("mousedown",h);
   },[open]);
@@ -122,19 +121,19 @@ const STATUSES=["Aprovada","Pendente","Em análise","Recusada"];
 const DEPTS=["SSMA","Operações","TI","Suprimentos","Manutenção","Financeiro"];
 const PRIO=["Crítica","Alta","Média","Baixa"];
 const NAMES=["Mariana Souza","Carlos Pereira","Amanda Silva","João Mendes","Patricia Costa","Rafael Lima","Beatriz Santos","Eduardo Almeida","Fernanda Castro","Lucas Oliveira"];
-const STATUS_COLOR={"Aprovada":"sucesso","Pendente":"atencao","Em análise":"info","Recusada":"critico"};
-const PRIO_COLOR={"Crítica":C.danger,"Alta":C.amareloEscuro,"Média":C.azulClaro,"Baixa":C.cinzaChumbo};
+const STATUS_COLOR:Record<string,string>={"Aprovada":"sucesso","Pendente":"atencao","Em análise":"info","Recusada":"critico"};
+const PRIO_COLOR:Record<string,string>={"Crítica":C.danger,"Alta":C.amareloEscuro,"Média":C.azulClaro,"Baixa":C.cinzaChumbo};
 /* Cores fixas (não theme-aware) para o fundo cheio dos PillFilter — o pill ativo
    é sempre texto branco sobre a cor, então usa o tom saturado dos badges em vez
    do token light/dark (que em muitos casos clareia no dark e perde contraste). */
-const STATUS_PILL_COLOR={"Aprovada":"#00A83E","Pendente":"#F6921E","Em análise":"#002A68","Recusada":"#DC3545"};
-const PRIO_PILL_COLOR={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#6B7784"};
+const STATUS_PILL_COLOR:Record<string,string>={"Aprovada":"#00A83E","Pendente":"#F6921E","Em análise":"#002A68","Recusada":"#DC3545"};
+const PRIO_PILL_COLOR:Record<string,string>={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#6B7784"};
 /* Cor fixa do pill "Todos" (sem cor semântica própria) — não usa C.azulProfundo
    porque esse token É theme-aware (var(--color-gov-azul-profundo)) e clareia pra
    #93BDE4 no dark, o que quebraria o texto branco por cima. */
 const PILL_PRIMARY="#0057B8";
 
-function seed(n){
+function seed(n:number){
   let r=137;const rnd=()=>{r=(r*9301+49297)%233280;return r/233280;};
   return Array.from({length:n},(_,i)=>({
     id:`REQ-${4000+i}`,
@@ -160,7 +159,7 @@ const ALL_COLUMNS=[
   {id:"actions",label:"Ações",default:true,fixed:true},
 ];
 
-const DENSITY={
+const DENSITY:Record<string,{rowH:number;fs:number;padX:number}>={
   compact:{rowH:30,fs:11,padX:12},
   normal:{rowH:42,fs:12,padX:16},
   comfortable:{rowH:56,fs:13,padX:20},
@@ -287,7 +286,7 @@ export function DataListingTable() {
 }
 
 function dlPreview(part: string) {
-  const labels = { header: 'Header Navy + CTA', kpi: 'KPI Cards + Sparkline', toolbar: 'Toolbar + Table' }
+  const labels: Record<string, string> = { header: 'Header Navy + CTA', kpi: 'KPI Cards + Sparkline', toolbar: 'Toolbar + Table' }
   return (
     <div style={{ padding: 12, textAlign: 'center' }}>
       <div style={{ background: 'linear-gradient(135deg, #002A68, #004B9B)', borderRadius: 8, padding: '14px 12px', color: '#fff', fontSize: 11, fontFamily: "'Saira Expanded', sans-serif" }}>
@@ -352,9 +351,9 @@ export default function DataListingDemo() {
   const [configTab,setConfigTab]=useState("colunas");
   const [density,setDensity]=useState("normal");
   const [visibleCols,setVisibleCols]=useState(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
-  const [appearance,setAppearance]=useState({zebra:true,verticalBorders:false,stickyHeader:true,wrapText:false});
+  const [appearance,setAppearance]=useState<Record<string,boolean>>({zebra:true,verticalBorders:false,stickyHeader:true,wrapText:false});
   const [sortableS,setSortableS]=useState(true);
-  const [sortBy,setSortBy]=useState({col:null,dir:"asc"});
+  const [sortBy,setSortBy]=useState<{col:string|null;dir:string}>({col:null,dir:"asc"});
 
   const allData=useMemo(()=>seed(60),[]);
   const data=useMemo(()=>{
@@ -365,7 +364,7 @@ export default function DataListingDemo() {
     if(filters.priority)r=r.filter(x=>x.priority===filters.priority);
     if(sortBy.col){
       r=[...r].sort((a,b)=>{
-        const av=a[sortBy.col],bv=b[sortBy.col];
+        const av=a[sortBy.col as keyof typeof a],bv=b[sortBy.col as keyof typeof b];
         if(typeof av==="number"&&typeof bv==="number")return sortBy.dir==="asc"?av-bv:bv-av;
         const as=String(av??"").toLowerCase(),bs=String(bv??"").toLowerCase();
         return sortBy.dir==="asc"?as.localeCompare(bs):bs.localeCompare(as);
@@ -389,44 +388,44 @@ export default function DataListingDemo() {
       .map(k=>({key:k,label:filters[k],remove:()=>setFilters(p=>({...p,[k]:""}))})),
   [filters]);
 
-  const [hovKpi,setHovKpi]=useState(null); // {c:cardIdx, p:pointIdx}
+  const [hovKpi,setHovKpi]=useState<{c:number;p:number}|null>(null); // {c:cardIdx, p:pointIdx}
   const [listingScope,setListingScope]=useState<'minha'|'todos'>('todos');
   const countMinhaArea=useMemo(()=>allData.filter((_,i)=>i%6===0).length,[allData]);
 
-  const filterRef=useRef(null);
-  const configRef=useRef(null);
-  const periodoRef=useRef(null);
-  const configDemoRef=useRef(null);
+  const filterRef=useRef<HTMLButtonElement>(null);
+  const configRef=useRef<HTMLDivElement>(null);
+  const periodoRef=useRef<HTMLDivElement>(null);
+  const configDemoRef=useRef<HTMLDivElement>(null);
   // Filtros abrem em Drawer (padrão QLP `ListingToolbar`), não em popover ancorado:
   // fechar é overlay/X/Esc — não click-outside.
   useEffect(()=>{
     if(!showFilters)return;
-    const h=e=>{if(e.key==="Escape")setShowFilters(false)};
+    const h=(e:KeyboardEvent)=>{if(e.key==="Escape")setShowFilters(false)};
     document.addEventListener("keydown",h);
     return()=>document.removeEventListener("keydown",h);
   },[showFilters]);
   useEffect(()=>{
     if(!showConfig)return;
-    const h=e=>{if(configRef.current&&!configRef.current.contains(e.target))setShowConfig(false)};
+    const h=(e:MouseEvent)=>{if(configRef.current&&!configRef.current.contains(e.target as Node))setShowConfig(false)};
     document.addEventListener("mousedown",h);
     return()=>document.removeEventListener("mousedown",h);
   },[showConfig]);
   useEffect(()=>{
     if(!showPeriodo)return;
-    const h=e=>{if(periodoRef.current&&!periodoRef.current.contains(e.target))setShowPeriodo(false)};
+    const h=(e:MouseEvent)=>{if(periodoRef.current&&!periodoRef.current.contains(e.target as Node))setShowPeriodo(false)};
     document.addEventListener("mousedown",h);
     return()=>document.removeEventListener("mousedown",h);
   },[showPeriodo]);
   useEffect(()=>{
     if(!showConfigDemo)return;
-    const h=e=>{if(configDemoRef.current&&!configDemoRef.current.contains(e.target))setShowConfigDemo(false)};
+    const h=(e:MouseEvent)=>{if(configDemoRef.current&&!configDemoRef.current.contains(e.target as Node))setShowConfigDemo(false)};
     document.addEventListener("mousedown",h);
     return()=>document.removeEventListener("mousedown",h);
   },[showConfigDemo]);
 
-  const toggleSel=id=>{const n=new Set(selected);if(n.has(id))n.delete(id);else n.add(id);setSelected(n)};
+  const toggleSel=(id:string)=>{const n=new Set(selected);if(n.has(id))n.delete(id);else n.add(id);setSelected(n)};
   const toggleAll=()=>{if(selected.size===data.length)setSelected(new Set());else setSelected(new Set(data.map(r=>r.id)))};
-  const toggleCol=id=>{const c=ALL_COLUMNS.find(x=>x.id===id);if(c?.fixed)return;const n=new Set(visibleCols);if(n.has(id))n.delete(id);else n.add(id);setVisibleCols(n)};
+  const toggleCol=(id:string)=>{const c=ALL_COLUMNS.find(x=>x.id===id);if(c?.fixed)return;const n=new Set(visibleCols);if(n.has(id))n.delete(id);else n.add(id);setVisibleCols(n)};
   const restoreCols=()=>setVisibleCols(new Set(ALL_COLUMNS.filter(c=>c.default).map(c=>c.id)));
 
   const visibleColumnList=ALL_COLUMNS.filter(c=>visibleCols.has(c.id));
@@ -484,7 +483,7 @@ export default function DataListingDemo() {
             const aprovadas=allData.filter(r=>r.status==="Aprovada").length;
             const volume=allData.reduce((a,r)=>a+r.valor,0);
             // Sparkline com variância garantida — não fica linha reta nunca
-            const mkSpark=(seed)=>{
+            const mkSpark=(seed:number)=>{
               let r=seed;
               return Array.from({length:12},(_,i)=>{
                 r=(r*9301+49297)%233280;
@@ -624,7 +623,7 @@ export default function DataListingDemo() {
                         <button onClick={()=>{setShowCustom(false);setCustomStart("");setCustomEnd("")}} style={{flex:1,padding:"7px 10px",fontSize:10,fontWeight:600,color:C.cinzaEscuro,background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:6,cursor:"pointer",fontFamily:Fn.body}}>Cancelar</button>
                         <button onClick={()=>{
                           if(!customStart||!customEnd)return;
-                          const fmt=d=>{const[y,m,day]=d.split("-");return `${day}/${m}/${y.slice(2)}`};
+                          const fmt=(d:string)=>{const[y,m,day]=d.split("-");return `${day}/${m}/${y.slice(2)}`};
                           setPeriodo(`${fmt(customStart)} → ${fmt(customEnd)}`);
                           setShowCustom(false);
                           setShowPeriodo(false);
