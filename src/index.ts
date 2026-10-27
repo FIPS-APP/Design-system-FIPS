@@ -18,7 +18,7 @@ export {
   type PatternPanelHeroProps,
   type PatternPanelHeroStat,
 } from './components/composites/PatternPanelHero'
-export { FipsTabBar, type FipsTabItem } from './components/composites/FipsTabBar'
+export { FipsTabBar, type FipsTabBarProps, type FipsTabItem } from './components/composites/FipsTabBar'
 export {
   BuscarPessoaModal,
   type BuscarPessoaModalProps,
