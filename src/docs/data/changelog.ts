@@ -32,12 +32,12 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          '`publish.yml` publica no GitHub Packages a cada bump de `package.json#version` na `main`, sem passo manual. O workflow compara a versão com a do commit anterior: mudou e não está no registro, publica (`npm ci`, `npm test`, `npm run build`, `npm publish`) e cria a tag `vX.Y.Z` no commit; não mudou, termina verde sem publicar; mudou para uma versão que já existe no registro, falha com a versão na mensagem. Tag `vX.Y.Z` empurrada à mão continua valendo e não publica de novo uma versão já publicada. Permissões mínimas: `contents: write` e `packages: write`, só com o `GITHUB_TOKEN` do próprio workflow, sem segredo novo.',
+          '`publish.yml` publica no GitHub Packages a cada bump de `package.json#version` na `main`, sem passo manual. O workflow compara a versão com a do commit anterior: mudou e não está no registro, publica (`npm ci`, `npm test`, `npm run build`, `npm publish`) e cria a tag `vX.Y.Z` no commit; não mudou e a versão já está no registro, termina verde sem publicar; não mudou mas a versão não está no registro (o run do bump falhou ou foi cancelado), publica; mudou para uma versão que já existe no registro, falha com a versão na mensagem. Tag `vX.Y.Z` empurrada à mão continua valendo e não publica de novo uma versão já publicada. Permissões mínimas, só com o `GITHUB_TOKEN` do próprio workflow e sem segredo novo: `packages: write` no job que publica, com o token apenas nos passos que falam com o registro; `contents: write` só no job que cria a tag, que pula se a tag já existe.',
       },
       {
         type: 'improvement',
         description:
-          'A regra de decisão fica em `scripts/publicar-decisao.mjs`, fora do YAML, e `npm run test:publicar` cobre os oito casos (bump, versão igual, versão repetida, commit anterior desconhecido, tag à mão antes e depois da publicação, tag que não bate, saída do script). README, seção Versionamento: bump na `main` é publicação.',
+          'A regra de decisão fica em `scripts/publicar-decisao.mjs`, fora do YAML, e `npm run test:publicar` cobre nove casos (bump, versão igual já publicada e não publicada, versão repetida, commit anterior desconhecido, tag à mão antes e depois da publicação, tag que não bate, saída do script para push na main e para tag). README, seção Versionamento: bump na `main` é publicação.',
       },
     ],
   },
