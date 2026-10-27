@@ -195,6 +195,48 @@ export default function ColorsPage() {
           </p>
         </Section>
 
+        <Section n="05" title="Alternar o tema" desc="O pacote exporta o hook que liga e desliga o escuro: ele troca a classe .dark no <html> e guarda a escolha no navegador. Importe do pacote, não copie o arquivo para o app.">
+          <div style={{ background: C.cardBg, borderRadius: 10, border: `1px solid ${C.cardBorder}`, overflow: 'hidden', marginBottom: 16 }}>
+            <pre style={{ margin: 0, padding: '14px 18px', fontSize: 12, lineHeight: 1.6, fontFamily: "'Fira Code', monospace", color: C.cinzaEscuro, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{`import { useFipsTheme } from '@fips-app/ds-fips'
+
+function BotaoDeTema() {
+  const { dark, toggle } = useFipsTheme()
+  return <button onClick={toggle}>{dark ? 'Tema claro' : 'Tema escuro'}</button>
+}`}</pre>
+          </div>
+          <div style={{ background: C.cardBg, borderRadius: 10, border: `1px solid ${C.cardBorder}`, overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: Fn.body, fontSize: 12 }}>
+              <thead>
+                <tr style={{ borderBottom: `1px solid ${C.cardBorder}` }}>
+                  <th style={{ padding: '10px 16px', textAlign: 'left', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Retorno</th>
+                  <th style={{ padding: '10px 16px', textAlign: 'left', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>Tipo</th>
+                  <th style={{ padding: '10px 16px', textAlign: 'left', fontFamily: Fn.title, fontWeight: 600, fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase', color: C.cinzaChumbo }}>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { nome: 'dark', tipo: 'boolean', texto: 'true quando o <html> tem a classe .dark. Acompanha quem muda a classe por fora do hook.' },
+                  { nome: 'toggle', tipo: '() => void', texto: 'Alterna entre claro e escuro e guarda a escolha.' },
+                  { nome: 'setDark', tipo: '(dark: boolean) => void', texto: 'Força o tema (true é o escuro) e guarda a escolha.' },
+                ].map((r) => (
+                  <tr key={r.nome} style={{ borderBottom: `1px solid ${C.cardBorder}` }}>
+                    <td style={{ padding: '8px 16px', fontFamily: "'Fira Code', monospace", fontWeight: 600, color: C.cinzaEscuro }}>{r.nome}</td>
+                    <td style={{ padding: '8px 16px', fontFamily: "'Fira Code', monospace", fontSize: 11, color: C.cinzaChumbo }}>{r.tipo}</td>
+                    <td style={{ padding: '8px 16px', color: C.cinzaChumbo }}>{r.texto}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p style={{ fontSize: 13, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55 }}>
+            A escolha fica em <code>localStorage</code>, na chave <code>fips-theme</code>, com o valor <code>dark</code> ou <code>light</code>. É a mesma chave das cópias antigas do hook nos apps: quem troca a cópia pelo import não perde a escolha guardada.
+            Ao importar o pacote no navegador, a escolha guardada já é aplicada ao <code>&lt;html&gt;</code>, antes de o React pintar.
+            Fora do navegador (render no servidor) o hook devolve <code>dark: false</code> e não toca em <code>window</code>.
+            Com o armazenamento bloqueado pelo navegador, a tela não quebra e o tema alterna só nesta visita.
+            O tipo do retorno sai do pacote como <code>UseFipsThemeResult</code>.
+          </p>
+        </Section>
+
         <div style={{ textAlign: 'center', padding: '20px 0 0', borderTop: `1px solid ${C.cardBorder}`, marginTop: 20 }}>
           <span style={{ fontSize: 12, color: C.cinzaChumbo, letterSpacing: '0.5px', fontFamily: Fn.title, fontWeight: 400 }}>DS-FIPS v0.4.2 · Ferrovia Interna do Porto de Santos · Excelência sobre trilhos · {new Date().getFullYear()}</span>
         </div>

@@ -8,7 +8,7 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 
 ### `src/index.ts` — entrada pública da library
 
-Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
+Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundations.md`, Dark mode), **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
 - `HeroAtalho`, `HeroAtalhos`, `HeroFileira`

@@ -25,6 +25,28 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.8',
+    date: '2026-10-27',
+    title: 'useFipsTheme sai no pacote',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`useFipsTheme` e o tipo `UseFipsThemeResult` passam a sair em `src/index.ts`: `import { useFipsTheme } from \'@fips-app/ds-fips\'` devolve `{ dark, toggle, setDark }`. Era a razão de cada app ter a sua cópia do hook de tema. A escolha continua em `localStorage`, na chave `fips-theme` (`dark` ou `light`), e a classe `.dark` do `<html>` é aplicada ao importar o pacote, como na cópia que os apps já têm. Export novo e nada removido: `dist/index.d.ts` vai de 199 para 201 nomes.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O hook deixa de lançar com o armazenamento bloqueado: o acesso a `localStorage` rodava na importação e, com `SecurityError`, derrubava a tela inteira. Agora a leitura e a gravação são protegidas e o tema alterna só na visita. O `toggle` passa a ler o tema do momento do clique (antes usava o valor de quando o componente renderizou) e `setDark(valor)` entra no retorno para quem precisa forçar o tema. O estado do hook é a classe `.dark` do `<html>`, não o `localStorage`, e quem muda a classe por fora do hook também atualiza `dark`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`useDsTheme` sai: só o `ExportModal`, que o pacote não exporta, o usava, e a leitura da classe com `MutationObserver` agora está dentro de `useFipsTheme`. Dois hooks para o mesmo assunto viram um. A página Cores do site ganha a seção 05 com o import do pacote, os três retornos e a chave `fips-theme`; `foundations.md` e `components.md` da skill acompanham. `npm run test:tema` (11 testes) cobre importação sem `window`, armazenamento que lança, tema guardado, `toggle`, `setDark`, observador da classe, render no servidor e a exportação do hook e do tipo.',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',

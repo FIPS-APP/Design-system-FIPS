@@ -13,7 +13,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { cn } from "../../lib/cn";
-import { useDsTheme } from "../../hooks/useDsTheme";
+import { useFipsTheme } from "../../hooks/useFipsTheme";
 import { exportXLSX, exportPDF, exportPrint } from "../../utils/exportData";
 import type { ExportCatalog } from "../../utils/exportHelpers";
 
@@ -61,7 +61,7 @@ export function ExportModal({
   filterPills = [],
   filename,
 }: ExportModalProps) {
-  const { dark } = useDsTheme();
+  const { dark } = useFipsTheme();
   const [cols, setCols] = useState<ColItem[]>([]);
   const [size, setSize] = useState<ModalSize>("grande");
   const [sectionFilter, setSectionFilter] = useState<SectionFilter>("all");
