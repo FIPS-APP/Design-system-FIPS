@@ -437,24 +437,39 @@ function SidebarNeuIcon36({
   )
 }
 
+/*
+ * Selinho de contagem. A presença dele é a informação: quem passa o olho pela barra precisa notar
+ * que há aviso antes de ler o número. No escuro ele leva três contas (WCAG 1.4.3 e 1.4.11):
+ *   1. número contra o disco: 4,5:1 (9 a 10px, peso 700)
+ *   2. disco contra a barra #1A1A1A: 3:1
+ *   3. anel contra o azulejo do ícone, onde o selinho do menu recolhido encosta: 3:1
+ * A tinta de 14% que havia aqui passava na 1 (6,68 a 9,18:1) e reprovava na 2 (1,15 a 1,32:1) e
+ * na 3 (1,31 a 1,79:1, medido sobre o azulejo rgb(43,51,63)). Disco sólido, nos quatro tons:
+ *   vermelho  #DC3545 com #FFFFFF  4,53:1 | disco 3,84:1 | anel 3,88:1 (o par do tema claro)
+ *   âmbar     #F6921E com #1A1A1A  7,50:1 | disco 7,50:1 | anel 3,94:1 (a tinta do ícone aceso)
+ *   azul      #1A6FC4 com #FFFFFF  5,10:1 | disco 3,41:1 | anel 4,08:1
+ *   verde     #008842 com #FFFFFF  4,56:1 | disco 3,81:1 | anel 4,24:1
+ * Anel medido sobre o trecho mais claro do azulejo (#303036). npm test (scripts/contraste.test.mjs)
+ * refaz as três contas nos quatro tons: não "corrija o contraste" de novo apagando o aviso.
+ */
 function getBadgeTone(item: MenuItem, dark: boolean): { bg: string; color: string; shadow: string; border: string } {
   if (item.badge === 'financeiroPendente') {
     return dark
-      ? { bg: 'rgba(246,146,30,0.14)', color: '#FDC24E', shadow: 'rgba(246,146,30,0.25)', border: 'rgba(246,146,30,0.28)' }
+      ? { bg: '#F6921E', color: '#1A1A1A', shadow: 'rgba(246,146,30,0.45)', border: 'rgba(253,194,78,0.6)' }
       : { bg: C.amareloEscuro, color: '#FFFFFF', shadow: 'rgba(246,146,30,0.45)', border: 'rgba(253,194,78,0.6)' }
   }
   if (item.badge === 'notaPendente') {
     return dark
-      ? { bg: 'rgba(147,189,228,0.14)', color: '#93BDE4', shadow: 'rgba(147,189,228,0.25)', border: 'rgba(147,189,228,0.28)' }
+      ? { bg: '#1A6FC4', color: '#FFFFFF', shadow: 'rgba(26,111,196,0.45)', border: 'rgba(147,189,228,0.7)' }
       : { bg: C.azulProfundo, color: '#FFFFFF', shadow: 'rgba(0,75,155,0.45)', border: 'rgba(147,189,228,0.5)' }
   }
   if (item.badge === 'producaoEmAndamento') {
     return dark
-      ? { bg: 'rgba(0,198,76,0.14)', color: '#8BE5AD', shadow: 'rgba(0,198,76,0.25)', border: 'rgba(0,198,76,0.28)' }
+      ? { bg: '#008842', color: '#FFFFFF', shadow: 'rgba(0,136,66,0.45)', border: 'rgba(167,243,208,0.55)' }
       : { bg: C.verdeFloresta, color: '#FFFFFF', shadow: 'rgba(0,198,76,0.42)', border: 'rgba(167,243,208,0.55)' }
   }
   return dark
-    ? { bg: 'rgba(239,68,68,0.14)', color: '#FCA5A5', shadow: 'rgba(239,68,68,0.25)', border: 'rgba(239,68,68,0.28)' }
+    ? { bg: '#DC3545', color: '#FFFFFF', shadow: 'rgba(220,53,69,0.45)', border: 'rgba(254,202,202,0.55)' }
     : { bg: C.danger, color: '#FFFFFF', shadow: 'rgba(220,53,69,0.45)', border: 'rgba(254,202,202,0.55)' }
 }
 
@@ -1704,6 +1719,7 @@ export default function SidebarDoc() {
               <p style={gt}>• Ícone sobre laranja (hover/ativo): azul escuro #002A68</p>
               <p style={gt}>• Shimmer sobre laranja: branco 25% opacidade</p>
               <p style={gt}>• Badge crítico: branco no texto, sombra controlada</p>
+              <p style={gt}>• Selinho de contagem no escuro: disco sólido de 3:1 contra a barra, número de 4,5:1 contra o disco, anel de 3:1 contra o azulejo</p>
               <p style={gt}>• Tooltip colapsado: contraste AA mínimo</p>
             </div>
           </Card>

@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.6',
+    date: '2026-10-27',
+    title: 'Selinho de contagem da Sidebar visível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'No tema escuro, `getBadgeTone` da `Sidebar` pintava o selinho de contagem com tinta de 14% (`rgba(239,68,68,0.14)` e equivalentes). O número lia bem (6,68 a 9,18:1 contra o disco), mas o disco quase não se separava da barra `#1a1a1a`: 1,15 a 1,32:1, abaixo dos 3:1 de componente de interface (WCAG 1.4.11), e o anel de 1px tinha a mesma tinta (1,31 a 1,80:1 contra o azulejo do ícone). Passa a disco sólido nos quatro tons: vermelho `#DC3545` com `#FFFFFF` (disco 3,84:1 contra a barra, número 4,53:1), âmbar `#F6921E` com `#1A1A1A` (7,50:1 e 7,50:1), azul `#1A6FC4` com `#FFFFFF` (3,41:1 e 5,10:1) e verde `#008842` com `#FFFFFF` (3,81:1 e 4,56:1). O anel contra o azulejo mede 3,80 a 4,17:1. O tema claro não muda.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a conferir, nos quatro tons do escuro, o número contra o disco (4,5:1), o disco contra a barra (3:1) e o anel contra o azulejo (3:1). A página da `Sidebar` ganha a linha do selinho em "Contraste".',
+      },
+    ],
+  },
+  {
     version: '0.20.29',
     date: '2026-10-24',
     title: 'Select e ChipSelect por teclado',
