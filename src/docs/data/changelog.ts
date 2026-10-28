@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.39',
+    date: '2026-10-28',
+    title: 'Table: zebra opaca',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'A faixa da zebra (`--color-table-zebra`) era translúcida: numa tabela com coluna fixa (`position: sticky`), a célula fixa herda o fundo da linha e a faixa somava duas vezes, deixando a célula mais escura que a linha e o texto das colunas do meio visível por baixo. Agora é opaca, mistura sobre `--color-surface`: claro `color-mix(in srgb, var(--color-fips-blue-200) 25%, var(--color-surface))`, idêntico ao de antes sobre o cartão branco; escuro `color-mix(in srgb, white 3%, var(--color-surface))`.',
+      },
+    ],
+  },
+  {
     version: '0.20.38',
     date: '2026-10-27',
     title: 'README: tgz vendorizado sai do GitHub Packages',
