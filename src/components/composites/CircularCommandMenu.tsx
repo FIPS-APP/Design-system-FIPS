@@ -60,7 +60,8 @@ export function CircularCommandMenu({
   const computeCenter = useCallback(() => {
     const r = triggerRef.current?.getBoundingClientRect()
     if (!r) return
-    const m = radius + 44
+    // Órbita vai até radius + 18 (meia bolinha de 36 px); +4 px de folga pro anel ativo e a sombra.
+    const m = radius + 22
     setCenter({
       x: Math.min(Math.max(r.left + r.width / 2, m), window.innerWidth - m),
       y: Math.min(Math.max(r.top + r.height / 2, m), window.innerHeight - m),

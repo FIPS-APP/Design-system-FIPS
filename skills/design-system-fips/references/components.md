@@ -435,6 +435,8 @@ Um único componente, dois presets:
 
 `ariaLabel` (v0.11.31) tem default `"Ações da linha"`, correto pro uso em tabela. **Fora de linha de tabela (FAB), passe `ariaLabel` próprio** — ex.: `ariaLabel="Ações rápidas"`.
 
+O centro da órbita segue o gatilho (o × central abre sobre ele); só é preso à janela quando a órbita (`radius + 18`, meia bolinha de 36 px) não caberia, com margem `radius + 22` (v0.20.40).
+
 ```tsx
 <RowActionsMenu
   rowId={row.id}
