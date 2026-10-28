@@ -78,7 +78,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-surface: #ffffff;
   --color-surface-soft: var(--color-fips-neutral-25);
   --color-surface-muted: var(--color-fips-neutral-50);
-  --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, transparent);
+  --color-table-zebra: color-mix(in srgb, var(--color-fips-blue-200) 25%, var(--color-surface));
   --color-border: #d7e0ea;
   --color-border-strong: var(--color-fips-gray-400);
   --color-fg: var(--color-fips-gray-900);
@@ -119,7 +119,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-success-strong` (**cor de texto**) | green-700 | `#8be5ad` |
 | `--color-success-fill` (fundo cheio com texto branco) | green-700 | `#008842` (4,56:1) |
 | `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |
-| `--color-table-zebra` | blue-200 @25% | `rgba(255,255,255,.03)` |
+| `--color-table-zebra` (opaca, sobre `--color-surface`) | blue-200 @25% sobre a superfície | branco @3% sobre a superfície |
 | `--color-ring` | sky-600 | yellow-600 |
 | `--color-switch-on` | `--color-primary` | blue-700 |
 | `--color-switch-off` | `--color-fg-muted` | `#7a7a82` |
