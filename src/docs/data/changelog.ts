@@ -37,7 +37,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          'A regra de decisão fica em `scripts/publicar-decisao.mjs`, fora do YAML, e `npm run test:publicar` cobre doze casos (bump, versão igual já publicada e não publicada, versão repetida, commit anterior desconhecido, tag à mão antes e depois da publicação, tag que não bate, saída do script para push na main e para tag, e a consulta ao registro). A consulta fica em `scripts/registro-versao.sh`: só a resposta E404 conta como versão fora do registro; qualquer outro erro do `npm view` (rede, 401, 403) falha o passo com a mensagem do npm, em vez de tentar publicar. README, seção Versionamento: bump na `main` é publicação.',
+          'A regra de decisão fica em `scripts/publicar-decisao.mjs`, fora do YAML, e `npm run test:publicar` cobre treze casos (bump, versão igual já publicada e não publicada, versão repetida, commit anterior desconhecido, tag à mão antes e depois da publicação, tag que não bate, saída do script para push na main e para tag, e a consulta ao registro: versão existente, E404, resposta vazia sem erro e falha de rede ou permissão). A consulta fica em `scripts/registro-versao.sh`: só a resposta E404 conta como versão fora do registro; qualquer outro erro do `npm view` (rede, 401, 403) falha o passo com a mensagem do npm, em vez de tentar publicar. README, seção Versionamento: bump na `main` é publicação.',
       },
     ],
   },
