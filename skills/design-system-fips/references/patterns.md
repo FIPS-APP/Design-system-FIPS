@@ -287,7 +287,7 @@ O título de coluna usa `--color-fg`: 10,70:1 sobre a faixa `--color-surface-mut
 
 **`TableRow`** — `hover:bg-[var(--color-surface-soft)]`; com `zebra=true` → `even:bg-[var(--color-table-zebra)]` (hover sobrescreve).
 
-**Token zebra** — `--color-table-zebra`: light = `#D3E3F440` (blue-200 @ 25%); dark = `rgba(255,255,255,0.03)`. Declarar em `globals.css` e no bloco `.dark`. **Zebra fraca demais é bug conhecido**: `#93BDE4` a 5% fica quase invisível e a tabela parece não-zebrada — o valor certo é o `#D3E3F4` a 25%.
+**Token zebra** — `--color-table-zebra`, **opaca**, mistura sobre a superfície: light = `color-mix(in srgb, var(--color-fips-blue-200) 25%, var(--color-surface))`; dark = `color-mix(in srgb, white 3%, var(--color-surface))`. Declarar em `globals.css` e no bloco `.dark`. Não pode ser translúcida: a coluna fixa (`position: sticky`) herda o fundo da linha, e a faixa translúcida soma duas vezes (célula mais escura que a linha) e deixa o texto das colunas do meio aparecer por baixo. **Zebra fraca demais é bug conhecido**: `#93BDE4` a 5% fica quase invisível e a tabela parece não-zebrada — o valor certo é o `#D3E3F4` a 25%.
 
 #### Cadência de linha — o alvo visual (`DENSITY`)
 
