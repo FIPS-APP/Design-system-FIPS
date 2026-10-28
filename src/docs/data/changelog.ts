@@ -26,23 +26,23 @@ export interface ChangelogVersion {
 export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '0.21.2',
-    date: '2026-10-26',
+    date: '2026-10-27',
     title: 'Select: a lista abre num portal e Modal, Drawer e card deixam de cortá-la',
     entries: [
       {
         type: 'fix',
         description:
-          'A lista do `Select` passa de `absolute` dentro do campo para um portal no `body` com `position: fixed` na coordenada do gatilho. Dentro do `Modal` (corpo `overflow-y-auto`, contêiner `overflow-hidden`) ela era cortada: a 1440x900, com 24 opções no fim do corpo, 0 de 4 opções inteiras ficavam clicáveis; agora são 4 de 4 e a roda do mouse alcança as 24 (rolagem de 0 a 828 px). Props e `ref` não mudam. Quem achava a lista como filha do campo por seletor CSS passa a usar `[role="listbox"]`.',
+          'A lista do `Select` passa de `absolute` dentro do campo para um portal no `body` com `position: fixed` na coordenada do gatilho. Dentro do `Modal` (corpo `overflow-y-auto`, contêiner `overflow-hidden`) ela era cortada: a 1440x900, com 24 opções no fim do corpo, 0 de 4 opções inteiras ficavam clicáveis; agora são 4 de 4 e a roda do mouse alcança as 24 (rolagem de 0 a 828 px). Props e `ref` não mudam. Quem achava a lista como filha do campo por seletor CSS passa a usar `[role="listbox"]`. Teste de app com Testing Library que procura as opções com `within(container)` ou `container.querySelector(\'[role="option"]\')` deixa de achá-las, porque estão no `body`: use `screen`.',
       },
       {
         type: 'improvement',
         description:
-          'A lista sobe quando embaixo não cabe e o gatilho perde o canto de cima em vez do de baixo; sem espaço nos dois lados ela encolhe e rola. Acompanha a rolagem do corpo do `Modal` e o redimensionamento, e fecha quando o gatilho sai da área visível. Fica em `z-[70]` (acima do `Modal` e do `Drawer` em 50 e do tour em 60), devolve `pointer-events: auto` (o Radix põe `none` no `body`) e libera a roda e o toque (o travamento de rolagem do `Modal` cancelava os dois sobre a lista). Leva `data-lista-flutuante`, o marcador do `SelectBusca` dos apps. `ChipSelect` não mudou e continua `absolute`.',
+          'A lista sobe quando embaixo não cabe e o gatilho perde o canto de cima em vez do de baixo; sem espaço nos dois lados ela encolhe e rola. Acompanha a rolagem do corpo do `Modal`, o redimensionamento e o gatilho que muda de lugar sem rolagem (aviso que aparece acima do campo, acordeão, `Modal` ainda animando): com a lista aberta, cada quadro confere o gatilho e a altura da lista e só mede de novo quando algo mudou. Fecha quando o gatilho sai da área visível. Fica em `z-[70]` (acima do `Modal` e do `Drawer` em 50 e do tour em 60), devolve `pointer-events: auto` (o Radix põe `none` no `body`) e libera a roda e o toque (o travamento de rolagem do `Modal` cancelava os dois sobre a lista). Leva `data-lista-flutuante`, o marcador do `SelectBusca` dos apps. `ChipSelect` não mudou e continua `absolute`.',
       },
       {
         type: 'improvement',
         description:
-          '`npm run test:select`: 7 casos da conta de posição (`lista-flutuante.ts`), o render no servidor e a guarda do código, mais 12 casos num Chromium sem interface (`Modal` a 1440x900, 1440x420, 600x500 e 375x812 com toque, teclado, `Drawer`, card com `overflow-hidden`, tema escuro). Os do navegador precisam do playwright (`npm i --no-save playwright`) e são pulados sem ele. Seção 01-I da página do Select e notas da skill acompanham.',
+          '`npm run test:select`: 7 casos da conta de posição (`lista-flutuante.ts`), o render no servidor e a guarda do código, mais 13 casos num Chromium sem interface (`Modal` a 1440x900, 1440x420, 600x500 e 375x812 com toque, teclado, aviso acima do campo, `Drawer`, card com `overflow-hidden`, tema escuro). A parte sem navegador também roda no `npm test`. Os do navegador precisam do playwright (`npm i --no-save playwright`) ou do playwright-core com `DS_CHROME` apontando para um Chrome instalado; sem eles são pulados, com o motivo escrito no topo da saída. Seção 01-I da página do Select e notas da skill acompanham.',
       },
     ],
   },
