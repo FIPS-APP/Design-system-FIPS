@@ -36,7 +36,7 @@ Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
 
 **Exportado sem página de doc:** `Switch` (Radix, `src/components/ui/switch.tsx`; trilho em `--color-switch-on`/`--color-switch-off`, anel `--color-ring` cheio com recuo `--color-surface`). A página `/docs/components/switch` foi removida na v0.11.20 — o primitive e o composite `SettingsPreferenceRow` continuam funcionando em qualquer app consumidor, só ficaram sem doc dedicada.
 
-**Documentados no site e exportados desde a 0.21.13:** `DrawerHero` e `DrawerHeroProps`, `useTableDensity` e `TableDensity`, `FipsTabBar` e `FipsTabItem`, `BuscarPessoaModal`, `BuscarPessoaModalProps` e `Pessoa`. Continuam sem sair do pacote: `SettingsPreferenceRow` (a decisão está no PR #6, que traz também `SettingsPreferenceRowSelect`) e `BuscarUsuarioModal` (é o "Entrar como usuário" do menu Minha Conta do site; já não importa dado de `src/docs/`). `PatternPanelHero` já saía desde a 0.20.0.
+**Documentados no site e exportados desde a 0.21.13:** `DrawerHero` e `DrawerHeroProps`, `useTableDensity` e `TableDensity`, `FipsTabBar`, `FipsTabBarProps` e `FipsTabItem`, `BuscarPessoaModal`, `BuscarPessoaModalProps` e `Pessoa`. Continuam sem sair do pacote: `SettingsPreferenceRow` (a decisão está no PR #6, que traz também `SettingsPreferenceRowSelect`) e `BuscarUsuarioModal` (é o "Entrar como usuário" do menu Minha Conta do site; já não importa dado de `src/docs/`). `PatternPanelHero` já saía desde a 0.20.0.
 
 ## Button
 
