@@ -4,7 +4,7 @@
  */
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -81,5 +81,48 @@ test('o script de linha de comando escreve as saídas e sai com 1 no caso de fal
     assert.match(tagErrada.stdout, /não bate com a versão/)
   } finally {
     rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// Consulta ao registro (scripts/registro-versao.sh): um `npm` falso no PATH responde o que o
+// registro responderia. Só "não existe" (E404) vira ja_publicada=false; outro erro falha o passo.
+const CONSULTA = fileURLToPath(new URL('./registro-versao.sh', import.meta.url))
+
+function consultar(npmFalso) {
+  const dir = mkdtempSync(join(tmpdir(), 'registro-'))
+  try {
+    mkdirSync(join(dir, 'bin'))
+    writeFileSync(join(dir, 'bin', 'npm'), `#!/usr/bin/env bash\n${npmFalso}\n`)
+    chmodSync(join(dir, 'bin', 'npm'), 0o755)
+    const saida = join(dir, 'saida.txt')
+    writeFileSync(saida, '')
+    const r = spawnSync('bash', [CONSULTA], {
+      env: { ...process.env, PATH: `${join(dir, 'bin')}:${process.env.PATH}`, GITHUB_OUTPUT: saida, NOME: '@fips-app/ds-fips', VERSAO: '0.21.9' },
+      encoding: 'utf8',
+    })
+    return { status: r.status, stdout: r.stdout, saida: readFileSync(saida, 'utf8') }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
+test('registro tem a versão: grava ja_publicada=true', () => {
+  const r = consultar('echo 0.21.9')
+  assert.equal(r.status, 0)
+  assert.equal(r.saida, 'ja_publicada=true\n')
+})
+
+test('registro responde E404 (versão ou pacote inexistente): grava ja_publicada=false', () => {
+  const r = consultar('echo "npm error code E404" >&2; exit 1')
+  assert.equal(r.status, 0)
+  assert.equal(r.saida, 'ja_publicada=false\n')
+})
+
+test('registro inacessível ou sem permissão: o passo falha com a mensagem do npm e não grava nada', () => {
+  for (const codigo of ['ECONNREFUSED', 'E401', 'E403']) {
+    const r = consultar(`echo "npm error code ${codigo}" >&2; exit 1`)
+    assert.equal(r.status, 1, codigo)
+    assert.equal(r.saida, '', codigo)
+    assert.match(r.stdout, new RegExp(codigo), codigo)
   }
 })
