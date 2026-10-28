@@ -7,7 +7,9 @@ name: Publish to GitHub Packages
 # continua valendo, mas não publica de novo uma versão que já está no registro.
 # O token de publicação só entra nos passos que falam com o registro, e a tag sai num job
 # à parte, o único com contents: write, que não roda código do projeto nem de dependências.
-# A regra de decisão está em scripts/publicar-decisao.mjs (npm run test:publicar).
+# A regra de decisão está em scripts/publicar-decisao.mjs e a consulta ao registro em
+# scripts/registro-versao.sh (npm run test:publicar). Só E404 conta como "não está no registro";
+# outro erro da consulta falha o passo.
 on:
   push:
     branches: [main]
@@ -49,14 +51,7 @@ jobs:
         id: registro
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          NOME=$(node -p "require('./package.json').name")
-          VERSAO=$(node -p "require('./package.json').version")
-          if [ -n "$(npm view "$NOME@$VERSAO" version 2>/dev/null)" ]; then
-            echo "ja_publicada=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ja_publicada=false" >> "$GITHUB_OUTPUT"
-          fi
+        run: bash scripts/registro-versao.sh
 
       - name: Decidir
         id: decisao
