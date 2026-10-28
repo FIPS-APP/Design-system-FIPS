@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.40',
+    date: '2026-10-28',
+    title: 'Menu radial: × sobre o gatilho perto da borda',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O `CircularCommandMenu` (e o `RowActionsMenu`) prendia o centro da órbita a `radius + 44` da borda da janela, mas a órbita só ocupa `radius + 18` (meia bolinha de 36 px). Perto da borda o centro era empurrado para dentro mesmo com todas as bolinhas cabendo, e o × central saía de cima do gatilho. A margem passa a `radius + 22`: meia bolinha + 4 px para o anel ativo e a sombra.',
+      },
+    ],
+  },
+  {
     version: '0.20.39',
     date: '2026-10-28',
     title: 'Table: zebra opaca',
