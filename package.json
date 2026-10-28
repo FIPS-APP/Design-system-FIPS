@@ -34,7 +34,7 @@
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test:select": "node --test scripts/select-portal.test.mjs",
     "test:rolagem": "node --test scripts/rolagem-teclado.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {

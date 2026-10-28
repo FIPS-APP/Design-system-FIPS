@@ -6,9 +6,11 @@
  * Parte 2, no navegador: monta o Modal, o Drawer e um cartão com overflow hidden do DS num Chromium
  * sem interface e mede a lista de verdade, porque corte por overflow e z-index não existem no jsdom.
  * Precisa do playwright, que o DS não traz no package.json: `npm i --no-save playwright` e, se faltar o
- * navegador, `npx playwright install chromium`. Sem isso a parte 2 é pulada e a saída diz o motivo.
+ * navegador, `npx playwright install chromium`. Ou o playwright-core com um Chrome já instalado:
+ * `npm i --no-save playwright-core` e `DS_CHROME=/caminho/do/chrome`. Sem nenhum dos dois a parte 2 é
+ * pulada e o aviso no topo da saída diz o motivo.
  *
- * Rodar: npm run test:select
+ * Rodar: npm run test:select (a parte 1 também roda no npm test)
  */
 import { test, describe, before, after } from 'node:test'
 import assert from 'node:assert/strict'
@@ -157,20 +159,33 @@ describe('Select: servidor e fonte', () => {
     assert.match(fonte, /z-\[70\]/)
     assert.match(fonte, /data-lista-flutuante/)
   })
+  test('com a lista aberta, cada quadro confere o lugar do gatilho e o efeito cancela o quadro ao fechar', () => {
+    assert.match(fonte, /requestAnimationFrame\(acompanhar\)/)
+    assert.match(fonte, /cancelAnimationFrame\(quadro\)/)
+  })
 })
 
 // ───────────────────────── Parte 2: no navegador ─────────────────────────
 
 let playwright = null
 let semNavegador = ''
-try {
-  playwright = await import('playwright')
-  if (!existsSync(playwright.chromium.executablePath())) {
-    semNavegador = 'Chromium do playwright não instalado (npx playwright install chromium)'
+const CHROME = process.env.DS_CHROME || ''
+for (const nome of ['playwright', 'playwright-core']) {
+  try {
+    playwright = await import(nome)
+    break
+  } catch {
+    // tenta o próximo
   }
-} catch {
-  semNavegador = 'playwright não instalado (npm i --no-save playwright)'
 }
+if (!playwright) {
+  semNavegador = 'playwright não instalado (npm i --no-save playwright, ou playwright-core com DS_CHROME)'
+} else if (!existsSync(CHROME || playwright.chromium.executablePath())) {
+  semNavegador = CHROME
+    ? `DS_CHROME não existe: ${CHROME}`
+    : 'Chromium do playwright não instalado (npx playwright install chromium, ou DS_CHROME com um Chrome instalado)'
+}
+if (semNavegador) console.warn(`select-portal: parte 2 (casos no navegador) pulada. ${semNavegador}`)
 
 const OPCOES = 24
 
@@ -199,9 +214,13 @@ function Campo({ n }) {
 
 function CorpoComSelect({ preenchimento }) {
   const [v, setV] = useState('')
+  const [aviso, setAviso] = useState(false)
+  // Muda o lugar do gatilho sem rolagem nem redimensionamento, como um aviso de validação.
+  window.__mostrarAviso = () => setAviso(true)
   return (
     <div style={{ display: 'grid', gap: 16 }}>
       {Array.from({ length: preenchimento }, (_, i) => <Campo key={i} n={i + 1} />)}
+      {aviso && <p role="alert" style={{ margin: 0, height: 64 }}>Preencha o local antes de salvar.</p>}
       <Select aria-label="Local" placeholder="Selecione o local" options={OPCOES} value={v} onChange={setV} />
     </div>
   )
@@ -278,7 +297,7 @@ describe('Select no navegador', { skip: semNavegador || false }, () => {
     })
     await new Promise((ok) => servidor.listen(0, '127.0.0.1', ok))
     base = `http://127.0.0.1:${servidor.address().port}/`
-    browser = await playwright.chromium.launch({ headless: true })
+    browser = await playwright.chromium.launch({ headless: true, ...(CHROME && { executablePath: CHROME }) })
   })
 
   after(async () => {
@@ -380,6 +399,7 @@ describe('Select no navegador', { skip: semNavegador || false }, () => {
     try {
       await abrirLista(page)
       const m = await medir(page)
+      t.diagnostic(`navegador: ${CHROME || 'Chromium do playwright'} ${browser.version()}`)
       t.diagnostic(`1440x900 Modal: ${resumo(m)}`)
       assert.equal(m.filhaDoBody, true, 'a lista deveria ser filha do body (portal)')
       assert.equal(m.marcador, true, 'a lista deveria levar data-lista-flutuante')
@@ -490,6 +510,25 @@ describe('Select no navegador', { skip: semNavegador || false }, () => {
       // Rola o corpo até o topo: o gatilho, no fim do corpo, sai da área visível dele.
       await el.evaluate((n) => { n.scrollTop = 0 })
       await page.waitForFunction(() => !document.querySelector('[role="listbox"]'), null, { timeout: 2000 })
+    } finally {
+      await ctx.close()
+    }
+  })
+
+  test('Modal: um aviso acima do campo muda o gatilho de lugar, sem rolagem, e a lista vai junto', async (t) => {
+    const { page, ctx } = await abrir('modal')
+    try {
+      await abrirLista(page)
+      const a = await medir(page)
+      await page.evaluate(() => window.__mostrarAviso())
+      await page.waitForSelector('[role="alert"]')
+      await page.evaluate(() => Promise.all(document.getAnimations().map((x) => x.finished.catch(() => {}))))
+      await page.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))))
+      const b = await medir(page)
+      assert.ok(b, 'a lista fechou quando o aviso apareceu')
+      t.diagnostic(`aviso acima do campo: gatilho ${Math.round(a.gatilho.bottom)} -> ${Math.round(b.gatilho.bottom)}, lista ${Math.round(a.lista.top)} -> ${Math.round(b.lista.top)}`)
+      assert.ok(Math.abs(b.gatilho.bottom - a.gatilho.bottom) >= 20, `o aviso deveria mover o gatilho, andou ${b.gatilho.bottom - a.gatilho.bottom} px`)
+      assert.ok(Math.abs(emenda(b)) <= 1, `a lista ficou ${Math.round(emenda(b))} px longe do gatilho depois que ele mudou de lugar`)
     } finally {
       await ctx.close()
     }

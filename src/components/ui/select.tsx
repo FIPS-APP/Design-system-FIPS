@@ -110,7 +110,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
 
 
     // Posiciona a lista: mede o gatilho e a lista antes de pintar (a lista nasce `hidden`) e mede de
-    // novo a cada rolagem e redimensionamento. A rolagem escuta na captura porque o corpo rolável de
+    // novo a cada rolagem, redimensionamento e mudança de lugar do gatilho. A rolagem escuta na captura porque o corpo rolável de
     // um Modal não borbulha o `scroll` até a window. Se o gatilho sai da área visível (rolou para
     // fora do corpo do Modal, por exemplo), a lista fecha em vez de ficar solta na tela.
     useLayoutEffectSeguro(() => {
@@ -130,6 +130,22 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       medir()
       window.addEventListener('scroll', medir, true)
       window.addEventListener('resize', medir)
+      // O gatilho também muda de lugar sem `scroll` nem `resize`: um aviso aparece acima do campo, um
+      // acordeão abre, o Modal ainda anima a entrada, e a lista muda de altura quando os rótulos mudam.
+      // Enquanto a lista está aberta, cada quadro confere o gatilho e a altura da lista e só mede de
+      // novo quando algo mudou.
+      let quadro = 0
+      let ultimo = ''
+      const acompanhar = () => {
+        const r = gatilho.getBoundingClientRect()
+        const agora = `${r.top} ${r.left} ${r.width} ${r.height} ${lista.scrollHeight}`
+        if (agora !== ultimo) {
+          ultimo = agora
+          medir()
+        }
+        quadro = requestAnimationFrame(acompanhar)
+      }
+      quadro = requestAnimationFrame(acompanhar)
       const visivel =
         typeof IntersectionObserver === 'undefined'
           ? null
@@ -138,6 +154,7 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             })
       visivel?.observe(gatilho)
       return () => {
+        cancelAnimationFrame(quadro)
         window.removeEventListener('scroll', medir, true)
         window.removeEventListener('resize', medir)
         visivel?.disconnect()
