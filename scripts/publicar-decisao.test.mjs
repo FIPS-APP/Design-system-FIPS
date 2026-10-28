@@ -6,7 +6,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { delimiter, join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { decidir } from './publicar-decisao.mjs'
@@ -86,6 +86,9 @@ test('o script de linha de comando escreve as saídas e sai com 1 no caso de fal
 
 // Consulta ao registro (scripts/registro-versao.sh): um `npm` falso no PATH responde o que o
 // registro responderia. Só "não existe" (E404) vira ja_publicada=false; outro erro falha o passo.
+// Os testes precisam de `bash` e de um `npm` falso sem extensão, o que o Windows sem Git Bash não
+// oferece; lá eles são pulados. O workflow roda no Linux do Actions.
+const SEM_BASH = process.platform === 'win32' && 'precisa de bash e de um npm falso sem extensão; roda no Linux e no macOS'
 const CONSULTA = fileURLToPath(new URL('./registro-versao.sh', import.meta.url))
 
 function consultar(npmFalso) {
@@ -97,7 +100,7 @@ function consultar(npmFalso) {
     const saida = join(dir, 'saida.txt')
     writeFileSync(saida, '')
     const r = spawnSync('bash', [CONSULTA], {
-      env: { ...process.env, PATH: `${join(dir, 'bin')}:${process.env.PATH}`, GITHUB_OUTPUT: saida, NOME: '@fips-app/ds-fips', VERSAO: '0.21.9' },
+      env: { ...process.env, PATH: `${join(dir, 'bin')}${delimiter}${process.env.PATH}`, GITHUB_OUTPUT: saida, NOME: '@fips-app/ds-fips', VERSAO: '0.21.9' },
       encoding: 'utf8',
     })
     return { status: r.status, stdout: r.stdout, saida: readFileSync(saida, 'utf8') }
@@ -106,19 +109,25 @@ function consultar(npmFalso) {
   }
 }
 
-test('registro tem a versão: grava ja_publicada=true', () => {
+test('registro tem a versão: grava ja_publicada=true', { skip: SEM_BASH }, () => {
   const r = consultar('echo 0.21.9')
   assert.equal(r.status, 0)
   assert.equal(r.saida, 'ja_publicada=true\n')
 })
 
-test('registro responde E404 (versão ou pacote inexistente): grava ja_publicada=false', () => {
+test('registro responde sucesso sem saída (versão não encontrada sem erro): grava ja_publicada=false', { skip: SEM_BASH }, () => {
+  const r = consultar('exit 0')
+  assert.equal(r.status, 0)
+  assert.equal(r.saida, 'ja_publicada=false\n')
+})
+
+test('registro responde E404 (versão ou pacote inexistente): grava ja_publicada=false', { skip: SEM_BASH }, () => {
   const r = consultar('echo "npm error code E404" >&2; exit 1')
   assert.equal(r.status, 0)
   assert.equal(r.saida, 'ja_publicada=false\n')
 })
 
-test('registro inacessível ou sem permissão: o passo falha com a mensagem do npm e não grava nada', () => {
+test('registro inacessível ou sem permissão: o passo falha com a mensagem do npm e não grava nada', { skip: SEM_BASH }, () => {
   for (const codigo of ['ECONNREFUSED', 'E401', 'E403']) {
     const r = consultar(`echo "npm error code ${codigo}" >&2; exit 1`)
     assert.equal(r.status, 1, codigo)
