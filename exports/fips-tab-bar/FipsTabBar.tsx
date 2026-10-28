@@ -9,7 +9,7 @@ export type FipsTabItem = {
   disabled?: boolean
 }
 
-type FipsTabBarProps = {
+export type FipsTabBarProps = {
   tabs: FipsTabItem[]
   activeId: string
   onChange: (id: string) => void

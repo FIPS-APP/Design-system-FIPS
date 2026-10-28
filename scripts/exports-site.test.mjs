@@ -50,7 +50,7 @@ test('o pacote exporta os componentes documentados no site', () => {
 })
 
 test('nenhum arquivo do pacote vem de src/docs', () => {
-  const docs = join(RAIZ, 'src/docs') + '/'
+  const docs = join(RAIZ, 'src/docs').replaceAll('\\', '/') + '/'
   const doSite = programaDoPacote()
     .getSourceFiles()
     .map((f) => f.fileName)

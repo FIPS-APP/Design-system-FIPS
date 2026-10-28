@@ -32,12 +32,12 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'feature',
         description:
-          '`DrawerHero` (+ `DrawerHeroProps`), `useTableDensity` (+ `TableDensity`), `FipsTabBar` (+ `FipsTabItem`) e `BuscarPessoaModal` (+ `BuscarPessoaModalProps` e `Pessoa`) saem em `src/index.ts`. O site já os documentava e `src/index.ts` não os exportava, então o app que queria um deles copiava o arquivo. Export novo e nada removido: `dist/index.d.ts` ganha 9 nomes. `PatternPanelHero` já saía desde a 0.20.0. `SettingsPreferenceRow` fica de fora até a decisão do PR #6.',
+          '`DrawerHero` (+ `DrawerHeroProps`), `useTableDensity` (+ `TableDensity`), `FipsTabBar` (+ `FipsTabBarProps` e `FipsTabItem`) e `BuscarPessoaModal` (+ `BuscarPessoaModalProps` e `Pessoa`) saem em `src/index.ts`. O site já os documentava e `src/index.ts` não os exportava, então o app que queria um deles copiava o arquivo. Export novo e nada removido: `dist/index.d.ts` ganha 10 nomes. `PatternPanelHero` já saía desde a 0.20.0. `SettingsPreferenceRow` fica de fora até a decisão do PR #6.',
       },
       {
         type: 'improvement',
         description:
-          '`BuscarUsuarioModal` deixa de importar de `src/docs/data/users`: o tipo `FipsUser` e as funções puras de papel e iniciais foram para `src/lib/fipsUser.ts`, e o arquivo do site os reexporta. O modal continua fora do pacote. `npm run test:exports` confere os nomes exportados pelo compilador do TypeScript e que o modal não importa de `src/docs/`.',
+          '`BuscarUsuarioModal` deixa de importar de `src/docs/data/users`: o tipo `FipsUser` e as funções puras de papel e iniciais foram para `src/lib/fipsUser.ts`, e o arquivo do site os reexporta. O modal continua fora do pacote. `npm run test:exports` confere os nomes exportados pelo compilador do TypeScript e que nenhum arquivo alcançado a partir de `src/index.ts` vem de `src/docs/`.',
       },
     ],
   },
