@@ -203,7 +203,7 @@ export function FieldInput({ label, placeholder, icon, required, error, errorMsg
   const [focused, setFocused] = useState(false);
   const [val, setVal] = useState(cv || "");
   const ref = useRef<HTMLInputElement>(null);
-  const h = compact ? 30 : 35;
+  const h = compact ? 32 : 35;
   const fs = compact ? 12 : 13;
   const dv = cv !== undefined ? cv : val;
   const bc = error ? C.danger : focused ? C.azulProfundo : C.border;

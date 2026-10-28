@@ -573,7 +573,7 @@ function DSMultiSelect({
           display: 'flex',
           alignItems: 'center',
           gap: 6,
-          minHeight: compact ? 30 : 35,
+          minHeight: compact ? 32 : 35,
           padding: '4px 12px',
           background: C.inputBg,
           border: `1.5px solid ${open ? C.azulProfundo : C.inputBorder}`,
