@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.39`
+## Versão atual: `v0.20.40`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
 | 0.20.39 | 2026-10-28 | `Table`: a faixa da zebra (`--color-table-zebra`) passa a ser opaca, mistura sobre `--color-surface` nos dois temas; a coluna fixa herda o fundo da linha sem somar a faixa duas vezes nem deixar o texto do meio aparecer por baixo |
 | 0.20.38 | 2026-10-27 | README: o tgz vendorizado sai do GitHub Packages, com o `sha512` do registro, nunca de `npm pack` local (os comentários de caminho do build mudam os bytes) |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
