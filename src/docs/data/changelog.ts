@@ -32,12 +32,12 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          'Registro da decisão: a altura do campo compacto é 32px (`h-8`), borda de 1px por token. Foi decidida na 0.11.15, que desfez os 35px da 0.11.14 (tirados de uma página de documentação, não de um app) e voltou para 32px com base no campo real do QLP. Vale para `Input`, `Select`, `Textarea`, `FieldTrigger` e `InputGroup` com `density="compact"`. Quem precisa de alvo maior no celular (OPA Mobile, 35px no escritório e 48px no pátio, por token do próprio app) resolve no app; densidade nova no pacote só entra com issue própria.',
+          'Registro da decisão: a altura do campo compacto é 32px (`h-8`), borda de 1px por token. Foi decidida na 0.11.15, que desfez os 35px da 0.11.14 (tirados de uma página de documentação, não de um app) e voltou para 32px com base no campo real do QLP. Vale para `Input`, `Select` e `FieldTrigger` com `density="compact"` (`h-8`). Ficam de fora: `Textarea` compacto, que tem altura mínima de 92px por ser de várias linhas, e `InputGroup`, que não tem prop `density` e mede sempre `h-12`. Quem precisa de alvo maior no celular (OPA Mobile, 35px no escritório e 48px no pátio, por token do próprio app) resolve no app; densidade nova no pacote só entra com issue própria.',
       },
       {
         type: 'fix',
         description:
-          'As páginas Field, Input, Select, Visão geral e Espaçamento do site diziam "Compacto 30px"; o componente entrega 32px. Texto, `TokenRow` e a altura dos exemplos passam a 32px. Fica como estava, sem decisão: a página diz Desktop 35px e Mobile 42px, e o pacote entrega 48px na densidade padrão (`h-12`).',
+          'As páginas Field, Input, Select, Drawer, Visão geral e Espaçamento do site diziam "Compacto 30px"; o componente entrega 32px. Texto, `TokenRow`, a altura dos exemplos e o código copiável da página Field passam a 32px. Continua em 30px o exemplo de `Textarea` com altura automática, fora desta decisão. Fica como estava, sem decisão: a página diz Desktop 35px e Mobile 42px, e o pacote entrega 48px na densidade padrão (`h-12`).',
       },
     ],
   },
