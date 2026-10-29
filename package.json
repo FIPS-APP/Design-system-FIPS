@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.20.41",
+  "version": "0.21.11",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -30,6 +30,7 @@
     "build:site": "tsc -b && vite build",
     "test:xlsx": "node --test scripts/xlsx.test.mjs",
     "build:downloads": "bash scripts/build-ai-downloads.sh",
+    "tokens:gen": "node scripts/gen-tokens-md.mjs",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test": "node --test scripts/contraste.test.mjs",

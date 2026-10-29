@@ -247,6 +247,54 @@ test('--color-primary-hover-text no claro vale o mesmo que --color-primary-hover
   assert.deepEqual(token('--color-primary-hover-text', 'claro'), token('--color-primary-hover', 'claro'))
 })
 
+// ─── Texto secundário (--color-fg-muted) ───────────────────────────────────
+// Legenda do BrandLoader, placeholder, botão ghost, hover de borda e todo texto secundário leem este token.
+// No claro media 4,29:1 sobre a página (--color-surface-muted), abaixo dos 4,5:1 de texto de 9px a 14px.
+for (const t of TEMAS) {
+  test(`--color-fg-muted, tema ${t}: texto contra o cartão, o cartão suave e a página`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-fg-muted contra ${fundo}`, token('--color-fg-muted', t), token(fundo, t), MINIMO_TEXTO)
+  })
+}
+
+// Listra da tabela (--color-table-zebra). Cobre color-mix(... N%, transparent),
+// color-mix(... N%, outra cor) e rgba(). Com transparent a faixa soma ao fundo
+// de baixo. Com outra cor ela já é opaca e não depende do fundo.
+function listra(t, fundo) {
+  const valor = TOKENS[t]['--color-table-zebra']
+  assert.ok(valor, `token --color-table-zebra não existe no tema ${t}`)
+  const mistura = valor.match(/^color-mix\(in srgb,\s*(.+?)\s+([\d.]+)%,\s*(.+)\)$/)
+  const rgba = mistura ? null : valor.match(/^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/)
+  assert.ok(mistura || rgba, `--color-table-zebra em formato não reconhecido: ${valor}`)
+  const topo = mistura ? (mistura[1] === 'white' ? BRANCO : cor(mistura[1], t)) : { r: +rgba[1], g: +rgba[2], b: +rgba[3] }
+  if (mistura && mistura[3] !== 'transparent') fundo = cor(mistura[3], t)
+  const alfa = mistura ? Number(mistura[2]) / 100 : Number(rgba[4])
+  return { r: topo.r * alfa + fundo.r * (1 - alfa), g: topo.g * alfa + fundo.g * (1 - alfa), b: topo.b * alfa + fundo.b * (1 - alfa) }
+}
+
+for (const t of TEMAS) {
+  test(`--color-fg-muted, tema ${t}: texto sobre a listra da tabela, em cada superfície`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-fg-muted contra a listra sobre ${fundo}`, token('--color-fg-muted', t), listra(t, token(fundo, t)), MINIMO_TEXTO)
+  })
+}
+
+// No claro o --color-neutral-fill é o próprio --color-fg-muted. A fonte em TypeScript (src/tokens/colors.ts)
+// alimenta o site e o docs/tokens.md e é escrita à mão: não pode divergir do globals.css, que é o que o pacote entrega.
+const COLORS_TS = ler('src/tokens/colors.ts')
+function neutralFillDoTs(objeto) {
+  const m = COLORS_TS.match(new RegExp(`export const ${objeto}\\s*=\\s*\\{([\\s\\S]*?)\\}\\s*as const`))
+  assert.ok(m, `colors.ts: objeto ${objeto} não encontrado`)
+  const v = m[1].match(/^\s*neutralFill:\s*'(#[\da-f]{6})'/im)
+  assert.ok(v, `colors.ts: neutralFill não encontrado em ${objeto}`)
+  return v[1]
+}
+
+for (const [t, objeto] of [['claro', 'semanticColors'], ['escuro', 'darkSemanticColors']]) {
+  test(`colors.ts: neutralFill de ${objeto} é o --color-neutral-fill do globals.css, tema ${t}`, () => {
+    const ts = neutralFillDoTs(objeto)
+    assert.deepEqual(cor(ts, t), token('--color-neutral-fill', t), `colors.ts ${ts} diverge de globals.css ${TOKENS[t]['--color-neutral-fill']}`)
+  })
+}
+
 test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CONTRASTE_RELATORIO }, () => {
   for (const t of TEMAS) {
     const linha = (rotulo, a, b) => console.log(`${t.padEnd(6)} ${rotulo.padEnd(30)} ${contraste(a, b).toFixed(2)}:1`)
@@ -259,5 +307,8 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('anel de foco / faixa', token('--color-ring', t), token('--color-surface-muted', t))
     linha('azul de texto / cartão', token('--color-primary-hover-text', t), cartao)
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
+    linha('muted / cartão', token('--color-fg-muted', t), cartao)
+    linha('muted / página', token('--color-fg-muted', t), token('--color-surface-muted', t))
+    linha('muted / listra', token('--color-fg-muted', t), listra(t, token('--color-surface', t)))
   }
 })

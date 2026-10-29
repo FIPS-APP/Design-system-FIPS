@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.11',
+    date: '2026-10-29',
+    title: 'Texto secundário do tema claro passa de 4,5:1 sobre cartão, cartão suave, página e listra da tabela',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão (`#ffffff`), o cartão suave (`#fbfdff`) e a página (`#f5f8fc`). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. Muda o pixel de todo texto secundário do pacote e dos apps, que fica um pouco mais escuro: legenda do `BrandLoader`, placeholder de `Input`, `Textarea` e `FieldTrigger`, botão `ghost`, `lead`, `small` e `caption`. O token do escuro não muda (`#9ca3af`, 6,04:1 ou mais sobre cartão, cartão suave e página). `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham: o cinza cheio com texto branco vai de 4,57:1 a 5,05:1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 de `--color-fg-muted` sobre cartão, cartão suave, página e listra da tabela nos dois temas, e que o `neutralFill` do `colors.ts` bata com o `globals.css`. `foundations.md`, `patterns.md`, `docs/tokens.md`, a página de cores do site e o README do Switch portátil acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.20.41',
     date: '2026-10-29',
     title: 'Modal curto: cabeçalho plano, também no escuro',

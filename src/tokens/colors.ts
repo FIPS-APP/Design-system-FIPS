@@ -47,8 +47,8 @@ export const semanticColors = {
   dangerText: '#B91C1C',
   /** Verde de fundo com texto branco. */
   successFill: fipsPalette.verdeFlorestaEscuro,
-  /** Cinza de fundo com texto branco. */
-  neutralFill: '#6B7784',
+  /** Cinza de fundo com texto branco: o mesmo valor do --color-fg-muted no claro (5,05:1 com texto branco). */
+  neutralFill: '#64707D',
   sidebar: fipsPalette.azulProfundo,
   sidebarMuted: fipsPalette.azulProfundoDark,
 } as const

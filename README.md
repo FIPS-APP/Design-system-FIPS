@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.20.41`
+## Versão atual: `v0.21.11`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.11 | 2026-10-29 | `--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão, o cartão suave e a página (legenda do `BrandLoader`, placeholder, texto secundário). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. O token do escuro não muda. `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham. `npm test` exige 4,5:1 nos dois temas |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
 | 0.20.39 | 2026-10-28 | `Table`: a faixa da zebra (`--color-table-zebra`) passa a ser opaca, mistura sobre `--color-surface` nos dois temas; a coluna fixa herda o fundo da linha sem somar a faixa duas vezes nem deixar o texto do meio aparecer por baixo |
