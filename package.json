@@ -32,7 +32,8 @@
     "build:downloads": "bash scripts/build-ai-downloads.sh",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs",
+    "test:hooks": "node --test scripts/hooks.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/hero-atalho.test.mjs scripts/xlsx.test.mjs scripts/hooks.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {

@@ -111,7 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.12 | 2026-10-27 | Workflow `ci.yml` em todo PR contra a `main`: lint, typecheck, testes, build da lib e build do site. `npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Nada muda na API do pacote |
+| 0.21.12 | 2026-10-27 | Workflow `ci.yml` em todo PR contra a `main`: lint, typecheck, testes (`npm test` roda contraste, hero, xlsx e hooks), build da lib e build do site. `npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Nada muda na API do pacote |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
