@@ -21,9 +21,15 @@ export interface ModalProps {
   showCloseButton?: boolean
   layer?: number
   headerIcon?: LucideIcon
-  /** Header hero — gradiente institucional FIPS (fundo azul, ícone glass, texto branco). Default: header simples atual. */
+  /**
+   * Faixa em degradê (ícone glass, texto branco, eyebrow). Fica desligada.
+   * O modal curto — aviso, passo a passo, um botão — usa o cabeçalho plano,
+   * no tema claro e no escuro. Ligar isto num aviso curto é o cartão com selo
+   * e disco de ícone. Exemplo escuro: botão "Simples (escuro)" em
+   * `/docs/components/dialog`.
+   */
   hero?: boolean
-  /** Rótulo dourado uppercase acima do título. Só tem efeito com `hero`. */
+  /** Rótulo dourado uppercase acima do título. Só tem efeito com `hero`. Não use no modal curto. */
   eyebrow?: ReactNode
   /** Remove o padding do corpo (`px-6 py-5`); o conteúdo controla o próprio espaçamento. */
   noPadBody?: boolean

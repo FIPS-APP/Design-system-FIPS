@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles, Users } from "lucide-react";
 import { Select } from '../../../components/ui/select';
+import { Button } from '../../../components/ui/button';
+import { Modal as ModalDs, ModalFooter } from '../../../components/ui/Modal';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
 import { BuscarPessoaModal } from '../../../components/composites/BuscarPessoaModal';
@@ -257,6 +259,26 @@ export default function DialogDoc(){
           LIVE MODALS
           ══════════════════════════════════════════════ */}
 
+      {/* 0. SIMPLES NO ESCURO — o Modal do pacote, hero desligado. A classe dark
+          fica no cartão: o portal não herda o tema da página. */}
+      <ModalDs
+        open={m==="simples"}
+        onOpenChange={(aberto) => { if (!aberto) close(); }}
+        className="dark"
+        title="Instale o Facilities no aparelho"
+        description="Fica como ícone na tela inicial e abre em tela cheia, sem a barra do navegador."
+        size="lg"
+      >
+        <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-snug text-[var(--color-fg)]">
+          <li>Abra o menu do navegador ⋮ no canto superior</li>
+          <li>Escolha Instalar aplicativo ou Adicionar à tela inicial</li>
+          <li>Confirme em Instalar</li>
+        </ol>
+        <ModalFooter>
+          <Button variant="primary" onClick={close}>Entendi</Button>
+        </ModalFooter>
+      </ModalDs>
+
       {/* 1. CONFIRMAÇÃO */}
       <Modal open={m==="confirm"} onClose={close} eyebrow="Confirmação" eyebrowColor="rgba(255,255,255,0.9)" title="Aprovar requisição?" subtitle="Encaminhará REQ-4025 para o departamento de compras." icon={Ic.check(24,"#fff")} width={440} headerBg="#00904C"
         footer={<><Btn label="Cancelar" outline onClick={close}/><Btn label="Aprovar" color={C.verdeFloresta} onClick={close}/></>}>
@@ -451,6 +473,7 @@ export default function DialogDoc(){
               {/* Cor = categoria. Os 4 semânticos guardam a cor de estado (verde/vermelho/
                   laranja/azul institucional); os estruturais e os compostos ocupam faixas
                   distintas para nenhum par repetir — no claro E no escuro. */}
+              <Btn label="Simples (escuro)" icon={Info} color={Btn3.azulNavy} onClick={()=>open("simples")}/>
               <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
               <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
               <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
@@ -463,7 +486,7 @@ export default function DialogDoc(){
               <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} fg={Btn3.azulNavy} onClick={()=>open("changelog")}/>
               <Btn label="Responsável" icon={Users} color={C.azulCeu} fg={Btn3.azulNavy} onClick={()=>open("responsavel")}/>
             </div>
-            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>11 variantes: confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha), novidades (ChangelogModal — header gov, versão atual + histórico expansível) e buscar responsável (BuscarPessoaModal — campo de busca + lista com avatar/cargo/área; sem busca, traz quem tem equipe). Todos fecham com ESC, clique no overlay ou botão X.</p>
+            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>12 variantes. A primeira, Simples (escuro), é o modal do pacote com o hero desligado: cabeçalho plano, lista numerada, botão Entendi. Sem selo, sem disco de ícone, sem degradê. As outras onze são confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha), novidades (ChangelogModal — header gov, versão atual + histórico expansível) e buscar responsável (BuscarPessoaModal — campo de busca + lista com avatar/cargo/área; sem busca, traz quem tem equipe). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
         </Section>
 

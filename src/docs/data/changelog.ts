@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.41',
+    date: '2026-10-29',
+    title: 'Modal curto: cabeçalho plano, também no escuro',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O modal curto (aviso, passo a passo, um botão) fica com o `hero` desligado: sem degradê, sem selo e sem disco de ícone. O cabeçalho plano vale nos dois temas. A página Modal do site abre esse cartão no escuro pelo botão "Simples (escuro)" (`className="dark"` no conteúdo, porque o portal não herda o tema da página). `hero` e `eyebrow` continuam no componente, só para o modal institucional longo.',
+      },
+    ],
+  },
+  {
     version: '0.20.40',
     date: '2026-10-28',
     title: 'Menu radial: × sobre o gatilho perto da borda',
