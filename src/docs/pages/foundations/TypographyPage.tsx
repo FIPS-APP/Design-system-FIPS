@@ -266,14 +266,14 @@ export default function DSFIPSTypography(){
         <Section n="08" title="Considerações Dark Mode" desc="Adaptações tipográficas para o modo escuro do DS-FIPS.">
           <div style={{background:C.cardBg,borderRadius:"10px 10px 10px 18px",border:`1px solid ${C.cardBorder}`,padding:mob?16:24}}>
             <p style={{fontSize:13,color:C.cinzaChumbo,lineHeight:1.6,margin:"0 0 16px",fontFamily:Fn.body}}>
-              No dark mode, o foreground principal muda de #333B41 para #E2E2E8 e o muted de #64707D para #A1A1AA. Fontes e pesos permanecem idênticos — a hierarquia tipográfica não muda entre modos.
+              No dark mode, o foreground principal muda de #333B41 para #E2E2E8 e o muted de #64707D para #9CA3AF. Fontes e pesos permanecem idênticos — a hierarquia tipográfica não muda entre modos.
             </p>
             <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr",gap:10}}>
               {[
                 {label:"fg (light)",value:"#333B41"},
                 {label:"fg (dark)",value:"#E2E2E8"},
                 {label:"fg-muted (light)",value:"#64707D"},
-                {label:"fg-muted (dark)",value:"#A1A1AA"},
+                {label:"fg-muted (dark)",value:"#9CA3AF"},
                 {label:"Fontes",value:"Idênticas em ambos"},
                 {label:"Pesos",value:"Idênticos em ambos"},
                 {label:"Line-height",value:"Sem alteração"},
