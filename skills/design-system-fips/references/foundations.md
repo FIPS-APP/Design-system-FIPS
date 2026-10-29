@@ -44,7 +44,7 @@ export const semanticColors = {
   success: '#00C64C',
   successStrong: '#00904C',
   dangerStrong: '#B91C1C',
-  borderControl: '#C0CCD2',
+  borderControl: '#808D9A',
   primaryText: '#004B9B',
   dangerText: '#B91C1C',
   successFill: '#00904C',
