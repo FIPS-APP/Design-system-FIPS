@@ -213,19 +213,27 @@ const TONS_SUCESSO = [
   'src/docs/pages/components/TooltipDoc.tsx',
 ]
 
+// ToastDoc e TooltipDoc têm duas paletas `C` cada (a da demo do site e a do código copiável), e a DemoPill passa
+// o verde por JSX. A chave vira lista de valores e todos entram na conta.
 for (const arquivo of TONS_SUCESSO) {
   test(`${arquivo}: texto do tom sucesso contra o fundo dele, mínimo 4,5:1`, () => {
     const fonte = ler(arquivo)
-    const paleta = Object.fromEntries([...fonte.matchAll(/(\w+)\s*:\s*"(#[\da-f]{6})"/gi)].map((m) => [m[1], m[2]]))
-    const tons = [...fonte.matchAll(/\bsucesso\s*:\s*\{([^}]*)\}/g)].map((m) => m[1])
-    assert.ok(tons.length > 0, `${arquivo}: nenhum tom sucesso encontrado`)
-    for (const corpo of tons) {
+    const paleta = {}
+    for (const m of fonte.matchAll(/(\w+)\s*:\s*"(#[\da-f]{6})"/gi)) (paleta[m[1]] ??= new Set()).add(m[2])
+    const pares = []
+    for (const m of fonte.matchAll(/\bsucesso\s*:\s*\{([^}]*)\}/g)) {
+      const corpo = m[1]
       const bg = corpo.match(/\bbg\s*:\s*"(#[\da-f]{6})"/i)
       const texto = corpo.match(/\bcolor\s*:\s*(?:"(#[\da-f]{6})"|C\.(\w+))/i)
       assert.ok(bg && texto, `${arquivo}: sucesso sem bg ou color legível (${corpo.trim().slice(0, 80)})`)
-      const hex = texto[1] ?? paleta[texto[2]]
-      assert.ok(hex, `${arquivo}: C.${texto[2]} fora da paleta do arquivo`)
-      verifica(`${arquivo}: ${hex} sobre ${bg[1]}`, cor(hex, 'claro'), cor(bg[1], 'claro'), MINIMO_TEXTO)
+      pares.push({ bg: bg[1], hex: texto[1], chave: texto[2] })
+    }
+    for (const m of fonte.matchAll(/\bbg="(#ECFDF5)"\s+color=\{C\.(\w+)\}/gi)) pares.push({ bg: m[1], chave: m[2] })
+    assert.ok(pares.length > 0, `${arquivo}: nenhum tom sucesso encontrado`)
+    for (const { bg, hex, chave } of pares) {
+      const valores = hex ? [hex] : [...(paleta[chave] ?? [])]
+      assert.ok(valores.length > 0, `${arquivo}: C.${chave} fora da paleta do arquivo`)
+      for (const v of valores) verifica(`${arquivo}: ${chave ? `C.${chave} = ` : ''}${v} sobre ${bg}`, cor(v, 'claro'), cor(bg, 'claro'), MINIMO_TEXTO)
     }
   })
 }
