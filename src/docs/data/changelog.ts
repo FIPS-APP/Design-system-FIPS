@@ -32,12 +32,12 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          '`Alert` com tom `warning`: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6` no claro) a `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto passa de `#f6921e` a `#fdc24e` (5,89:1 vira 8,47:1 sobre o cartão). Fundo e borda não mudam.',
+          '`Alert` com tom `warning`: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6` no claro) a `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto passa de `#f6921e` a `#fdc24e` (5,91:1 vira 8,49:1 sobre o cartão). Fundo e borda não mudam.',
       },
       {
         type: 'fix',
         description:
-          'Mesmo token no item "Importante" do `ChangelogModal` (claro 2,14:1 vira 4,77:1) e nos ícones em hover do `UserAccountMenu` (claro 2,11:1 vira 4,71:1; escuro `#f6921e` vira `#fdc24e`).',
+          'Mesmo token no item "Importante" do `ChangelogModal` (claro 2,14:1 vira 4,77:1) e nos ícones em hover do `UserAccountMenu` (claro 2,11:1 vira 4,70:1; escuro `#f6921e` vira `#fdc24e`, 5,77:1 vira 8,30:1 com o fundo de hover a /12).',
       },
       {
         type: 'fix',
@@ -47,7 +47,12 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          '`npm run test:badge` passa a cobrir o `Alert` warning (texto contra o fundo em cartão, cartão suave e faixa, nos dois temas), as quatro eyebrows contra o degradê do cabeçalho, o item do `ChangelogModal` e o ícone do `UserAccountMenu`, e recusa `--color-accent-strong` como cor de texto em `src` fora de `src/docs`.',
+          '`npm run test:badge` passa a cobrir o `Alert` warning (texto contra o fundo em cartão, cartão suave e faixa, nos dois temas), as quatro eyebrows contra o degradê do cabeçalho, o item do `ChangelogModal` e o ícone do `UserAccountMenu`, e recusa o laranja `#f6921e` como cor de texto em `src` fora de `src/docs`, por qualquer um dos nomes (`--color-accent-strong`, `--color-warning`, `--color-fips-yellow-600` e o hex). Dois ícones que já usavam esse laranja antes (`AbasDeSecao` e `DocHeaderSectionNav`) ficam numa lista fechada no teste; qualquer uso novo falha. O teste do menu da conta passa a medir os três ícones contra todos os fundos de hover, no claro e no escuro, e o das eyebrows de `ChangelogModal` e `ExportPreviewModal` compõe o trilho branco a 6% sobre o degradê (pior ponto: 4,55:1).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'As referências da skill (`components.md` e `patterns.md`) deixam de ensinar o laranja como texto: eyebrow do header `hero` em `--color-accent`, ícone do hover do menu e tom `breaking` do `ChangelogModal` em `--color-semantic-atencao-fg`. O zip da skill foi regerado.',
       },
     ],
   },
@@ -59,12 +64,17 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          '`Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre o fundo `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). Nenhum valor novo no sistema: é o token que o `RuleTile` com tom `atencao` já lê. Fundo e borda não mudam. No escuro o texto também lê o token, no mesmo `#fdc24e` de antes (8,47:1 sobre o cartão `#1a1a1a`, 8,00:1 sobre o suave `#1f1f1f`, 7,44:1 sobre a faixa `#252525`), e a classe `dark:text-[#FDC24E]` sai de `badge-variants.ts`.',
+          '`Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre o fundo `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). Nenhum valor novo no sistema: é o token que o `RuleTile` com tom `atencao` já lê. Fundo e borda não mudam. No escuro o texto também lê o token, no mesmo `#fdc24e` de antes (8,49:1 sobre o cartão `#1a1a1a`, 7,99:1 sobre o suave `#1f1f1f`, 7,41:1 sobre a faixa `#252525`, com o fundo composto sem arredondar para pixel), e a classe `dark:text-[#FDC24E]` sai de `badge-variants.ts`.',
       },
       {
         type: 'improvement',
         description:
-          '`npm run test:badge` passa a cobrir também o `warning`: texto contra o fundo em cartão, cartão suave e faixa, nos dois temas, e nenhuma cor fixa nas classes.',
+          'App com `tema-escuro.css` próprio que sobrescreve `--color-semantic-atencao-fg`: o Badge `warning` no escuro antes ignorava a sobrescrita (a classe com hex vencia) e agora segue o valor do app. Se o valor do app for um laranja mais escuro que `#fdc24e`, o badge muda de cor no escuro ao subir para esta versão. Conferir o contraste do valor do app antes de atualizar.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir também o `warning`: texto contra o fundo em cartão, cartão suave e faixa, nos dois temas, nenhuma cor fixa nas classes e nenhuma classe `dark:text-` ou `dark:bg-` nas variantes, mesmo com token (a regra é o token resolver o tema).',
       },
     ],
   },
