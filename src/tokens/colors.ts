@@ -39,8 +39,8 @@ export const semanticColors = {
   border: fipsPalette.cinzaMetal,
   foreground: fipsPalette.cinzaChumbo,
   foregroundMuted: '#4b5563',
-  /** Borda de campo. No claro é a mesma do divisor. */
-  borderControl: fipsPalette.cinzaMetal,
+  /** Borda de campo, select, textarea e gatilho de campo. 3,39:1 sobre branco. O divisor segue mais claro. */
+  borderControl: '#808D9A',
   /** Texto e contorno de ação. */
   primaryText: fipsPalette.azulProfundo,
   /** Alias de dangerStrong: texto vermelho pequeno, 6,47:1 sobre branco. */
@@ -65,8 +65,8 @@ export const darkSemanticColors = {
   borderStrong: '#3a3a3a',
   foreground: '#E8E8E8',
   foregroundMuted: '#9CA3AF',
-  /** Campo, select, textarea e gatilho de campo. 3,03:1 sobre o cartão. */
-  borderControl: '#666666',
+  /** Campo, select, textarea e gatilho de campo. 3,62:1 sobre o cartão, 3,19:1 sobre a página. */
+  borderControl: '#727272',
   /** Texto e contorno de ação. 8,82:1 sobre o cartão. */
   primaryText: '#93BDE4',
   /** Alias de dangerStrong: texto vermelho pequeno, 9,17:1 sobre o cartão. */
