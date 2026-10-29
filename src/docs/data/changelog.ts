@@ -37,7 +37,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          '`npm run test:rolagem` chama o auxiliar com um `document` sem `scrollIntoView`, com elemento ausente e com o método presente, e confere que `select.tsx` e `chip-select.tsx` não chamam `scrollIntoView` direto.',
+          '`npm run test:rolagem` chama o auxiliar com um `document` sem `scrollIntoView`, com elemento ausente e com o método presente, e confere que `select.tsx` e `chip-select.tsx` não chamam `scrollIntoView` direto. O teste também roda dentro de `npm test` (que o `publish.yml` executa), então a regressão trava a publicação.',
       },
     ],
   },

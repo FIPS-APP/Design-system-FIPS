@@ -33,7 +33,7 @@
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test:rolagem": "node --test scripts/rolagem-teclado.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/rolagem-teclado.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {
