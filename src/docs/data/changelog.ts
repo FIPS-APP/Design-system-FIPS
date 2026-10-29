@@ -37,7 +37,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas.',
+          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas. Confere também que `HeroAtalho`, `UserChip` e `DocHeaderNeuIconButton` pintam o fundo com `docHeaderNeuAccentBgHover`.',
       },
     ],
   },
@@ -49,7 +49,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          '`--color-border-control` no escuro passa de `#666666` a `#727272`: 3,03:1, 2,87:1 e 2,67:1 viram 3,62:1, 3,43:1 e 3,19:1 sobre o cartão (`#1a1a1a`), o cartão suave (`#1f1f1f`) e a página (`#252525`). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais clara no escuro. `--color-border` (o divisor) e o claro não mudam. O hover (`--color-fg-muted`) continua mais claro que a borda.',
+          '`--color-border-control` no escuro passa de `#666666` a `#727272`: 3,03:1, 2,87:1 e 2,67:1 viram 3,62:1, 3,43:1 e 3,19:1 sobre o cartão (`#1a1a1a`), o cartão suave (`#1f1f1f`) e a página (`#252525`). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais clara no escuro. `--color-border` (o divisor) e o claro não mudam no CSS. O hover (`--color-fg-muted`) continua mais claro que a borda. No export em TypeScript, `semanticColors.borderControl` passa de `#C0CCD2` a `#808D9A`, o mesmo valor do CSS desde a 0.20.16.',
       },
       {
         type: 'improvement',

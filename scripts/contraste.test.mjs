@@ -234,8 +234,10 @@ function borderControlDoTs(objeto) {
   const v = m[1].match(/^\s*borderControl:\s*(?:'(#[\da-f]{6})'|fipsPalette\.(\w+))/im)
   assert.ok(v, `colors.ts: borderControl não encontrado em ${objeto}`)
   if (v[1]) return v[1]
-  const p = TS_TOKENS.match(new RegExp(`^\\s*${v[2]}:\\s*'(#[\\da-f]{6})'`, 'im'))
-  assert.ok(p, `colors.ts: fipsPalette.${v[2]} não encontrado`)
+  const pal = TS_TOKENS.match(/export const fipsPalette\s*=\s*\{([\s\S]*?)\}\s*as const/)
+  assert.ok(pal, 'colors.ts: objeto fipsPalette não encontrado')
+  const p = pal[1].match(new RegExp(`^\\s*${v[2]}:\\s*'(#[\\da-f]{6})'`, 'im'))
+  assert.ok(p, `colors.ts: fipsPalette.${v[2]} não encontrado dentro de fipsPalette`)
   return p[1]
 }
 
@@ -320,6 +322,18 @@ test('Atalho aberto do hero: rótulo contra o degradê laranja, 4,5:1 em todo o 
   const rotulo = cor(constanteDoChrome('docHeaderNeuAccentIcon'), 'claro')
   const paradas = paradasDoDegrade(constanteDoChrome('docHeaderNeuAccentBgHover'))
   for (let pct = 0; pct <= 100; pct++) verifica(`rótulo contra o degradê a ${pct}%`, rotulo, corNoDegrade(paradas, pct), MINIMO_TEXTO)
+})
+
+// O teste acima lê a constante; este garante que os componentes pintam o fundo com ela e não com um degradê próprio.
+test('Atalho aberto do hero: HeroAtalho, UserChip e DocHeaderNeuIconButton pintam o fundo com docHeaderNeuAccentBgHover', () => {
+  for (const arquivo of ['composites/HeroAtalho', 'layout/UserChip', 'layout/DocHeaderNeuIconButton']) {
+    const fonte = ler(`src/components/${arquivo}.tsx`)
+    assert.match(
+      fonte,
+      /(?:\bbackground|'--user-chip-bg')\s*:\s*(?:hovered \? )?docHeaderNeuAccentBgHover\b/,
+      `${arquivo}.tsx não pinta o fundo com docHeaderNeuAccentBgHover`,
+    )
+  }
 })
 
 for (const t of TEMAS) {
