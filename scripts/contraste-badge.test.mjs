@@ -108,6 +108,14 @@ for (const variante of ['success', 'warning']) {
     assert.equal(classes.match(/#[\da-f]{3,8}\b|rgba?\(/gi), null, `cor fixa em ${variante}: ${classes}`)
   })
 
+  test(`Badge ${variante}: nenhuma variante dark: de texto ou fundo, o token resolve o tema`, () => {
+    assert.equal(
+      classes.match(/(?:^|\s)(?:[\w-]+:)*dark:(?:[\w-]+:)*(?:text|bg)-\S+/g),
+      null,
+      `variante dark: de texto ou fundo em ${variante}: ${classes}`,
+    )
+  })
+
   for (const t of ['claro', 'escuro']) {
     test(`Badge ${variante}, tema ${t}: texto contra o fundo em todas as superfícies (>= ${MINIMO}:1)`, () => {
       const texto = token(TEXTO, t)
