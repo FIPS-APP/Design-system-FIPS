@@ -97,7 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.12 | 2026-10-27 | Workflow `ci.yml` em todo PR contra a `main`: lint, typecheck, testes, build da lib e build do site. `npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Nada muda na API do pacote |
+| 0.21.12 | 2026-10-27 | Workflow `ci.yml` em todo PR contra a `main`: lint, typecheck, testes (`npm test` roda contraste, hero, xlsx e hooks), build da lib e build do site. `npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Nada muda na API do pacote |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
 | 0.20.28 | 2026-10-24 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.27 | 2026-10-24 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |
