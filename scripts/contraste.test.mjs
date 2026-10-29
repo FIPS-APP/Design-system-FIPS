@@ -226,8 +226,22 @@ const CORPO_DO_TOM = FONTE_DA_SIDEBAR.slice(
   FONTE_DA_SIDEBAR.indexOf('function getBadgeTone'),
   FONTE_DA_SIDEBAR.indexOf('\n}\n', FONTE_DA_SIDEBAR.indexOf('function getBadgeTone')),
 )
-// Os quatro ramos escuros, na ordem do arquivo: âmbar, azul, verde, vermelho (padrão). Os claros começam com ":".
-const SELINHOS_ESCUROS = [...CORPO_DO_TOM.matchAll(/\?\s*\{\s*bg:\s*'([^']+)',\s*color:\s*'([^']+)',\s*shadow:\s*'[^']+',\s*border:\s*'([^']+)'\s*\}/g)]
+// Ramo escuro de cada tom, achado pela condição de `getBadgeTone` (não pela ordem) e lido campo a campo
+// (não pela ordem das chaves): um tom mexido acusa o próprio tom.
+const RAMO_ESCURO = '(\\{[^}]*\\})\\s*:'
+const OBJETO_ESCURO_DO_TOM = {
+  'âmbar': new RegExp(`item\\.badge === 'financeiroPendente'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
+  azul: new RegExp(`item\\.badge === 'notaPendente'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
+  verde: new RegExp(`item\\.badge === 'producaoEmAndamento'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
+}
+const campoDoTom = (objeto, nome) => objeto?.match(new RegExp(`\\b${nome}:\\s*'([^']+)'`))?.[1]
+const SELINHOS_ESCUROS = TONS_DO_SELINHO.map((tom) => {
+  const objeto =
+    tom === 'vermelho'
+      ? CORPO_DO_TOM.slice(CORPO_DO_TOM.lastIndexOf('return dark')).match(new RegExp(`return dark\\s*\\?\\s*${RAMO_ESCURO}`))?.[1]
+      : CORPO_DO_TOM.match(OBJETO_ESCURO_DO_TOM[tom])?.[1]
+  return [tom, campoDoTom(objeto, 'bg'), campoDoTom(objeto, 'color'), campoDoTom(objeto, 'border')]
+})
 const BARRA_ESCURA = cor(FONTE_DA_SIDEBAR.match(/TN_DARKMODE: SidebarTheme = \{\s*bg:\s*'(#[\da-f]{6})'/i)?.[1] ?? '', 'claro')
 // Azulejo do ícone no escuro: os três pontos do degradê (o selinho do menu recolhido encosta nele) e o que a Facilities mediu.
 const AZULEJOS = [...FONTE_DA_SIDEBAR.matchAll(/linear-gradient\(160deg,\s*(#[\da-f]{6}) 0%,\s*(#[\da-f]{6}) 55%,\s*(#[\da-f]{6}) 100%\)/gi)]
@@ -237,13 +251,16 @@ const AZULEJOS = [...FONTE_DA_SIDEBAR.matchAll(/linear-gradient\(160deg,\s*(#[\d
   .concat([{ r: 43, g: 51, b: 63 }])
 
 test('Sidebar: o selinho de contagem do escuro tem quatro tons, a barra e o azulejo estão lidos', () => {
-  assert.equal(SELINHOS_ESCUROS.length, TONS_DO_SELINHO.length, 'ramos escuros de getBadgeTone')
+  for (const [tom, bg, texto, anel] of SELINHOS_ESCUROS) {
+    assert.ok(bg && texto && anel, `${tom}: ramo escuro de getBadgeTone não foi lido (bg, color e border)`)
+  }
   assert.equal(AZULEJOS.length, 4, 'azulejos do ícone (3 do degradê e 1 medido)')
 })
 
 TONS_DO_SELINHO.forEach((tom, i) => {
   test(`Sidebar escuro, selinho ${tom}: número 4,5:1 contra o disco, disco 3:1 contra a barra, anel 3:1 contra o azulejo`, () => {
     const [, bg, texto, anel] = SELINHOS_ESCUROS[i]
+    assert.ok(bg && texto && anel, `${tom}: ramo escuro de getBadgeTone não foi lido`)
     const disco = sobreFundo(corComAlfa(bg), BARRA_ESCURA)
     verifica(`${tom}: número ${texto} contra o disco ${bg}`, sobreFundo(corComAlfa(texto), disco), disco, MINIMO_TEXTO)
     verifica(`${tom}: disco ${bg} contra a barra`, disco, BARRA_ESCURA)
