@@ -26,18 +26,66 @@ export interface ChangelogVersion {
 export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '0.21.11',
-    date: '2026-10-27',
+    date: '2026-10-29',
     title: 'Texto secundário do tema claro passa de 4,5:1 sobre cartão, cartão suave, página e listra da tabela',
     entries: [
       {
         type: 'fix',
         description:
-          '`--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão (`#ffffff`), o cartão suave (`#fbfdff`) e a página (`#f5f8fc`). Sobre a listra da tabela o pior caso vai de 4,08:1 a 4,51:1. Muda o pixel de todo texto secundário do pacote e dos apps, que fica um pouco mais escuro: legenda do `BrandLoader`, placeholder de `Input`, `Textarea` e `FieldTrigger`, botão `ghost`, `lead`, `small` e `caption`. O escuro não muda (`#9ca3af`, 6,04:1 ou mais). `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham: o cinza cheio com texto branco vai de 4,57:1 a 5,05:1.',
+          '`--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão (`#ffffff`), o cartão suave (`#fbfdff`) e a página (`#f5f8fc`). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. Muda o pixel de todo texto secundário do pacote e dos apps, que fica um pouco mais escuro: legenda do `BrandLoader`, placeholder de `Input`, `Textarea` e `FieldTrigger`, botão `ghost`, `lead`, `small` e `caption`. O token do escuro não muda (`#9ca3af`, 6,04:1 ou mais sobre cartão, cartão suave e página). `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham: o cinza cheio com texto branco vai de 4,57:1 a 5,05:1.',
       },
       {
         type: 'improvement',
         description:
           '`npm test` passa a exigir 4,5:1 de `--color-fg-muted` sobre cartão, cartão suave, página e listra da tabela nos dois temas, e que o `neutralFill` do `colors.ts` bata com o `globals.css`. `foundations.md`, `patterns.md`, `docs/tokens.md`, a página de cores do site e o README do Switch portátil acompanham.',
+      },
+    ],
+  },
+  {
+    version: '0.20.41',
+    date: '2026-10-29',
+    title: 'Modal curto: cabeçalho plano, também no escuro',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O modal curto (aviso, passo a passo, um botão) fica com o `hero` desligado: sem degradê, sem selo e sem disco de ícone. O cabeçalho plano vale nos dois temas. A página Modal do site abre esse cartão no escuro pelo botão "Simples (escuro)" (`className="dark"` no conteúdo, porque o portal não herda o tema da página). `hero` e `eyebrow` continuam no componente, só para o modal institucional longo.',
+      },
+    ],
+  },
+  {
+    version: '0.20.40',
+    date: '2026-10-28',
+    title: 'Menu radial: × sobre o gatilho perto da borda',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O `CircularCommandMenu` (e o `RowActionsMenu`) prendia o centro da órbita a `radius + 44` da borda da janela, mas a órbita só ocupa `radius + 18` (meia bolinha de 36 px). Perto da borda o centro era empurrado para dentro mesmo com todas as bolinhas cabendo, e o × central saía de cima do gatilho. A margem passa a `radius + 22`: meia bolinha + 4 px para o anel ativo e a sombra.',
+      },
+    ],
+  },
+  {
+    version: '0.20.39',
+    date: '2026-10-28',
+    title: 'Table: zebra opaca',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'A faixa da zebra (`--color-table-zebra`) era translúcida: numa tabela com coluna fixa (`position: sticky`), a célula fixa herda o fundo da linha e a faixa somava duas vezes, deixando a célula mais escura que a linha e o texto das colunas do meio visível por baixo. Agora é opaca, mistura sobre `--color-surface`: claro `color-mix(in srgb, var(--color-fips-blue-200) 25%, var(--color-surface))`, idêntico ao de antes sobre o cartão branco; escuro `color-mix(in srgb, white 3%, var(--color-surface))`.',
+      },
+    ],
+  },
+  {
+    version: '0.20.38',
+    date: '2026-10-27',
+    title: 'README: tgz vendorizado sai do GitHub Packages',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O README ganha a seção "Tgz vendorizado": o arquivo que os apps carregam em `vendor/` sai do GitHub Packages (`npm pack` contra o registro, com o `sha512` conferido), nunca de `npm pack` local, porque os comentários de caminho do build mudam os bytes e o lock de cada app passaria a apontar para um tgz diferente da mesma versão.',
       },
     ],
   },

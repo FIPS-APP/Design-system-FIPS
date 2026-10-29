@@ -34,29 +34,31 @@ Referências sincronizadas com a **v0.11.33** (2026-08-11) do repositório DS-FI
 
 Spec completa (props, anatomia hero vs. não-hero, gaps conhecidos) em `references/components.md` → **Dialog/Modal — componente governado**.
 
-```tsx
-import { Modal, ModalFooter, Field, FieldLabel, Input, Button } from '@fips-app/ds-fips'
-import { UserRound } from 'lucide-react'
+O modal curto (aviso, passo a passo, um botão) sai **sem** `hero`, sem `headerIcon` e sem `eyebrow`. O degradê, o selo dourado e o disco de ícone não são o padrão — no claro nem no escuro. Exemplo no site: botão "Simples (escuro)" em `/docs/components/dialog`.
 
-<Modal open={open} onOpenChange={setOpen} hero headerIcon={UserRound}
-  eyebrow="Requisição" title="Atribuir responsável"
-  description="Selecione o colaborador e tipo de atribuição." size="lg">
-  <Field density="compact">
-    <FieldLabel required>Responsável</FieldLabel>
-    <Input density="compact" placeholder="Nome do colaborador" />
-  </Field>
-  <ModalFooter hint="Você poderá editar depois.">
-    <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>
-    <Button variant="success">Salvar atribuição</Button>
+```tsx
+import { Modal, ModalFooter, Button } from '@fips-app/ds-fips'
+
+<Modal open={open} onOpenChange={setOpen}
+  title="Instale o Facilities no aparelho"
+  description="Fica como ícone na tela inicial e abre em tela cheia, sem a barra do navegador."
+  size="lg">
+  <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-snug text-[var(--color-fg)]">
+    <li>Abra o menu do navegador no canto superior</li>
+    <li>Escolha Instalar aplicativo ou Adicionar à tela inicial</li>
+    <li>Confirme em Instalar</li>
+  </ol>
+  <ModalFooter>
+    <Button variant="primary" onClick={() => setOpen(false)}>Entendi</Button>
   </ModalFooter>
 </Modal>
 ```
 
 - [ ] `<Modal>`/`<ModalFooter>` da library — nunca `Dialog`/`DialogContent`/header/close/radius remontados na mão
 - [ ] `onOpenChange`, não `onClose` — a prop real é essa, apesar de exemplos antigos (e da própria `DialogDoc.tsx`) usarem `onClose`
-- [ ] `headerIcon={Componente}` (referência ao componente lucide, não `<Componente/>` nem string)
-- [ ] `hero` para modal institucional/de fluxo (faixa gov + eyebrow); sem `hero` só para diálogo simples com header branco
-- [ ] `eyebrow` só faz efeito com `hero`, e nunca repete palavra do título
+- [ ] Modal curto: sem `hero`, sem `headerIcon`, sem `eyebrow`. Passos numa `<ol className="list-decimal">`, nunca disco azul
+- [ ] `hero` só no modal institucional longo, quando a faixa foi pedida. `eyebrow` só faz efeito com `hero` e nunca repete palavra do título
+- [ ] Não importe a cópia local que liga o degradê sempre (`tone` no Facilities e no QLP)
 - [ ] Tamanho pela prop `size` (`sm md lg xl 2xl 3xl full workflow`) — nunca `className="max-w-*"`
 - [ ] Campo dentro de modal = `Field density="compact"` + `Input`/`Select`/`Textarea` `density="compact"` — as duas props existem e as duas precisam ser passadas
 - [ ] Rodapé = `<ModalFooter>` como filho de `<Modal>` (pode estar em qualquer posição entre os filhos — é extraído automaticamente), texto de apoio no `hint`, nunca parágrafo solto

@@ -256,14 +256,17 @@ for (const t of TEMAS) {
   })
 }
 
-// Listra da tabela (--color-table-zebra) pousada sobre cada superfície. Cobre color-mix(... N%, transparent) e rgba().
+// Listra da tabela (--color-table-zebra). Cobre color-mix(... N%, transparent),
+// color-mix(... N%, outra cor) e rgba(). Com transparent a faixa soma ao fundo
+// de baixo. Com outra cor ela já é opaca e não depende do fundo.
 function listra(t, fundo) {
   const valor = TOKENS[t]['--color-table-zebra']
   assert.ok(valor, `token --color-table-zebra não existe no tema ${t}`)
-  const mistura = valor.match(/^color-mix\(in srgb,\s*(.+?)\s+([\d.]+)%,\s*transparent\)$/)
+  const mistura = valor.match(/^color-mix\(in srgb,\s*(.+?)\s+([\d.]+)%,\s*(.+)\)$/)
   const rgba = mistura ? null : valor.match(/^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/)
   assert.ok(mistura || rgba, `--color-table-zebra em formato não reconhecido: ${valor}`)
-  const topo = mistura ? cor(mistura[1], t) : { r: +rgba[1], g: +rgba[2], b: +rgba[3] }
+  const topo = mistura ? (mistura[1] === 'white' ? BRANCO : cor(mistura[1], t)) : { r: +rgba[1], g: +rgba[2], b: +rgba[3] }
+  if (mistura && mistura[3] !== 'transparent') fundo = cor(mistura[3], t)
   const alfa = mistura ? Number(mistura[2]) / 100 : Number(rgba[4])
   return { r: topo.r * alfa + fundo.r * (1 - alfa), g: topo.g * alfa + fundo.g * (1 - alfa), b: topo.b * alfa + fundo.b * (1 - alfa) }
 }
@@ -304,5 +307,8 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('anel de foco / faixa', token('--color-ring', t), token('--color-surface-muted', t))
     linha('azul de texto / cartão', token('--color-primary-hover-text', t), cartao)
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
+    linha('muted / cartão', token('--color-fg-muted', t), cartao)
+    linha('muted / página', token('--color-fg-muted', t), token('--color-surface-muted', t))
+    linha('muted / listra', token('--color-fg-muted', t), listra(t, token('--color-surface', t)))
   }
 })

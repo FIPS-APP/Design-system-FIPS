@@ -265,7 +265,7 @@ Direção de uso:
 | `description` | `ReactNode` | — | vira `DialogDescription`, abaixo do título |
 | `children` | `ReactNode` | — | corpo; um `<ModalFooter>` entre os filhos é extraído e renderizado fixo embaixo (não precisa ser o último) |
 | `size` | `'sm'\|'md'\|'lg'\|'xl'\|'2xl'\|'3xl'\|'full'\|'workflow'` | `'md'` | `max-w-{sm..3xl}` / `max-w-4xl` (`full`) / `max-w-[900px]` (`workflow`) — nunca `className="max-w-*"` |
-| `headerIcon` | `LucideIcon` | — | componente do ícone (`headerIcon={UserRound}`, não JSX). Sem ícone o modal sai fora do padrão |
+| `headerIcon` | `LucideIcon` | — | opcional. O modal curto padrão não tem ícone. Com ícone, o círculo é `40×40` `bg-[var(--color-fips-blue-200)]/60` |
 | `hero` | `boolean` | `false` | header institucional (gradiente gov 135°, texto branco, close translúcido) em vez do header branco simples com borda |
 | `eyebrow` | `ReactNode` | — | rótulo dourado uppercase acima do título — **só tem efeito com `hero`** |
 | `noPadBody` | `boolean` | `false` | remove `px-6 py-5` do corpo; o conteúdo controla o próprio espaçamento (usado por conteúdo full-bleed, ex. tabela dentro do modal) |
@@ -276,9 +276,33 @@ Direção de uso:
 
 **Anatomia do header `hero`** (gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`): tile de ícone `44×44px rounded-[10px]` com gradiente glass translúcido (branco 14%→6%→azul 22%) + borda `white/16`, eyebrow `11px/600/tracking-[0.14em] uppercase` cor `--color-accent-strong`, título branco `21px/700` Saira Expanded, descrição `white/65` `12px`, close `32×32 rounded-lg` `top-3.5 right-3.5` `bg-white/8` → hover `white/18`. Radius do modal inteiro: assimétrico `12px 12px 12px 24px` (assinatura FIPS) via `DialogContent`, não `rounded-2xl` uniforme.
 
-**Anatomia do header não-`hero`:** `DialogHeader` com borda inferior, ícone (se houver) em círculo `40×40` `bg-[var(--color-fips-blue-200)]/60` `text-[var(--color-primary)]`, título `text-lg` cor de texto padrão (não branco).
+**Anatomia do header não-`hero` (este é o padrão do modal curto):** `DialogHeader` com borda inferior, título `text-lg` (`dark:text-white`), descrição do `DialogDescription` (`dark:text-zinc-400`). Sem ícone. Se houver `headerIcon`, o círculo é `40×40` `bg-[var(--color-fips-blue-200)]/60` `text-[var(--color-primary)]`.
 
-**Regra:** `eyebrow` nunca repete palavra do título (ex.: "Atribuição" + "Atribuir responsável" é redundante — remover o eyebrow; "Dashboard" + "Movimentação de Pátio" é válido porque não repete).
+**Modal curto no tema escuro:** o mesmo componente, `hero` desligado. O cartão é o `DialogContent` na variante `dark` (degradê `#272727` → `#1d1d1d`, faixa azul de 3px no topo). Corpo em `--color-fg`. Passos em `<ol className="list-decimal space-y-2 pl-5 text-[13px] leading-snug">`, nunca disco azul. Uma ação: `Button variant="primary"` dentro de `ModalFooter`. No site, desde a 0.20.41, o botão "Simples (escuro)" em `/docs/components/dialog` abre esse cartão com `className="dark"` (o portal não herda o tema da página). No app, o tema vem do `html.dark`. Contraste medido neste cabeçalho, Facilities 0.15.1, tema escuro: título 15,33:1, descrição 5,84:1, lista 12,51:1, `primary` 8,47:1.
+
+**Não use no modal curto:** `hero`, `eyebrow` (selo "Aplicativo"), tile glass, cópia local com `tone` (Facilities `app/src/components/Modal.tsx` e o QLP), que pinta o degradê sempre.
+
+**Regra:** `eyebrow` nunca repete palavra do título. `eyebrow` só entra com `hero`, e `hero` só no modal institucional longo.
+
+```tsx
+import { Modal, ModalFooter, Button } from '@fips-app/ds-fips'
+
+<Modal open={open} onOpenChange={setOpen}
+  title="Instale o Facilities no aparelho"
+  description="Fica como ícone na tela inicial e abre em tela cheia, sem a barra do navegador."
+  size="lg">
+  <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-snug text-[var(--color-fg)]">
+    <li>Abra o menu do navegador no canto superior</li>
+    <li>Escolha Instalar aplicativo ou Adicionar à tela inicial</li>
+    <li>Confirme em Instalar</li>
+  </ol>
+  <ModalFooter>
+    <Button variant="primary" onClick={() => setOpen(false)}>Entendi</Button>
+  </ModalFooter>
+</Modal>
+```
+
+O `hero` abaixo é o modal institucional longo, não o aviso curto:
 
 ```tsx
 import { Modal, ModalFooter, Field, FieldLabel, Input, Button } from '@fips-app/ds-fips'
@@ -434,6 +458,8 @@ Um único componente, dois presets:
 - **FAB** — o mesmo componente com o trigger padrão de **56px**, para ação isolada de página.
 
 `ariaLabel` (v0.11.31) tem default `"Ações da linha"`, correto pro uso em tabela. **Fora de linha de tabela (FAB), passe `ariaLabel` próprio** — ex.: `ariaLabel="Ações rápidas"`.
+
+O centro da órbita segue o gatilho (o × central abre sobre ele); só é preso à janela quando a órbita (`radius + 18`, meia bolinha de 36 px) não caberia, com margem `radius + 22` (v0.20.40).
 
 ```tsx
 <RowActionsMenu

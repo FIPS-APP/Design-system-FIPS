@@ -72,6 +72,20 @@ A medida segue a largura do cartão (container query de 560px). `PatternPanelHer
 > `CircularCommandMenu` / `RowActionsMenu`) instalados no projeto consumidor
 > (declarados como `peerDependencies`).
 
+### 4. Tgz vendorizado (apps que não leem o registro)
+
+Alguns apps carregam o pacote como arquivo em `vendor/` (`"@fips-app/ds-fips": "file:vendor/fips-app-ds-fips-X.Y.Z.tgz"`). **O arquivo sai do GitHub Packages, não de `npm pack` local**: o build local grava nos comentários `//#region` do `dist/index.js` o caminho da máquina, os bytes mudam e o `sha512` do lock deixa de bater com o do registro, e cada app passa a carregar um tgz diferente para a mesma versão.
+
+```bash
+export GITHUB_TOKEN=ghp_xxx   # read:packages
+npm pack @fips-app/ds-fips@X.Y.Z \
+  --registry=https://npm.pkg.github.com \
+  --//npm.pkg.github.com/:_authToken="$GITHUB_TOKEN" \
+  --pack-destination vendor
+```
+
+Confira contra o registro antes de commitar: `npm view @fips-app/ds-fips@X.Y.Z dist.integrity --registry=https://npm.pkg.github.com` tem de ser o `sha512` do arquivo (`openssl dgst -sha512 -binary vendor/fips-app-ds-fips-X.Y.Z.tgz | base64 -w0`). Depois: `package.json` apontando para o arquivo novo, o tgz antigo fora, `npm install` para regerar o lock.
+
 ## Versionamento
 
 O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualizar a versão em `package.json` antes do commit.
@@ -97,7 +111,11 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.11 | 2026-10-27 | `--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão, o cartão suave e a página (legenda do `BrandLoader`, placeholder, texto secundário). Sobre a listra da tabela o pior caso vai de 4,08:1 a 4,51:1. O escuro não muda. `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham. `npm test` exige 4,5:1 nos dois temas |
+| 0.21.11 | 2026-10-29 | `--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão, o cartão suave e a página (legenda do `BrandLoader`, placeholder, texto secundário). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. O token do escuro não muda. `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham. `npm test` exige 4,5:1 nos dois temas |
+| 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
+| 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
+| 0.20.39 | 2026-10-28 | `Table`: a faixa da zebra (`--color-table-zebra`) passa a ser opaca, mistura sobre `--color-surface` nos dois temas; a coluna fixa herda o fundo da linha sem somar a faixa duas vezes nem deixar o texto do meio aparecer por baixo |
+| 0.20.38 | 2026-10-27 | README: o tgz vendorizado sai do GitHub Packages, com o `sha512` do registro, nunca de `npm pack` local (os comentários de caminho do build mudam os bytes) |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
 | 0.20.28 | 2026-10-24 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.27 | 2026-10-24 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |
