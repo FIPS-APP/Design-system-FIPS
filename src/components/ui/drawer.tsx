@@ -128,7 +128,7 @@ function DrawerHero({
         {eyebrow ? (
           <span
             className="font-heading block text-[11px] font-semibold uppercase tracking-[0.14em]"
-            style={{ color: 'var(--color-accent-strong)' }}
+            style={{ color: 'var(--color-accent)' }}
           >
             {eyebrow}
           </span>

@@ -25,6 +25,38 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.23',
+    date: '2026-10-23',
+    title: 'Alert warning e texto laranja passam de 4,5:1 no claro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`Alert` com tom `warning`: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6` no claro) a `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto passa de `#f6921e` a `#fdc24e` (5,91:1 vira 8,49:1 sobre o cartão). Fundo e borda não mudam.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Mesmo token no item "Importante" do `ChangelogModal` (claro 2,14:1 vira 4,77:1) e nos ícones em hover do `UserAccountMenu` (claro 2,11:1 vira 4,70:1; escuro `#f6921e` vira `#fdc24e`, 5,77:1 vira 8,30:1 com o fundo de hover a /12).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Eyebrow de 11 px do cabeçalho de `Modal` (hero), `Drawer`, `ExportPreviewModal` e `ChangelogModal`: passa de `--color-accent-strong` a `--color-accent` (`#fdc24e`). Sobre o começo do degradê azul `#004B9B` vai de 3,65:1 a 5,24:1; no escuro, o pior ponto vai de 4,91:1 a 7,06:1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir o `Alert` warning (texto contra o fundo em cartão, cartão suave e faixa, nos dois temas), as quatro eyebrows contra o degradê do cabeçalho, o item do `ChangelogModal` e o ícone do `UserAccountMenu`, e recusa o laranja `#f6921e` como cor de texto em `src` fora de `src/docs`, por qualquer um dos nomes (`--color-accent-strong`, `--color-warning`, `--color-fips-yellow-600` e o hex). Dois ícones que já usavam esse laranja antes (`AbasDeSecao` e `DocHeaderSectionNav`) ficam numa lista fechada no teste; qualquer uso novo falha. O teste do menu da conta passa a medir os três ícones contra todos os fundos de hover, no claro e no escuro, e o das eyebrows de `ChangelogModal` e `ExportPreviewModal` compõe o trilho branco a 6% sobre o degradê (pior ponto: 4,55:1).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'As referências da skill (`components.md` e `patterns.md`) deixam de ensinar o laranja como texto: eyebrow do header `hero` em `--color-accent`, ícone do hover do menu e tom `breaking` do `ChangelogModal` em `--color-semantic-atencao-fg`. O zip da skill foi regerado.',
+      },
+    ],
+  },
+  {
     version: '0.20.15',
     date: '2026-10-23',
     title: 'Badge warning legível no tema claro',

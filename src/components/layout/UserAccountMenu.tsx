@@ -197,7 +197,7 @@ export function UserAccountMenu({
                 className="group flex w-full items-center gap-2 px-3.5 py-1 pb-2 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-accent)]/20 dark:text-white/85 dark:hover:bg-[var(--color-accent)]/12"
               >
                 <Users
-                  className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
+                  className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-semantic-atencao-fg)]"
                   aria-hidden
                 />
                 Entrar como usuário…
@@ -214,7 +214,7 @@ export function UserAccountMenu({
                   className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-accent)]/20 dark:text-white/85 dark:hover:bg-[var(--color-accent)]/12"
                 >
                   <UserRound
-                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
+                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-semantic-atencao-fg)]"
                     aria-hidden
                   />
                   Meu perfil
@@ -226,7 +226,7 @@ export function UserAccountMenu({
                   className="group flex w-full items-center gap-2 px-3.5 py-1 text-left text-[12px] text-[var(--color-fg)] transition-colors hover:bg-[var(--color-accent)]/20 dark:text-white/85 dark:hover:bg-[var(--color-accent)]/12"
                 >
                   <Settings
-                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
+                    className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-semantic-atencao-fg)]"
                     aria-hidden
                   />
                   Preferências

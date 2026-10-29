@@ -7,7 +7,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const RAIZ = join(fileURLToPath(new URL('.', import.meta.url)), '..')
@@ -127,4 +127,162 @@ for (const variante of ['success', 'warning']) {
       }
     })
   }
+}
+
+// ─── Alert warning e o --color-accent-strong como texto ────────────────────
+import { readdirSync, statSync } from 'node:fs'
+
+const COR_FIXA = /#[\da-f]{3,8}\b|rgba?\(/i
+
+// Cor com transparência de um token, composta sobre o cartão do tema.
+function compostoSobreCartao(nome, t) {
+  return sobre(token(nome, t), token('--color-surface', t))
+}
+
+function arquivosDe(pasta, saida = []) {
+  for (const nome of readdirSync(join(RAIZ, pasta))) {
+    const caminho = join(pasta, nome)
+    if (statSync(join(RAIZ, caminho)).isDirectory()) arquivosDe(caminho, saida)
+    else if (/\.(ts|tsx)$/.test(nome)) saida.push(caminho)
+  }
+  return saida
+}
+
+{
+  const ALERT = 'src/components/composites/Alert.tsx'
+  const linha = ler(ALERT).match(/warning:\s*\n?\s*'([^']+)'/)
+  assert.ok(linha, `${ALERT}: tom warning não encontrado`)
+  const pegar = (prefixo) => {
+    const m = linha[1].match(new RegExp(`(?:^|\\s)${prefixo}-\\[var\\((--[\\w-]+)\\)\\]`))
+    assert.ok(m, `${ALERT}: classe ${prefixo}-[var(--...)] não encontrada em warning`)
+    return m[1]
+  }
+  const [TEXTO, FUNDO] = [pegar('text'), pegar('bg')]
+
+  for (const t of ['claro', 'escuro']) {
+    test(`Alert warning, tema ${t}: texto contra o fundo em todas as superfícies (>= ${MINIMO}:1)`, () => {
+      for (const superficie of SUPERFICIES) {
+        const base = token(superficie, t)
+        const fundo = sobre(token(FUNDO, t), base)
+        const c = contraste(sobre(token(TEXTO, t), fundo), fundo)
+        assert.ok(c >= MINIMO, `${TEXTO} sobre ${FUNDO} em ${superficie}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+      }
+    })
+  }
+}
+
+// O mesmo #f6921e (2,32:1 sobre branco) entra como texto por quatro nomes: --color-accent-strong,
+// --color-warning, --color-fips-yellow-600 e o hex. Ícones que já usavam o laranja antes deste teste
+// ficam numa lista fechada (são ícones ao lado de rótulo, sem regressão); qualquer uso novo falha.
+const NOMES_DO_LARANJA = '--color-accent-strong|--color-warning|--color-fips-yellow-600'
+const TEXTO_LARANJA = new RegExp(
+  `(?:^|[\\s'"\`:])(?:[\\w-]+:)*text-\\[(?:var\\((?:${NOMES_DO_LARANJA})\\)|#f6921e)\\]` +
+    `|\\bcolor:\\s*['"\`]var\\((?:${NOMES_DO_LARANJA})\\)`,
+  'i',
+)
+const ICONES_JA_EXISTENTES = [
+  ['src/components/composites/AbasDeSecao.tsx', "text-[var(--color-fips-yellow-600)]"],
+  ['src/components/layout/DocHeaderSectionNav.tsx', "text-[#F6921E]"],
+]
+
+test('Nenhum componente novo lê o laranja #f6921e como cor de texto (é fundo e borda: 2,32:1 sobre branco)', () => {
+  const achados = []
+  for (const arquivo of arquivosDe('src').filter((a) => !a.startsWith(join('src', 'docs')))) {
+    ler(arquivo).split('\n').forEach((linha, i) => {
+      if (!TEXTO_LARANJA.test(linha)) return
+      const liberado = ICONES_JA_EXISTENTES.some(([a, trecho]) => a === arquivo.split(sep).join('/') && linha.includes(trecho))
+      if (!liberado) achados.push(`${arquivo}:${i + 1}`)
+    })
+  }
+  assert.deepEqual(achados, [], `laranja #f6921e como texto:\n${achados.join('\n')}`)
+})
+
+test('A lista de ícones liberados continua valendo (some quando o ícone é corrigido)', () => {
+  for (const [arquivo, trecho] of ICONES_JA_EXISTENTES) {
+    assert.ok(ler(arquivo).includes(trecho), `${arquivo} não tem mais ${trecho}: tirar da lista ICONES_JA_EXISTENTES`)
+  }
+})
+
+// Eyebrow de 11 px sobre o degradê azul do cabeçalho de Modal, Drawer, ExportPreviewModal e ChangelogModal.
+const EYEBROWS = [
+  ['src/components/ui/Modal.tsx', /tracking-\[0\.14em\] text-\[var\((--[\w-]+)\)\]">\{eyebrow\}/],
+  ['src/components/ui/drawer.tsx', /color: 'var\((--[\w-]+)\)' \}\}\s*>\s*\{eyebrow\}/],
+  ['src/components/composites/ExportPreviewModal.tsx', /tracking-\[0\.14em\] text-\[var\((--[\w-]+)\)\] uppercase/],
+  ['src/components/layout/ChangelogModal.tsx', /tracking-\[0\.14em\] text-\[var\((--[\w-]+)\)\] uppercase/],
+]
+
+function fundosDoCabecalho(t) {
+  // Modal e Drawer: --color-gov-gradient-from, -to e #001A4A. ExportPreviewModal e ChangelogModal: --fips-banner-content-bg.
+  const nomes = ['--color-gov-gradient-from', '--color-gov-gradient-to']
+  const fundos = nomes.map((n) => token(n, t))
+  const gradientes = [...css.matchAll(/--fips-banner-content-bg:\s*linear-gradient\(([^;]+)\);/g)]
+  assert.equal(gradientes.length, 2, '--fips-banner-content-bg deve ter um valor no claro e outro no escuro')
+  const m = gradientes[t === 'escuro' ? 1 : 0]
+  for (const hex of m[1].match(/#[\da-f]{6}/gi) ?? []) fundos.push(cor(hex, t))
+  fundos.push(cor('#001a4a', t))
+  return fundos
+}
+
+for (const [arquivo, padrao] of EYEBROWS) {
+  for (const t of ['claro', 'escuro']) {
+    test(`Eyebrow de ${arquivo.split('/').pop()}, tema ${t}: texto contra o degradê do cabeçalho (>= ${MINIMO}:1)`, () => {
+      const m = ler(arquivo).match(padrao)
+      assert.ok(m, `${arquivo}: eyebrow não encontrada`)
+      const texto = token(m[1], t)
+      for (const fundo of fundosDoCabecalho(t)) {
+        const c = contraste(texto, fundo)
+        assert.ok(c >= MINIMO, `${m[1]} sobre rgb(${fundo.r},${fundo.g},${fundo.b}): ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+      }
+    })
+  }
+}
+
+// ChangelogModal e ExportPreviewModal desenham um trilho branco por baixo da eyebrow (svg com opacity-[0.06]).
+// A eyebrow precisa passar também sobre o degradê com esse branco composto: se alguém subir a opacidade, o teste vê.
+for (const arquivo of ['src/components/layout/ChangelogModal.tsx', 'src/components/composites/ExportPreviewModal.tsx']) {
+  for (const t of ['claro', 'escuro']) {
+    test(`Eyebrow de ${arquivo.split('/').pop()}, tema ${t}: texto contra o degradê com o trilho branco composto (>= ${MINIMO}:1)`, () => {
+      const fonte = ler(arquivo)
+      const trilho = fonte.match(/h-\[200px\] w-\[360px\] opacity-\[(0\.\d+)\]/)
+      assert.ok(trilho, `${arquivo}: trilho branco (svg 360x200 com opacity-[...]) não encontrado`)
+      const m = fonte.match(EYEBROWS.find(([a]) => a === arquivo)[1])
+      assert.ok(m, `${arquivo}: eyebrow não encontrada`)
+      const texto = token(m[1], t)
+      for (const fundo of fundosDoCabecalho(t)) {
+        const comTrilho = sobre({ r: 255, g: 255, b: 255, a: Number(trilho[1]) }, fundo)
+        const c = contraste(texto, comTrilho)
+        assert.ok(c >= MINIMO, `${m[1]} sobre rgb(${fundo.r},${fundo.g},${fundo.b}) com trilho branco a ${trilho[1]}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+      }
+    })
+  }
+}
+
+for (const t of ['claro', 'escuro']) {
+  test(`ChangelogModal "Importante", tema ${t}: texto contra o cartão do item (>= ${MINIMO}:1)`, () => {
+    const fonte = ler('src/components/layout/ChangelogModal.tsx')
+    const bloco_ = fonte.match(/breaking:\s*\{[\s\S]*?\n  \},/)[0]
+    const texto = bloco_.match(/accent: 'text-\[var\((--[\w-]+)\)\]'/)[1]
+    const fundo = bloco_.match(/bg-\[var\((--[\w-]+)\)\]\/(\d+)/)
+    const cartao = token('--color-surface', t)
+    const base = sobre({ ...token(fundo[1], t), a: Number(fundo[2]) / 100 }, cartao)
+    const c = contraste(token(texto, t), base)
+    assert.ok(c >= MINIMO, `${texto} sobre ${fundo[1]}/${fundo[2]}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+  })
+
+  test(`UserAccountMenu, tema ${t}: todo ícone em hover contra todo fundo de item do tema (>= 3:1)`, () => {
+    const fonte = ler('src/components/layout/UserAccountMenu.tsx')
+    const icones = [...fonte.matchAll(/group-hover:text-\[var\((--[\w-]+)\)\]/g)].map((m) => m[1])
+    assert.equal(icones.length, 3, 'esperava 3 ícones com group-hover:text-[var(...)] no menu')
+    // Claro: hover:bg-... sem prefixo. Escuro: dark:hover:bg-...
+    const padraoFundo = t === 'escuro' ? /dark:hover:bg-\[var\((--[\w-]+)\)\]\/(\d+)/g : /(?:^|[\s'"`])hover:bg-\[var\((--[\w-]+)\)\]\/(\d+)/g
+    const fundos = [...fonte.matchAll(padraoFundo)].filter((m) => m[1] === '--color-accent')
+    assert.ok(fundos.length >= 3, `fundos de hover do tema ${t} (--color-accent): achei ${fundos.length}, esperava pelo menos 3`)
+    for (const icone of icones) {
+      for (const fundo of fundos) {
+        const base = sobre({ ...token(fundo[1], t), a: Number(fundo[2]) / 100 }, token('--color-surface', t))
+        const c = contraste(token(icone, t), base)
+        assert.ok(c >= 3, `${icone} sobre ${fundo[1]}/${fundo[2]}: ${c.toFixed(2)}:1, mínimo 3:1`)
+      }
+    }
+  })
 }

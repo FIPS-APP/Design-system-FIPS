@@ -272,7 +272,7 @@ Direção de uso:
 
 **`ModalFooter` — props:** `children` (botões), `className`, `hint` (texto de apoio à esquerda — se ausente, um spacer ocupa o lugar pra empurrar os botões à direita). Border-top + fundo `--color-surface-muted`/70, `px-6 py-4`.
 
-**Anatomia do header `hero`** (gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`): tile de ícone `44×44px rounded-[10px]` com gradiente glass translúcido (branco 14%→6%→azul 22%) + borda `white/16`, eyebrow `11px/600/tracking-[0.14em] uppercase` cor `--color-accent-strong`, título branco `21px/700` Saira Expanded, descrição `white/65` `12px`, close `32×32 rounded-lg` `top-3.5 right-3.5` `bg-white/8` → hover `white/18`. Radius do modal inteiro: assimétrico `12px 12px 12px 24px` (assinatura FIPS) via `DialogContent`, não `rounded-2xl` uniforme.
+**Anatomia do header `hero`** (gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`): tile de ícone `44×44px rounded-[10px]` com gradiente glass translúcido (branco 14%→6%→azul 22%) + borda `white/16`, eyebrow `11px/600/tracking-[0.14em] uppercase` cor `--color-accent` (5,24:1 no pior ponto do degradê, claro e escuro; `--color-accent-strong` não serve como texto), título branco `21px/700` Saira Expanded, descrição `white/65` `12px`, close `32×32 rounded-lg` `top-3.5 right-3.5` `bg-white/8` → hover `white/18`. Radius do modal inteiro: assimétrico `12px 12px 12px 24px` (assinatura FIPS) via `DialogContent`, não `rounded-2xl` uniforme.
 
 **Anatomia do header não-`hero`:** `DialogHeader` com borda inferior, ícone (se houver) em círculo `40×40` `bg-[var(--color-fips-blue-200)]/60` `text-[var(--color-primary)]`, título `text-lg` cor de texto padrão (não branco).
 
@@ -321,7 +321,7 @@ Anatomia:
   | `feature` | `Sparkles` | Novidade | `--color-success` |
   | `improvement` | `Wrench` | Melhoria | `--color-secondary` / `--color-primary` |
   | `fix` | `Bug` | Correção | `--color-danger` |
-  | `breaking` | `Rocket` | Importante | `--color-accent-strong` |
+  | `breaking` | `Rocket` | Importante | `--color-semantic-atencao-fg` |
 
 - Só a versão mais recente aparece por padrão; botão texto "Ver versões anteriores" expande o histórico completo.
 - **API real: só `{ open, onOpenChange }`.** Não existem props `changelog`/`currentVersion` — as versões vêm sempre de `CHANGELOG` (`src/docs/data/changelog.ts`), não são configuráveis.
