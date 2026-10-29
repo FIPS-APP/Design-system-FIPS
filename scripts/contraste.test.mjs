@@ -224,6 +224,13 @@ function tokenDeTabs(trecho, padrao, rotulo) {
 
 const GATILHO_DE_TABS = trechoDeTabs('const TabsTrigger', 'TabsTrigger.displayName')
 const LISTA_DE_TABS = trechoDeTabs('const TabsList', 'TabsList.displayName')
+// Tem de haver uma só classe de texto para a aba ativa e sem variante na frente: uma segunda, como
+// `dark:data-[state=active]:text-[var(--color-primary)]`, desfaria a correção no escuro.
+test('Tabs: o gatilho tem uma só classe de texto para a aba ativa, sem variante dark: ou outra antes', () => {
+  const achadas = [...GATILHO_DE_TABS.matchAll(/[^\s'"`]*data-\[state=active\]:[^\s'"`]*text-\[var\([^)]*\)\]/g)].map((m) => m[0])
+  assert.equal(achadas.length, 1, `classes de texto da aba ativa em ${TABS}: ${achadas.join(' ')}`)
+  assert.match(achadas[0], /^data-\[state=active\]:text-/, `a classe de texto da aba ativa não pode ter variante antes: ${achadas[0]}`)
+})
 const TEXTO_ABA_ATIVA = tokenDeTabs(GATILHO_DE_TABS, /data-\[state=active\]:text-\[var\((--[\w-]+)\)\]/, 'texto da aba ativa')
 const FUNDO_ABA_ATIVA = tokenDeTabs(GATILHO_DE_TABS, /data-\[state=active\]:bg-\[var\((--[\w-]+)\)\]/, 'fundo da aba ativa')
 // A aba inativa não pinta texto: herda o da lista, que também dá o fundo dela.
