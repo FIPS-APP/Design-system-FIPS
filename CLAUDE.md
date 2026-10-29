@@ -63,7 +63,7 @@ Tokens visuais bloqueados (regex em `eslint.config.js:9-10`): `bg-`, `text-`, `b
 
 ### ESLint custom rule: `governance/no-literal-colors`
 
-Definida em `eslint.config.js`. Acusa cor literal (`#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(`, `hsla(`) em texto de código dos `.tsx` de `src/components/ui/`. As outras pastas de `src/components/` ficam fora até a fatia delas (`composites/` e `icons/` na FIPS-1303; `layout/`, `domain/` e `patterns/` na FIPS-1305). Cor que ainda não tem token entra em `COLOR_EXCEPTIONS`, no próprio `eslint.config.js`, por arquivo e com o motivo. Cor nova em `ui/` não entra ali sem motivo: use `var(--color-*)`. `npm run test:lint-governanca` cobre os casos.
+Definida em `eslint.config.js`. Acusa cor literal (`#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(`, `hsla(`) em texto de código dos `.ts` e `.tsx` de `src/components/ui/` (inclusive os `*-variants.ts`) e de `src/components/brand/`. `rgb(var(--x) / 0.5)` passa, por ser token. A exceção vale por arquivo e cor, não por ocorrência. Limitação: `#abc` que não é cor (âncora em `href="#add"`) é acusado. As outras pastas de `src/components/` ficam fora até a fatia delas (`composites/` e `icons/` na FIPS-1303; `layout/`, `domain/` e `patterns/` na FIPS-1305). Cor que ainda não tem token entra em `COLOR_EXCEPTIONS`, no próprio `eslint.config.js`, por arquivo e com o motivo. Cor nova em `ui/` não entra ali sem motivo: use `var(--color-*)`. `npm run test:lint-governanca` cobre os casos.
 
 ### Convenções de tema
 

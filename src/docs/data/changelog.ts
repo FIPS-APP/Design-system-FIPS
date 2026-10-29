@@ -32,12 +32,17 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'improvement',
         description:
-          'Regra de lint nova, `governance/no-literal-colors`: acusa `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(` e `hsla(` em texto de código nos `.tsx` de `src/components/ui/`, inclusive dentro de valor arbitrário do Tailwind. As 47 cores distintas (62 ocorrências em 11 arquivos) que `ui/` tem hoje e ainda não têm token ficam em `COLOR_EXCEPTIONS`, no `eslint.config.js`, por arquivo e com o motivo. Cor nova em `ui/` precisa de token ou de exceção escrita. `composites/`, `icons/`, `layout/`, `domain/` e `patterns/` ficam fora até as fatias delas (FIPS-1303 e FIPS-1305).',
+          'Regra de lint nova, `governance/no-literal-colors`: acusa `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(` e `hsla(` em texto de código nos `.ts` e `.tsx` de `src/components/ui/` (os `*-variants.ts` entram) e de `src/components/brand/` (0 cores hoje), inclusive dentro de valor arbitrário do Tailwind e hex depois de `_` (`shadow-[0_0_0_3px_#93BDE4]`). `rgb(var(--x) / 0.5)` não é acusado: é token com alfa. As 56 combinações de arquivo e cor (46 cores distintas; 72 ocorrências em 13 arquivos) que `ui/` tem hoje e ainda não têm token ficam em `COLOR_EXCEPTIONS`, no `eslint.config.js`, por arquivo e com o motivo. A exceção vale por arquivo e cor, não por ocorrência. Cor nova em `ui/` precisa de token ou de exceção escrita. `composites/`, `icons/`, `layout/`, `domain/` e `patterns/` ficam fora até as fatias delas (FIPS-1303 e FIPS-1305).',
+      },
+      {
+        type: 'fix',
+        description:
+          'O CSS do pacote deixa de ler `scripts/` como fonte de classes do Tailwind (`@source not "../../scripts"` em `globals.css`). Sem isso, os trechos de código do teste de lint viravam utilitários publicados (`.bg-[#ff0000]`, `.shadow-[...]` e outros no `dist/styles.css`). Sai também um `.ring-[...]` que já vinha de `scripts/`. Nenhum elemento usa essas classes: a aparência é a mesma.',
       },
       {
         type: 'improvement',
         description:
-          '`src/components/ui/` deixa de ficar fora de `governance/no-visual-overrides`. As duas acusações que apareceram, `InputGroupInput` e `InputGroupTextarea` (o grupo desenha borda, raio e foco do campo, e o campo de dentro fica sem os dele), levam `eslint-disable-next-line` com o motivo. Nenhum componente muda e a aparência é a mesma. `npm run test:lint-governanca` roda o ESLint sobre trechos de código e confere seis casos.',
+          '`src/components/ui/` deixa de ficar fora de `governance/no-visual-overrides`. As duas acusações que apareceram, `InputGroupInput` e `InputGroupTextarea` (o grupo desenha borda, raio e foco do campo, e o campo de dentro fica sem os dele), levam `eslint-disable-next-line` com o motivo. Nenhum componente muda e a aparência é a mesma. `npm run test:lint-governanca` roda o ESLint sobre trechos de código e confere onze casos.',
       },
     ],
   },

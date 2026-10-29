@@ -40,7 +40,9 @@ function getPotentialClassTokens(classText) {
 // Cor literal: `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(`, `hsla(` dentro de texto
 // de código (className, style, template). Cor vem de token (`var(--color-*)`); o que não tem token
 // ainda entra na lista de exceções do bloco `no-literal-colors` mais abaixo, com o motivo.
-const LITERAL_COLOR_PATTERN = /(?<![\w&])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])|(?<![A-Za-z])(?:rgba?|hsla?)\([^)]*\)/g
+// Limitação conhecida: `#abc` que não é cor (âncora em `href="#add"`) é acusado como cor. Hex depois de
+// `_`, o formato de sombra arbitrária do Tailwind (`shadow-[0_0_0_3px_#93BDE4]`), é acusado.
+const LITERAL_COLOR_PATTERN = /(?<![A-Za-z0-9&])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])|(?<![A-Za-z])(?:rgba?|hsla?)\([^)]*\)/g
 const normalizeColor = (color) => color.replace(/\s+/g, '').toLowerCase()
 
 const dsGovernancePlugin = {
@@ -67,6 +69,8 @@ const dsGovernancePlugin = {
 
         function check(node, text) {
           for (const match of text.matchAll(LITERAL_COLOR_PATTERN)) {
+            // `rgb(var(--x) / 0.5)` é token com alfa, não cor literal
+            if (match[0].includes('var(')) continue
             if (allowed.has(normalizeColor(match[0]))) continue
             context.report({
               node,
@@ -203,6 +207,21 @@ const COLOR_EXCEPTIONS = {
     'rgba(147,189,228,0.14)',
     '#2a2a2a',
   ],
+  // variantes do Badge: no escuro, azul claro (#93BDE4) com seu fundo a 14% e o amarelo #FDC24E do texto de aviso, no par dark:; sem token.
+  'src/components/ui/badge-variants.ts': [
+    '#93BDE4',
+    'rgba(147,189,228,0.14)',
+    '#FDC24E',
+  ],
+  // variantes do Button: sombras de 8px na cor do próprio fundo (azul institucional, laranja, verdes e vermelho) a 12, 18 e 20%; sem token de sombra com essas cores.
+  'src/components/ui/button-variants.ts': [
+    'rgba(0,75,155,0.12)',
+    'rgba(0,75,155,0.18)',
+    'rgba(246,146,30,0.2)',
+    'rgba(0,198,76,0.2)',
+    'rgba(0,144,76,0.2)',
+    'rgba(220,53,69,0.2)',
+  ],
   // sombra do polegar do Switch; sem token.
   'src/components/ui/switch.tsx': [
     'rgba(0,0,0,0.2)',
@@ -247,7 +266,7 @@ export default defineConfig([
     // delas: `composites/` e `icons/` na FIPS-1303, `layout/`, `domain/` e `patterns/` (código
     // só do site, que o pacote não exporta) na FIPS-1305. Quando a fatia entrar, a pasta sai
     // desta lista de `ignores`.
-    files: ['src/components/**/*.tsx'],
+    files: ['src/components/**/*.{ts,tsx}'],
     ignores: [
       'src/components/composites/**',
       'src/components/icons/**',

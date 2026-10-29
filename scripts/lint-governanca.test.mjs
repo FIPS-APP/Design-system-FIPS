@@ -36,6 +36,50 @@ test('rgb( e rgba( literais em src/components/ui/ são acusados, mesmo dentro de
   assert.equal(achados.length, 2)
 })
 
+test('hex depois de _ (sombra e anel arbitrários do Tailwind) é acusado', async () => {
+  const achados = await acusacoes(
+    `export const a = 'shadow-[0_0_0_3px_#93BDE4]'\nexport const b = 'shadow-[inset_0_0_0_1px_#fff]'\n`,
+    'src/components/ui/sonda.tsx',
+    COR,
+  )
+  assert.deepEqual(
+    achados.map((m) => /`([^`]+)`/.exec(m.message)[1]),
+    ['#93BDE4', '#fff'],
+  )
+})
+
+test('hsl(, hsla( e hex de 3, 4 e 8 dígitos são acusados', async () => {
+  const achados = await acusacoes(
+    `export const a = 'bg-[hsl(210_40%_50%)]'\nexport const b = 'bg-[hsla(210,40%,50%,0.5)]'\n` +
+      `export const c = '#fff'\nexport const d = '#fff8'\nexport const e = '#ff000080'\n`,
+    'src/components/ui/sonda.tsx',
+    COR,
+  )
+  assert.equal(achados.length, 5)
+})
+
+test('rgb( com var() dentro é token com alfa e não é acusado; rgb( literal ao lado dele é', async () => {
+  const achados = await acusacoes(
+    `export const a = 'bg-[rgb(var(--color-primary-rgb)/0.5)]'\nexport const b = 'bg-[rgb(1,2,3)]'\n`,
+    'src/components/ui/sonda.tsx',
+    COR,
+  )
+  assert.equal(achados.length, 1)
+  assert.match(achados[0].message, /rgb\(1,2,3\)/)
+})
+
+test('arquivo .ts de ui/ (os *-variants) entra na regra de cor, e brand/ também', async () => {
+  const codigo = `export const x = 'shadow-[0_2px_8px_rgba(9,9,9,0.2)]'\n`
+  assert.equal((await acusacoes(codigo, 'src/components/ui/sonda-variants.ts', COR)).length, 1)
+  assert.equal((await acusacoes(codigo, 'src/components/brand/sonda.tsx', COR)).length, 1)
+})
+
+test('cor registrada para button-variants.ts passa lá e não em outro .ts', async () => {
+  const codigo = `export const x = 'shadow-[0_2px_8px_rgba(0,75,155,0.12)]'\n`
+  assert.equal((await acusacoes(codigo, 'src/components/ui/button-variants.ts', COR)).length, 0)
+  assert.equal((await acusacoes(codigo, 'src/components/ui/sonda-variants.ts', COR)).length, 1)
+})
+
 test('token e var() não são acusados', async () => {
   const achados = await acusacoes(
     `export const x = 'bg-[var(--color-primary)] text-[var(--color-fg)] href-#secao'\n`,
