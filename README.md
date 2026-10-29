@@ -111,7 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.1 | 2026-10-27 | `Select` e `ChipSelect` não lançam mais `scrollIntoView is not a function` onde o método não existe (jsdom, usado pelo vitest dos apps). A rolagem da opção realçada pelo teclado passa por `rolarOpcaoParaVista`, que usa `scrollIntoView?.()`: sem o método não há nada a fazer, no navegador a lista rola como antes. `npm run test:rolagem` cobre o auxiliar e a ligação dos dois componentes |
+| 0.21.1 | 2026-10-27 | `Select` e `ChipSelect` não lançam mais `scrollIntoView is not a function` onde o método não existe (jsdom, usado pelo vitest dos apps). A rolagem da opção realçada pelo teclado passa por `rolarOpcaoParaVista`, que usa `scrollIntoView?.()`: sem o método não há nada a fazer, no navegador a lista rola como antes. `npm run test:rolagem` cobre o auxiliar e a ligação dos dois componentes e também roda dentro de `npm test` |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
