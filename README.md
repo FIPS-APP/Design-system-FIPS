@@ -97,7 +97,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.5 | 2026-10-27 | Atalho `ouro` fechado do hero (`HeroAtalho` e `HeroFileira`) leva a borda de 1,5px, como o `inverseOutline`. Antes saía com borda 0 e 27px de largura, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px); agora mede 29px. A borda segue transparente: o desenho não muda. `npm run test:hero` confere a largura de borda dos quatro estados |
+| 0.21.5 | 2026-10-27 | Atalho `ouro` fechado do hero (`HeroAtalho` e `HeroFileira`) leva a borda de 1,5px, como o `inverseOutline`. Antes saía com borda 0 e 27px de largura, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px); agora mede 29px a 1x (30px a 2x), igual ao `inverseOutline`. A borda segue transparente: o desenho não muda. `npm run test:hero` confere a largura de borda dos quatro estados |
 | 0.20.29 | 2026-10-24 | Select e ChipSelect operáveis por teclado; Select com `name` entra no submit de formulário nativo |
 | 0.20.28 | 2026-10-24 | `badgePill` do `PatternPanelHero` fica deprecado: o slot `badge` é só para estado da tela, nunca o nome do sistema. O `PatternPanelHero` sai no pacote a partir da versão 0.20.0 (PR #99), como apelido do `PageHeader`; a regra vale também para a cópia de `exports/pattern-panel-hero`, que os apps copiam |
 | 0.20.27 | 2026-10-24 | O `index.html` do site deixa de carregar dois scripts de `localhost:3000` (desde 23/06) no HTML de produção |

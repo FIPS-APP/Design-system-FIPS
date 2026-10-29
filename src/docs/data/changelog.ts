@@ -32,7 +32,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          '`HeroAtalho` com `variante="ouro"` fechado não declarava largura de borda, e o preflight do Tailwind zera a borda de elemento sem largura: o atalho saía com borda 0 e medindo 27px, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px, `/docs/patterns/hero`). Na `HeroFileira`, onde o principal `ouro` fecha quando outro atalho abre, a fileira é centrada e os vizinhos andavam 1px para cada lado. O repouso `ouro` passa a levar `border-[1.5px]`, como o do `inverseOutline` já levava: a borda segue transparente, o desenho não muda e o atalho fechado passa a medir 29px, igual ao `inverseOutline`.',
+          '`HeroAtalho` com `variante="ouro"` fechado não declarava largura de borda, e o preflight do Tailwind zera a borda de elemento sem largura: o atalho saía com borda 0 e medindo 27px, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px, `/docs/patterns/hero`). Na `HeroFileira`, onde o principal `ouro` fecha quando outro atalho abre, a fileira é centrada e os vizinhos andavam 1px para cada lado. O repouso `ouro` passa a levar `border-[1.5px]`, como o do `inverseOutline` já levava: a borda segue transparente, o desenho não muda e o atalho fechado passa a medir 29px a 1x (30px a 2x, onde o Chromium desenha a borda de 1,5px inteira), igual ao `inverseOutline`.',
       },
       {
         type: 'improvement',
