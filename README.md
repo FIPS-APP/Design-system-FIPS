@@ -111,7 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.5 | 2026-10-27 | Atalho `ouro` fechado do hero (`HeroAtalho` e `HeroFileira`) leva a borda de 1,5px, como o `inverseOutline`. Antes saía com borda 0 e 27px de largura, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px); agora mede 29px. A borda segue transparente: o desenho não muda. `npm run test:hero` confere a largura de borda dos quatro estados |
+| 0.21.5 | 2026-10-27 | Atalho `ouro` fechado do hero (`HeroAtalho` e `HeroFileira`) leva a borda de 1,5px, como o `inverseOutline`. Antes saía com borda 0 e 27px de largura, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px); agora mede 29px a 1x (30px a 2x), igual ao `inverseOutline`. A borda segue transparente: o desenho não muda. `npm run test:hero` confere a largura de borda dos quatro estados |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |
