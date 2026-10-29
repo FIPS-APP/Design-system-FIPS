@@ -27,7 +27,7 @@ export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '0.21.11',
     date: '2026-10-27',
-    title: 'Texto secundário do tema claro passa de 4,5:1 em todas as superfícies',
+    title: 'Texto secundário do tema claro passa de 4,5:1 sobre cartão, cartão suave, página e listra da tabela',
     entries: [
       {
         type: 'fix',

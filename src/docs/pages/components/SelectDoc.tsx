@@ -2261,7 +2261,7 @@ input::placeholder{color:${C.textLight}}
                 {token:"Borda focus",light:"#004B9B",dark:"#93BDE4"},
                 {token:"Background",light:"#FFFFFF",dark:"#252525"},
                 {token:"Texto",light:"#333B41",dark:"#E2E2E8"},
-                {token:"Placeholder",light:"#64707D",dark:"#A1A1AA"},
+                {token:"Placeholder",light:"#64707D",dark:"#9CA3AF"},
                 {token:"Ring focus",light:"rgba(147,189,228,0.35)",dark:"rgba(147,189,228,0.2)"},
                 {token:"Dropdown bg",light:"#FFFFFF",dark:"#2A2A2A"},
                 {token:"Option hover",light:"#F2F4F8",dark:"#333333"},
