@@ -32,12 +32,17 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'fix',
         description:
-          '`Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre o fundo `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). Nenhum valor novo no sistema: é o token que o `RuleTile` com tom `atencao` já lê. Fundo e borda não mudam. No escuro o texto também lê o token, no mesmo `#fdc24e` de antes (8,47:1 sobre o cartão `#1a1a1a`, 8,00:1 sobre o suave `#1f1f1f`, 7,44:1 sobre a faixa `#252525`), e a classe `dark:text-[#FDC24E]` sai de `badge-variants.ts`.',
+          '`Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre o fundo `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). Nenhum valor novo no sistema: é o token que o `RuleTile` com tom `atencao` já lê. Fundo e borda não mudam. No escuro o texto também lê o token, no mesmo `#fdc24e` de antes (8,49:1 sobre o cartão `#1a1a1a`, 7,99:1 sobre o suave `#1f1f1f`, 7,41:1 sobre a faixa `#252525`, com o fundo composto sem arredondar para pixel), e a classe `dark:text-[#FDC24E]` sai de `badge-variants.ts`.',
       },
       {
         type: 'improvement',
         description:
-          '`npm run test:badge` passa a cobrir também o `warning`: texto contra o fundo em cartão, cartão suave e faixa, nos dois temas, e nenhuma cor fixa nas classes.',
+          'App com `tema-escuro.css` próprio que sobrescreve `--color-semantic-atencao-fg`: o Badge `warning` no escuro antes ignorava a sobrescrita (a classe com hex vencia) e agora segue o valor do app. Se o valor do app for um laranja mais escuro que `#fdc24e`, o badge muda de cor no escuro ao subir para esta versão. Conferir o contraste do valor do app antes de atualizar.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir também o `warning`: texto contra o fundo em cartão, cartão suave e faixa, nos dois temas, nenhuma cor fixa nas classes e nenhuma classe `dark:text-` ou `dark:bg-` nas variantes, mesmo com token (a regra é o token resolver o tema).',
       },
     ],
   },
