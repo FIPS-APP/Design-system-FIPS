@@ -5,10 +5,15 @@ import type { FieldDensity } from './field'
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leftIcon?: React.ReactNode
   density?: FieldDensity
+  /** Obrigatório ainda vazio. Some com `aria-invalid`, `disabled` ou `readOnly`: o erro vence. */
+  pending?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = 'text', leftIcon, density = 'default', ...props }, ref) => {
+  ({ className, type = 'text', leftIcon, density = 'default', pending = false, ...props }, ref) => {
+    const invalid = props['aria-invalid'] === true || props['aria-invalid'] === 'true'
+    const isPending = pending && !invalid && !props.disabled && !props.readOnly
+
     return (
       <div className="relative w-full">
         {leftIcon ? (
@@ -31,8 +36,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               ? 'h-8 px-2.5 text-[13px] leading-none'
               : 'h-12 px-4 py-2 text-[1.08rem]',
             leftIcon && (density === 'compact' ? 'pl-8' : 'pl-11'),
+            isPending &&
+              'border-2 border-[var(--color-semantic-atencao-fg)] bg-[var(--color-semantic-atencao-bg)] hover:border-[var(--color-semantic-atencao-fg)]',
             className,
           )}
+          data-pending={isPending ? 'true' : undefined}
           ref={ref}
           {...props}
         />
