@@ -379,6 +379,7 @@ const INPUT_VARIANTS: InputVariant[] = [
 export default function InputDoc() {
   const [searchVal, setSearchVal] = useState("");
   const [emailVal, setEmailVal] = useState("consultoriafiscal");
+  const [medidaVal, setMedidaVal] = useState("");
   const [scenarioNome, setScenarioNome] = useState("");
   const [scenarioEmail, setScenarioEmail] = useState("");
   const [evidenceUrls, setEvidenceUrls] = useState<string[]>([]);
@@ -774,13 +775,13 @@ input::placeholder { color: #7B8C96; }
                 <Field inset="icon">
                   <FieldLabel htmlFor="input-doc-pendente" required>Medida (mm)</FieldLabel>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <Input id="input-doc-pendente" inputMode="decimal" placeholder="0,00" leftIcon={icons.documento()} pending aria-describedby="input-doc-pendente-selo" />
-                    <Badge id="input-doc-pendente-selo" variant="warning" style={{ flexShrink:0 }}>Em branco</Badge>
+                    <Input id="input-doc-pendente" inputMode="decimal" placeholder="0,00" leftIcon={icons.documento()} value={medidaVal} onChange={(e) => setMedidaVal(e.target.value)} pending={!medidaVal} aria-describedby={!medidaVal ? "input-doc-pendente-selo" : undefined} />
+                    {!medidaVal ? <Badge id="input-doc-pendente-selo" variant="warning" style={{ flexShrink:0 }}>Em branco</Badge> : null}
                   </div>
                   <FieldHint>{"<Input pending />: fio de 2px e fundo de atenção."}</FieldHint>
                 </Field>
                 <div style={gl}>Quando ocorre</div>
-                <p style={gt}>Campo obrigatório ainda vazio, antes do envio. Fio laranja de 2px e fundo de atenção, que aparecem dentro de uma célula branca. A cor não basta sozinha: mantenha ao lado um selo ou texto "Em branco". Com <code>aria-invalid</code> o erro vence; desabilitado e somente leitura não ficam pendentes.</p>
+                <p style={gt}>Campo obrigatório ainda vazio, antes do envio. Fio laranja de 2px e fundo de atenção, que aparecem dentro de uma célula branca. A cor não basta sozinha: mantenha ao lado um selo ou texto "Em branco". Passe <code>pending={"{!valor}"}</code>: ao preencher, o fio e o selo saem juntos (digite no campo para ver). Com <code>aria-invalid</code> o erro vence; desabilitado e somente leitura não ficam pendentes.</p>
               </div>
             </div>
 
