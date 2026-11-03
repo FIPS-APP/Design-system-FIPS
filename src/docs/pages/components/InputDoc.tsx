@@ -771,10 +771,10 @@ input::placeholder { color: #7B8C96; }
             <div style={{...gc, borderLeft:"4px solid var(--color-semantic-atencao-fg)"}}>
               <div style={gh}><span style={{ fontSize:13,fontWeight:700,color:"var(--color-semantic-atencao-fg)",fontFamily:F.title }}>PENDENTE</span></div>
               <div style={{...gb, display:"flex", flexDirection:"column", gap:8 }}>
-                <Field>
+                <Field inset="icon">
                   <FieldLabel htmlFor="input-doc-pendente" required>Medida (mm)</FieldLabel>
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                    <Input id="input-doc-pendente" inputMode="decimal" placeholder="0,00" pending aria-describedby="input-doc-pendente-selo" />
+                    <Input id="input-doc-pendente" inputMode="decimal" placeholder="0,00" leftIcon={icons.documento()} pending aria-describedby="input-doc-pendente-selo" />
                     <Badge id="input-doc-pendente-selo" variant="warning" style={{ flexShrink:0 }}>Em branco</Badge>
                   </div>
                   <FieldHint>{"<Input pending />: fio de 2px e fundo de atenção."}</FieldHint>
