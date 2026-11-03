@@ -437,9 +437,13 @@ export interface AdminTablePaginationProps extends React.HTMLAttributes<HTMLDivE
   pageCount: number
   itemsPerPage: number
   totalItems?: number
+  /** Opções do seletor de linhas por página (ex.: `[10, 25, 50]`). O seletor só aparece com 2 ou mais opções e com `onItemsPerPageChange`. */
   itemsPerPageOptions?: number[]
   onPageChange: (page: number) => void
+  /** Chamado com o novo tamanho de página. Quem chama decide voltar à página 1. */
   onItemsPerPageChange?: (itemsPerPage: number) => void
+  /** Rótulo do grupo de opções (leitor de tela e texto visível). */
+  itemsPerPageLabel?: string
 }
 
 function buildPageList(page: number, total: number): Array<number | 'ellipsis'> {
@@ -460,9 +464,16 @@ function AdminTablePagination({
   pageCount,
   itemsPerPage,
   totalItems,
+  itemsPerPageOptions,
+  onItemsPerPageChange,
+  itemsPerPageLabel = 'Linhas por página',
   onPageChange,
   ...props
 }: AdminTablePaginationProps) {
+  const perPageChoices =
+    onItemsPerPageChange && itemsPerPageOptions && itemsPerPageOptions.length > 1
+      ? Array.from(new Set([...itemsPerPageOptions, itemsPerPage])).sort((a, b) => a - b)
+      : null
   const totalPages = Math.max(pageCount, 1)
   const from = totalItems != null ? (page - 1) * itemsPerPage + 1 : 0
   const to = totalItems != null ? Math.min(page * itemsPerPage, totalItems) : 0
@@ -471,24 +482,55 @@ function AdminTablePagination({
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 border-t border-[var(--color-border)] px-6 py-3 sm:flex-row sm:items-center sm:justify-between',
+        'flex flex-col gap-3 border-t border-[var(--color-border)] bg-[var(--color-surface-muted)] px-4 py-2.5 text-[11px] text-[var(--color-fg-muted)] sm:flex-row sm:items-center sm:justify-between',
         className,
       )}
       {...props}
     >
-      <span className="text-[11px] text-[var(--color-fg-muted)]">
-        {totalItems != null ? (
-          <>
-            Mostrando{' '}
-            <strong className="font-semibold text-[var(--color-fg)]">
-              {from}–{to}
-            </strong>{' '}
-            de {totalItems} registros
-          </>
-        ) : (
-          <>Página {page} de {totalPages}</>
-        )}
-      </span>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span className="text-[11px] text-[var(--color-fg-muted)]">
+          {totalItems != null ? (
+            <>
+              Mostrando{' '}
+              <strong className="font-semibold text-[var(--color-fg)]">
+                {from}–{to}
+              </strong>{' '}
+              de {totalItems} registros
+            </>
+          ) : (
+            <>Página {page} de {totalPages}</>
+          )}
+        </span>
+        {perPageChoices ? (
+          <div role="group" aria-label={itemsPerPageLabel} className="flex items-center gap-1.5">
+            <span className="text-[11px] text-[var(--color-fg-muted)]" aria-hidden>
+              {itemsPerPageLabel}
+            </span>
+            {perPageChoices.map((n) => {
+              const active = n === itemsPerPage
+              return (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => {
+                    if (!active) onItemsPerPageChange?.(n)
+                  }}
+                  aria-pressed={active}
+                  aria-label={`${n} linhas por página`}
+                  className={cn(
+                    'inline-flex min-w-8 items-center justify-center rounded-md border px-2 py-[3px] text-[11px] font-semibold tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
+                    active
+                      ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-sm'
+                      : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg-muted)] hover:border-[var(--color-primary)]/40 hover:text-[var(--color-fg)]',
+                  )}
+                >
+                  {n}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
+      </div>
 
       <div className="flex items-center gap-1">
         <Button

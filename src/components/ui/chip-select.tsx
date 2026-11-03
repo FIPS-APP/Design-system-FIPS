@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState, type Keyboard
 import { ChevronDown, Search, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import { rolarOpcaoParaVista } from '../../lib/rolar-para-vista'
+import { useListaNaTela } from '../../lib/use-lista-na-tela'
 
 /** A partir de quantas opções o dropdown ganha busca (rolar dezenas de itens não escala). */
 const BUSCA_MIN_OPCOES = 10
@@ -63,6 +64,9 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
   const ref = useRef<HTMLDivElement>(null)
   const gatilhoRef = useRef<HTMLButtonElement>(null)
   const buscaRef = useRef<HTMLInputElement>(null)
+  const painelRef = useRef<HTMLDivElement>(null)
+  // Dropdown inteiro na tela e no corpo rolável do drawer: vira para cima, encurta ou desloca.
+  useListaNaTela(open, gatilhoRef, painelRef, { afastamento: 6 })
   const uid = useId()
   const listId = `${uid}-lista`
   const optId = useCallback((i: number) => `${uid}-opcao-${i}`, [uid])
@@ -202,7 +206,7 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
         <ChevronDown className={cn('h-2.5 w-2.5 shrink-0 text-[var(--color-fg-muted)] transition-transform duration-200', open && 'rotate-180')} aria-hidden />
       </button>
       {open && (
-        <div className="absolute left-0 top-[calc(100%+6px)] z-50 flex max-h-[280px] min-w-[200px] flex-col overflow-hidden rounded-[8px_8px_8px_14px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_12px_36px_rgba(0,42,104,0.18),0_2px_8px_rgba(0,42,104,0.06)]">
+        <div ref={painelRef} className="absolute left-0 top-[calc(100%+6px)] z-50 flex max-h-[280px] min-w-[200px] flex-col overflow-hidden rounded-[8px_8px_8px_14px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_12px_36px_rgba(0,42,104,0.18),0_2px_8px_rgba(0,42,104,0.06)]">
           {/* Busca (só em campo com muitas opções) — mesma linguagem do SearchField. */}
           {comBusca && (
             <div className="flex shrink-0 items-center gap-2 border-b border-[var(--color-border)] px-3 py-2">

@@ -10,7 +10,10 @@
  * o nome que --font-heading ja usa. urls relativos: o Vite empacota os woff2
  * em dist/ junto de styles.css, entao o consumidor nao depende da CDN.
  *
- * Pesos: Open Sans 400-700, Saira Expanded 500-700. Subsets latin + latin-ext.
+ * 'Saira' (largura normal, wdth=100) entra so para o cabecalho de tabela, igual ao Gestao OPA e a Manutencao,
+ * so no subset latin (cada fonte vai em base64 dentro de styles.css; latin-ext custaria mais 34 KB; fora do latin cai no Open Sans).
+ *
+ * Pesos: Open Sans 400-700, Saira Expanded 500-700, Saira 500-700. Subsets latin + latin-ext (Saira: so latin).
  * Regenerar: python scripts/atualizar-fontes.py
  */
 
@@ -55,5 +58,16 @@
   font-stretch: 125%;
   font-display: swap;
   src: url('../fonts/saira-expanded-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Saira — latin */
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 500 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url('../fonts/saira-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
