@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.0',
+    date: '2026-11-03',
+    title: 'Input: estado pendente para obrigatório ainda vazio',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado.',
+      },
+    ],
+  },
+  {
     version: '0.20.41',
     date: '2026-10-29',
     title: 'Modal curto: cabeçalho plano, também no escuro',

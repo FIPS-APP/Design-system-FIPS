@@ -243,6 +243,35 @@ test('Campos: o hover da borda é mais escuro que a borda em repouso no claro (e
   }
 })
 
+// ─── Input pendente ────────────────────────────────────────────────────────
+const INPUT = 'src/components/ui/input.tsx'
+const FIO_PENDENTE = classe(INPUT, /isPending &&\s*'[^']*\bborder-\[var\((--[\w-]+)\)\]/)
+const FUNDO_PENDENTE = classe(INPUT, /isPending &&\s*'[^']*\bbg-\[var\((--[\w-]+)\)\]/)
+
+for (const t of TEMAS) {
+  test(`Input pendente, tema ${t}: fio contra o cartão e contra o próprio fundo`, () => {
+    const fio = token(FIO_PENDENTE, t)
+    verifica(`${FIO_PENDENTE} contra --color-surface`, fio, token('--color-surface', t))
+    verifica(`${FIO_PENDENTE} contra ${FUNDO_PENDENTE}`, fio, compor(TOKENS[t][FUNDO_PENDENTE], t))
+  })
+
+  // Campo pendente é campo vazio: o placeholder sempre aparece. No claro mede 4,30:1 até o #143 escurecer --color-fg-muted.
+  test(`Input pendente, tema ${t}: placeholder contra o fundo de atenção`, { todo: t === 'claro' ? 'depende do #143 (--color-fg-muted)' : false }, () => {
+    verifica(`--color-fg-muted contra ${FUNDO_PENDENTE}`, token('--color-fg-muted', t), compor(TOKENS[t][FUNDO_PENDENTE], t), MINIMO_TEXTO)
+  })
+}
+
+test('Input pendente: o erro, o desabilitado e o somente leitura vencem antes de pintar', () => {
+  const fonte = ler(INPUT)
+  assert.match(fonte, /const invalid = props\['aria-invalid'\] === true \|\| props\['aria-invalid'\] === 'true'/, 'input.tsx: aria-invalid (booleano e "true") tem que desligar o pendente')
+  const guarda = fonte.match(/const isPending = ([^\n]+)/)
+  assert.ok(guarda, 'input.tsx: const isPending não encontrada')
+  for (const parte of ['pending', '!invalid', '!props.disabled', '!props.readOnly']) {
+    assert.ok(guarda[1].split(/\s*&&\s*/).includes(parte), `input.tsx: isPending sem "${parte}" (${guarda[1]})`)
+  }
+  assert.match(fonte, /data-pending=\{isPending \? 'true' : undefined\}/, 'input.tsx: data-pending só quando o pendente está ativo')
+})
+
 test('--color-primary-hover-text no claro vale o mesmo que --color-primary-hover', () => {
   assert.deepEqual(token('--color-primary-hover-text', 'claro'), token('--color-primary-hover', 'claro'))
 })

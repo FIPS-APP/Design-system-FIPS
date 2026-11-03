@@ -3,6 +3,9 @@ import { ImagePlus } from "lucide-react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { FormSectionCard, FormSectionHeader } from "../../../components/composites/FormSectionCard";
 import { PhotoEvidenceDropzone } from "../../../components/composites/PhotoEvidenceDropzone";
+import { Badge } from "../../../components/ui/badge";
+import { Field, FieldHint, FieldLabel } from "../../../components/ui/field";
+import { Input } from "../../../components/ui/input";
 
 /* ═══════════════════════════════════════════
    FIPS DESIGN SYSTEM — BRAND TOKENS
@@ -376,6 +379,7 @@ const INPUT_VARIANTS: InputVariant[] = [
 export default function InputDoc() {
   const [searchVal, setSearchVal] = useState("");
   const [emailVal, setEmailVal] = useState("consultoriafiscal");
+  const [medidaVal, setMedidaVal] = useState("");
   const [scenarioNome, setScenarioNome] = useState("");
   const [scenarioEmail, setScenarioEmail] = useState("");
   const [evidenceUrls, setEvidenceUrls] = useState<string[]>([]);
@@ -765,6 +769,22 @@ input::placeholder { color: #7B8C96; }
               </div>
             </div>
 
+            <div style={{...gc, borderLeft:"4px solid var(--color-semantic-atencao-fg)"}}>
+              <div style={gh}><span style={{ fontSize:13,fontWeight:700,color:"var(--color-semantic-atencao-fg)",fontFamily:F.title }}>PENDENTE</span></div>
+              <div style={{...gb, display:"flex", flexDirection:"column", gap:8 }}>
+                <Field inset="icon">
+                  <FieldLabel htmlFor="input-doc-pendente" required>Medida (mm)</FieldLabel>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <Input id="input-doc-pendente" inputMode="decimal" placeholder="0,00" leftIcon={icons.documento()} value={medidaVal} onChange={(e) => setMedidaVal(e.target.value)} pending={!medidaVal} aria-describedby={!medidaVal ? "input-doc-pendente-selo" : undefined} />
+                    {!medidaVal ? <Badge id="input-doc-pendente-selo" variant="warning" style={{ flexShrink:0 }}>Em branco</Badge> : null}
+                  </div>
+                  <FieldHint>{"<Input pending />: fio de 2px e fundo de atenção."}</FieldHint>
+                </Field>
+                <div style={gl}>Quando ocorre</div>
+                <p style={gt}>Campo obrigatório ainda vazio, antes do envio. Fio laranja de 2px e fundo de atenção, que aparecem dentro de uma célula branca. A cor não basta sozinha: mantenha ao lado um selo ou texto "Em branco". Passe <code>pending={"{!valor}"}</code>: ao preencher, o fio e o selo saem juntos (digite no campo para ver). Com <code>aria-invalid</code> o erro vence; desabilitado e somente leitura não ficam pendentes.</p>
+              </div>
+            </div>
+
             <div style={gc}>
               <div style={gh}><span style={{ fontSize:13,fontWeight:700,color:C.cinzaChumbo,fontFamily:F.title }}>BLOQUEADO</span></div>
               <div style={{...gb, display:"flex", flexDirection:"column", gap:8 }}>
@@ -779,7 +799,7 @@ input::placeholder { color: #7B8C96; }
               <div style={{...gb, display:"flex", flexDirection:"column", gap:8 }}>
                 <DSInput label="Nome completo" placeholder="Ex: João Silva" icon={icons.pessoa()} required helper="Asterisco vermelho identifica campo obrigatório." />
                 <div style={gl}>Quando ocorre</div>
-                <p style={gt}>Campo mandatório para submissão. Asterisco vermelho ao lado do label. Se vazio no submit, entra em estado de erro.</p>
+                <p style={gt}>Campo mandatório para submissão. Asterisco vermelho ao lado do label. Antes do envio pode ficar pendente; se vazio no submit, entra em estado de erro.</p>
               </div>
             </div>
 
