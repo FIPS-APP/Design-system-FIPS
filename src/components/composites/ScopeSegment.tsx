@@ -53,7 +53,7 @@ export function ScopeSegment<K extends string>({
               padding: '5px 10px',
               fontSize: 11,
               fontWeight: 700,
-              color: isActive ? '#fff' : 'var(--color-primary)',
+              color: isActive ? '#fff' : 'var(--color-primary-text)',
               background: isActive ? 'var(--color-primary)' : 'transparent',
               boxShadow: isActive ? '0 1px 3px rgba(0,42,104,0.18)' : 'none',
               border: 'none',
@@ -68,8 +68,8 @@ export function ScopeSegment<K extends string>({
               style={{
                 fontSize: 10,
                 fontWeight: 600,
-                color: isActive ? 'rgba(255,255,255,0.75)' : 'var(--color-primary)',
-                opacity: isActive ? 1 : 0.65,
+                color: isActive ? 'rgba(255,255,255,0.75)' : 'var(--color-primary-text)',
+                opacity: isActive ? 1 : 0.8,
               }}
               aria-label={`${count} ${countUnit}`}
             >

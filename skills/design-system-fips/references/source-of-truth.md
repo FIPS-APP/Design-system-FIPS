@@ -71,6 +71,9 @@ Se houver conflito:
 - `src/docs/pages/patterns/DashboardDemo.tsx`
 - `src/docs/pages/patterns/DataListingDemo.tsx` — toolbar + **drawer de filtros** + **chips de filtro ativo** + tabela + paginação (referência viva do padrão)
 - `src/components/composites/AbasDeSecao.tsx`
+- `src/components/composites/{AppShell,AppHeader,AppSidebar,HeaderTile,HeaderTrilha,UserChip,UserAccountMenu,NotificacoesMenu,TutorialOverlay}.tsx` (+ `app-shell-*.ts`): casca padrão do app (cabeçalho + menu lateral), exportada pela library; réplica do Gestão OPA. Doc `/docs/components/casca-do-app`, demo `/demo/casca` (`src/docs/pages/patterns/CascaDemo.tsx`). Os `components/layout/*` acima continuam sendo só a casca do site de docs
+- `src/components/composites/SecaoNumerada.tsx` · `SegmentoAvaliacao.tsx` (+ `segmento-avaliacao-variants.ts`) · `AssinaturaCanvas.tsx` · `BarraAcoesRodape.tsx` (+ `estado-salvamento.ts`) · `CardChecklist.tsx` · `src/docs/pages/components/FormularioExecucaoDoc.tsx` · `src/docs/pages/patterns/ExecucaoInspecaoDemo.tsx` · `scripts/formulario-execucao.test.mjs`
+- `src/components/composites/TabelaExpansivel.tsx` · `src/docs/pages/components/TabelaExpansivelDoc.tsx` (linha expansível, cartões no celular, paginação com linhas por página)
 - `src/components/composites/ExportButtons.tsx`
 - `src/components/composites/ExportPreviewModal.tsx`
 - `src/components/composites/ListingKpiRow.tsx` · `StatsCard.tsx` · `HowItWorksCard.tsx` · `RuleTile.tsx`
@@ -118,3 +121,7 @@ Se houver conflito:
 - `rg -n "Field density|density =" src/components/ui`
 - `rg -n "Padrão:" src/docs/pages/patterns`
 - `rg -n "Governança|regra de ouro|Não" src/docs/pages/GovernancePage.tsx`
+
+## Gráficos, documento de impressão e listagem de apoio
+
+`src/components/composites/{CartaoGrafico,GraficoBarras,GraficoRosca,GraficoLinha,GraficoFunil,MapaDeCalor,ProgressoPorFaixa,grafico-logica,Documento,documento-variants,CartaoListagem,AlternadorDeVisao,AvisoSomenteLeitura,TabelaClassificacao}`; tokens `--grafico-*` e `--documento-faixa-*` no fim de `src/styles/globals.css`; testes em `scripts/graficos-documento.test.mjs`.

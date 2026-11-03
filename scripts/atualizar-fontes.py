@@ -10,6 +10,9 @@ FONTES = [
     # "Saira Expanded" nao e familia do Google — e o Saira no eixo wdth=125.
     ('https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,500..700&display=swap',
      'Saira Expanded', 'saira-expanded'),
+    # Saira na largura normal: so o cabecalho de tabela (igual ao Gestao OPA e a Manutencao).
+    ('https://fonts.googleapis.com/css2?family=Saira:wght@500..700&display=swap',
+     'Saira', 'saira'),
 ]
 
 CABECALHO = """/* Fontes do DS-FIPS servidas no bundle (sem Google Fonts).
@@ -24,7 +27,9 @@ CABECALHO = """/* Fontes do DS-FIPS servidas no bundle (sem Google Fonts).
  * o nome que --font-heading ja usa. urls relativos: o Vite empacota os woff2
  * em dist/ junto de styles.css, entao o consumidor nao depende da CDN.
  *
- * Pesos: Open Sans 400-700, Saira Expanded 500-700. Subsets latin + latin-ext.
+ * 'Saira' (largura normal, wdth=100) entra so para o cabecalho de tabela, igual ao Gestao OPA e a Manutencao.
+ *
+ * Pesos: Open Sans 400-700, Saira Expanded 500-700, Saira 500-700. Subsets latin + latin-ext.
  * Regenerar: python scripts/atualizar-fontes.py
  */
 
@@ -42,6 +47,8 @@ def gerar(raiz: pathlib.Path):
         for subset, bloco in re.findall(r'/\* ([a-z-]+) \*/\s*(@font-face \{.*?\})', css, re.S):
             if subset not in ('latin', 'latin-ext'):
                 continue
+            if prefixo == 'saira' and subset != 'latin':
+                continue  # so o cabecalho de tabela usa; cada fonte vai em base64 no styles.css
             woff = re.search(r'url\((https://[^)]+\.woff2)\)', bloco).group(1)
             nome = f'{prefixo}-{subset}.woff2'
             dados = pega(woff)

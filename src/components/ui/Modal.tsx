@@ -1,5 +1,5 @@
-import { Children, forwardRef, isValidElement, type ReactNode } from 'react'
-import { X, type LucideIcon } from 'lucide-react'
+import { Children, forwardRef, isValidElement, useCallback, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { Maximize2, Minimize2, X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import {
   Dialog,
@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from './dialog'
+import { classesDoModal, type TamanhoDoModal } from './modal-variants'
 
 export interface ModalProps {
   open: boolean
@@ -17,7 +18,7 @@ export interface ModalProps {
   description?: ReactNode
   children: ReactNode
   className?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full' | 'workflow'
+  size?: TamanhoDoModal
   showCloseButton?: boolean
   layer?: number
   headerIcon?: LucideIcon
@@ -33,17 +34,20 @@ export interface ModalProps {
   eyebrow?: ReactNode
   /** Remove o padding do corpo (`px-6 py-5`); o conteúdo controla o próprio espaçamento. */
   noPadBody?: boolean
-}
-
-const sizeVariants = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-xl',
-  '2xl': 'max-w-2xl',
-  '3xl': 'max-w-3xl',
-  full: 'max-w-4xl',
-  workflow: 'max-w-[900px]',
+  /**
+   * Mostra o botão "Tela cheia" / "Restaurar" ao lado do X de fechar. Sem esta prop
+   * nada muda. Regra do DS: modal curto não rola; conteúdo grande (formulário longo,
+   * tabela, pré-visualização) liga isto e o corpo rola dentro da tela cheia.
+   */
+  permiteTelaCheia?: boolean
+  /** Estado controlado da tela cheia. Sem ele o Modal guarda o estado e volta ao tamanho normal ao fechar. */
+  telaCheia?: boolean
+  /** Estado inicial quando `telaCheia` não é passado. */
+  telaCheiaInicial?: boolean
+  /** Chamado quando o botão (ou o atalho) alterna a tela cheia. */
+  aoMudarTelaCheia?: (telaCheia: boolean) => void
+  /** Liga o atalho Alt+Enter (só com o foco dentro do modal) para alternar a tela cheia. Só tem efeito com `permiteTelaCheia`. */
+  atalhoTelaCheia?: boolean
 }
 
 function isModalFooterChild(child: ReactNode): child is React.ReactElement<ModalFooterProps> {
@@ -64,9 +68,52 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       hero = false,
       eyebrow,
       noPadBody = false,
+      permiteTelaCheia = false,
+      telaCheia: telaCheiaControlada,
+      telaCheiaInicial = false,
+      aoMudarTelaCheia,
+      atalhoTelaCheia = false,
     },
     ref,
   ) => {
+    const [telaCheiaInterna, setTelaCheiaInterna] = useState(telaCheiaInicial)
+    const [abertoAntes, setAbertoAntes] = useState(open)
+    if (abertoAntes !== open) {
+      setAbertoAntes(open)
+      // Ao fechar, o modal não controlado volta ao tamanho normal.
+      if (!open) setTelaCheiaInterna(telaCheiaInicial)
+    }
+    const controlado = telaCheiaControlada !== undefined
+    const telaCheia = permiteTelaCheia && (controlado ? telaCheiaControlada : telaCheiaInterna)
+    const alternarTelaCheia = () => {
+      const proximo = !telaCheia
+      if (!controlado) setTelaCheiaInterna(proximo)
+      aoMudarTelaCheia?.(proximo)
+    }
+    const aoTeclar = (evento: KeyboardEvent<HTMLDivElement>) => {
+      if (!permiteTelaCheia || !atalhoTelaCheia) return
+      if (evento.altKey && evento.key === 'Enter' && !evento.ctrlKey && !evento.metaKey) {
+        evento.preventDefault()
+        alternarTelaCheia()
+      }
+    }
+    // Com a tela cheia ligada, o corpo traz para a vista a lista de um Select recém-aberta: o Select do
+    // DS abre `absolute` dentro do corpo rolável e, perto da borda de baixo, a lista ficaria cortada.
+    const observarListas = useCallback((corpo: HTMLDivElement | null) => {
+      if (!corpo || !permiteTelaCheia) return
+      const observador = new MutationObserver((registros) => {
+        for (const registro of registros) {
+          const gatilho = registro.target as HTMLElement
+          if (gatilho.getAttribute('aria-expanded') !== 'true') continue
+          const lista = gatilho.parentElement?.querySelector('[role="listbox"]')
+          lista?.scrollIntoView({ block: 'nearest' })
+        }
+      })
+      observador.observe(corpo, { subtree: true, attributes: true, attributeFilter: ['aria-expanded'] })
+      return () => observador.disconnect()
+    }, [permiteTelaCheia])
+    const rotuloTelaCheia = telaCheia ? 'Restaurar' : 'Tela cheia'
+    const IconeTelaCheia = telaCheia ? Minimize2 : Maximize2
     const childList = Children.toArray(children)
     const footers = childList.filter(isModalFooterChild)
     const body = childList.filter((child) => !isModalFooterChild(child))
@@ -76,15 +123,35 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
         <DialogContent
           ref={ref}
           showCloseButton={!hero}
-          className={cn(
-            'flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-h-[90vh] sm:p-0',
-            sizeVariants[size],
-            className,
-          )}
+          onKeyDown={permiteTelaCheia && atalhoTelaCheia ? aoTeclar : undefined}
+          data-tela-cheia={telaCheia ? 'true' : undefined}
+          className={classesDoModal({ size, telaCheia, className })}
         >
+          {permiteTelaCheia ? (
+            <button
+              type="button"
+              onClick={alternarTelaCheia}
+              aria-label={rotuloTelaCheia}
+              aria-pressed={telaCheia}
+              aria-keyshortcuts={atalhoTelaCheia ? 'Alt+Enter' : undefined}
+              title={rotuloTelaCheia}
+              className={cn(
+                'absolute z-[30] flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:outline-none',
+                hero
+                  ? 'top-3.5 right-[3.25rem] h-8 w-8 rounded-lg bg-white/[0.08] text-white/75 hover:bg-white/[0.18] hover:text-white'
+                  : cn(
+                      'top-4 right-14 h-7 w-7 rounded-lg border border-black/[0.08] bg-black/[0.04] text-zinc-500',
+                      'hover:border-[color-mix(in_srgb,var(--color-primary)_35%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] hover:text-[var(--color-primary)]',
+                      'dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:text-[var(--color-fips-blue-200)]',
+                    ),
+              )}
+            >
+              <IconeTelaCheia className="h-3.5 w-3.5" aria-hidden strokeWidth={2} />
+            </button>
+          ) : null}
           {(title || description) && (hero ? (
             <div
-              className="relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14"
+              className={cn('relative flex shrink-0 items-center gap-3.5 overflow-hidden px-6 py-5 pr-14', permiteTelaCheia && 'pr-24')}
               style={{ background: 'linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)' }}
             >
               {HeaderIcon ? (
@@ -119,6 +186,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               className={cn(
                 'flex-row items-start gap-3 border-b border-[var(--color-border)] px-6 py-4 pr-14 text-left',
                 HeaderIcon && 'gap-4',
+                permiteTelaCheia && 'pr-[5.5rem]!',
               )}
             >
               {HeaderIcon ? (
@@ -135,7 +203,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             </DialogHeader>
           ))}
           {body.length > 0 ? (
-            <div className={cn('flex-1 overflow-y-auto', noPadBody ? 'p-0' : 'px-6 py-5')}>{body}</div>
+            <div ref={observarListas} className={cn('flex-1 overflow-y-auto', noPadBody ? 'p-0' : 'px-6 py-5')}>{body}</div>
           ) : null}
           {footers}
         </DialogContent>

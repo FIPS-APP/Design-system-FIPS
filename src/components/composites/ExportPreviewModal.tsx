@@ -408,7 +408,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_1px_3px_rgba(0,75,155,0.04)]">
+              <div className="overflow-hidden rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]">
                 <div className="flex items-center gap-3 border-b border-[var(--color-border)] px-4 py-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[color-mix(in_srgb,var(--color-primary)_8%,transparent)] bg-[color-mix(in_srgb,var(--color-primary)_4%,transparent)]">
                     <FileSpreadsheet className="h-[22px] w-[22px] text-[var(--color-primary)]" />

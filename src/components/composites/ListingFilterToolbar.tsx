@@ -3,15 +3,15 @@ import {
   Calendar,
   CheckCircle2,
   ChevronDown,
-  FileDown,
-  FileSpreadsheet,
   Filter,
   Globe,
   Search,
   User,
 } from 'lucide-react'
+import { useListaNaTela } from '../../lib/use-lista-na-tela'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { ExcelIcon, PdfIcon } from '../icons/FileIcons'
 import { ScopeSegment } from './ScopeSegment'
 
 export const LISTING_PERIOD_PRESETS = [
@@ -20,6 +20,11 @@ export const LISTING_PERIOD_PRESETS = [
   'Últimos 90 dias',
   'Este ano',
   'Tudo',
+] as const
+
+const ITENS_DE_ESCOPO = [
+  { key: 'minha', Icon: User },
+  { key: 'todos', Icon: Globe },
 ] as const
 
 export type ListingPeriodPreset = (typeof LISTING_PERIOD_PRESETS)[number] | 'Personalizado'
@@ -50,6 +55,26 @@ export type ListingFilterToolbarProps = {
   exportDisabled?: boolean
   /** Slot após Período, antes do export (ex.: spacer). */
   trailing?: ReactNode
+  /** Texto do campo de busca. Padrão: o do painel de OPAs. */
+  searchPlaceholder?: string
+  /** `aria-label` da busca. Padrão: "Buscar OPAs" sem `searchPlaceholder`, "Buscar" com ele. */
+  searchLabel?: string
+  /**
+   * Textos da alçada. `minha` e `todos` trocam o rótulo dos dois segmentos; `grupo` troca o
+   * rótulo do grupo para leitor de tela. Padrão: "Minha Área", "Toda jurisdição", "Alçada".
+   */
+  scopeLabels?: { minha?: string; todos?: string; grupo?: string }
+  /** Substantivo dos contadores da alçada (ex.: "inspeções"). Padrão: "OPAs". */
+  countUnit?: string
+  /**
+   * Quais alçadas aparecem, na ordem do array. Padrão: `['minha', 'todos']`. Perfil que só enxerga o próprio
+   * (um terceirizado, por exemplo) passa `['minha']` e o segmento "Toda jurisdição" some.
+   */
+  escopos?: Array<'minha' | 'todos'>
+  /** `false` esconde a alçada inteira (o segmento todo). Padrão: `true`. */
+  mostrarEscopo?: boolean
+  /** Mostra os botões Excel e PDF. Padrão: `true`. Com `false` nenhum dos dois é renderizado. */
+  showExport?: boolean
 }
 
 /**
@@ -81,8 +106,18 @@ export function ListingFilterToolbar({
   onExportPdf,
   exportDisabled = false,
   trailing,
+  searchPlaceholder,
+  searchLabel,
+  scopeLabels,
+  countUnit = 'OPAs',
+  escopos = ['minha', 'todos'],
+  mostrarEscopo = true,
+  showExport = true,
 }: ListingFilterToolbarProps) {
   const periodRef = useRef<HTMLDivElement>(null)
+  const periodListRef = useRef<HTMLUListElement>(null)
+  // A lista do período (e o intervalo personalizado) cabe inteira na tela: vira para cima ou desloca no celular.
+  useListaNaTela(showPeriod, periodRef, periodListRef, { afastamento: 8 })
 
   useEffect(() => {
     if (!showPeriod) return
@@ -102,7 +137,7 @@ export function ListingFilterToolbar({
         background: 'var(--color-surface)',
         borderRadius: '10px 10px 10px 18px',
         border: '1px solid var(--color-border)',
-        boxShadow: '0 1px 3px rgba(0,75,155,.04)',
+        boxShadow: 'var(--shadow-card)',
       }}
     >
       <Button
@@ -113,7 +148,8 @@ export function ListingFilterToolbar({
         aria-haspopup="dialog"
       >
         <Filter className="h-4 w-4" />
-        Filtros
+        {/* Abaixo de md só o ícone (o nome acessível continua "Filtros"), como no Gestão OPA. */}
+        <span className="max-md:sr-only">Filtros</span>
         {filterActiveCount > 0 && (
           <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] font-semibold text-[var(--color-surface)]">
             {filterActiveCount}
@@ -121,30 +157,34 @@ export function ListingFilterToolbar({
         )}
       </Button>
 
-      <ScopeSegment
-        value={scope}
-        onChange={onScopeChange}
-        label="Alçada"
-        countUnit="OPAs"
-        items={[
-          { key: 'minha', label: 'Minha Área', Icon: User, count: countMinha },
-          { key: 'todos', label: 'Toda jurisdição', Icon: Globe, count: countTodos },
-        ]}
-      />
+      {mostrarEscopo && escopos.length > 0 ? (
+        <ScopeSegment
+          value={scope}
+          onChange={onScopeChange}
+          label={scopeLabels?.grupo ?? 'Alçada'}
+          countUnit={countUnit}
+          items={ITENS_DE_ESCOPO.filter((i) => escopos.includes(i.key)).map((i) => ({
+            key: i.key,
+            Icon: i.Icon,
+            label: i.key === 'minha' ? (scopeLabels?.minha ?? 'Minha Área') : (scopeLabels?.todos ?? 'Toda jurisdição'),
+            count: i.key === 'minha' ? countMinha : countTodos,
+          }))}
+        />
+      ) : null}
 
-      <div className="min-w-0 flex-1">
+      <div className="min-w-[10rem] flex-1">
         <Input
           type="search"
           density="compact"
           leftIcon={<Search className="h-4 w-4" />}
-          placeholder="Buscar OPAs por número, área, responsável, município…"
+          placeholder={searchPlaceholder ?? 'Buscar OPAs por número, área, responsável, município…'}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          aria-label="Buscar OPAs"
+          aria-label={searchLabel ?? (searchPlaceholder ? 'Buscar' : 'Buscar OPAs')}
         />
       </div>
 
-      <div ref={periodRef} className="relative">
+      <div ref={periodRef} className="relative" style={{ marginLeft: 'auto' }}>
         <button
           type="button"
           onClick={() => onShowPeriodChange(!showPeriod)}
@@ -179,9 +219,10 @@ export function ListingFilterToolbar({
         </button>
         {showPeriod ? (
           <ul
+            ref={periodListRef}
             role="listbox"
             aria-label="Selecionar período"
-            className="absolute right-0 top-full z-30 mt-2 overflow-hidden"
+            className="absolute right-0 top-full z-30 mt-2 overflow-y-auto overflow-x-hidden"
             style={{
               minWidth: 200,
               background: 'var(--color-surface)',
@@ -311,42 +352,46 @@ export function ListingFilterToolbar({
 
       {trailing}
 
-      <button
-        type="button"
-        title="Exportar para Excel"
-        aria-label="Exportar Excel"
-        onClick={onExportExcel}
-        disabled={exportDisabled}
-        className="inline-flex items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-45"
-        style={{
-          width: 34,
-          height: 34,
-          border: '1px solid var(--color-border)',
-          borderRadius: 8,
-          background: 'var(--color-surface)',
-          cursor: 'pointer',
-        }}
-      >
-        <FileSpreadsheet style={{ width: 16, height: 16, color: '#1D6F42' }} strokeWidth={1.8} />
-      </button>
-      <button
-        type="button"
-        title="Exportar para PDF"
-        aria-label="Exportar PDF"
-        onClick={onExportPdf}
-        disabled={exportDisabled}
-        className="inline-flex items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-45"
-        style={{
-          width: 34,
-          height: 34,
-          border: '1px solid var(--color-border)',
-          borderRadius: 8,
-          background: 'var(--color-surface)',
-          cursor: 'pointer',
-        }}
-      >
-        <FileDown style={{ width: 16, height: 16, color: '#C0392B' }} strokeWidth={1.8} />
-      </button>
+      {showExport ? (
+        <>
+          <button
+            type="button"
+            title="Exportar para Excel"
+            aria-label="Exportar Excel"
+            onClick={onExportExcel}
+            disabled={exportDisabled}
+            className="inline-flex items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-45"
+            style={{
+              width: 34,
+              height: 34,
+              border: '1px solid var(--color-border)',
+              borderRadius: 8,
+              background: 'var(--color-surface)',
+              cursor: 'pointer',
+            }}
+          >
+            <ExcelIcon size={16} color="var(--color-excel)" />
+          </button>
+          <button
+            type="button"
+            title="Exportar para PDF"
+            aria-label="Exportar PDF"
+            onClick={onExportPdf}
+            disabled={exportDisabled}
+            className="inline-flex items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-45"
+            style={{
+              width: 34,
+              height: 34,
+              border: '1px solid var(--color-border)',
+              borderRadius: 8,
+              background: 'var(--color-surface)',
+              cursor: 'pointer',
+            }}
+          >
+            <PdfIcon size={16} color="var(--color-danger-text)" />
+          </button>
+        </>
+      ) : null}
     </div>
   )
 }

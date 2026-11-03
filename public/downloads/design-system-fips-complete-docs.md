@@ -77,7 +77,7 @@ Se houver conflito:
   --color-surface-muted: #F5F8FC;
   --color-border: #D7E0EA;
   --color-fg: #333B41;
-  --color-fg-muted: #6B7784;
+  --color-fg-muted: #64707D;
   --color-ring: #0090D0;
   --color-sidebar: #002A68;
 }

@@ -1,14 +1,19 @@
 import * as React from 'react'
 import { cn } from '../../lib/cn'
 
-function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Elemento raiz. `li` quando os cartões estão numa `ul`. Padrão `div`. */
+  como?: 'div' | 'li' | 'article' | 'section'
+}
+
+function Card({ className, como: Raiz = 'div', ...props }: CardProps) {
   return (
-    <div
+    <Raiz
       className={cn(
         'rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] transition-shadow duration-200',
         className,
       )}
-      {...props}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
     />
   )
 }

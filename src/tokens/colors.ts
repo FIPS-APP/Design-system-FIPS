@@ -47,8 +47,13 @@ export const semanticColors = {
   dangerText: '#B91C1C',
   /** Verde de fundo com texto branco. */
   successFill: fipsPalette.verdeFlorestaEscuro,
+  /** Laranja e verde de texto pequeno (sobretítulo, selo): 6,26:1 e 5,3:1 sobre branco. */
+  accentText: '#9A4A00',
+  successText: '#007A40',
+  /** Mistura 60/40 de --color-fg-muted (#64707d) com --color-fg (#333B41), alinhada ao color-mix do CSS. */
+  foregroundMutedStrong: '#505B65',
   /** Cinza de fundo com texto branco. */
-  neutralFill: '#6B7784',
+  neutralFill: '#64707D',
   sidebar: fipsPalette.azulProfundo,
   sidebarMuted: fipsPalette.azulProfundoDark,
 } as const
@@ -73,6 +78,11 @@ export const darkSemanticColors = {
   dangerText: '#FCA5A5',
   /** Verde de fundo com texto branco. 4,56:1. */
   successFill: '#008842',
+  /** Laranja e verde de texto pequeno. 7,50:1 e 12:1 sobre o cartão. */
+  accentText: '#F6921E',
+  successText: '#8BE5AD',
+  /** Mistura de foregroundMuted com foreground no escuro. */
+  foregroundMutedStrong: '#BBC0C6',
   /** Cinza de fundo com texto branco. */
   neutralFill: '#5B6470',
   primary: '#93BDE4',
@@ -98,3 +108,32 @@ export const darkSemanticColors = {
   badgeDangerBg: 'rgba(239,68,68,0.14)',
   badgeInfoBg: 'rgba(147,189,228,0.14)',
 } as const
+
+/**
+ * Paleta da casca do app (AppHeader, AppSidebar, UserChip, TutorialOverlay): degradês neumórficos do
+ * Gestão OPA. Espelha `--color-fips-yellow-300/500/800`, `--color-fips-azulejo-*`, `--color-fips-grafite-*`
+ * e `--color-fips-prata-*` do `@theme` em `src/styles/globals.css`.
+ */
+export const fipsShellPalette = {
+  ambar300: '#FFD37B',
+  ambar500: '#F7AD45',
+  ambar800: '#CF730D',
+  azulejo400: '#0E4D8A',
+  azulejo600: '#0A3A6E',
+  azulejo800: '#072D58',
+  azulejoBorda: '#1A3D6E',
+  azulejoFundo: '#001F4D',
+  grafite300: '#3F3F46',
+  grafite400: '#303036',
+  grafite500: '#232328',
+  grafite600: '#222226',
+  grafite700: '#1C1C20',
+  grafite800: '#1A1A1E',
+  grafite900: '#151518',
+  prata25: '#FAFAFA',
+  prata50: '#F0F0F2',
+  prata100: '#EBEBEB',
+  prata150: '#E8E8EC',
+  prata200: '#E0E0E0',
+} as const
+
