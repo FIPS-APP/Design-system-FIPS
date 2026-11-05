@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.9',
+    date: '2026-10-27',
+    title: 'Publicação no GitHub Packages a cada bump de versão na main',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`publish.yml` publica no GitHub Packages a cada bump de `package.json#version` na `main`, sem passo manual. O workflow compara a versão com a do commit anterior: mudou e não está no registro, publica (`npm ci`, `npm test`, `npm run build`, `npm publish`) e cria a tag `vX.Y.Z` no commit; não mudou e a versão já está no registro, termina verde sem publicar; não mudou mas a versão não está no registro (o run do bump falhou ou foi cancelado), publica; mudou para uma versão que já existe no registro, falha com a versão na mensagem. Tag `vX.Y.Z` empurrada à mão continua valendo e não publica de novo uma versão já publicada. Permissões mínimas, só com o `GITHUB_TOKEN` do próprio workflow e sem segredo novo: `packages: write` no job que publica, com o token apenas nos passos que falam com o registro; `contents: write` só no job que cria a tag, que pula se a tag já existe.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'A regra de decisão fica em `scripts/publicar-decisao.mjs`, fora do YAML, e `npm run test:publicar` cobre treze casos (bump, versão igual já publicada e não publicada, versão repetida, commit anterior desconhecido, tag à mão antes e depois da publicação, tag que não bate, saída do script para push na main e para tag, e a consulta ao registro: versão existente, E404, resposta vazia sem erro e falha de rede ou permissão). A consulta fica em `scripts/registro-versao.sh`: só a resposta E404 conta como versão fora do registro; qualquer outro erro do `npm view` (rede, 401, 403) falha o passo com a mensagem do npm, em vez de tentar publicar. README, seção Versionamento: bump na `main` é publicação.',
+      },
+    ],
+  },
+  {
     version: '0.21.0',
     date: '2026-11-03',
     title: 'Input: estado pendente para obrigatório ainda vazio',
