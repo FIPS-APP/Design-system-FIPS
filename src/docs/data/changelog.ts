@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.20.27',
+    date: '2026-10-26',
+    title: 'Regra da skill: um título por seção na listagem',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Regra escrita na skill (`patterns.md`, Data Listing e Header do card da tabela): um título por seção na listagem. O header do card da tabela (tile, título, "N registros" e ações) é o título da seção. Título ou contagem repetidos acima do card (cabeçalho de guia, `PageHeader` de seção, `h2` solto) estão fora do padrão, e as ações da listagem vão no slot do header do card. Só documentação: nenhum componente muda.',
+      },
+    ],
+  },
+  {
     version: '0.20.26',
     date: '2026-10-24',
     title: 'Borda de campo e de controle do tema claro passa de 3:1',
