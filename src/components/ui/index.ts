@@ -1,7 +1,8 @@
 export { badgeVariants, type BadgeVariantProps } from './badge-variants'
 export { buttonVariants, type ButtonVariantProps } from './button-variants'
 export { Badge, type BadgeProps } from './badge'
-export { Button, type ButtonProps } from './button'
+export { Button, type ButtonProps, type IconButtonName } from './button'
+export type { AccessibleName } from './accessible-name'
 export {
   AdminTableColumnMenu,
   AdminTableCompanyCell,
@@ -66,6 +67,7 @@ export {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
+  type InputGroupButtonProps,
   InputGroupText,
   InputGroupInput,
   InputGroupTextarea,
@@ -81,4 +83,4 @@ export {
   TooltipProvider,
   TooltipTrigger,
 } from './tooltip'
-export { Switch } from './switch'
+export { Switch, type SwitchProps, type SwitchName } from './switch'

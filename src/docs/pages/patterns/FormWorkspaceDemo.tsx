@@ -186,7 +186,7 @@ function WorkspaceProgress({ value }: { value: number }) {
             <Zap className="h-4.5 w-4.5 text-[var(--color-primary)]" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-[var(--color-fg)]">Progresso do formulário</p>
+            <p id="form-workspace-progresso" className="text-sm font-semibold text-[var(--color-fg)]">Progresso do formulário</p>
             <p className="text-xs text-[var(--color-fg-muted)]">
               {value < 100 ? 'Preencha todos os campos obrigatórios' : 'Formulário completo'}
             </p>
@@ -199,7 +199,7 @@ function WorkspaceProgress({ value }: { value: number }) {
       </div>
 
       <div className="relative">
-        <Progress value={value} />
+        <Progress value={value} aria-labelledby="form-workspace-progresso" />
         <div className="mt-3 flex justify-between">
           {segments.map((seg) => (
             <div key={seg.label} className="flex flex-col items-center gap-1.5">
@@ -814,7 +814,7 @@ function FormWorkspacePage() {
           </h2>
         </div>
         <CardContent>
-          <Progress value={82} />
+          <Progress value={82} aria-label="Progresso do formulário" />
         </CardContent>
       </Card>
 
