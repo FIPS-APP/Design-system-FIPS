@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { ChevronDown, Search, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { rolarOpcaoParaVista } from '../../lib/rolar-para-vista'
 
 /** A partir de quantas opções o dropdown ganha busca (rolar dezenas de itens não escala). */
 const BUSCA_MIN_OPCOES = 10
@@ -92,7 +93,7 @@ export function ChipSelect({ icon: Icon, fieldLabel, value, onChange, options, a
   }, [open])
   // Opção realçada pelo teclado fica visível dentro da lista rolável.
   useEffect(() => {
-    if (open && teclado && hi >= 0) document.getElementById(optId(hi))?.scrollIntoView({ block: 'nearest' })
+    if (open && teclado && hi >= 0) rolarOpcaoParaVista(optId(hi))
   }, [open, teclado, hi, optId])
 
   const comBusca = searchable ?? options.length >= BUSCA_MIN_OPCOES
