@@ -96,12 +96,7 @@ export function DocHeaderStandardPreview({
             type="button"
             variant="secondary"
             size="icon"
-            className={cn(
-              'lg:hidden',
-              dark
-                ? 'border border-[#3F3F46] bg-[#27272A] text-[#E2E2E8] hover:bg-[#323236]'
-                : 'border border-black/[0.10] bg-white/90 text-neutral-800 hover:bg-white',
-            )}
+            className="lg:hidden"
             aria-label="Abrir menu (demo)"
             tabIndex={0}
           >

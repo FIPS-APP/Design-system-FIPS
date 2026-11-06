@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.12',
+    date: '2026-10-27',
+    title: 'CI em pull request e lint sem erro',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`.github/workflows/ci.yml` roda em todo pull request contra a `main` e em todo push na `main`, com passos separados: lint, typecheck do site (`tsc -b`), testes (`npm test`, que roda contraste, hero, xlsx e hooks), build da biblioteca e build do site. O erro aponta o passo que falhou.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Dos 18 efeitos acusados, 13 viram valor derivado ou hook (`useIsClient`, `useResetOnChange` e `useSyncedState`, novos) e 5 ficam com `eslint-disable-next-line` e o motivo escrito: `TutorialContextual.tsx`, `DocHeaderSectionNav.tsx`, `DialogDoc.tsx` (2) e `DrawerDoc.tsx`. `react-refresh/only-export-components` fica desligada só em `src/components/`, onde o arquivo do componente exporta também API pública do pacote. `governance/no-visual-overrides` segue ativa em tudo que cobria. Os botões de menu móvel do site e a demonstração do modal de formulário deixam de sobrescrever raio, altura e cor e usam o visual padrão do componente.',
+      },
+    ],
+  },
+  {
     version: '0.21.0',
     date: '2026-11-03',
     title: 'Input: estado pendente para obrigatório ainda vazio',
