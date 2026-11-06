@@ -24,7 +24,7 @@ export function SettingsPreferenceRow({
       className={cn(
         'flex items-center justify-between gap-4 rounded-[10px_10px_10px_18px] border px-3 py-3 transition-colors',
         variant === 'info'
-          ? 'border-[var(--color-fips-blue-400)]/35 bg-[var(--color-semantic-info-bg)] hover:bg-[color-mix(in_srgb,var(--color-semantic-info-bg)_85%,var(--color-fips-blue-200))]'
+          ? 'border-[var(--color-fips-blue-400)]/35 bg-[var(--color-semantic-info-bg)] hover:border-[var(--color-fips-blue-400)]'
           : 'border-transparent bg-[var(--color-surface-soft)] hover:bg-[var(--color-surface-muted)]',
       )}
     >
