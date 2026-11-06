@@ -143,7 +143,7 @@ const TableHead = React.forwardRef<
         'px-4 text-center align-middle text-[var(--color-fg)]',
         density === 'compact' ? 'py-2' : density === 'normal' ? 'py-2.5' : 'h-14',
         dense
-          ? 'text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]'
+          ? 'text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-saira)]'
           : 'text-sm font-semibold',
         className,
       )}

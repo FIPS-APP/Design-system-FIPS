@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { ChevronDown, Check } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { useListaNaTela } from '../../lib/use-lista-na-tela'
 import type { FieldDensity } from './field'
 
 export type SelectOption = {
@@ -71,6 +72,9 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const [internal, setInternal] = useState(defaultValue ?? '')
     const val = controlledValue !== undefined ? controlledValue : internal
     const wrapRef = useRef<HTMLDivElement>(null)
+    const listaRef = useRef<HTMLDivElement>(null)
+    // A lista vira para cima, encurta ou desloca para caber na tela e no corpo rolável do Modal/Drawer.
+    const lado = useListaNaTela(open && !disabled, wrapRef, listaRef)
     const [hi, setHi] = useState(-1)
     // O realce veio do teclado: só então ele rola a lista e ganha o indicador de teclado.
     // Clique para abrir e hover do mouse não rolam nada.
@@ -212,7 +216,8 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             'flex w-full items-center gap-2 rounded-lg border border-[var(--color-border-control)] bg-[var(--color-surface)] text-left text-[var(--color-fg)] transition-colors hover:border-[var(--color-fg-muted)] focus-visible:border-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-fg-muted)] disabled:opacity-70 dark:focus-visible:border-[#93BDE4] dark:focus-visible:ring-[#93BDE4]/25',
             isCompact ? 'h-8 px-2.5 text-[13px]' : 'h-12 px-4 text-[1.08rem]',
             leftIcon && (isCompact ? 'pl-8' : 'pl-11'),
-            open && 'rounded-b-none border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/25 dark:border-[#93BDE4] dark:ring-[#93BDE4]/25',
+            open && (lado === 'cima' ? 'rounded-t-none' : 'rounded-b-none'),
+            open && 'border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/25 dark:border-[#93BDE4] dark:ring-[#93BDE4]/25',
             isInvalid && 'border-[var(--color-danger)] focus-visible:ring-[var(--color-danger)]/25',
           )}
         >
@@ -246,13 +251,15 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         {/* Dropdown */}
         {open && !disabled ? (
           <div
+            ref={listaRef}
             id={listId}
             role="listbox"
             aria-label={props['aria-label']}
             // Clique numa opção não tira o foco do gatilho.
             onMouseDown={(e) => e.preventDefault()}
             className={cn(
-              'absolute left-0 right-0 top-full z-20 max-h-[200px] overflow-y-auto rounded-b-lg border border-t-0 border-[var(--color-primary)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] dark:border-[#93BDE4]',
+              'absolute left-0 right-0 top-full z-20 max-h-[200px] overflow-y-auto border border-[var(--color-primary)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] dark:border-[#93BDE4]',
+              lado === 'cima' ? 'rounded-t-lg border-b-0' : 'rounded-b-lg border-t-0',
             )}
           >
             {options.map((o, i) => {

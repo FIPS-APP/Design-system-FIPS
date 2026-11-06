@@ -28,9 +28,14 @@ const DialogDoc = lazy(() => import('./docs/pages/components/DialogDoc'))
 const DrawerDoc = lazy(() => import('./docs/pages/components/DrawerDoc'))
 const HeaderDoc = lazy(() => import('./docs/pages/components/HeaderDoc'))
 const AbasDeSecaoDoc = lazy(() => import('./docs/pages/components/AbasDeSecaoDoc'))
+const TabelaExpansivelDoc = lazy(() => import('./docs/pages/components/TabelaExpansivelDoc'))
 const SidebarDoc = lazy(() => import('./docs/pages/components/SidebarDoc'))
 const ToastDoc = lazy(() => import('./docs/pages/components/ToastDoc'))
 const TooltipDoc = lazy(() => import('./docs/pages/components/TooltipDoc'))
+const FormularioExecucaoDoc = lazy(() => import('./docs/pages/components/FormularioExecucaoDoc'))
+const GraficosDoc = lazy(() => import('./docs/pages/components/GraficosDoc'))
+const DocumentoDoc = lazy(() => import('./docs/pages/components/DocumentoDoc'))
+const ListagemApoioDoc = lazy(() => import('./docs/pages/components/ListagemApoioDoc'))
 const CircularCommandMenuDoc = lazy(() => import('./docs/pages/components/CircularCommandMenuDoc'))
 const BrandLoaderDoc = lazy(() => import('./docs/pages/motion/BrandLoaderDoc'))
 const ApplicationShellDemo = lazy(() => import('./docs/pages/patterns/ApplicationShellDemo'))
@@ -41,7 +46,11 @@ const ModalWorkflowDemo = lazy(() => import('./docs/pages/patterns/ModalWorkflow
 const HeroHeaderDoc = lazy(() => import('./docs/pages/patterns/HeroHeaderDoc'))
 const HeroBannerDoc = lazy(() => import('./docs/pages/patterns/HeroBannerDoc'))
 const ConfiguracoesDemo = lazy(() => import('./docs/pages/patterns/ConfiguracoesDemo'))
+const ExecucaoInspecaoDemo = lazy(() => import('./docs/pages/patterns/ExecucaoInspecaoDemo'))
+const CascaDemo = lazy(() => import('./docs/pages/patterns/CascaDemo'))
+const AppShellDoc = lazy(() => import('./docs/pages/components/AppShellDoc'))
 const FiltroDemo = lazy(() => import('./docs/pages/patterns/FiltroDemo'))
+const HomePadraoDemo = lazy(() => import('./docs/pages/patterns/HomePadraoDemo'))
 const LoginClaudeLab = lazy(() => import('./docs/pages/LoginClaudeLab'))
 function RouteFallback() {
   return (
@@ -60,6 +69,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Navigate to="/docs/home" replace />} />
       <Route path="/login-claude-lab" element={renderLazyRoute(<LoginClaudeLab />)} />
+      <Route path="/demo/casca/*" element={renderLazyRoute(<CascaDemo />)} />
       <Route path="/docs" element={<DocLayout />}>
         <Route index element={renderLazyRoute(<OverviewPage />)} />
         <Route path="home" element={renderLazyRoute(<HomePage />)} />
@@ -85,9 +95,15 @@ export default function App() {
         <Route path="components/drawer" element={renderLazyRoute(<DrawerDoc />)} />
         <Route path="components/header" element={renderLazyRoute(<HeaderDoc />)} />
         <Route path="components/abas-de-secao" element={renderLazyRoute(<AbasDeSecaoDoc />)} />
+        <Route path="components/tabela-expansivel" element={renderLazyRoute(<TabelaExpansivelDoc />)} />
         <Route path="components/sidebar" element={renderLazyRoute(<SidebarDoc />)} />
+        <Route path="components/casca-do-app" element={renderLazyRoute(<AppShellDoc />)} />
         <Route path="components/toast" element={renderLazyRoute(<ToastDoc />)} />
         <Route path="components/tooltip" element={renderLazyRoute(<TooltipDoc />)} />
+        <Route path="components/formulario-execucao" element={renderLazyRoute(<FormularioExecucaoDoc />)} />
+        <Route path="components/graficos" element={renderLazyRoute(<GraficosDoc />)} />
+        <Route path="components/documento" element={renderLazyRoute(<DocumentoDoc />)} />
+        <Route path="components/listagem-apoio" element={renderLazyRoute(<ListagemApoioDoc />)} />
         <Route path="components/circular-command-menu" element={renderLazyRoute(<CircularCommandMenuDoc />)} />
         <Route
           path="components/app-fips-header-logo"
@@ -113,7 +129,9 @@ export default function App() {
         <Route path="patterns/application-shell" element={renderLazyRoute(<ApplicationShellDemo />)} />
         <Route path="patterns/dashboard" element={renderLazyRoute(<DashboardDemo />)} />
         <Route path="patterns/data-listing" element={renderLazyRoute(<DataListingDemo />)} />
+        <Route path="patterns/execucao-inspecao" element={renderLazyRoute(<ExecucaoInspecaoDemo />)} />
         <Route path="patterns/filtro" element={renderLazyRoute(<FiltroDemo />)} />
+        <Route path="patterns/home-padrao" element={renderLazyRoute(<HomePadraoDemo />)} />
         <Route path="patterns/form-workspace" element={renderLazyRoute(<FormWorkspaceDemo />)} />
         <Route path="patterns/opa-gestao-ui" element={<Navigate to="/docs/components/header#header-app-fips-logo" replace />} />
         <Route path="patterns/modal-workflow" element={renderLazyRoute(<ModalWorkflowDemo />)} />

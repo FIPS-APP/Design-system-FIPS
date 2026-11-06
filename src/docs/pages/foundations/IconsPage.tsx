@@ -155,7 +155,7 @@ export default function DSFIPSIconography(){
                             </div>
                             <div>
                               <div style={{fontSize:14,fontWeight:700,fontFamily:"'Saira Expanded', sans-serif",color:"#333B41"}}>{ic.label}</div>
-                              <code style={{fontSize:11,fontFamily:"'Fira Code', monospace",color:"#6B7784"}}>{importName}</code>
+                              <code style={{fontSize:11,fontFamily:"'Fira Code', monospace",color:"#66727F"}}>{importName}</code>
                             </div>
                           </div>
                         }

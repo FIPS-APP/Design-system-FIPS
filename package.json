@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -32,7 +32,10 @@
     "build:downloads": "bash scripts/build-ai-downloads.sh",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs",
+    "test:listagens": "node --test scripts/listagens.test.mjs",
+    "test:casca": "node --test scripts/app-shell.test.mjs",
+    "test:rodada3": "node --test scripts/rodada3.test.mjs",
+    "test": "node --test scripts/*.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {
@@ -76,5 +79,8 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.1"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

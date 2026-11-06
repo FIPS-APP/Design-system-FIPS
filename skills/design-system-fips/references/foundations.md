@@ -48,7 +48,7 @@ export const semanticColors = {
   primaryText: '#004B9B',
   dangerText: '#B91C1C',
   successFill: '#00904C',
-  neutralFill: '#6B7784',
+  neutralFill: '#64707D',
   surface: '#FFFFFF',
   surfaceMuted: '#E8EBFF',
   border: '#C0CCD2',
@@ -82,13 +82,16 @@ Fonte: `src/styles/globals.css` (`@layer base`)
   --color-border: #d7e0ea;
   --color-border-strong: var(--color-fips-gray-400);
   --color-fg: var(--color-fips-gray-900);
-  --color-fg-muted: #6b7784;
+  --color-fg-muted: #64707d;
   --color-border-control: #808d9a;
   --color-primary-text: var(--color-primary);
   --color-primary-hover-text: var(--color-primary-hover);
   --color-danger-text: var(--color-danger-strong);
   --color-success-fill: var(--color-fips-green-700);
   --color-neutral-fill: var(--color-fg-muted);
+  --color-accent-text: #9a4a00;
+  --color-success-text: #007a40;
+  --color-fg-muted-strong: color-mix(in srgb, var(--color-fg-muted) 60%, var(--color-fg));
   --color-ring: var(--color-fips-sky-600);
   --color-switch-on: var(--color-primary);
   --color-switch-off: var(--color-fg-muted);
@@ -111,7 +114,9 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-border-strong` | gray-400 | `#3a3a3a` |
 | `--color-border-control` (campo) | `#808d9a` (3,39:1 sobre branco) | `#666666` (3,03:1 sobre o cartão) |
 | `--color-fg` | gray-900 | `#e8e8e8` |
-| `--color-fg-muted` | `#6b7784` | `#9ca3af` |
+| `--color-fg-muted` (texto secundário) | `#64707d` (5,05:1 sobre branco, 4,74:1 sobre a página) | `#9ca3af` (6,04:1 sobre a página) |
+| `--color-excel` (ícone de exportar Excel) | `#1d6f42` | `#3fa872` |
+| `--color-fips-blue-100` (trilho do escopo, avatar claro) | `#e9f2fb` | `#172b47` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |
 | `--color-primary-hover-text` (azul escuro de texto) | `--color-primary-hover` (`#002a68`, 13,72:1) | `#93bde4` (8,82:1) |
 | `--color-danger-strong` (vermelho de texto pequeno) | red-700 `#b91c1c` | red-300 `#fca5a5` |
@@ -119,6 +124,9 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-success-strong` (**cor de texto**) | green-700 | `#8be5ad` |
 | `--color-success-fill` (fundo cheio com texto branco) | green-700 | `#008842` (4,56:1) |
 | `--color-neutral-fill` (cinza cheio com texto branco) | `--color-fg-muted` | `#5b6470` |
+| `--color-accent-text` (laranja de texto pequeno: sobretítulo, número de passo, selo) | `#9a4a00` (6,26:1 sobre branco, 5,6:1 sobre o tom suave) | `--color-accent-strong` (`#f6921e`, 7,50:1 sobre o cartão) |
+| `--color-success-text` (verde de texto pequeno sobre o tom suave) | `#007a40` (4,78:1 sobre o tom suave) | `--color-success-strong` (`#8be5ad`) |
+| `--color-fg-muted-strong` (apoio sobre a página `#f5f8fc` e sobre o degradê azul suave; `--color-fg-muted` mede 4,61:1 ali desde a rodada 3) | 60% `--color-fg-muted` + 40% `--color-fg` (≥ 4,9:1) | a mesma mistura |
 | `--color-table-zebra` (opaca, sobre `--color-surface`) | blue-200 @25% sobre a superfície | branco @3% sobre a superfície |
 | `--color-ring` | sky-600 | yellow-600 |
 | `--color-switch-on` | `--color-primary` | blue-700 |
@@ -196,13 +204,7 @@ Fonte: `src/styles/globals.css`
 --shadow-float: 0 12px 36px rgb(15 23 42 / 0.12);
 ```
 
-**Atenção — `--shadow-card` é sobrescrito depois.** O bloco `@layer base :root` redefine, mais abaixo no mesmo arquivo, o valor que de fato vale em runtime:
-
-```css
---shadow-card: 0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03);
-```
-
-É essa sombra azulada e discreta (não a cinza do `@theme`) que aparece nos cards, na toolbar e no card da tabela. Ao replicar um card FIPS fora do repo, use este valor.
+**`--shadow-card` tem uma declaração só (0.21.0).** Até a 0.20.x o bloco `@layer base :root` redefinia o token com uma sombra azulada (`0 1px 3px rgba(0, 75, 155, 0.04), 0 4px 14px rgba(0, 75, 155, 0.03)`) e era ela que valia em runtime. Na 0.21.0 essa segunda declaração saiu: vale a neutra acima (`0 2px 8px #0f172a0a, 0 10px 24px #0f172a0f`), a mesma que o Gestão OPA e a Manutenção renderizam. Vale para todo consumidor do token (cards, toolbar, tabela, abas, botão de acento). Em app na 0.20.x ou anterior, a sombra azulada continua sendo a que aparece.
 
 Uso prático:
 
@@ -232,3 +234,9 @@ Fonte: `public/guias/guia-design-system-fips.md`
 - Testar em `768px`
 - Testar em `1280px`
 - Texto sobre azul institucional e dourado precisa manter contraste mínimo AA
+
+## Tokens da casca do app
+
+Paleta estática no `@theme` (e espelho em `src/tokens/colors.ts`): `--color-fips-yellow-300/500/800` (degradê âmbar do azulejo aceso; o 600 é o `--color-fips-yellow-600`), `--color-fips-azulejo-400/600/800`, `--color-fips-azulejo-borda`, `--color-fips-azulejo-fundo` (azulejo azul do menu e popover "Modo do menu"), `--color-fips-grafite-300` a `900` (azulejos, popover e cartão do tutorial no escuro), `--color-fips-prata-25/50/100/150/200` (azulejo e cartão no claro).
+
+Semânticos por tema (`:root` e `.dark`): `--shell-azulejo-{borda,fundo,sombra,icone}`, `--shell-azulejo-aceso-{borda,fundo,sombra,icone}`, `--shell-menu-{fundo,sombra,popover}`, `--shell-menu-azulejo-{borda,fundo,sombra}`, `--shell-cartao-{fundo,borda,sombra,seta}`. O fundo do menu no escuro é `--color-surface` (`#1a1a1a`).

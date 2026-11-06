@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { criarRetornoDoFoco } from '../../lib/foco-de-retorno'
 
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
@@ -32,11 +33,16 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 const DialogContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { showCloseButton?: boolean }
->(({ className, children, showCloseButton = true, ...props }, ref) => (
+>(({ className, children, showCloseButton = true, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
+  // O foco volta a quem abriu, mesmo quando o painel abre por estado e não por `DialogTrigger`.
+  const retorno = React.useMemo(() => criarRetornoDoFoco(), [])
+  return (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      onOpenAutoFocus={retorno.aoAbrir(onOpenAutoFocus)}
+      onCloseAutoFocus={retorno.aoFechar(onCloseAutoFocus)}
       className={cn(
         'fixed top-1/2 left-1/2 z-50 w-[calc(100vw-1rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 sm:w-[calc(100%-1.5rem)] sm:w-full',
         'max-h-[calc(100dvh-1rem)] sm:max-h-[90vh]',
@@ -81,7 +87,8 @@ const DialogContent = React.forwardRef<
       ) : null}
     </DialogPrimitive.Content>
   </DialogPortal>
-))
+  )
+})
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 /** Azulejo neu do cabeçalho — paridade Tecnopano DialogIconTile. */

@@ -1,5 +1,5 @@
 import { SlidersHorizontal, type LucideIcon } from 'lucide-react'
-import { Drawer, DrawerContent, DrawerHero } from '../ui/drawer'
+import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerHero } from '../ui/drawer'
 import { ChipSelect } from '../ui/chip-select'
 import { PillGroup } from './PillGroup'
 import { type PillOption } from './PillFilter'
@@ -25,6 +25,9 @@ export type FilterChip = {
   onChange: (v: string | null) => void
 }
 
+/** Texto de apoio sem filtro ativo. Neutro: o app passa o do próprio produto em `emptyDescription`. */
+export const TEXTO_PADRAO_DO_FILTRO = 'Refine os resultados pelos campos abaixo'
+
 /**
  * Drawer de filtros — hero institucional + pills + ChipSelect + rodapé fixo.
  * Use em toda listagem com botão "Filtros" (nunca popover ancorado).
@@ -38,7 +41,7 @@ export function FilterDrawer({
   activeCount,
   resultCount,
   onClear,
-  emptyDescription = 'Refine os OPAs pelos campos abaixo',
+  emptyDescription = TEXTO_PADRAO_DO_FILTRO,
 }: {
   open: boolean
   onOpenChange: (v: boolean) => void
@@ -65,7 +68,7 @@ export function FilterDrawer({
             activeCount > 0 ? `${activeCount} filtro(s) ativo(s)` : emptyDescription
           }
         />
-        <div className="flex-1 space-y-4 overflow-y-auto px-6 py-5">
+        <DrawerBody className="space-y-4 px-6 py-5">
           {groups.map((g) => (
             <PillGroup
               key={g.key}
@@ -89,8 +92,8 @@ export function FilterDrawer({
               ariaLabel={c.label}
             />
           ))}
-        </div>
-        <div className="flex shrink-0 gap-2 border-t border-[var(--color-border)] bg-[var(--color-surface-muted)]/70 px-6 py-4">
+        </DrawerBody>
+        <DrawerFooter className="bg-[var(--color-surface-muted)]/70 px-6 py-4">
           <button
             type="button"
             onClick={onClear}
@@ -106,7 +109,7 @@ export function FilterDrawer({
           >
             Ver {resultCount} resultado{resultCount === 1 ? '' : 's'}
           </button>
-        </div>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )
