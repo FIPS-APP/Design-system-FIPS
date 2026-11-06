@@ -298,7 +298,7 @@ export function ExportPreviewModal<T extends Record<string, unknown>>({
                 <ModalIcon className="h-5 w-5 text-[var(--color-accent)]" aria-hidden />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="font-heading block text-[11px] font-semibold tracking-[0.14em] text-[var(--color-accent-strong)] uppercase">
+                <span className="font-heading block text-[11px] font-semibold tracking-[0.14em] text-[var(--color-accent)] uppercase">
                   Exportação
                 </span>
                 <DialogPrimitive.Title className="font-heading text-[17px] leading-tight font-bold text-white">
