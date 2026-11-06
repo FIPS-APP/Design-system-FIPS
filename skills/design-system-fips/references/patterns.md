@@ -249,12 +249,15 @@ Alinhado ao footer do `<Table>` (v0.11.22): faixa com fundo `--color-surface-mut
 
 ### Cuidado — clipping do dropdown do Select
 
-O `Select` do DS abre a lista como `absolute top-full` (**sem portal**). Qualquer ancestral com `overflow-hidden`/`overflow-auto` (popover de filtros, `PageHero`/`PageHeader`, card de cantos arredondados) **corta a lista "pra dentro"** — bug já visto em 3 telas (Minha Área, Catálogo, Conformidade).
+**A partir da v0.21.2 o `Select` abre a lista num portal para o `body`** (`position: fixed`, `z-[70]`): `Modal`, `Drawer`, `PageHero`/`PageHeader`, card de canto arredondado e qualquer ancestral com `overflow-hidden`/`overflow-auto` deixaram de cortar a lista. Nesse caso não há o que contornar no consumidor.
+
+**Em versões anteriores (medido nas tags v0.5.0 a v0.20.26 e nos tarballs 0.12.3, 0.12.5 e 0.20.4)** o `Select` abre a lista como `absolute top-full` (**sem portal**). Qualquer ancestral com `overflow-hidden`/`overflow-auto` (popover de filtros, `PageHero`/`PageHeader`, card de cantos arredondados) **corta a lista "pra dentro"** — bug já visto em 3 telas (Minha Área, Catálogo, Conformidade). Dentro de `Modal` o corte é certo (o corpo é `overflow-y-auto` e o contêiner `overflow-hidden`):
 
 - não envolva um `Select` em container `overflow-hidden`
-- dropdowns ancorados da toolbar (Período, `ChipSelect`) usam `z-50` e **não** `overflow-hidden` — os cantos arredondados sobrevivem, nenhum filho preenche o canto. O card da toolbar do Data Listing é `overflow: visible` justamente por isso.
 - se o `Select` precisa morar dentro do `PageHero`/`PageHeader` (que é `overflow-hidden` pelo gradiente), mova-o para uma toolbar-card abaixo do hero
-- nunca corrija no `Select` do DS (é sincronizado) — corrija no consumidor
+- em `Modal`: até 4 opções, mostre todas como pílulas ou botões de escolha; ou ponha o campo primeiro no corpo, com pelo menos 200 px visíveis abaixo dele; ou suba o pacote para a v0.21.2 ou mais nova
+
+**`ChipSelect` e os dropdowns ancorados da toolbar (Período) seguem `absolute` em toda versão** (`z-50`, sem portal): não use `overflow-hidden` em volta deles. Os cantos arredondados sobrevivem porque nenhum filho preenche o canto; o card da toolbar do Data Listing é `overflow: visible` justamente por isso. Medido no `Modal` a 1440x900 (12 opções): 0 de 7 opções inteiras do `ChipSelect` ficam clicáveis.
 
 ### Tabela canônica
 
