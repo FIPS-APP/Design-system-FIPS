@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.15.2`
+## Versão atual: `v0.21.18`
 
 ## Favicon e ícones de app
 
@@ -92,6 +92,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Tipo de alteração | Incremento | Exemplo |
 |---|---|---|
+| 0.21.18 | 2026-10-22 | Sem `transition-all` nos componentes de `ui` e `composites` e animações com `prefers-reduced-motion` respeitado; o bloco global de movimento reduzido vale para todo app que importa o `styles.css` |
 | **Correção / patch** (bugfix, ajuste visual, refactor) | `+0.0.1` | 0.4.0 → 0.4.1 |
 | **Nova feature / tela** | `+0.1.0` | 0.4.0 → 0.5.0 |
 | **Breaking change** (mudança incompatível) | `+1.0.0` | 0.4.0 → 1.0.0 |
