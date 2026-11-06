@@ -240,4 +240,3 @@ Fonte: `public/guias/guia-design-system-fips.md`
 Paleta estática no `@theme` (e espelho em `src/tokens/colors.ts`): `--color-fips-yellow-300/500/800` (degradê âmbar do azulejo aceso; o 600 é o `--color-fips-yellow-600`), `--color-fips-azulejo-400/600/800`, `--color-fips-azulejo-borda`, `--color-fips-azulejo-fundo` (azulejo azul do menu e popover "Modo do menu"), `--color-fips-grafite-300` a `900` (azulejos, popover e cartão do tutorial no escuro), `--color-fips-prata-25/50/100/150/200` (azulejo e cartão no claro).
 
 Semânticos por tema (`:root` e `.dark`): `--shell-azulejo-{borda,fundo,sombra,icone}`, `--shell-azulejo-aceso-{borda,fundo,sombra,icone}`, `--shell-menu-{fundo,sombra,popover}`, `--shell-menu-azulejo-{borda,fundo,sombra}`, `--shell-cartao-{fundo,borda,sombra,seta}`. O fundo do menu no escuro é `--color-surface` (`#1a1a1a`).
-

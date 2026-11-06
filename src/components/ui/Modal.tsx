@@ -1,4 +1,4 @@
-import { Children, forwardRef, isValidElement, useCallback, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { Children, forwardRef, isValidElement, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { Maximize2, Minimize2, X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import {
@@ -99,8 +99,12 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
     }
     // Com a tela cheia ligada, o corpo traz para a vista a lista de um Select recém-aberta: o Select do
     // DS abre `absolute` dentro do corpo rolável e, perto da borda de baixo, a lista ficaria cortada.
-    const observarListas = useCallback((corpo: HTMLDivElement | null) => {
-      if (!corpo || !permiteTelaCheia) return
+    // useEffect + useRef: o retorno de cleanup de ref callback só roda no React 19; peer é >=18.
+    const corpoRef = useRef<HTMLDivElement | null>(null)
+    useEffect(() => {
+      if (!permiteTelaCheia || !open) return
+      const corpo = corpoRef.current
+      if (!corpo) return
       const observador = new MutationObserver((registros) => {
         for (const registro of registros) {
           const gatilho = registro.target as HTMLElement
@@ -111,7 +115,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       })
       observador.observe(corpo, { subtree: true, attributes: true, attributeFilter: ['aria-expanded'] })
       return () => observador.disconnect()
-    }, [permiteTelaCheia])
+    }, [permiteTelaCheia, open])
     const rotuloTelaCheia = telaCheia ? 'Restaurar' : 'Tela cheia'
     const IconeTelaCheia = telaCheia ? Minimize2 : Maximize2
     const childList = Children.toArray(children)
@@ -203,7 +207,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             </DialogHeader>
           ))}
           {body.length > 0 ? (
-            <div ref={observarListas} className={cn('flex-1 overflow-y-auto', noPadBody ? 'p-0' : 'px-6 py-5')}>{body}</div>
+            <div ref={corpoRef} className={cn('flex-1 overflow-y-auto', noPadBody ? 'p-0' : 'px-6 py-5')}>{body}</div>
           ) : null}
           {footers}
         </DialogContent>

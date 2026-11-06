@@ -406,4 +406,3 @@ export default function HomePadraoDemo() {
     </DocPage>
   )
 }
-
