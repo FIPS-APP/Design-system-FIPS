@@ -234,7 +234,8 @@
     /* Borda de campo e de controle: 3,39:1 sobre #ffffff, 3,32:1 sobre o cartão suave e 3,18:1 sobre a página. O divisor (--color-border) não muda. */
     --color-border-control: #808d9a;
     --color-fg: var(--color-fips-gray-900);
-    --color-fg-muted: #6b7784;
+    /* Texto secundário: 5,05:1 sobre branco, 4,96:1 sobre o cartão suave e 4,74:1 sobre a página. O #6b7784 dava 4,57:1, 4,48:1 e 4,29:1. */
+    --color-fg-muted: #64707d;
     --color-primary-text: var(--color-primary);
     /* Azul escuro de texto: igual ao hover do primary no claro (13,72:1 sobre branco). */
     --color-primary-hover-text: var(--color-primary-hover);

@@ -9,7 +9,7 @@ O `Switch.tsx` lê quatro tokens e não traz valor de reserva em `var()`. Sem el
 | Token | Claro | Escuro |
 |---|---|---|
 | `--color-switch-on` (trilho ligado) | `#004B9B` | `#658ec9` |
-| `--color-switch-off` (trilho desligado) | `#6b7784` | `#7a7a82` |
+| `--color-switch-off` (trilho desligado) | `#64707d` | `#7a7a82` |
 | `--color-surface` (recuo do anel, obrigatório) | `#ffffff` | `#1a1a1a` |
 | `--color-ring` (anel de foco, obrigatório) | `#0090d0` | `#f6921e` |
 
