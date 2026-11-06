@@ -47,7 +47,7 @@ export const semanticColors = {
   dangerText: '#B91C1C',
   /** Verde de fundo com texto branco. */
   successFill: fipsPalette.verdeFlorestaEscuro,
-  /** Laranja e verde de texto pequeno (sobretítulo, selo): 6,26:1 e 5,3:1 sobre branco. */
+  /** Laranja e verde de texto pequeno (sobretítulo, selo): 6,26:1 e 5,44:1 sobre branco. */
   accentText: '#9A4A00',
   successText: '#007A40',
   /** Mistura 60/40 de --color-fg-muted (#64707d) com --color-fg (#333B41), alinhada ao color-mix do CSS. */
@@ -136,4 +136,3 @@ export const fipsShellPalette = {
   prata150: '#E8E8EC',
   prata200: '#E0E0E0',
 } as const
-
