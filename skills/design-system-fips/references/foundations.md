@@ -27,6 +27,7 @@ Fonte: `src/tokens/colors.ts`
 | `verdeClaro` | `#8BE5AD` |
 | `verdeFloresta` | `#00C64C` |
 | `verdeFlorestaEscuro` | `#00904C` |
+| `verdeFlorestaProfundo` | `#006D35` |
 | `branco` | `#FFFFFF` |
 | `neutroClaro` | `#E8EBFF` |
 
