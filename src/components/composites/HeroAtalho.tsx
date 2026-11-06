@@ -61,6 +61,9 @@ export interface HeroAtalhoProps extends HeroAtalhoAtributos {
  * desenho. Quem abre é uma coluna de grade de `0fr` a `1fr`, porque largura
  * `auto` não tem transição. A caixa que corta não pode ter padding, senão o
  * botão fechado passa de 30px.
+ *
+ * O foco do teclado é um `outline` branco de 3px, não um `ring`: o atalho aberto leva
+ * `boxShadow` em `style`, que vence qualquer classe de sombra, e foco no teclado sempre abre o atalho.
  */
 const repousoInverse =
   'border-[1.5px] border-white/60 bg-white/[0.06] text-white'
@@ -109,7 +112,7 @@ export function HeroAtalho(props: HeroAtalhoProps) {
       if (!controlado) setFocado(false)
     },
     className: cn(
-      'relative inline-flex h-[30px] cursor-pointer items-center justify-center overflow-hidden rounded-md pl-[6.5px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-accent)]/40 active:scale-[0.97]',
+      'relative inline-flex h-[30px] cursor-pointer items-center justify-center overflow-hidden rounded-md pl-[6.5px] focus-visible:outline-solid focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-white active:scale-[0.97]',
       realcado ? 'border-[1.5px]' : variante === 'ouro' ? repousoOuro : repousoInverse,
     ),
     style,
