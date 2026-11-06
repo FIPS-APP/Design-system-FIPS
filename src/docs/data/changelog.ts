@@ -25,7 +25,7 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.20.19',
+    version: '0.21.17',
     date: '2026-10-23',
     title: 'Foco do teclado visível no atalho aberto do hero',
     entries: [
