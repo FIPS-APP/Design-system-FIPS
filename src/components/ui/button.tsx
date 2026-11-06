@@ -38,7 +38,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...props}
       >
-        {loading ? <LoaderCircle className="animate-spin" aria-hidden /> : null}
+        {loading ? <LoaderCircle className="animate-spin motion-reduce:animate-none" aria-hidden /> : null}
         {children}
       </button>
     )

@@ -67,7 +67,7 @@ const DialogContent = React.forwardRef<
       {showCloseButton ? (
         <DialogPrimitive.Close
           className={cn(
-            'absolute top-4 right-4 z-[30] flex h-7 w-7 items-center justify-center rounded-lg transition-all',
+            'absolute top-4 right-4 z-[30] flex h-7 w-7 items-center justify-center rounded-lg transition',
             'border border-black/[0.08] bg-black/[0.04] text-zinc-500',
             'hover:border-[color-mix(in_srgb,var(--color-primary)_35%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] hover:text-[var(--color-primary)]',
             'dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400',
