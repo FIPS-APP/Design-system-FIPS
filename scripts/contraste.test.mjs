@@ -481,6 +481,26 @@ for (const [t, objeto] of [['claro', 'semanticColors'], ['escuro', 'darkSemantic
   })
 }
 
+test('PageHeader: ponto do chip de contagem passa de 3:1 sobre o chip (6% de branco sobre o banner), nos dois temas', () => {
+  const fonte = ler('src/components/composites/PageHeader.tsx')
+  assert.match(fonte, /\?\? 'var\(--fips-banner-stat-dot\)'/, 'PageHeader.tsx: o ponto sem dotColor tem que usar --fips-banner-stat-dot')
+  const mistura = (a, b, t) => ({ r: a.r * (1 - t) + b.r * t, g: a.g * (1 - t) + b.g * t, b: a.b * (1 - t) + b.b * t })
+  // Fundos do banner: extremos do degradê de cada tema (o mais claro é o pior caso).
+  const fundos = {
+    claro: [token('--color-gov-gradient-from', 'claro'), token('--color-gov-gradient-to', 'claro'), cor('#001a4a', 'claro')],
+    escuro: ['#1e2a3a', '#162030', '#1a2840'].map((c) => cor(c, 'escuro')),
+  }
+  for (const t of TEMAS) {
+    const declarado = css.match(/--fips-banner-stat-dot:\s*([^;]+);/)
+    assert.ok(declarado, '--fips-banner-stat-dot não existe em globals.css')
+    const ponto = cor(declarado[1].trim(), t)
+    for (const fundo of fundos[t]) {
+      const r = contraste(ponto, mistura(fundo, BRANCO, 0.06))
+      assert.ok(r >= MINIMO, `${t}: ponto ${r.toFixed(2)}:1 < ${MINIMO}`)
+    }
+  }
+})
+
 test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CONTRASTE_RELATORIO }, () => {
   for (const t of TEMAS) {
     const linha = (rotulo, a, b) => console.log(`${t.padEnd(6)} ${rotulo.padEnd(30)} ${contraste(a, b).toFixed(2)}:1`)
