@@ -529,7 +529,7 @@ Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `on
 
 Fonte: `src/components/composites/AbasDeSecao.tsx`
 
-Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
+Sem `href` é `tablist`/`tab` (`aria-selected`, setas, Home, End; `idBase` + `propsDoPainel` ligam o `tabpanel`); com `href` é `nav` com `aria-current="page"`. Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
 
 ```tsx
 import { useState } from 'react'

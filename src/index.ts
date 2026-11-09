@@ -136,3 +136,4 @@ export {
   type AbasDeSecaoProps,
   type AbaDeSecao,
 } from './components/composites/AbasDeSecao'
+export { idDaAba, idPainelDeAba, propsDoPainel } from './components/composites/abasDeSecaoUtil'

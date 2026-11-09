@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.16`
+## Versão atual: `v0.22.1`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.22.1 | 2026-11-10 | `AbasDeSecao` segue o padrão de abas do WAI-ARIA quando troca conteúdo na mesma página: `tablist`, `tab`, `aria-selected`, `tabindex` móvel, setas, Home e End. `idBase` e `propsDoPainel` ligam aba e `tabpanel` (`aria-controls`). Com `href` segue `nav` com `aria-current="page"`. A 375px a faixa que rola esmaece a borda com mais abas |
 | 0.21.16 | 2026-11-10 | Anéis de foco de `UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o hex com transparência (`#2563EB` a 25% media 1,43:1 no claro e 1,26:1 no escuro; `#F6921E` de 28% a 40% media de 1,27:1 a 2,25:1). Passam a `--color-ring` cheio (claro) e `#F6921E` cheio (ramo escuro das seções). O anel do `DocHeaderNeuIconButton` nunca aparecia, porque o `boxShadow` em linha o cobria: passa a contorno `outline`. `npm test` confere |
 | 0.21.15 | 2026-11-10 | `SettingsPreferenceRow` variante `info`: o hover deixa de clarear o fundo da linha e passa a reforçar a borda (`--color-fips-blue-400` cheio). No escuro o trilho do `Switch` desligado contra a linha em hover vai de 2,05:1 a 3,09:1 (sobre o cartão). No claro o fundo de hover já era igual ao de repouso. `npm test` calcula o fundo de hover, inclusive `color-mix` |
 | 0.21.14 | 2026-11-10 | `HeroAtalho` e `HeroFileira`: o foco do teclado aparece no atalho aberto. O anel (`ring`) nunca chegava à tela porque o `boxShadow` em linha do atalho aberto o cobria; passa a contorno branco (`outline`) de 3px com recuo de 2px, 3:1 ou mais contra o fundo do `PageHero` nos dois temas. `npm test` confere a classe e o contraste |

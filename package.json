@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.21.16",
+  "version": "0.22.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -39,6 +39,7 @@
     "test:tema": "node --test scripts/tema.test.mjs",
     "test:hooks": "node --test scripts/hooks.test.mjs",
     "test:lint-governanca": "node --test scripts/lint-governanca.test.mjs",
+    "test:abas": "node --test scripts/abas-de-secao.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {
