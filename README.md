@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.13`
+## Versão atual: `v0.21.14`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.14 | 2026-11-10 | `HeroAtalho` e `HeroFileira`: o foco do teclado aparece no atalho aberto. O anel (`ring`) nunca chegava à tela porque o `boxShadow` em linha do atalho aberto o cobria; passa a contorno branco (`outline`) de 3px com recuo de 2px, 3:1 ou mais contra o fundo do `PageHero` nos dois temas. `npm test` confere a classe e o contraste |
 | 0.21.13 | 2026-11-10 | `--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão, o cartão suave e a página (legenda do `BrandLoader`, placeholder, texto secundário). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. O token do escuro não muda. `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham. `npm test` exige 4,5:1 nos dois temas |
 | 0.21.12 | 2026-11-10 | Regra nova `governance/no-literal-colors` acusa cor literal (hex de 3, 4, 6 e 8 dígitos, rgb, rgba, hsl, hsla) nos `.ts` e `.tsx` de `src/components/ui/` e `brand/`, com as 56 combinações de arquivo e cor (46 cores distintas) que ainda não têm token listadas por arquivo e com motivo em `COLOR_EXCEPTIONS`; `src/components/ui/` sai da exclusão de `governance/no-visual-overrides`. Nada muda na API do pacote nem na aparência. `npm run test:lint-governanca` |
 | 0.21.11 | 2026-11-10 | Workflow `ci.yml` em todo PR contra a `main`: lint, typecheck, testes (`npm test` roda contraste, hero, xlsx e hooks), build da lib e build do site. `npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Nada muda na API do pacote |
