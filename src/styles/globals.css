@@ -369,6 +369,8 @@
     --fips-banner-content-shadow: 0 4px 20px rgba(0, 42, 104, 0.12);
     --fips-banner-content-border-color: transparent;
     --fips-banner-junction-opacity: 0.12;
+    /* Ponto do chip de contagem do PageHeader: amarelo-400 mede 5,19:1 sobre o chip no claro e 8,01:1 no escuro. */
+    --fips-banner-stat-dot: var(--color-accent);
   }
 
   .dark {

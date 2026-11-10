@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.22',
+    date: '2026-11-10',
+    title: 'PageHeader: ponto do chip por token e chip com link',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O ponto de 6px do chip de contagem do `PageHeader` (sem `dotColor`) passa de `--color-accent-strong` (3,61:1 sobre o chip no claro) para o token `--fips-banner-stat-dot`, que vale `--color-accent` (amarelo-400): 5,19:1 no claro e 8,01:1 no escuro, medidos sobre o chip renderizado. O resto do chip não muda; `dotColor` continua mandando.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`PageHeaderStat` ganha `href` opcional: o chip vira um `<a>` com o mesmo visual, realce no hover e anel de foco em `--color-accent`. Sem `href` segue um `<span>`.',
+      },
+    ],
+  },
+  {
     version: '0.21.21',
     date: '2026-11-10',
     title: 'Badge warning legível no tema claro',
