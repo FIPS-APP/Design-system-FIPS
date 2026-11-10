@@ -1,6 +1,6 @@
 # Tokens — Design System FIPS
 
-> Gerado automaticamente a partir de `src/tokens/` em 2026-10-13. Não edite à mão — rode `npm run tokens:gen` para regenerar.
+> Gerado automaticamente a partir de `src/tokens/` em 2026-10-26. Não edite à mão — rode `npm run tokens:gen` para regenerar.
 
 ## Paleta oficial (Brandbook)
 
@@ -41,7 +41,7 @@
 | `border` | <span style="display:inline-block;width:80px;height:36px;background:#C0CCD2;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#C0CCD2</span> | `#C0CCD2` |
 | `foreground` | <span style="display:inline-block;width:80px;height:36px;background:#333B41;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#333B41</span> | `#333B41` |
 | `foregroundMuted` | <span style="display:inline-block;width:80px;height:36px;background:#4b5563;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#4b5563</span> | `#4b5563` |
-| `borderControl` | <span style="display:inline-block;width:80px;height:36px;background:#C0CCD2;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#C0CCD2</span> | `#C0CCD2` |
+| `borderControl` | <span style="display:inline-block;width:80px;height:36px;background:#808D9A;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#808D9A</span> | `#808D9A` |
 | `primaryText` | <span style="display:inline-block;width:80px;height:36px;background:#004B9B;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#004B9B</span> | `#004B9B` |
 | `dangerText` | <span style="display:inline-block;width:80px;height:36px;background:#B91C1C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#B91C1C</span> | `#B91C1C` |
 | `successFill` | <span style="display:inline-block;width:80px;height:36px;background:#00904C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00904C</span> | `#00904C` |
@@ -60,7 +60,7 @@
 | `borderStrong` | <span style="display:inline-block;width:80px;height:36px;background:#3a3a3a;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#3a3a3a</span> | `#3a3a3a` |
 | `foreground` | <span style="display:inline-block;width:80px;height:36px;background:#E8E8E8;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#E8E8E8</span> | `#E8E8E8` |
 | `foregroundMuted` | <span style="display:inline-block;width:80px;height:36px;background:#9CA3AF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#9CA3AF</span> | `#9CA3AF` |
-| `borderControl` | <span style="display:inline-block;width:80px;height:36px;background:#666666;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#666666</span> | `#666666` |
+| `borderControl` | <span style="display:inline-block;width:80px;height:36px;background:#727272;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#727272</span> | `#727272` |
 | `primaryText` | <span style="display:inline-block;width:80px;height:36px;background:#93BDE4;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#93BDE4</span> | `#93BDE4` |
 | `dangerText` | <span style="display:inline-block;width:80px;height:36px;background:#FCA5A5;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FCA5A5</span> | `#FCA5A5` |
 | `successFill` | <span style="display:inline-block;width:80px;height:36px;background:#008842;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#008842</span> | `#008842` |

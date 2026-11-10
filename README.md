@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.0`
+## Versão atual: `v0.21.1`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.1 | 2026-11-10 | Borda de campo no escuro: `--color-border-control` passa de `#666666` a `#727272`. Sobre o cartão suave (`#1f1f1f`) vai de 2,87:1 a 3,43:1 e sobre a página (`#252525`) de 2,67:1 a 3,19:1 (cartão: 3,03:1 a 3,62:1). A borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` fica mais clara no escuro em todo app que usa o pacote. O claro não muda no CSS, mas `semanticColors.borderControl` (TypeScript) passa de `#C0CCD2` a `#808D9A`, o valor do CSS desde a 0.20.16. `npm test` exige 3:1 nas três superfícies nos dois temas |
 | 0.21.0 | 2026-11-03 | `Input` ganha o estado `pending` (obrigatório ainda vazio): fio de 2px em `--color-semantic-atencao-fg` e fundo em `--color-semantic-atencao-bg`, nos dois temas. O erro vence (`aria-invalid`), e desabilitado/somente leitura não ficam pendentes. A página Input mostra o card "Pendente" com o selo "Em branco" ao lado |
 | 0.20.41 | 2026-10-29 | Modal curto com `hero` desligado, nos dois temas. A página Modal abre o cartão escuro em "Simples (escuro)": título, descrição, lista numerada e botão `primary`, sem selo e sem disco de ícone |
 | 0.20.40 | 2026-10-28 | `CircularCommandMenu`: o centro da órbita só é preso à janela a `radius + 22` (meia bolinha + 4 px), não mais `radius + 44`; perto da borda o × central volta a ficar sobre o gatilho |

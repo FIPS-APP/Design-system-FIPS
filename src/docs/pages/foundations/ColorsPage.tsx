@@ -150,7 +150,7 @@ export default function ColorsPage() {
                   { token: 'surface-soft', light: '#FBFDFF', dark: '#1F1F1F' },
                   { token: 'surface-muted', light: '#F5F8FC', dark: '#252525' },
                   { token: 'border', light: '#D7E0EA', dark: '#2E2E2E' },
-                  { token: 'border-control', light: '#808D9A', dark: '#666666' },
+                  { token: 'border-control', light: '#808D9A', dark: '#727272' },
                   { token: 'foreground', light: '#333B41', dark: '#E8E8E8' },
                   { token: 'fg-muted', light: '#6B7784', dark: '#9CA3AF' },
                   { token: 'primary-text', light: '#004B9B', dark: '#93BDE4' },
@@ -187,7 +187,7 @@ export default function ColorsPage() {
           </div>
           <p style={{ fontSize: 13, color: C.cinzaChumbo, margin: '12px 0 0', lineHeight: 1.55 }}>
             No escuro, <code>--color-border</code> (#2E2E2E) é divisor: 1,28:1 sobre o cartão #1A1A1A.
-            <code> --color-border-control</code> é a borda de campo, select, textarea e gatilho de campo: #666666 no escuro (3,03:1 sobre o mesmo cartão) e #808D9A no claro (3,39:1 sobre branco).
+            <code> --color-border-control</code> é a borda de campo, select, textarea e gatilho de campo: #727272 no escuro (3,62:1 sobre o cartão, 3,19:1 sobre a página) e #808D9A no claro (3,39:1 sobre branco).
             <code> --color-success-strong</code> (#8BE5AD) é cor de texto no escuro; fundo verde com texto branco usa
             <code> --color-success-fill</code> (#008842): 4,56:1.
             <code> --color-danger-strong</code> é o vermelho de texto pequeno: 6,47:1 sobre branco e 9,17:1 sobre o cartão escuro.
