@@ -287,6 +287,55 @@ TONS_DO_SELINHO.forEach((tom, i) => {
   })
 })
 
+// ─── Tabs: texto da aba ativa ──────────────────────────────────────────────
+// --color-primary não muda no .dark (#004b9b nos dois temas): a aba ativa ficava em 2,06:1 sobre o
+// cartão, menos legível que as inativas. O texto da aba ativa lê --color-primary-text.
+const TABS = 'src/components/ui/tabs.tsx'
+
+function trechoDeTabs(de, ate) {
+  const fonte = ler(TABS)
+  const inicio = fonte.indexOf(de)
+  assert.notEqual(inicio, -1, `${TABS}: ${de} não encontrado`)
+  return fonte.slice(inicio, fonte.indexOf(ate, inicio))
+}
+
+function tokenDeTabs(trecho, padrao, rotulo) {
+  const m = trecho.match(padrao)
+  assert.ok(m, `${TABS}: ${rotulo} não encontrado (${padrao})`)
+  return m[1]
+}
+
+const GATILHO_DE_TABS = trechoDeTabs('const TabsTrigger', 'TabsTrigger.displayName')
+const LISTA_DE_TABS = trechoDeTabs('const TabsList', 'TabsList.displayName')
+// Tem de haver uma só classe de texto para a aba ativa e sem variante na frente: uma segunda, como
+// `dark:data-[state=active]:text-[var(--color-primary)]`, desfaria a correção no escuro.
+test('Tabs: o gatilho tem uma só classe de texto para a aba ativa, sem variante dark: ou outra antes', () => {
+  const achadas = [...GATILHO_DE_TABS.matchAll(/[^\s'"`]*data-\[state=active\]:[^\s'"`]*text-\[var\([^)]*\)\]/g)].map((m) => m[0])
+  assert.equal(achadas.length, 1, `classes de texto da aba ativa em ${TABS}: ${achadas.join(' ')}`)
+  assert.match(achadas[0], /^data-\[state=active\]:text-/, `a classe de texto da aba ativa não pode ter variante antes: ${achadas[0]}`)
+})
+const TEXTO_ABA_ATIVA = tokenDeTabs(GATILHO_DE_TABS, /data-\[state=active\]:text-\[var\((--[\w-]+)\)\]/, 'texto da aba ativa')
+const FUNDO_ABA_ATIVA = tokenDeTabs(GATILHO_DE_TABS, /data-\[state=active\]:bg-\[var\((--[\w-]+)\)\]/, 'fundo da aba ativa')
+// A aba inativa não pinta texto: herda o da lista, que também dá o fundo dela.
+const TEXTO_ABA_INATIVA = tokenDeTabs(LISTA_DE_TABS, /(?<![:\w-])text-\[var\((--[\w-]+)\)\]/, 'texto herdado pela aba inativa')
+const FUNDO_DA_LISTA = tokenDeTabs(LISTA_DE_TABS, /(?<![:\w-])bg-\[var\((--[\w-]+)\)\]/, 'fundo da lista')
+
+for (const t of TEMAS) {
+  test(`Tabs, tema ${t}: texto da aba ativa contra o fundo dela`, () => {
+    verifica(`${TEXTO_ABA_ATIVA} contra ${FUNDO_ABA_ATIVA}`, token(TEXTO_ABA_ATIVA, t), token(FUNDO_ABA_ATIVA, t), MINIMO_TEXTO)
+  })
+
+  test(`Tabs, tema ${t}: a aba ativa é mais legível que a inativa`, () => {
+    const ativa = contraste(token(TEXTO_ABA_ATIVA, t), token(FUNDO_ABA_ATIVA, t))
+    const inativa = contraste(token(TEXTO_ABA_INATIVA, t), token(FUNDO_DA_LISTA, t))
+    assert.ok(ativa > inativa, `aba ativa ${ativa.toFixed(2)}:1 não passa a inativa ${inativa.toFixed(2)}:1 (${TEXTO_ABA_INATIVA} sobre ${FUNDO_DA_LISTA})`)
+  })
+}
+
+test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => {
+  assert.deepEqual(token(TEXTO_ABA_ATIVA, 'claro'), token('--color-primary', 'claro'))
+})
+
 // ─── Azul escuro de texto ──────────────────────────────────────────────────
 for (const t of TEMAS) {
   test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {

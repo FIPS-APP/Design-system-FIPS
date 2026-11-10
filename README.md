@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.8`
+## Versão atual: `v0.21.9`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.9 | 2026-11-10 | Texto da aba ativa do `Tabs` passa de `--color-primary` a `--color-primary-text`. No escuro `--color-primary` não muda (`#004b9b`): a aba ativa media 2,06:1 sobre o cartão `#1a1a1a`, menos legível que as inativas (6,04:1); agora é `#93bde4`, 8,82:1. O claro não muda (`#004b9b`, 8,47:1 sobre branco). `npm test` exige 4,5:1 e que a ativa seja mais legível que a inativa |
 | 0.21.8 | 2026-11-10 | Selinho de contagem da `Sidebar` no tema escuro (página do componente e demonstrações): passa da tinta de 14% a disco sólido nos quatro tons. O disco contra a barra `#1a1a1a` vai de 1,15 a 1,32:1 para 3,41 a 7,50:1; o número contra o disco fica em 4,53:1 ou mais; o anel contra o azulejo do ícone vai de 1,31 a 1,79:1 para 3,80 a 4,17:1. O tema claro não muda. `npm test` refaz as três contas nos quatro tons |
 | 0.21.7 | 2026-11-10 | Atalho `ouro` fechado do hero (`HeroAtalho` e `HeroFileira`) leva a borda de 1,5px, como o `inverseOutline`. Antes saía com borda 0 e 27px de largura, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px); agora mede 29px a 1x (30px a 2x), igual ao `inverseOutline`. A borda segue transparente: o desenho não muda. `npm run test:hero` confere a largura de borda dos quatro estados |
 | 0.21.6 | 2026-11-10 | `exports/switch/README.md` cita as linhas certas da `foundations.md`: `:92-94` no claro, `:107` e `:123-125` no escuro (estava `:89-91`, `:104` e `:118-120`, que caíam em outros tokens e numa linha em branco). `npm test` passa a conferir que as linhas citadas declaram `--color-ring`, `--color-switch-on`, `--color-switch-off` e `--color-surface` |
