@@ -24,14 +24,14 @@ function tabLinkClass(active: boolean, dark: boolean) {
     dark
       ? cn(
           active
-            ? 'font-semibold text-[#E2E2E8] focus-visible:ring-[#F6921E]/40'
-            : 'font-normal text-[#A1A1AA] hover:bg-white/[0.06] hover:text-[#D4D4D8] focus-visible:ring-[#F6921E]/30',
+            ? 'font-semibold text-[#E2E2E8] focus-visible:ring-[#F6921E]'
+            : 'font-normal text-[#A1A1AA] hover:bg-white/[0.06] hover:text-[#D4D4D8] focus-visible:ring-[#F6921E]',
           'focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]',
         )
       : cn(
           active
-            ? 'font-semibold text-[var(--color-fg)] focus-visible:ring-[#F6921E]/35'
-            : 'font-normal text-[var(--color-fg-muted)] hover:bg-[var(--color-primary)]/[0.04] hover:text-[var(--color-fg)] focus-visible:ring-[#F6921E]/28',
+            ? 'font-semibold text-[var(--color-fg)] focus-visible:ring-[var(--color-ring)]'
+            : 'font-normal text-[var(--color-fg-muted)] hover:bg-[var(--color-primary)]/[0.04] hover:text-[var(--color-fg)] focus-visible:ring-[var(--color-ring)]',
           'focus-visible:ring-offset-2 focus-visible:ring-offset-transparent',
         ),
   )
