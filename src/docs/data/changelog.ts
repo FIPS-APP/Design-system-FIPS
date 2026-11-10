@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.24',
+    date: '2026-11-10',
+    title: 'Radio, RadioGroup e Checkbox',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`RadioGroup` + `Radio` (escolha única, em lista ou em pílula com `variant="pill"`) e `Checkbox` (com `indeterminate`) saem no pacote, com tipos. Rótulo clicável, descrição e erro ligados por `aria-describedby`/`aria-invalid`, foco visível, desabilitado, claro e escuro, só com tokens. Setas no grupo de rádio pelo teclado nativo. Borda e marcação medidas a 3:1 ou mais nos dois temas por `npm test`. Página nova: /docs/components/radio-checkbox.',
+      },
+    ],
+  },
+  {
     version: '0.21.23',
     date: '2026-11-10',
     title: 'AbasDeSecao: padrão de abas do WAI-ARIA e fade de rolagem no celular',

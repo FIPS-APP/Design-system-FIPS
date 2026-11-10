@@ -535,6 +535,53 @@ test('PageHeader: ponto do chip de contagem passa de 3:1 sobre o chip (6% de bra
   }
 })
 
+// ─── Radio e Checkbox ──────────────────────────────────────────────────────
+const CHECKBOX = 'src/components/ui/choice-styles.ts'
+const RADIO = 'src/components/ui/radio.tsx'
+
+test('Radio e Checkbox: nenhuma cor fixa, só token', () => {
+  for (const arquivo of [CHECKBOX, 'src/components/ui/checkbox.tsx', RADIO]) {
+    const hex = ler(arquivo).match(/#[\da-f]{3,8}\b/gi)
+    assert.equal(hex, null, `hex em ${arquivo}: ${hex}`)
+  }
+})
+
+test('Radio e Checkbox: anel de foco cheio, recuo na cor do fundo, sem transparência', () => {
+  const caixa = ler(CHECKBOX)
+  assert.match(caixa, /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'caixa sem anel cheio')
+  assert.match(caixa, /focus-visible:ring-offset-\[var\(--color-surface\)\]/, 'caixa sem recuo na cor do fundo')
+  const pilula = ler(RADIO)
+  assert.match(pilula, /has-\[:focus-visible\]:ring-\[var\(--color-ring\)\](?!\/)/, 'pílula sem anel cheio')
+  assert.match(pilula, /has-\[:focus-visible\]:ring-offset-\[var\(--color-surface\)\]/, 'pílula sem recuo na cor do fundo')
+})
+
+for (const t of TEMAS) {
+  test(`Radio e Checkbox, tema ${t}: borda em repouso e caixa marcada contra cada fundo`, () => {
+    const borda = classe(CHECKBOX, /\bborder-2 border-\[var\((--[\w-]+)\)\]/)
+    const marcada = classe(CHECKBOX, /\bchecked:bg-\[var\((--[\w-]+)\)\]/)
+    // Escuro: só o cartão, como nos campos (a borda #666666 mede 2,87:1 sobre o cartão suave, #115).
+    for (const fundo of t === 'claro' ? FUNDOS : ['--color-surface']) {
+      verifica(`${borda} contra ${fundo}`, token(borda, t), token(fundo, t))
+      verifica(`${marcada} (caixa marcada) contra ${fundo}`, token(marcada, t), token(fundo, t))
+    }
+    verifica(`marca branca contra ${marcada}`, BRANCO, token(marcada, t))
+  })
+
+  test(`Radio e Checkbox, tema ${t}: erro (--color-danger) contra cada fundo e marca branca sobre ele`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-danger contra ${fundo}`, token('--color-danger', t), token(fundo, t))
+    verifica('marca branca contra --color-danger', BRANCO, token('--color-danger', t))
+  })
+
+  test(`Radio pílula, tema ${t}: texto branco sobre a pílula marcada (4,5:1) e borda da pílula em repouso`, () => {
+    const marcada = classe(RADIO, /has-\[:checked\]:bg-\[var\((--[\w-]+)\)\]/)
+    verifica(`texto branco contra ${marcada}`, BRANCO, token(marcada, t), MINIMO_TEXTO)
+    // Pílula marcada: o fundo é --color-primary (texto) e o contorno --color-switch-on, que separa a pílula do cartão.
+    for (const fundo of FUNDOS) verifica(`--color-switch-on (contorno) contra ${fundo}`, token('--color-switch-on', t), token(fundo, t))
+    for (const fundo of t === 'claro' ? FUNDOS : ['--color-surface']) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', t), token(fundo, t))
+    verifica('texto --color-fg contra --color-surface', token('--color-fg', t), token('--color-surface', t), MINIMO_TEXTO)
+  })
+}
+
 test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CONTRASTE_RELATORIO }, () => {
   for (const t of TEMAS) {
     const linha = (rotulo, a, b) => console.log(`${t.padEnd(6)} ${rotulo.padEnd(30)} ${contraste(a, b).toFixed(2)}:1`)
@@ -545,6 +592,10 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('botão / trilho ligado', BRANCO, token('--color-switch-on', t))
     linha('anel de foco / cartão', token('--color-ring', t), cartao)
     linha('anel de foco / faixa', token('--color-ring', t), token('--color-surface-muted', t))
+    linha('caixa/rádio marcado / cartão', token('--color-switch-on', t), cartao)
+    linha('marca branca / caixa marcada', BRANCO, token('--color-switch-on', t))
+    linha('borda do controle / cartão', token('--color-border-control', t), cartao)
+    linha('erro (danger) / cartão', token('--color-danger', t), cartao)
     linha('azul de texto / cartão', token('--color-primary-hover-text', t), cartao)
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }
