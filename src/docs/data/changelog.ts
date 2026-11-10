@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.23',
+    date: '2026-11-10',
+    title: 'AbasDeSecao: padrão de abas do WAI-ARIA e fade de rolagem no celular',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Sem `href`, `AbasDeSecao` deixa de sair como botões dentro de `nav` com `aria-current` e passa a `tablist` com `tab`, `aria-selected` e `tabindex` móvel. Setas, Home e End movem o foco e ativam a aba. Com `href` segue `nav` com links e `aria-current="page"`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Props e helpers novos, todos opcionais: `idBase` (a aba ganha `aria-controls`), `propsDoPainel(idBase, id)` (o painel vira `tabpanel` rotulado pela aba), `idDaAba` e `idPainelDeAba`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'A 375px, quando as abas não cabem, a borda com mais abas esmaece por 28px e o rótulo cortado deixa de parecer erro (`data-rolagem-esq` e `data-rolagem-dir`).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Consumidores que consultam `button` com `aria-current="true"` passam a consultar `tab` com `aria-selected="true"`. Quem usa `href` não muda.',
+      },
+    ],
+  },
+  {
     version: '0.21.22',
     date: '2026-11-10',
     title: 'PageHeader: ponto do chip por token e chip com link',

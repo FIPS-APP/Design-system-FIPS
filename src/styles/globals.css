@@ -64,6 +64,21 @@
     );
   }
 
+  /* Faixa de abas que rola: a borda com mais abas esmaece, para o rótulo cortado não
+     parecer erro. O atributo é posto por AbasDeSecao conforme a rolagem. */
+  .abas-secao-faixa[data-rolagem-esq] {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px);
+    mask-image: linear-gradient(to right, transparent 0, #000 28px);
+  }
+  .abas-secao-faixa[data-rolagem-dir] {
+    -webkit-mask-image: linear-gradient(to left, transparent 0, #000 28px);
+    mask-image: linear-gradient(to left, transparent 0, #000 28px);
+  }
+  .abas-secao-faixa[data-rolagem-esq][data-rolagem-dir] {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  }
+
   .btn-shimmer:hover {
     background-image: linear-gradient(
       110deg,
