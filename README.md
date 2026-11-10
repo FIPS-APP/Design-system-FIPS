@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.4`
+## Versão atual: `v0.21.5`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.5 | 2026-11-10 | `Select` abre a lista num portal para o `body` (`position: fixed` na coordenada do gatilho, `z-[70]`): `Modal`, `Drawer` e card com `overflow-hidden` deixam de cortá-la. A 1440x900, com 24 opções no fim do corpo do `Modal`, 0 de 4 opções inteiras ficavam clicáveis; agora são 4 de 4 e a roda alcança as 24. Sobe quando embaixo não cabe (o gatilho troca `rounded-b-none` por `rounded-t-none`), encolhe e rola quando falta espaço dos dois lados, acompanha a rolagem, a janela e o gatilho que muda de lugar sem rolar (confere a cada quadro com a lista aberta) e fecha quando o gatilho sai da vista. Props e `ref` iguais. Leva `data-lista-flutuante`. Teste de app acha as opções por `screen`, não por `within(container)`: elas estão no `body`. `npm test` roda a parte sem navegador; `npm run test:select` também mede num Chromium sem interface (playwright, ou playwright-core com `DS_CHROME`). `ChipSelect` segue `absolute` |
 | 0.21.4 | 2026-11-10 | `Select` e `ChipSelect` não lançam mais `scrollIntoView is not a function` onde o método não existe (jsdom, usado pelo vitest dos apps). A rolagem da opção realçada pelo teclado passa por `rolarOpcaoParaVista`, que usa `scrollIntoView?.()`: sem o método não há nada a fazer, no navegador a lista rola como antes. `npm run test:rolagem` cobre o auxiliar e a ligação dos dois componentes e também roda dentro de `npm test` |
 | 0.21.3 | 2026-11-10 | Regra escrita na skill (`patterns.md`, Data Listing e Header do card da tabela): **um título por seção**. O header do card da tabela já é o título da seção; título ou contagem repetidos acima do card (ex.: cabeçalho da guia + "Gestões cadastradas") estão fora do padrão. Só documentação, nenhum componente muda |
 | 0.21.2 | 2026-11-10 | Atalho aberto do hero (`HeroAtalho`, `HeroFileira`): o último ponto do degradê laranja de hover passa de `#cf730d` a `#dc8212`. O rótulo `#002A68` sobre o canto inferior direito vai de 3,99:1 a 4,73:1, e o degradê inteiro fica em 4,5:1 ou mais. A mesma constante pinta `UserChip` e `DocHeaderNeuIconButton` no hover. `npm test` amostra o degradê a cada 1% e confere que os três componentes usam a constante |
