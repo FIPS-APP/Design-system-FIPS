@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.10`
+## Versão atual: `v0.21.11`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.11 | 2026-11-10 | Workflow `ci.yml` em todo PR contra a `main`: lint, typecheck, testes (`npm test` roda contraste, hero, xlsx e hooks), build da lib e build do site. `npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Nada muda na API do pacote |
 | 0.21.10 | 2026-11-10 | `useFipsTheme` e o tipo `UseFipsThemeResult` saem em `src/index.ts`: `import { useFipsTheme } from '@fips-app/ds-fips'` devolve `{ dark, toggle, setDark }`, com a escolha em `localStorage` na chave `fips-theme` e a classe `.dark` aplicada ao importar. Export novo, nada removido (199 para 201 nomes em `dist/index.d.ts`). O hook não lança mais com o armazenamento bloqueado e o `toggle` lê o tema do momento do clique. `useDsTheme` sai, fundido em `useFipsTheme`. `npm run test:tema` |
 | 0.21.9 | 2026-11-10 | Texto da aba ativa do `Tabs` passa de `--color-primary` a `--color-primary-text`. No escuro `--color-primary` não muda (`#004b9b`): a aba ativa media 2,06:1 sobre o cartão `#1a1a1a`, menos legível que as inativas (6,04:1); agora é `#93bde4`, 8,82:1. O claro não muda (`#004b9b`, 8,47:1 sobre branco). `npm test` exige 4,5:1 e que a ativa seja mais legível que a inativa |
 | 0.21.8 | 2026-11-10 | Selinho de contagem da `Sidebar` no tema escuro (página do componente e demonstrações): passa da tinta de 14% a disco sólido nos quatro tons. O disco contra a barra `#1a1a1a` vai de 1,15 a 1,32:1 para 3,41 a 7,50:1; o número contra o disco fica em 4,53:1 ou mais; o anel contra o azulejo do ícone vai de 1,31 a 1,79:1 para 3,80 a 4,17:1. O tema claro não muda. `npm test` refaz as três contas nos quatro tons |

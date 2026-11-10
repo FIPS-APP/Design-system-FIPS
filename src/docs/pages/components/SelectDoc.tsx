@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useSyncedState } from '../../../hooks/useSyncedState'
 import { CodeExportSection } from '../../components/CodeExport'
 import { MapPin, Workflow } from 'lucide-react'
 import { FormSectionCard, FormSectionHeader } from '../../../components/composites/FormSectionCard'
@@ -152,7 +153,7 @@ function DSSelect({
   onChange?: (v: string) => void
 }) {
   const [open, setOpen] = useState(false)
-  const [val, setVal] = useState(cv ?? '')
+  const [val, setVal] = useSyncedState(cv, '')
   const [hi, setHi] = useState(-1)
   const ref = useRef<HTMLDivElement>(null)
   const sz = compact ? { h: 30, fs: 12 } : { h: 35, fs: 13 }
@@ -169,9 +170,6 @@ function DSSelect({
     document.addEventListener('mousedown', h)
     return () => document.removeEventListener('mousedown', h)
   }, [open])
-  useEffect(() => {
-    if (cv !== undefined) setVal(cv)
-  }, [cv])
 
   return (
     <div
@@ -787,11 +785,8 @@ function DSRadioGroup({
   value?: string
   onChange?: (v: string) => void
 }) {
-  const [val, setVal] = useState(cv ?? '')
+  const [val, setVal] = useSyncedState(cv, '')
   const fs = compact ? 12 : 13
-  useEffect(() => {
-    if (cv !== undefined) setVal(cv)
-  }, [cv])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? 6 : 8 }}>
@@ -880,15 +875,12 @@ function DSToggle({
   disabled?: boolean
   status?: boolean
 }) {
-  const [on, setOn] = useState(cv ?? false)
+  const [on, setOn] = useSyncedState(cv, false)
   const w = compact ? 36 : 42
   const h = compact ? 20 : 24
   const dot = compact ? 16 : 20
   const bgOn = status ? C.verdeFloresta : C.azulProfundo
   const bgOff = status ? C.danger : C.cinzaClaro
-  useEffect(() => {
-    if (cv !== undefined) setOn(cv)
-  }, [cv])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -1234,12 +1226,9 @@ function DSSegmented({
   value?: string
   onChange?: (v: string) => void
 }) {
-  const [val, setVal] = useState(cv ?? options[0] ?? '')
+  const [val, setVal] = useSyncedState(cv, options[0] ?? '')
   const fs = compact ? 11 : 12
   const h = compact ? 28 : 34
-  useEffect(() => {
-    if (cv !== undefined) setVal(cv)
-  }, [cv])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>

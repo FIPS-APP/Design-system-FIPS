@@ -93,6 +93,8 @@ function useSectionTabUnderline(activeIndex: number, remeasureKey?: unknown) {
   }, [activeIndex])
 
   useLayoutEffect(() => {
+    // Mede o DOM depois do layout: a posição do traço não existe na renderização.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     update()
     const nav = navRef.current
     window.addEventListener('resize', update)
