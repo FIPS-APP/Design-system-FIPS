@@ -250,7 +250,7 @@ const EXPORT_ROWS = Array.from({ length: 24 }, (_, i) => ({
 /* ═══════════════════════════════════════════ TELA CHEIA ═══════════════════════════════════════════ */
 /* Conteúdo longo de exemplo: formulário de ocorrência com cinco blocos. Só primitives do DS (claro e escuro).
    O último campo é um Select de propósito: a lista dele abre para baixo, dentro do corpo rolável do Modal. */
-function CampoDoc({ rotulo, children }) {
+function CampoDoc({ rotulo, children }: { rotulo: string; children: ReactNode }) {
   return (
     <Field density="compact">
       <FieldLabel>{rotulo}</FieldLabel>
@@ -258,7 +258,7 @@ function CampoDoc({ rotulo, children }) {
     </Field>
   );
 }
-function BlocoDoc({ titulo, children, colunas }) {
+function BlocoDoc({ titulo, children, colunas }: { titulo: string; children: ReactNode; colunas: string }) {
   return (
     <fieldset className="min-w-0 border-0 p-0">
       <legend className="mb-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-fg-muted)]">{titulo}</legend>
@@ -268,7 +268,7 @@ function BlocoDoc({ titulo, children, colunas }) {
 }
 function ConteudoLongoDoc({ cheia }: { cheia: boolean }) {
   const colunas = cheia ? "grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4" : "grid grid-cols-1 gap-3";
-  const op = (...v) => v.map((x) => ({ value: x, label: x }));
+  const op = (...v: string[]) => v.map((x) => ({ value: x, label: x }));
   return (
     <div className="space-y-5">
       <BlocoDoc titulo="Identificação" colunas={colunas}>
