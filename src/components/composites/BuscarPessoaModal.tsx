@@ -15,6 +15,15 @@ export type Pessoa = {
   qtd_lideranca?: number | null
 }
 
+export interface BuscarPessoaModalProps {
+  open: boolean
+  onOpenChange: (aberto: boolean) => void
+  onSelect: (pessoa: Pessoa) => void
+  people: Pessoa[]
+  title?: string
+  descricao?: ReactNode
+}
+
 /**
  * Modal "Buscar responsável" — anatomia portada VERBATIM do OPA-Gestão
  * (`OPA-GESTAO/src/composites/Modal.tsx`, tone `gov`), que herdou do NDM/QLP.
@@ -29,15 +38,6 @@ export type Pessoa = {
  * ordenando por nº de liderados. Aqui (catálogo offline, sem backend nem CS real)
  * a mesma regra roda no cliente sobre o array `people`.
  */
-export interface BuscarPessoaModalProps {
-  open: boolean
-  onOpenChange: (aberto: boolean) => void
-  onSelect: (pessoa: Pessoa) => void
-  people: Pessoa[]
-  title?: string
-  descricao?: ReactNode
-}
-
 export function BuscarPessoaModal({
   open,
   onOpenChange,
