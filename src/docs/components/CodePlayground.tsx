@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, createContext, useContext, type ReactNode } from 'react'
+import { useState, useCallback, createContext, useContext, type ReactNode } from 'react'
 
 /* ═══════════════════════════════════════════
    CodePlayground — Clique em qualquer elemento → copia código → preview ao lado
@@ -24,7 +24,7 @@ const Ctx = createContext<PlaygroundCtx>({
   send: () => {},
 })
 
-export function usePlayground() {
+function usePlayground() {
   return useContext(Ctx)
 }
 
@@ -111,15 +111,13 @@ export function Copyable({
 export function CodePlayground() {
   const { code, preview } = usePlayground()
   const [running, setRunning] = useState(false)
-  const prevCodeRef = useRef(code)
+  const [codeVisto, setCodeVisto] = useState(code)
 
-  // Auto-run quando um novo elemento é clicado
-  useEffect(() => {
-    if (code && code !== prevCodeRef.current) {
-      prevCodeRef.current = code
-      setRunning(true)
-    }
-  }, [code])
+  // Auto-run quando um novo elemento é clicado (ajuste durante a renderização, sem efeito)
+  if (code && code !== codeVisto) {
+    setCodeVisto(code)
+    setRunning(true)
+  }
 
   const displayCode = code
   const displayPreview = running ? preview : null

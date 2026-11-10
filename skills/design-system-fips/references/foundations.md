@@ -44,7 +44,7 @@ export const semanticColors = {
   success: '#00C64C',
   successStrong: '#00904C',
   dangerStrong: '#B91C1C',
-  borderControl: '#C0CCD2',
+  borderControl: '#808D9A',
   primaryText: '#004B9B',
   dangerText: '#B91C1C',
   successFill: '#00904C',
@@ -100,7 +100,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
 
 ### Dark mode — o que muda e o que **não** muda
 
-Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `localStorage` chave `fips-theme`). Os neutros seguem o Gestão OPA: cartão `#1a1a1a` sobre página `#252525`. O bloco `.dark` redefine a camada de superfície, a borda de campo e os papéis de texto e de fundo cheio:
+Dark é toggle da classe `.dark` no `<html>`. O pacote exporta o hook: `import { useFipsTheme } from '@fips-app/ds-fips'` devolve `{ dark, toggle, setDark }` (tipo `UseFipsThemeResult`), guarda a escolha em `localStorage` na chave `fips-theme` (`dark` ou `light`) e aplica a escolha guardada ao importar o pacote, antes de o React pintar. Fora do navegador devolve `dark: false` e não toca em `window`; com o armazenamento bloqueado alterna só na visita. Não copie o arquivo do hook para o app. Os neutros seguem o Gestão OPA: cartão `#1a1a1a` sobre página `#252525`. O bloco `.dark` redefine a camada de superfície, a borda de campo e os papéis de texto e de fundo cheio:
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `l
 | `--color-surface-muted` (página) | neutral-50 | `#252525` |
 | `--color-border` (divisor) | `#d7e0ea` | `#2e2e2e` |
 | `--color-border-strong` | gray-400 | `#3a3a3a` |
-| `--color-border-control` (campo) | `#808d9a` (3,39:1 sobre branco) | `#666666` (3,03:1 sobre o cartão) |
+| `--color-border-control` (campo) | `#808d9a` (3,39:1 sobre branco) | `#727272` (3,62:1 sobre o cartão, 3,19:1 sobre a página) |
 | `--color-fg` | gray-900 | `#e8e8e8` |
 | `--color-fg-muted` | `#6b7784` | `#9ca3af` |
 | `--color-primary-text` (texto e contorno de ação) | `--color-primary` | `#93bde4` |

@@ -204,6 +204,138 @@ test('README do exemplo portátil do Switch lista os tokens lidos, com o hex dos
   }
 })
 
+test('README do exemplo portátil do Switch: as linhas citadas da foundations.md apontam para os tokens', () => {
+  const readme = ler('exports/switch/README.md')
+  const m = readme.match(/\(`:(\d+)-(\d+)` no claro, `:(\d+)` e `:(\d+)-(\d+)` no escuro\)/)
+  assert.ok(m, 'README sem a citação de linhas da foundations.md')
+  const [claroDe, claroAte, recuo, escuroDe, escuroAte] = m.slice(1).map(Number)
+  const linhas = ler('skills/design-system-fips/references/foundations.md').split('\n')
+  const trecho = (de, ate) => linhas.slice(de - 1, ate).join('\n')
+  const tokens = ['--color-ring', '--color-switch-on', '--color-switch-off']
+  assert.equal(claroAte - claroDe + 1, tokens.length, `claro :${claroDe}-${claroAte} deveria ter ${tokens.length} linhas`)
+  assert.equal(escuroAte - escuroDe + 1, tokens.length, `escuro :${escuroDe}-${escuroAte} deveria ter ${tokens.length} linhas`)
+  for (const nome of tokens) {
+    assert.ok(trecho(claroDe, claroAte).includes(`${nome}:`), `foundations.md:${claroDe}-${claroAte} (claro) não declara ${nome}`)
+    assert.ok(trecho(escuroDe, escuroAte).includes(`\`${nome}\``), `foundations.md:${escuroDe}-${escuroAte} (escuro) não lista ${nome}`)
+  }
+  assert.ok(trecho(recuo, recuo).includes('`--color-surface`'), `foundations.md:${recuo} (escuro) não é a linha de --color-surface`)
+})
+
+// ─── Sidebar: selinho de contagem no escuro ────────────────────────────────
+// A presença do selinho é a informação (WCAG 1.4.11, 3:1 contra o que o cerca); o número é texto (1.4.3, 4,5:1).
+// O selinho de 14% de tinta mediu 1,15 a 1,32:1 contra a barra. Lê getBadgeTone de SidebarDoc.tsx, ramo escuro.
+const SIDEBAR_DOC = 'src/docs/pages/components/SidebarDoc.tsx'
+const TONS_DO_SELINHO = ['âmbar', 'azul', 'verde', 'vermelho']
+
+function corComAlfa(valor) {
+  const v = valor.trim()
+  const hex = v.match(/^#([\da-f]{6})$/i)
+  if (hex) return { ...cor(`#${hex[1]}`, 'claro'), a: 1 }
+  const m = v.match(/^rgba?\(\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\s*\)$/)
+  assert.ok(m, `${SIDEBAR_DOC}: cor não reconhecida: ${valor}`)
+  return { r: +m[1], g: +m[2], b: +m[3], a: m[4] === undefined ? 1 : +m[4] }
+}
+
+const sobreFundo = (f, b) => ({ r: f.r * f.a + b.r * (1 - f.a), g: f.g * f.a + b.g * (1 - f.a), b: f.b * f.a + b.b * (1 - f.a) })
+
+const FONTE_DA_SIDEBAR = ler(SIDEBAR_DOC)
+const CORPO_DO_TOM = FONTE_DA_SIDEBAR.slice(
+  FONTE_DA_SIDEBAR.indexOf('function getBadgeTone'),
+  FONTE_DA_SIDEBAR.indexOf('\n}\n', FONTE_DA_SIDEBAR.indexOf('function getBadgeTone')),
+)
+// Ramo escuro de cada tom, achado pela condição de `getBadgeTone` (não pela ordem) e lido campo a campo
+// (não pela ordem das chaves): um tom mexido acusa o próprio tom.
+const RAMO_ESCURO = '(\\{[^}]*\\})\\s*:'
+const OBJETO_ESCURO_DO_TOM = {
+  'âmbar': new RegExp(`item\\.badge === 'financeiroPendente'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
+  azul: new RegExp(`item\\.badge === 'notaPendente'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
+  verde: new RegExp(`item\\.badge === 'producaoEmAndamento'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
+}
+const campoDoTom = (objeto, nome) => objeto?.match(new RegExp(`\\b${nome}:\\s*'([^']+)'`))?.[1]
+const SELINHOS_ESCUROS = TONS_DO_SELINHO.map((tom) => {
+  const objeto =
+    tom === 'vermelho'
+      ? CORPO_DO_TOM.slice(CORPO_DO_TOM.lastIndexOf('return dark')).match(new RegExp(`return dark\\s*\\?\\s*${RAMO_ESCURO}`))?.[1]
+      : CORPO_DO_TOM.match(OBJETO_ESCURO_DO_TOM[tom])?.[1]
+  return [tom, campoDoTom(objeto, 'bg'), campoDoTom(objeto, 'color'), campoDoTom(objeto, 'border')]
+})
+const BARRA_ESCURA = cor(FONTE_DA_SIDEBAR.match(/TN_DARKMODE: SidebarTheme = \{\s*bg:\s*'(#[\da-f]{6})'/i)?.[1] ?? '', 'claro')
+// Azulejo do ícone no escuro: os três pontos do degradê (o selinho do menu recolhido encosta nele) e o que a Facilities mediu.
+const AZULEJOS = [...FONTE_DA_SIDEBAR.matchAll(/linear-gradient\(160deg,\s*(#[\da-f]{6}) 0%,\s*(#[\da-f]{6}) 55%,\s*(#[\da-f]{6}) 100%\)/gi)]
+  .filter((m) => m[1].toLowerCase() === '#303036')
+  .flatMap((m) => [m[1], m[2], m[3]])
+  .map((h) => cor(h, 'claro'))
+  .concat([{ r: 43, g: 51, b: 63 }])
+
+test('Sidebar: o selinho de contagem do escuro tem quatro tons, a barra e o azulejo estão lidos', () => {
+  for (const [tom, bg, texto, anel] of SELINHOS_ESCUROS) {
+    assert.ok(bg && texto && anel, `${tom}: ramo escuro de getBadgeTone não foi lido (bg, color e border)`)
+  }
+  assert.equal(AZULEJOS.length, 4, 'azulejos do ícone (3 do degradê e 1 medido)')
+})
+
+TONS_DO_SELINHO.forEach((tom, i) => {
+  test(`Sidebar escuro, selinho ${tom}: número 4,5:1 contra o disco, disco 3:1 contra a barra, anel 3:1 contra o azulejo`, () => {
+    const [, bg, texto, anel] = SELINHOS_ESCUROS[i]
+    assert.ok(bg && texto && anel, `${tom}: ramo escuro de getBadgeTone não foi lido`)
+    const disco = sobreFundo(corComAlfa(bg), BARRA_ESCURA)
+    verifica(`${tom}: número ${texto} contra o disco ${bg}`, sobreFundo(corComAlfa(texto), disco), disco, MINIMO_TEXTO)
+    verifica(`${tom}: disco ${bg} contra a barra`, disco, BARRA_ESCURA)
+    for (const azulejo of AZULEJOS) {
+      verifica(`${tom}: anel ${anel} contra o azulejo rgb(${azulejo.r},${azulejo.g},${azulejo.b})`, sobreFundo(corComAlfa(anel), azulejo), azulejo)
+    }
+  })
+})
+
+// ─── Tabs: texto da aba ativa ──────────────────────────────────────────────
+// --color-primary não muda no .dark (#004b9b nos dois temas): a aba ativa ficava em 2,06:1 sobre o
+// cartão, menos legível que as inativas. O texto da aba ativa lê --color-primary-text.
+const TABS = 'src/components/ui/tabs.tsx'
+
+function trechoDeTabs(de, ate) {
+  const fonte = ler(TABS)
+  const inicio = fonte.indexOf(de)
+  assert.notEqual(inicio, -1, `${TABS}: ${de} não encontrado`)
+  return fonte.slice(inicio, fonte.indexOf(ate, inicio))
+}
+
+function tokenDeTabs(trecho, padrao, rotulo) {
+  const m = trecho.match(padrao)
+  assert.ok(m, `${TABS}: ${rotulo} não encontrado (${padrao})`)
+  return m[1]
+}
+
+const GATILHO_DE_TABS = trechoDeTabs('const TabsTrigger', 'TabsTrigger.displayName')
+const LISTA_DE_TABS = trechoDeTabs('const TabsList', 'TabsList.displayName')
+// Tem de haver uma só classe de texto para a aba ativa e sem variante na frente: uma segunda, como
+// `dark:data-[state=active]:text-[var(--color-primary)]`, desfaria a correção no escuro.
+test('Tabs: o gatilho tem uma só classe de texto para a aba ativa, sem variante dark: ou outra antes', () => {
+  const achadas = [...GATILHO_DE_TABS.matchAll(/[^\s'"`]*data-\[state=active\]:[^\s'"`]*text-\[var\([^)]*\)\]/g)].map((m) => m[0])
+  assert.equal(achadas.length, 1, `classes de texto da aba ativa em ${TABS}: ${achadas.join(' ')}`)
+  assert.match(achadas[0], /^data-\[state=active\]:text-/, `a classe de texto da aba ativa não pode ter variante antes: ${achadas[0]}`)
+})
+const TEXTO_ABA_ATIVA = tokenDeTabs(GATILHO_DE_TABS, /data-\[state=active\]:text-\[var\((--[\w-]+)\)\]/, 'texto da aba ativa')
+const FUNDO_ABA_ATIVA = tokenDeTabs(GATILHO_DE_TABS, /data-\[state=active\]:bg-\[var\((--[\w-]+)\)\]/, 'fundo da aba ativa')
+// A aba inativa não pinta texto: herda o da lista, que também dá o fundo dela.
+const TEXTO_ABA_INATIVA = tokenDeTabs(LISTA_DE_TABS, /(?<![:\w-])text-\[var\((--[\w-]+)\)\]/, 'texto herdado pela aba inativa')
+const FUNDO_DA_LISTA = tokenDeTabs(LISTA_DE_TABS, /(?<![:\w-])bg-\[var\((--[\w-]+)\)\]/, 'fundo da lista')
+
+for (const t of TEMAS) {
+  test(`Tabs, tema ${t}: texto da aba ativa contra o fundo dela`, () => {
+    verifica(`${TEXTO_ABA_ATIVA} contra ${FUNDO_ABA_ATIVA}`, token(TEXTO_ABA_ATIVA, t), token(FUNDO_ABA_ATIVA, t), MINIMO_TEXTO)
+  })
+
+  test(`Tabs, tema ${t}: a aba ativa é mais legível que a inativa`, () => {
+    const ativa = contraste(token(TEXTO_ABA_ATIVA, t), token(FUNDO_ABA_ATIVA, t))
+    const inativa = contraste(token(TEXTO_ABA_INATIVA, t), token(FUNDO_DA_LISTA, t))
+    assert.ok(ativa > inativa, `aba ativa ${ativa.toFixed(2)}:1 não passa a inativa ${inativa.toFixed(2)}:1 (${TEXTO_ABA_INATIVA} sobre ${FUNDO_DA_LISTA})`)
+  })
+}
+
+test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => {
+  assert.deepEqual(token(TEXTO_ABA_ATIVA, 'claro'), token('--color-primary', 'claro'))
+})
+
 // ─── Azul escuro de texto ──────────────────────────────────────────────────
 for (const t of TEMAS) {
   test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {
@@ -218,10 +350,35 @@ for (const t of TEMAS) {
   })
 }
 
-// Só o claro cobre também o cartão suave e a página. No escuro a borda #666666 mede 2,87:1 sobre o cartão suave: fora do escopo.
-test('--color-border-control, tema claro: borda contra o cartão suave e a página', () => {
-  for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', 'claro'), token(fundo, 'claro'))
-})
+// Campo aparece sobre o cartão, o cartão suave e a página, nos dois temas.
+for (const t of TEMAS) {
+  test(`--color-border-control, tema ${t}: borda contra o cartão suave e a página`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', t), token(fundo, t))
+  })
+}
+
+// A fonte em TypeScript (src/tokens/colors.ts) é lida pelo site e pelo docs/tokens.md e escrita à mão:
+// não pode divergir do globals.css, que é o que o pacote entrega.
+const TS_TOKENS = ler('src/tokens/colors.ts')
+function borderControlDoTs(objeto) {
+  const m = TS_TOKENS.match(new RegExp(`export const ${objeto}\\s*=\\s*\\{([\\s\\S]*?)\\}\\s*as const`))
+  assert.ok(m, `colors.ts: objeto ${objeto} não encontrado`)
+  const v = m[1].match(/^\s*borderControl:\s*(?:'(#[\da-f]{6})'|fipsPalette\.(\w+))/im)
+  assert.ok(v, `colors.ts: borderControl não encontrado em ${objeto}`)
+  if (v[1]) return v[1]
+  const pal = TS_TOKENS.match(/export const fipsPalette\s*=\s*\{([\s\S]*?)\}\s*as const/)
+  assert.ok(pal, 'colors.ts: objeto fipsPalette não encontrado')
+  const p = pal[1].match(new RegExp(`^\\s*${v[2]}:\\s*'(#[\\da-f]{6})'`, 'im'))
+  assert.ok(p, `colors.ts: fipsPalette.${v[2]} não encontrado dentro de fipsPalette`)
+  return p[1]
+}
+
+for (const [t, objeto] of [['claro', 'semanticColors'], ['escuro', 'darkSemanticColors']]) {
+  test(`colors.ts: borderControl de ${objeto} é o --color-border-control do globals.css, tema ${t}`, () => {
+    const ts = borderControlDoTs(objeto)
+    assert.deepEqual(cor(ts, t), token('--color-border-control', t), `colors.ts ${ts} diverge de globals.css ${TOKENS[t]['--color-border-control']}`)
+  })
+}
 
 test('--color-border (divisor) segue como estava: o --color-border-control não o reaproveita', () => {
   assert.equal(TOKENS.claro['--color-border'], '#d7e0ea')
@@ -290,3 +447,61 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }
 })
+
+// ─── Rótulo do atalho do hero sobre o degradê laranja ──────────────────────
+const CHROME = 'src/lib/docHeaderChrome.ts'
+
+function constanteDoChrome(nome) {
+  const m = ler(CHROME).match(new RegExp(`export const ${nome}\\s*=\\s*'([^']+)'`))
+  assert.ok(m, `${CHROME}: constante ${nome} não encontrada`)
+  return m[1]
+}
+
+// Lê `linear-gradient(135deg,#a,#b 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
+function paradasDoDegrade(valor) {
+  const itens = valor.match(/linear-gradient\([^,]+,(.+)\)$/)[1].split(/,(?![^(]*\))/).map((s) => s.trim())
+  const paradas = itens.map((item, i) => {
+    const [hex, pos] = item.split(/\s+/)
+    assert.match(hex, /^#[\da-f]{6}$/i, `parada fora de hex de 6 dígitos: ${item}`)
+    return [cor(hex, 'claro'), pos ? Number(pos.replace('%', '')) : i === 0 ? 0 : i === itens.length - 1 ? 100 : NaN]
+  })
+  paradas.forEach(([, p]) => assert.ok(!Number.isNaN(p), `parada sem posição em ${valor}`))
+  return paradas
+}
+
+function corNoDegrade(paradas, pct) {
+  let k = 0
+  while (k < paradas.length - 2 && pct > paradas[k + 1][1]) k++
+  const [a, pa] = paradas[k]
+  const [b, pb] = paradas[k + 1]
+  const t = Math.min(1, Math.max(0, (pct - pa) / (pb - pa)))
+  const mistura = (x, y) => Math.round(x + (y - x) * t)
+  return { r: mistura(a.r, b.r), g: mistura(a.g, b.g), b: mistura(a.b, b.b) }
+}
+
+test('Atalho aberto do hero: rótulo contra o degradê laranja, 4,5:1 em todo o degradê', () => {
+  const rotulo = cor(constanteDoChrome('docHeaderNeuAccentIcon'), 'claro')
+  const paradas = paradasDoDegrade(constanteDoChrome('docHeaderNeuAccentBgHover'))
+  for (let pct = 0; pct <= 100; pct++) verifica(`rótulo contra o degradê a ${pct}%`, rotulo, corNoDegrade(paradas, pct), MINIMO_TEXTO)
+})
+
+// O teste acima lê a constante; este garante que os componentes pintam o fundo com ela e não com um degradê próprio.
+test('Atalho aberto do hero: HeroAtalho, UserChip e DocHeaderNeuIconButton pintam o fundo com docHeaderNeuAccentBgHover', () => {
+  for (const arquivo of ['composites/HeroAtalho', 'layout/UserChip', 'layout/DocHeaderNeuIconButton']) {
+    const fonte = ler(`src/components/${arquivo}.tsx`)
+    assert.match(
+      fonte,
+      /(?:\bbackground|'--user-chip-bg')\s*:\s*(?:hovered \? )?docHeaderNeuAccentBgHover\b/,
+      `${arquivo}.tsx não pinta o fundo com docHeaderNeuAccentBgHover`,
+    )
+  }
+})
+
+for (const t of TEMAS) {
+  test(`Atalho ouro do hero em repouso, tema ${t}: texto contra o fundo`, () => {
+    const classes = ler('src/components/composites/HeroAtalho.tsx').match(/const repousoOuro =\s*'([^']+)'/)[1]
+    const fundo = classes.match(/\bbg-\[(var\(--[\w-]+\))\]/)[1]
+    const texto = classes.match(/\btext-\[(var\(--[\w-]+\))\]/)[1]
+    verifica(`${texto} contra ${fundo}`, cor(texto, t), cor(fundo, t), MINIMO_TEXTO)
+  })
+}

@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
 
@@ -19,12 +18,12 @@ const Ic={
   star:(s=14,c=C.amareloOuro)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><path d="M10 2l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.8 4.9 17.7l1-5.7-4.1-4 5.7-.8L10 2z" fill={c}/></svg>,
 };
 
-function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+function JunctionLines({style}:{style?:CSSProperties}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
 
 /* ═══════════════════════════════════════════
    TOOLTIP COMPONENT
    ═══════════════════════════════════════════ */
-const TTV={
+const TTV:Record<string,{bg:string;color:string;border:string}>={
   dark:{bg:C.cinzaEscuro,color:C.branco,border:C.cinzaEscuro},
   light:{bg:C.branco,color:C.cinzaEscuro,border:C.cardBorder},
   info:{bg:"#EFF6FF",color:C.azulEscuro,border:C.azulCeu},
@@ -33,13 +32,13 @@ const TTV={
   sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},
 };
 
-function Tooltip({children,text,title:ttl,position="top",variant="dark",delay=200,maxW=240}){
+function Tooltip({children,text,title:ttl,position="top",variant="dark",delay=200,maxW=240}:{children:ReactNode;text:ReactNode;title?:string;position?:"top"|"bottom"|"left"|"right";variant?:string;delay?:number;maxW?:number}){
   const [show,setShow]=useState(false);
-  const timer=useRef(null);
+  const timer=useRef<ReturnType<typeof setTimeout>|null>(null);
   const v=TTV[variant]||TTV.dark;
 
   const enter=()=>{timer.current=setTimeout(()=>setShow(true),delay)};
-  const leave=()=>{clearTimeout(timer.current);setShow(false)};
+  const leave=()=>{clearTimeout(timer.current!);setShow(false)};
 
   const arrowSize=6;
   const posStyles={
@@ -73,11 +72,11 @@ function Tooltip({children,text,title:ttl,position="top",variant="dark",delay=20
 
 /* ═══════════════════════════════════════════ BADGE mini ═══════════════════════════════════════════ */
 const BV={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},default:{bg:C.azulProfundo,color:C.branco,border:"transparent"},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
-function Badge({variant="default",children,dot,size="md"}){const v=BV[variant]||BV.default;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
+function Badge({variant="default",children,dot,size="md"}:{variant?:keyof typeof BV;children:ReactNode;dot?:boolean;size?:"sm"|"md"}){const v=BV[variant]||BV.default;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
-function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
+function Section({n,title,desc,children}:{n:ReactNode;title:ReactNode;desc:ReactNode;children:ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function DSCard({children,s,mob:m}:{children:ReactNode;s?:CSSProperties;mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 
 const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",overflow:"hidden"};
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
@@ -86,10 +85,10 @@ const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"upperc
 const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
 const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.body,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`};
 const gk={fontSize:11,fontFamily:Fn.mono,color:C.cinzaChumbo,background:C.cardBg,padding:"2px 8px",borderRadius:4,border:`1px solid ${C.cardBorder}`};
-function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
+function TokenRow({label,value,color}:{label:ReactNode;value:ReactNode;color?:string}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
 
 /* helper pill for demo */
-function DemoPill({children,bg,color}){return <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",padding:"8px 20px",borderRadius:8,background:bg||C.bg,color:color||C.cinzaEscuro,fontSize:12,fontWeight:600,fontFamily:Fn.body,border:`1px solid ${C.cardBorder}`,cursor:"default"}}>{children}</span>}
+function DemoPill({children,bg,color}:{children:ReactNode;bg?:string;color?:string}){return <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",padding:"8px 20px",borderRadius:8,background:bg||C.bg,color:color||C.cinzaEscuro,fontSize:12,fontWeight:600,fontFamily:Fn.body,border:`1px solid ${C.cardBorder}`,cursor:"default"}}>{children}</span>}
 
 /* ═══════════════════════════════════════════ EXPORT CODE ═══════════════════════════════════════════ */
 const tooltipExportCode = `// DS-FIPS — Tooltip — Copy-paste ready

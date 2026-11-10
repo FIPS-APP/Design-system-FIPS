@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { Select } from '../../../components/ui/select';
 
@@ -30,27 +29,28 @@ const Ic={
   prioridade:(s=16,c=C.cinzaChumbo)=><svg width={s} height={s} viewBox="0 0 20 20" fill="none"><path d="M4 18V3l12 5-12 5" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
 };
 
-function JunctionLines({style}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
+function JunctionLines({style}:{style?:CSSProperties}){return <svg viewBox="0 0 320 200" fill="none" style={{opacity:.12,...style}}><path d="M0 60H100C120 60 120 60 140 40L200 40H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 60H100C120 60 120 60 140 80L200 80H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 100L160 100H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/><path d="M0 120H60C80 120 80 120 100 140L160 140H320" stroke={C.branco} strokeWidth="6" strokeLinecap="round"/></svg>}
 
 /* ═══════════════════════════════════════════ BADGE mini ═══════════════════════════════════════════ */
-const BV={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},default:{bg:C.azulProfundo,color:C.branco,border:"transparent"},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
-function Badge({variant="default",children,dot,size="md"}){const v=BV[variant]||BV.default;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
+const BV:Record<string,{bg:string;color:string;border:string}>={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},default:{bg:C.azulProfundo,color:C.branco,border:"transparent"},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
+function Badge({variant="default",children,dot,size="md"}:{variant?:string;children?:ReactNode;dot?:boolean;size?:string}){const v=BV[variant]||BV.default;return(<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:6,height:6,borderRadius:"50%",background:v.color,opacity:.85}}/>}{children}</span>)}
 
 /* ═══════════════════════════════════════════
    DRAWER COMPONENT
    ═══════════════════════════════════════════ */
-function Drawer({open,onClose,title,subtitle,header,children,footer,side="right",width=420}){
+function Drawer({open,onClose,title,subtitle,header,children,footer,side="right",width=420}:{open:boolean;onClose:()=>void;title?:string;subtitle?:string;header?:ReactNode;children?:ReactNode;footer?:ReactNode;side?:"left"|"right"|"bottom"|"top";width?:number}){
   const [visible,setVisible]=useState(false);
   const [animIn,setAnimIn]=useState(false);
 
   useEffect(()=>{
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza a montagem e a animação de entrada e saída com timers e requestAnimationFrame; a chamada síncrona abre a sequência e não há valor derivável
     if(open){setVisible(true);requestAnimationFrame(()=>requestAnimationFrame(()=>setAnimIn(true)))}
     else{setAnimIn(false);const t=setTimeout(()=>setVisible(false),300);return()=>clearTimeout(t)}
   },[open]);
 
   useEffect(()=>{
     if(!open)return;
-    const h=(e)=>{if(e.key==="Escape")onClose()};
+    const h=(e:KeyboardEvent)=>{if(e.key==="Escape")onClose()};
     document.addEventListener("keydown",h);
     return()=>document.removeEventListener("keydown",h);
   },[open,onClose]);
@@ -58,7 +58,7 @@ function Drawer({open,onClose,title,subtitle,header,children,footer,side="right"
   if(!visible)return null;
 
   const isH=side==="left"||side==="right";
-  const panelStyle=isH?{
+  const panelStyle:CSSProperties=isH?{
     position:"fixed",top:0,[side]:0,width,maxWidth:"90vw",height:"100vh",zIndex:1001,
     background:C.cardBg,boxShadow:"-4px 0 24px rgba(0,0,0,.12)",
     display:"flex",flexDirection:"column",
@@ -97,19 +97,19 @@ function Drawer({open,onClose,title,subtitle,header,children,footer,side="right"
 }
 
 /* ═══════════════════════════════════════════ MINI COMPONENTS ═══════════════════════════════════════════ */
-function FInput({label,placeholder,value,required,compact,icon,type="text",onChange,height}){
+function FInput({label,placeholder,value,required,compact,icon,type="text",onChange,height}:{label?:string;placeholder?:string;value?:string;required?:boolean;compact?:boolean;icon?:ReactNode;type?:string;onChange?:(v:string)=>void;height?:number}){
   const h=height??(compact?30:35);
   return(
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:7,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}
       <div style={{display:"flex",alignItems:"center",gap:8,height:h,padding:"0 12px",border:`1.5px solid ${C.inputBorder}`,borderRadius:8,background:C.branco,transition:"all .18s"}} onClick={e=>{const inp=e.currentTarget.querySelector("input");if(inp)inp.focus()}}>
         {icon&&<span style={{display:"flex",flexShrink:0,opacity:.5}}>{icon}</span>}
-        <input type={type} placeholder={placeholder} defaultValue={onChange?undefined:value} value={onChange?value:undefined} onChange={onChange?e=>onChange(e.target.value):undefined} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:compact?12:13,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>e.target.parentElement.style.borderColor=C.azulProfundo} onBlur={e=>e.target.parentElement.style.borderColor=C.inputBorder}/>
+        <input type={type} placeholder={placeholder} defaultValue={onChange?undefined:value} value={onChange?value:undefined} onChange={onChange?e=>onChange(e.target.value):undefined} style={{flex:1,height:"100%",border:"none",outline:"none",background:"transparent",fontFamily:Fn.body,fontSize:compact?12:13,color:C.cinzaEscuro,minWidth:0,cursor:type==="date"?"pointer":"text"}} onFocus={e=>e.target.parentElement!.style.borderColor=C.azulProfundo} onBlur={e=>e.target.parentElement!.style.borderColor=C.inputBorder}/>
       </div>
     </div>
   );
 }
-function FSelect({label,options=[],value,compact,icon}){
+function FSelect({label,options=[],value,compact,icon}:{label?:string;options?:string[];value?:string;compact?:boolean;icon?:ReactNode}){
   return(
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:7}}>{label}</label>}
@@ -120,7 +120,7 @@ function FSelect({label,options=[],value,compact,icon}){
 /* Pill 1-clique — filtros de classificação (Status, Prioridade). Padrão do FilterBar Governança BI
    (skill patterns.md "Filtros avançados"): ativo com cor = fundo cheio + texto branco; inativo com
    cor = dot colorido (escaneável de relance); sem cor = azul primário. */
-function PillFilterGroup({options=[],value,onChange}){
+function PillFilterGroup({options=[],value,onChange}:{options?:(string|{label:string;color?:string})[];value?:string|null;onChange:(v:string|null)=>void}){
   return(
     <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
       {options.map(o=>{
@@ -138,7 +138,7 @@ function PillFilterGroup({options=[],value,onChange}){
     </div>
   );
 }
-function FieldLabel({icon,children}){
+function FieldLabel({icon,children}:{icon?:ReactNode;children?:ReactNode}){
   return(
     <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,marginLeft:2}}>
       {icon&&<span style={{display:"flex",opacity:.6}}>{icon}</span>}
@@ -148,12 +148,12 @@ function FieldLabel({icon,children}){
 }
 /* Chip de filtro — 32.5px (padrão da toolbar/Data Listing, mesmo do ChipSelect do Governança BI).
    Dropdown custom com radio, prefixo mudo + valor bold. Usar em filtros; formulário usa <Select> (h-9/h-12). */
-function ChipSelect({icon,label,options=[],value,onChange}){
+function ChipSelect({icon,label,options=[],value,onChange}:{icon?:ReactNode;label?:string;options?:string[];value?:string;onChange:(v:string)=>void}){
   const [open,setOpen]=useState(false);
-  const ref=useRef(null);
+  const ref=useRef<HTMLDivElement>(null);
   useEffect(()=>{
     if(!open)return;
-    const h=e=>{if(ref.current&&!ref.current.contains(e.target))setOpen(false)};
+    const h=(e:MouseEvent)=>{if(ref.current&&!ref.current.contains(e.target as Node))setOpen(false)};
     document.addEventListener("mousedown",h);
     return()=>document.removeEventListener("mousedown",h);
   },[open]);
@@ -184,7 +184,7 @@ function ChipSelect({icon,label,options=[],value,onChange}){
 /* Header hero institucional — gov-gradient 3-stops + tile âmbar + eyebrow dourado + título/subtítulo
    branco + X próprio. Padrão canônico de header de modal/drawer (skill patterns.md). `radius` só p/ o
    bottom drawer (cantos superiores arredondados). */
-function HeroHeader({icon,eyebrow,title,subtitle,onClose,radius}){
+function HeroHeader({icon,eyebrow,title,subtitle,onClose,radius}:{icon?:ReactNode;eyebrow?:string;title?:string;subtitle?:string;onClose?:()=>void;radius?:string}){
   return(
     <div style={{position:"relative",display:"flex",alignItems:"center",gap:14,padding:"18px 24px",paddingRight:56,overflow:"hidden",background:GOV_GRAD,flexShrink:0,borderRadius:radius}}>
       <JunctionLines style={{position:"absolute",top:-10,right:-20,width:280,height:180,opacity:.06}}/>
@@ -198,13 +198,13 @@ function HeroHeader({icon,eyebrow,title,subtitle,onClose,radius}){
     </div>
   );
 }
-function Btn({label,color,outline,onClick,full}){
+function Btn({label,color,outline,onClick,full}:{label?:string;color?:string;outline?:boolean;onClick?:()=>void;full?:boolean}){
   return <button onClick={onClick} style={{padding:"7px 18px",fontSize:12,fontWeight:600,background:outline?"transparent":color||C.azulProfundo,color:outline?color||C.cinzaChumbo:C.branco,border:outline?`1.5px solid ${color||C.cinzaClaro}`:"none",borderRadius:6,cursor:"pointer",fontFamily:Fn.body,width:full?"100%":"auto"}}>{label}</button>;
 }
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
-function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
+function Section({n,title,desc,children}:{n?:string;title?:string;desc?:string;children?:ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function DSCard({children,s,mob:m}:{children?:ReactNode;s?:CSSProperties;mob?:boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 
 const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",overflow:"hidden"};
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
@@ -213,7 +213,7 @@ const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"upperc
 const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
 const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.body,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`};
 const gk={fontSize:11,fontFamily:Fn.mono,color:C.cinzaChumbo,background:C.cardBg,padding:"2px 8px",borderRadius:4,border:`1px solid ${C.cardBorder}`};
-function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
+function TokenRow({label,value,color}:{label?:string;value?:string;color?:string}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
 
 /* ═══════════════════════════════════════════ EXPORT CODE ═══════════════════════════════════════════ */
 const drawerExportCode = `// DS-FIPS — Drawer (Slide Panel) — Copy-paste ready
@@ -299,13 +299,13 @@ export default function DrawerDoc(){
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
 
-  const [d,setD]=useState({open:false,id:null});
-  const open=(id)=>setD({open:true,id});
+  const [d,setD]=useState<{open:boolean;id:string|null}>({open:false,id:null});
+  const open=(id:string)=>setD({open:true,id});
   const close=()=>setD({open:false,id:null});
 
   /* Filtros avançados — pills de classificação (Status/Prioridade) + chips (Departamento/Segmento) */
-  const [filtroStatus,setFiltroStatus]=useState(null);
-  const [filtroPrioridade,setFiltroPrioridade]=useState(null);
+  const [filtroStatus,setFiltroStatus]=useState<string|null>(null);
+  const [filtroPrioridade,setFiltroPrioridade]=useState<string|null>(null);
   const [filtroDepto,setFiltroDepto]=useState("Todos");
   const [filtroSegmento,setFiltroSegmento]=useState("Todos");
   const filtrosAtivos=[filtroStatus,filtroPrioridade,filtroDepto!=="Todos"?filtroDepto:null,filtroSegmento!=="Todos"?filtroSegmento:null].filter(Boolean).length;

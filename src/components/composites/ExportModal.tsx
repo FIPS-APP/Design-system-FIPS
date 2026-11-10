@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
+import { useResetOnChange } from "../../hooks/useResetOnChange";
 import { createPortal } from "react-dom";
 import {
   X,
@@ -13,7 +14,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { cn } from "../../lib/cn";
-import { useDsTheme } from "../../hooks/useDsTheme";
+import { useFipsTheme } from "../../hooks/useFipsTheme";
 import { exportXLSX, exportPDF, exportPrint } from "../../utils/exportData";
 import type { ExportCatalog } from "../../utils/exportHelpers";
 
@@ -61,7 +62,7 @@ export function ExportModal({
   filterPills = [],
   filename,
 }: ExportModalProps) {
-  const { dark } = useDsTheme();
+  const { dark } = useFipsTheme();
   const [cols, setCols] = useState<ColItem[]>([]);
   const [size, setSize] = useState<ModalSize>("grande");
   const [sectionFilter, setSectionFilter] = useState<SectionFilter>("all");
@@ -75,17 +76,16 @@ export function ExportModal({
   const hasExpanded = useMemo(() => catalog.some((c) => c.section === "expanded"), [catalog]);
   const hasSections = hasMain && hasExpanded;
 
-  useEffect(() => {
-    if (open) {
-      setCols(
-        catalog
-          .filter((c) => c.id !== "select" && c.id !== "actions")
-          .map((c) => ({ ...c, checked: true })),
-      );
-      setSize("grande");
-      setSectionFilter("all");
-    }
-  }, [open, catalog]);
+  useResetOnChange([open, catalog], () => {
+    if (!open) return;
+    setCols(
+      catalog
+        .filter((c) => c.id !== "select" && c.id !== "actions")
+        .map((c) => ({ ...c, checked: true })),
+    );
+    setSize("grande");
+    setSectionFilter("all");
+  });
 
   // ─── Shell — dark/light (mesmo padrão do AssistenteIA) ───────────────────
   const shell = dark
