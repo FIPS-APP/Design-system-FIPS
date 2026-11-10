@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.6',
+    date: '2026-11-10',
+    title: 'Linhas citadas no README do Switch',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O fim de `exports/switch/README.md` citava linhas da `foundations.md` que não eram as dos tokens do Switch: `:89-91` no claro (caíam em `--color-danger-text`, `--color-success-fill` e `--color-neutral-fill`), `:104` no escuro (linha em branco) e `:118-120` no escuro (outras linhas da tabela). Passa a citar `:92-94` e `:107` e `:123-125`, onde estão `--color-ring`, `--color-switch-on`, `--color-switch-off` e `--color-surface`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` confere que as linhas citadas no README do Switch apontam para esses tokens na `foundations.md`: se a tabela mudar de lugar, o teste cai em vez de a citação envelhecer calada.',
+      },
+    ],
+  },
+  {
     version: '0.21.5',
     date: '2026-11-10',
     title: 'Select: a lista abre num portal e Modal, Drawer e card deixam de cortá-la',
