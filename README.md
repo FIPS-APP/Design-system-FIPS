@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.19`
+## Versão atual: `v0.21.20`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.20 | 2026-11-10 | `Badge` success no claro: texto de `#00904c` para `#006d35` (`--color-fips-green-800`), de 3,91:1 para 6,15:1 sobre `#ecfdf5`. Fundo, borda e tema escuro sem mudança |
 | 0.21.19 | 2026-11-10 | Sem `transition-all` nos componentes de `ui` e `composites` e animações com `prefers-reduced-motion` respeitado; o bloco global de movimento reduzido vale para todo app que importa o `styles.css` |
 | 0.21.18 | 2026-11-10 | Tom `sucesso` do `Toast` e do `Tooltip` (exemplos portáteis em `exports/` e páginas do site): o texto passa de `#00904C` (3,91:1 sobre `#ECFDF5`) a `#006D35`, 6,15:1. Fundo, borda e acento não mudam. `npm test` exige 4,5:1 do texto do `sucesso` nos quatro arquivos |
 | 0.21.17 | 2026-11-10 | A altura do campo compacto é 32px (`h-8`), decisão da 0.11.15 que se mantém: `Input`, `Select` e `FieldTrigger` entregam 32px com `density="compact"`; `Textarea` compacto tem altura mínima de 92px e `InputGroup` não tem `density` (sempre `h-12`). As páginas Field, Input, Select, Drawer, Visão geral e Espaçamento do site diziam 30px e passam a dizer 32px, e o código copiável da página Field também. Nenhum componente muda |
