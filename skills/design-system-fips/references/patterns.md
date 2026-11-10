@@ -45,7 +45,7 @@ Mesmo sistema neumorphic dos itens de sidebar/menu: `36×36`, `border-radius 10`
 |---|---|---|---|
 | Idle claro | `rgba(0,0,0,.10)` | `linear-gradient(145deg,#fff 0%,#ebebeb 55%,#e0e0e0 100%)` | `rgba(55,55,55,.82)` |
 | Idle escuro | `#3f3f46` | `linear-gradient(160deg,#303036 0%,#222226 55%,#1c1c20 100%)` | `#a1a1aa` |
-| Hover (claro **e** escuro) | `rgba(246,146,30,.55)` | `linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#cf730d 100%)` | `#002A68` (`docHeaderNeuAccentIcon`, fixo) |
+| Hover (claro **e** escuro) | `rgba(246,146,30,.55)` | `linear-gradient(135deg,#FFD37B,#f7ad45 34%,#F6921E 64%,#dc8212 100%)` | `#002A68` (`docHeaderNeuAccentIcon`, fixo) |
 
 Usado por: recolher-sidebar, Notificações (`Bell`), Tutorial (`GraduationCap`), tema (`SunMoon`, só no `DocLayout` real) e como base do hover do `UserChip`.
 
@@ -197,6 +197,7 @@ Regras:
 - **Chips de filtro ativo** (`ActiveFilterChips`) colados no título do header da Table — um chip por VALOR filtrado, nunca um badge de contagem; ver `components.md`
 - KPIs sparkline fora do card = variante documentada; `ListingKpiRow` (Indicadores rápidos clicáveis) é opcional e mora no `panelHeader` do card da toolbar quando usado — ver `components.md`
 - tabela dentro de card
+- **um título por seção**: o header do card da tabela (tile + título + "N registros …" + ações) **é** o título da seção. Não repita título nem contagem acima do card (cabeçalho de guia, `PageHeader` de seção, `h2` solto); as ações da listagem vão no slot de ações do header do card, não numa barra acima dele
 - coluna Ações usa `RowActionsMenu` (menu radial), não kebab genérico
 - detalhes da linha em painel lateral ou modal, não em navegação improvisada
 
@@ -249,12 +250,15 @@ Alinhado ao footer do `<Table>` (v0.11.22): faixa com fundo `--color-surface-mut
 
 ### Cuidado — clipping do dropdown do Select
 
-O `Select` do DS abre a lista como `absolute top-full` (**sem portal**). Qualquer ancestral com `overflow-hidden`/`overflow-auto` (popover de filtros, `PageHero`/`PageHeader`, card de cantos arredondados) **corta a lista "pra dentro"** — bug já visto em 3 telas (Minha Área, Catálogo, Conformidade).
+**A partir da v0.21.2 o `Select` abre a lista num portal para o `body`** (`position: fixed`, `z-[70]`): `Modal`, `Drawer`, `PageHero`/`PageHeader`, card de canto arredondado e qualquer ancestral com `overflow-hidden`/`overflow-auto` deixaram de cortar a lista. Nesse caso não há o que contornar no consumidor.
+
+**Em versões anteriores (medido nas tags v0.5.0 a v0.20.26 e nos tarballs 0.12.3, 0.12.5 e 0.20.4)** o `Select` abre a lista como `absolute top-full` (**sem portal**). Qualquer ancestral com `overflow-hidden`/`overflow-auto` (popover de filtros, `PageHero`/`PageHeader`, card de cantos arredondados) **corta a lista "pra dentro"** — bug já visto em 3 telas (Minha Área, Catálogo, Conformidade). Dentro de `Modal` o corte é certo (o corpo é `overflow-y-auto` e o contêiner `overflow-hidden`):
 
 - não envolva um `Select` em container `overflow-hidden`
-- dropdowns ancorados da toolbar (Período, `ChipSelect`) usam `z-50` e **não** `overflow-hidden` — os cantos arredondados sobrevivem, nenhum filho preenche o canto. O card da toolbar do Data Listing é `overflow: visible` justamente por isso.
 - se o `Select` precisa morar dentro do `PageHero`/`PageHeader` (que é `overflow-hidden` pelo gradiente), mova-o para uma toolbar-card abaixo do hero
-- nunca corrija no `Select` do DS (é sincronizado) — corrija no consumidor
+- em `Modal`: até 4 opções, mostre todas como pílulas ou botões de escolha; ou ponha o campo primeiro no corpo, com pelo menos 200 px visíveis abaixo dele; ou suba o pacote para a v0.21.2 ou mais nova
+
+**`ChipSelect` e os dropdowns ancorados da toolbar (Período) seguem `absolute` em toda versão** (`z-50`, sem portal): não use `overflow-hidden` em volta deles. Os cantos arredondados sobrevivem porque nenhum filho preenche o canto; o card da toolbar do Data Listing é `overflow: visible` justamente por isso. Medido no `Modal` a 1440x900 (12 opções): 0 de 7 opções inteiras do `ChipSelect` ficam clicáveis.
 
 ### Tabela canônica
 
@@ -278,7 +282,7 @@ Três densidades (`compact | normal | comfortable`, default `comfortable`) + qua
 - `compact` e `normal` → `text-[9px] font-bold uppercase tracking-[1px] font-[family-name:var(--font-heading)]`; py-2 (compact) / py-2.5 (normal)
 - `comfortable` → `text-sm font-semibold`; `h-14`
 
-O título de coluna usa `--color-fg`: 10,70:1 sobre a faixa `--color-surface-muted` no claro. `--color-fg-muted` mede 4,29:1 ali e não serve para título de coluna. Vale também para o texto dentro do título (botão de ordenação, spans) e para a prévia de exportação.
+O título de coluna usa `--color-fg`: 10,70:1 sobre a faixa `--color-surface-muted` no claro. `--color-fg-muted` media 4,29:1 ali e hoje mede 4,74:1, mas o título de coluna segue em `--color-fg`. Vale também para o texto dentro do título (botão de ordenação, spans) e para a prévia de exportação.
 
 **`TableCell`** — `px-4 text-[var(--color-fg)]`; por densidade:
 - `compact` → `py-1.5 text-[11px]`
@@ -305,6 +309,8 @@ O `<Table>` governado expressa densidade como **padding vertical**. A referênci
 - Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
 
 #### Header do card da tabela
+
+É o título da seção: nada de título ou contagem repetidos logo acima do card (ver Data Listing, "um título por seção").
 
 Padrão vindo do Data Listing (v0.11.23): `padding 18px 20px 14px`, `gap 14`, **`borderBottom` de 1px** separando header e tabela. Título 16px `lineHeight 1.2`; subtítulo 11px, `margin-top 3px`, `lineHeight 1.4`. Tile do ícone `48×48` com **aro**: fundo a 4% da cor do ícone, borda a 8% (`color-mix(in srgb, {cor} 8%, transparent)`).
 

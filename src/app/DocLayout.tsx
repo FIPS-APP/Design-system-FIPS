@@ -156,12 +156,7 @@ export function DocLayout() {
                 type="button"
                 variant="secondary"
                 size="icon"
-                className={cn(
-                  'lg:hidden',
-                  dark
-                    ? 'border border-[#3F3F46] bg-[#27272A] text-[#E2E2E8] hover:bg-[#323236]'
-                    : 'border border-[var(--color-border)]/60 bg-[var(--color-surface)]/90 text-[var(--color-fg)] hover:bg-[var(--color-surface)]',
-                )}
+                className="lg:hidden"
                 onClick={() => setMobileOpen((o) => !o)}
                 aria-expanded={effectiveMobileOpen}
                 aria-label={effectiveMobileOpen ? 'Fechar menu' : 'Abrir menu'}

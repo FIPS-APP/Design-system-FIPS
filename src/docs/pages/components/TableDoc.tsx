@@ -1,8 +1,18 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment -- doc page synced from DS export bundle */
-// @ts-nocheck
 import { useState, useEffect, useMemo, useRef } from 'react'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, DragEvent as ReactDragEvent, MouseEventHandler, ReactNode } from 'react'
 import { CodeExportSection } from '../../components/CodeExport'
+
+/* Tipos da tabela de demonstração */
+type Linha = Record<string, string | number>
+interface Coluna {
+  key: string
+  label?: string
+  width?: number | string
+  align?: 'left' | 'center' | 'right'
+  sortable?: boolean
+  // Método, e não propriedade: assim cada coluna anota o tipo do valor que recebe (number, string).
+  render?(value: unknown, row: Linha): ReactNode
+}
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
 const C={azulProfundo:"var(--color-gov-azul-profundo)",azulEscuro:"var(--color-gov-azul-escuro)",azulClaro:"var(--color-gov-azul-claro)",cinzaChumbo:"var(--color-fg-muted)",cinzaEscuro:"var(--color-fg)",cinzaClaro:"#C0CCD2",azulCeu:"#93BDE4",azulCeuClaro:"#D3E3F4",amareloOuro:"#FDC24E",amareloEscuro:"#F6921E",verdeFloresta:"#00C64C",verdeEscuro:"#00904C",danger:"#DC3545",neutro:"var(--color-surface-soft)",branco:"#FFFFFF",bg:"var(--color-surface-muted)",cardBg:"var(--color-surface)",cardBorder:"var(--color-border)",textMuted:"var(--color-fg-muted)",textLight:"var(--color-fg-muted)"};
@@ -31,8 +41,8 @@ function JunctionLines({ style }: { style?: CSSProperties }) {
 }
 
 /* ═══════════════════════════════════════════ BADGE ═══════════════════════════════════════════ */
-const BV={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
-function Badge({variant="info",children,dot,size="sm"}){const v=BV[variant]||BV.info;return(<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:5,height:5,borderRadius:"50%",background:v.color}}/>}{children}</span>)}
+const BV: Record<string,{bg:string;color:string;border:string}>={sucesso:{bg:"#ECFDF5",color:C.verdeEscuro,border:"#A7F3D0"},atencao:{bg:"#FFF7ED",color:"#C2410C",border:"#FDBA74"},critico:{bg:"#FEF2F2",color:"#B91C1C",border:"#FECACA"},info:{bg:C.azulCeuClaro,color:C.azulEscuro,border:C.azulCeu},secondary:{bg:C.bg,color:C.cinzaEscuro,border:C.cardBorder}};
+function Badge({variant="info",children,dot,size="sm"}: {variant?: string; children?: ReactNode; dot?: boolean; size?: string}){const v=BV[variant]||BV.info;return(<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:`2px ${size==="sm"?6:8}px`,fontSize:size==="sm"?10:11,fontWeight:600,fontFamily:Fn.body,color:v.color,background:v.bg,border:`1px solid ${v.border}`,borderRadius:4,whiteSpace:"nowrap"}}>{dot&&<span style={{width:5,height:5,borderRadius:"50%",background:v.color}}/>}{children}</span>)}
 
 /* ═══════════════════════════════════════════ MINI PROGRESS ═══════════════════════════════════════════ */
 function MiniProgress({value=0}){
@@ -41,7 +51,7 @@ function MiniProgress({value=0}){
 }
 
 /* ═══════════════════════════════════════════ AVATAR ═══════════════════════════════════════════ */
-function Avatar({name,photo}){
+function Avatar({name,photo}: {name?: string; photo?: string}){
   const parts=(name||"").split(" ").filter(Boolean);
   const initials=parts.length>=2?`${parts[0][0]}${parts[parts.length-1][0]}`:parts[0]?parts[0][0]:"?";
   if(photo)return <img src={photo} alt={name} style={{width:32,height:32,borderRadius:"50%",objectFit:"cover",flexShrink:0,border:`1px solid ${C.cardBorder}`}}/>;
@@ -51,18 +61,18 @@ function Avatar({name,photo}){
 /* ═══════════════════════════════════════════
    TABLE COMPONENT
    ═══════════════════════════════════════════ */
-function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,sortable=true,emptyText,loading,footer,paginate,perPageOptions,title,subtitle,icon,iconBg,iconBorder,configurable,viewToggle}){
-  const [sortCol,setSortCol]=useState(null);
-  const [sortDir,setSortDir]=useState("asc");
-  const [selected,setSelected]=useState([]);
+function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,sortable=true,emptyText,loading,footer,paginate,perPageOptions,title,subtitle,icon,iconBg,iconBorder,configurable,viewToggle}: {columns?: Coluna[]; data?: Linha[]; striped?: boolean; compact?: boolean; bordered?: boolean; selectable?: boolean; sortable?: boolean; emptyText?: string; loading?: boolean; footer?: ReactNode; paginate?: number; perPageOptions?: number[]; title?: string; subtitle?: string; icon?: ReactNode; iconBg?: string; iconBorder?: string; configurable?: boolean; viewToggle?: boolean}){
+  const [sortCol,setSortCol]=useState<string|null>(null);
+  const [sortDir,setSortDir]=useState<"asc"|"desc">("asc");
+  const [selected,setSelected]=useState<number[]>([]);
   const [hoverRow,setHoverRow]=useState(-1);
   const [page,setPage]=useState(1);
   const [perPage,setPerPage]=useState(paginate||0);
-  const [hiddenCols,setHiddenCols]=useState([]);
+  const [hiddenCols,setHiddenCols]=useState<string[]>([]);
   const [showColMenu,setShowColMenu]=useState(false);
   const [colOrder,setColOrder]=useState(()=>columns.map(c=>c.key));
-  const [dragIdx,setDragIdx]=useState(null);
-  const [dragOverIdx,setDragOverIdx]=useState(null);
+  const [dragIdx,setDragIdx]=useState<number|null>(null);
+  const [dragOverIdx,setDragOverIdx]=useState<number|null>(null);
   const [configTab,setConfigTab]=useState("colunas");
   const [view,setView]=useState("table");
   const [densityS,setDensityS]=useState(compact?"compact":"normal");
@@ -71,22 +81,22 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   const [sortableS,setSortableS]=useState(sortable);
   const [stickyHS,setStickyHS]=useState(false);
   const [wrapTextS,setWrapTextS]=useState(false);
-  const configRef=useRef(null);
+  const configRef=useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
     if(!showColMenu)return;
-    const h=e=>{if(configRef.current&&!configRef.current.contains(e.target))setShowColMenu(false)};
+    const h=(e: MouseEvent)=>{if(configRef.current&&!configRef.current.contains(e.target as Node))setShowColMenu(false)};
     document.addEventListener("mousedown",h);
     return()=>document.removeEventListener("mousedown",h);
   },[showColMenu]);
 
-  const toggleCol=(key)=>setHiddenCols(h=>h.includes(key)?h.filter(k=>k!==key):[...h,key]);
-  const orderedCols=colOrder.map(k=>columns.find(c=>c.key===k)).filter(Boolean);
+  const toggleCol=(key: string)=>setHiddenCols(h=>h.includes(key)?h.filter(k=>k!==key):[...h,key]);
+  const orderedCols=colOrder.map(k=>columns.find(c=>c.key===k)).filter(Boolean) as Coluna[];
   const visibleCols=orderedCols.filter(c=>!hiddenCols.includes(c.key));
 
-  const handleDragStart=(i)=>setDragIdx(i);
-  const handleDragOver=(e,i)=>{e.preventDefault();setDragOverIdx(i)};
-  const handleDrop=(i)=>{
+  const handleDragStart=(i: number)=>setDragIdx(i);
+  const handleDragOver=(e: ReactDragEvent,i: number)=>{e.preventDefault();setDragOverIdx(i)};
+  const handleDrop=(i: number)=>{
     if(dragIdx===null||dragIdx===i)return;
     const newOrder=[...colOrder];
     const [moved]=newOrder.splice(dragIdx,1);
@@ -96,7 +106,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
   };
   const handleDragEnd=()=>{setDragIdx(null);setDragOverIdx(null)};
 
-  const toggleSort=(key)=>{
+  const toggleSort=(key: string)=>{
     if(!sortableS)return;
     if(sortCol===key){setSortDir(d=>d==="asc"?"desc":"asc")}
     else{setSortCol(key);setSortDir("asc")}
@@ -119,14 +129,14 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
 
   const allSelected=selected.length===paged.length&&paged.length>0;
   const toggleAll=()=>setSelected(allSelected?[]:paged.map((_,i)=>i));
-  const toggleRow=(i)=>setSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i]);
+  const toggleRow=(i: number)=>setSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i]);
 
   // Densidade idêntica à do Data Listing (`DENSITY` em DataListingDemo.tsx): altura de
   // linha fixa (não padding vertical), que é o que mantém a tabela densa e previsível.
   const D=densityS==="compact"?{rowH:30,fs:11,padX:12}:densityS==="comfortable"?{rowH:56,fs:13,padX:20}:{rowH:42,fs:12,padX:16};
   const py=8; // padding vertical só do thead — o corpo usa rowH
 
-  const pgBtn=(label,disabled,onClick)=><button onClick={onClick} disabled={disabled} style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:disabled?"transparent":C.cardBg,color:disabled?C.textLight:C.azulProfundo,border:`1px solid ${disabled?C.cardBorder:C.azulCeu}`,borderRadius:5,cursor:disabled?"default":"pointer",transition:"all .15s"}}>{label}</button>;
+  const pgBtn=(label: string,disabled: boolean,onClick: () => void)=><button onClick={onClick} disabled={disabled} style={{padding:"4px 10px",fontSize:11,fontWeight:600,fontFamily:Fn.body,background:disabled?"transparent":C.cardBg,color:disabled?C.textLight:C.azulProfundo,border:`1px solid ${disabled?C.cardBorder:C.azulCeu}`,borderRadius:5,cursor:disabled?"default":"pointer",transition:"all .15s"}}>{label}</button>;
 
   return(
     <div style={{border:`1px solid ${C.cardBorder}`,borderRadius:"12px 12px 12px 24px",overflow:"hidden",background:C.cardBg,boxShadow:"0 1px 3px rgba(0,75,155,.04)",position:"relative"}}>
@@ -307,7 +317,7 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
             {loading&&Array.from({length:5}).map((_,ri)=>(
               <tr key={`sk${ri}`} style={{height:D.rowH,borderBottom:`1px solid ${C.cardBorder}`}}>
                 {selectable&&<td style={{padding:`0 ${D.padX}px`}}><div className="ds-shim" style={{width:16,height:16,borderRadius:3}}/></td>}
-                {visibleCols.map((col,ci)=>(
+                {visibleCols.map((_col,ci)=>(
                   <td key={ci} style={{padding:`0 ${D.padX}px`}}>
                     {ci===0?(
                       <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -438,11 +448,11 @@ function DSTable({columns=[],data=[],striped=true,compact,bordered,selectable,so
 }
 
 /* ═══════════════════════════════════════════ ACTION BTNS ═══════════════════════════════════════════ */
-function ActionBtn({icon,onClick,title}){return <span onClick={onClick} title={title} style={{display:"flex",cursor:"pointer",opacity:.5,padding:3,borderRadius:4,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.opacity=".5";e.currentTarget.style.background="transparent"}}>{icon}</span>}
+function ActionBtn({icon,onClick,title}: {icon?: ReactNode; onClick?: MouseEventHandler<HTMLSpanElement>; title?: string}){return <span onClick={onClick} title={title} style={{display:"flex",cursor:"pointer",opacity:.5,padding:3,borderRadius:4,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.background=C.bg}} onMouseLeave={e=>{e.currentTarget.style.opacity=".5";e.currentTarget.style.background="transparent"}}>{icon}</span>}
 
 /* ═══════════════════════════════════════════ LAYOUT ═══════════════════════════════════════════ */
-function Section({n,title,desc,children}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
-function DSCard({children,s,mob:m}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
+function Section({n,title,desc,children}: {n: string; title: string; desc: string; children?: ReactNode}){return(<section style={{marginBottom:44}}><div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.azulClaro,fontFamily:Fn.title,marginBottom:6}}>{n}</div><h2 style={{fontSize:20,fontWeight:700,color:C.cinzaEscuro,margin:"0 0 4px",fontFamily:Fn.title,letterSpacing:".5px"}}>{title}</h2><p style={{fontSize:14,color:C.cinzaChumbo,margin:"0 0 20px",lineHeight:1.55,fontFamily:Fn.body}}>{desc}</p>{children}</section>)}
+function DSCard({children,s,mob:m}: {children?: ReactNode; s?: CSSProperties; mob?: boolean}){return(<div style={{background:C.cardBg,borderRadius:"12px 12px 12px 24px",border:`1px solid ${C.cardBorder}`,padding:m?16:28,boxShadow:"0 1px 3px rgba(0,75,155,.04),0 4px 14px rgba(0,75,155,.03)",...s}}>{children}</div>)}
 
 const gc={background:C.cardBg,border:`1px solid ${C.cardBorder}`,borderRadius:"10px 10px 10px 18px",overflow:"hidden"};
 const gh={padding:"16px 20px",background:C.bg,borderBottom:`1px solid ${C.cardBorder}`,display:"flex",alignItems:"center",gap:12};
@@ -451,7 +461,7 @@ const gl={fontSize:10,fontWeight:700,letterSpacing:"1.2px",textTransform:"upperc
 const gt={fontSize:13,color:C.cinzaEscuro,lineHeight:1.55,margin:0,fontFamily:Fn.body};
 const ge={fontSize:12,color:C.cinzaChumbo,lineHeight:1.5,margin:0,fontFamily:Fn.body,fontStyle:"italic",paddingLeft:10,borderLeft:`2px solid ${C.azulCeuClaro}`};
 const gk={fontSize:11,fontFamily:Fn.mono,color:C.cinzaChumbo,background:C.cardBg,padding:"2px 8px",borderRadius:4,border:`1px solid ${C.cardBorder}`};
-function TokenRow({label,value,color}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
+function TokenRow({label,value,color}: {label: string; value: string; color?: string}){return(<div style={{display:"flex",alignItems:"center",gap:10,fontSize:12,fontFamily:Fn.body}}>{color&&<div style={{width:16,height:16,borderRadius:4,background:color,border:`1px solid ${C.cardBorder}`,flexShrink:0}}/>}<span style={{color:C.cinzaChumbo,minWidth:130}}>{label}</span><code style={{background:C.neutro,padding:"2px 8px",borderRadius:4,fontSize:11,fontFamily:Fn.mono,color:C.cinzaEscuro}}>{value}</code></div>)}
 
 /* ═══════════════════════════════════════════ DATA ═══════════════════════════════════════════ */
 const reqData=[
@@ -468,7 +478,7 @@ const reqData=[
   {id:"REQ-4015",solicitante:"Ricardo Souza",cargo:"Gestor Logístico",dept:"Logística",valor:5400,status:"Aprovada",sla:89},
   {id:"REQ-4014",solicitante:"Patrícia Gomes",cargo:"Analista de DP",dept:"RH",valor:3100,status:"Pendente",sla:67},
 ];
-const statusMap={Aprovada:"sucesso",Pendente:"atencao",Rejeitada:"critico"};
+const statusMap: Record<string,string>={Aprovada:"sucesso",Pendente:"atencao",Rejeitada:"critico"};
 
 const fornData=[
   {nome:"MRS Logística",cnpj:"01.417.222/0001-77",responsavel:"Roberto Alves",cargoResp:"Diretor Comercial",cidade:"Juiz de Fora",seg:"Ferroviário",status:"Ativo",score:94},
@@ -477,7 +487,7 @@ const fornData=[
   {nome:"Rumo S.A.",cnpj:"02.387.125/0001-10",responsavel:"Carla Duarte",cargoResp:"Key Account",cidade:"São Paulo",seg:"Ferroviário",status:"Ativo",score:92},
   {nome:"ALL Malha Sul",cnpj:"05.156.887/0001-49",responsavel:"João Moreira",cargoResp:"Gestor Logístico",cidade:"Curitiba",seg:"Grãos",status:"Inativo",score:40},
 ];
-const statusForn={Ativo:"sucesso",Pendente:"atencao",Inativo:"critico"};
+const statusForn: Record<string,string>={Ativo:"sucesso",Pendente:"atencao",Inativo:"critico"};
 
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 /* ═══════════════════════════════════════════ EXPORT CODE ═══════════════════════════════════════════ */
@@ -620,22 +630,22 @@ export default function TableDoc() {
   const mob=w<640;
   const [tabFilter,setTabFilter]=useState("Todas");
 
-  const reqCols=[
+  const reqCols: Coluna[]=[
     {key:"id",label:"Código",width:100},
-    {key:"solicitante",label:"Solicitante",render:(v,r)=><div style={{display:"flex",alignItems:"center",gap:10}}><Avatar name={v}/><div style={{lineHeight:1.2}}><span style={{fontWeight:600,fontSize:12,color:C.cinzaEscuro,display:"block"}}>{v}</span><span style={{fontSize:10,color:C.textMuted,marginTop:-1,display:"block"}}>{r.cargo}</span></div></div>},
+    {key:"solicitante",label:"Solicitante",render:(v: string,r: Linha)=><div style={{display:"flex",alignItems:"center",gap:10}}><Avatar name={v}/><div style={{lineHeight:1.2}}><span style={{fontWeight:600,fontSize:12,color:C.cinzaEscuro,display:"block"}}>{v}</span><span style={{fontSize:10,color:C.textMuted,marginTop:-1,display:"block"}}>{r.cargo}</span></div></div>},
     {key:"dept",label:"Depto"},
-    {key:"valor",label:"Valor",align:"right",render:v=><span style={{fontFamily:Fn.mono,fontWeight:600,color:C.cinzaEscuro}}>R$ {v.toLocaleString("pt-BR")}</span>},
-    {key:"status",label:"Status",render:v=><Badge variant={statusMap[v]} dot>{v}</Badge>},
-    {key:"sla",label:"SLA",width:120,render:v=><MiniProgress value={v}/>},
+    {key:"valor",label:"Valor",align:"right",render:(v: number)=><span style={{fontFamily:Fn.mono,fontWeight:600,color:C.cinzaEscuro}}>R$ {v.toLocaleString("pt-BR")}</span>},
+    {key:"status",label:"Status",render:(v: string)=><Badge variant={statusMap[v]} dot>{v}</Badge>},
+    {key:"sla",label:"SLA",width:120,render:(v: number)=><MiniProgress value={v}/>},
     {key:"_actions",label:"",sortable:false,width:70,render:()=><div style={{display:"flex",gap:4}}><ActionBtn icon={Ic.eye(14,C.azulProfundo)} title="Ver"/><ActionBtn icon={Ic.edit(14,C.cinzaChumbo)} title="Editar"/></div>},
   ];
 
-  const fornCols=[
-    {key:"nome",label:"Fornecedor",render:(v,r)=><div style={{display:"flex",alignItems:"center",gap:10}}><Avatar name={v}/><div style={{lineHeight:1.2}}><span style={{fontWeight:600,fontSize:12,color:C.cinzaEscuro,display:"block"}}>{v}</span><span style={{fontSize:10,color:C.textMuted,marginTop:-1,display:"block"}}>{r.cnpj}</span></div></div>},
-    {key:"responsavel",label:"Responsável",render:(v,r)=><div style={{display:"flex",alignItems:"center",gap:10}}><Avatar name={v}/><div style={{lineHeight:1.2}}><span style={{fontWeight:600,fontSize:12,color:C.cinzaEscuro,display:"block"}}>{v}</span><span style={{fontSize:10,color:C.textMuted,marginTop:-1,display:"block"}}>{r.cargoResp}</span></div></div>},
-    {key:"seg",label:"Segmento",render:v=><Badge variant="secondary">{v}</Badge>},
-    {key:"status",label:"Status",render:v=><Badge variant={statusForn[v]} dot>{v}</Badge>},
-    {key:"score",label:"Score",width:120,render:v=><MiniProgress value={v}/>},
+  const fornCols: Coluna[]=[
+    {key:"nome",label:"Fornecedor",render:(v: string,r: Linha)=><div style={{display:"flex",alignItems:"center",gap:10}}><Avatar name={v}/><div style={{lineHeight:1.2}}><span style={{fontWeight:600,fontSize:12,color:C.cinzaEscuro,display:"block"}}>{v}</span><span style={{fontSize:10,color:C.textMuted,marginTop:-1,display:"block"}}>{r.cnpj}</span></div></div>},
+    {key:"responsavel",label:"Responsável",render:(v: string,r: Linha)=><div style={{display:"flex",alignItems:"center",gap:10}}><Avatar name={v}/><div style={{lineHeight:1.2}}><span style={{fontWeight:600,fontSize:12,color:C.cinzaEscuro,display:"block"}}>{v}</span><span style={{fontSize:10,color:C.textMuted,marginTop:-1,display:"block"}}>{r.cargoResp}</span></div></div>},
+    {key:"seg",label:"Segmento",render:(v: string)=><Badge variant="secondary">{v}</Badge>},
+    {key:"status",label:"Status",render:(v: string)=><Badge variant={statusForn[v]} dot>{v}</Badge>},
+    {key:"score",label:"Score",width:120,render:(v: number)=><MiniProgress value={v}/>},
   ];
 
   return(
@@ -680,7 +690,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Striped (zebrada) ★</span>
                 <code style={gk}>padrão</code>
               </div>
-                <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status",render:v=><Badge variant={statusMap[v]} dot>{v}</Badge>}]} data={reqData.slice(0,3)} sortable={false}/>
+                <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status",render:(v: string)=><Badge variant={statusMap[v]} dot>{v}</Badge>}]} data={reqData.slice(0,3)} sortable={false}/>
             </div>
 
             {/* Compacta */}
@@ -689,7 +699,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Compacta</span>
                 <code style={gk}>dense</code>
               </div>
-                <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"valor",label:"Valor",align:"right",render:v=><span style={{fontFamily:Fn.mono}}>R$ {v.toLocaleString("pt-BR")}</span>}]} data={reqData.slice(0,4)} compact sortable={false}/>
+                <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"valor",label:"Valor",align:"right",render:(v: number)=><span style={{fontFamily:Fn.mono}}>R$ {v.toLocaleString("pt-BR")}</span>}]} data={reqData.slice(0,4)} compact sortable={false}/>
             </div>
 
             {/* Limpa */}
@@ -698,7 +708,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Limpa</span>
                 <code style={gk}>sem zebra</code>
               </div>
-                <DSTable columns={[{key:"id",label:"Código"},{key:"solicitante",label:"Solicitante"},{key:"sla",label:"SLA",render:v=><MiniProgress value={v}/>}]} data={reqData.slice(0,3)} striped={false} sortable={false}/>
+                <DSTable columns={[{key:"id",label:"Código"},{key:"solicitante",label:"Solicitante"},{key:"sla",label:"SLA",render:(v: number)=><MiniProgress value={v}/>}]} data={reqData.slice(0,3)} striped={false} sortable={false}/>
             </div>
 
             {/* Bordered */}
@@ -707,7 +717,7 @@ export default function TableDoc() {
                 <span style={{fontSize:13,fontWeight:700,color:C.cinzaEscuro,fontFamily:Fn.title}}>Bordered</span>
                 <code style={gk}>todas as bordas</code>
               </div>
-                <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status",render:v=><Badge variant={statusMap[v]} dot>{v}</Badge>},{key:"valor",label:"Valor",align:"right",render:v=><span style={{fontFamily:Fn.mono}}>R$ {v.toLocaleString("pt-BR")}</span>}]} data={reqData.slice(0,3)} bordered sortable={false}/>
+                <DSTable columns={[{key:"id",label:"Código"},{key:"dept",label:"Depto"},{key:"status",label:"Status",render:(v: string)=><Badge variant={statusMap[v]} dot>{v}</Badge>},{key:"valor",label:"Valor",align:"right",render:(v: number)=><span style={{fontFamily:Fn.mono}}>R$ {v.toLocaleString("pt-BR")}</span>}]} data={reqData.slice(0,3)} bordered sortable={false}/>
             </div>
           </div>
         </Section>
@@ -935,7 +945,7 @@ export default function TableDoc() {
                 {key:"tipo",label:"Tipo"},
                 {key:"local",label:"Local"},
                 {key:"data",label:"Data"},
-                {key:"status",label:"Gravidade",render:v=><Badge variant={v==="Crítica"?"critico":v==="Alta"?"atencao":"info"} dot>{v}</Badge>},
+                {key:"status",label:"Gravidade",render:(v: string)=><Badge variant={v==="Crítica"?"critico":v==="Alta"?"atencao":"info"} dot>{v}</Badge>},
               ]} data={[
                 {id:"OC-2041",tipo:"Vazamento",local:"Pátio 47-B",data:"02/04/2026",status:"Crítica"},
                 {id:"OC-2040",tipo:"Equipamento",local:"Oficina Central",data:"01/04/2026",status:"Alta"},

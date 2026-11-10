@@ -26,7 +26,7 @@ export interface ChangelogVersion {
 export const CHANGELOG: ChangelogVersion[] = [
   {
     version: '1.0.0',
-    date: '2026-10-26',
+    date: '2026-11-10',
     title: 'Nome acessível obrigatório e erro anunciado',
     entries: [
       {
@@ -43,6 +43,293 @@ export const CHANGELOG: ChangelogVersion[] = [
         type: 'fix',
         description:
           'Menu de colunas do `AdminTable`: o nome da coluna é o rótulo do checkbox e a linha da aparência é o rótulo do switch (clicáveis). A alça de reordenar vira botão que move a coluna com ArrowUp e ArrowDown, e o arrasto não seleciona texto. Ícones decorativos de `Input` e `FieldTrigger` saem com `aria-hidden`.',
+      },
+    ],
+  },
+  {
+    version: '0.21.16',
+    date: '2026-11-10',
+    title: 'Anéis de foco do cabeçalho passam de 3:1',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o anel de foco em hex com transparência. `ring-[#2563EB]/25` media 1,43:1 sobre branco e 1,26:1 sobre `#1a1a1a`; `ring-[#F6921E]` de 28% a 40% media de 1,27:1 a 1,40:1 no claro e de 1,71:1 a 2,25:1 no escuro. `UserChip` e o ramo claro das seções passam a `--color-ring` cheio; o ramo escuro das seções passa a `#F6921E` cheio (7,50:1 sobre `#1a1a1a`).',
+      },
+      {
+        type: 'fix',
+        description:
+          '`DocHeaderNeuIconButton`: o anel de foco nunca aparecia, porque o botão leva `boxShadow` em `style` e o estilo em linha vence `focus-visible:ring-2`. O foco passa a `outline` sólido de 2px com recuo de 2px em `--color-ring`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` recusa `ring-[...]` com hex, `rgba` ou transparência nos três arquivos, confere o contorno do botão e o contraste do anel do ramo escuro contra o recuo `#1A1A1A`.',
+      },
+    ],
+  },
+  {
+    version: '0.21.15',
+    date: '2026-11-10',
+    title: 'Linha info do SettingsPreferenceRow deixa de clarear no hover',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`SettingsPreferenceRow` variante `info`: sai o `hover:bg-[color-mix(...)]`. No escuro a mistura com `--color-fips-blue-200` clareava o fundo e o trilho do `Switch` desligado caía de 3,09:1 (repouso) para 2,05:1 (hover) sobre o cartão. No claro a mistura dava a mesma cor de repouso, então o hover não mudava nada. O fundo fica fixo e o hover passa a reforçar a borda, de `--color-fips-blue-400` a 35% para cheio, nos dois temas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê as classes da linha `info`, calcula o fundo de repouso e o de hover (inclusive `color-mix`, com alfa pré-multiplicado) e exige 3:1 do trilho desligado contra os dois nos dois temas.',
+      },
+    ],
+  },
+  {
+    version: '0.21.14',
+    date: '2026-11-10',
+    title: 'Foco do teclado visível no atalho aberto do hero',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho`: o foco do teclado passa a ser um `outline` sólido branco de 3px com recuo de 2px. Antes era `focus-visible:ring-4` (uma `box-shadow`), que o `boxShadow` em linha do atalho aberto sobrescrevia: Tab no atalho ficava igual ao repouso, e todo foco de teclado abre o atalho. O contorno branco mede mais de 3:1 contra o fundo do `PageHero` nos dois temas. Apps que tinham CSS local para desenhar esse foco podem removê-lo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` exige que a classe do atalho use `outline` sem `ring` e calcula o contraste do contorno contra o gradiente do `PageHero` (com a película branca de 8%) e contra o fundo escuro.',
+      },
+    ],
+  },
+  {
+    version: '0.21.13',
+    date: '2026-11-10',
+    title: 'Texto secundário do tema claro passa de 4,5:1 sobre cartão, cartão suave, página e listra da tabela',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão (`#ffffff`), o cartão suave (`#fbfdff`) e a página (`#f5f8fc`). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. Muda o pixel de todo texto secundário do pacote e dos apps, que fica um pouco mais escuro: legenda do `BrandLoader`, placeholder de `Input`, `Textarea` e `FieldTrigger`, botão `ghost`, `lead`, `small` e `caption`. O token do escuro não muda (`#9ca3af`, 6,04:1 ou mais sobre cartão, cartão suave e página). `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham: o cinza cheio com texto branco vai de 4,57:1 a 5,05:1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 de `--color-fg-muted` sobre cartão, cartão suave, página e listra da tabela nos dois temas, e que o `neutralFill` do `colors.ts` bata com o `globals.css`. `foundations.md`, `patterns.md`, `docs/tokens.md`, a página de cores do site e o README do Switch portátil acompanham.',
+      },
+    ],
+  },
+  {
+    version: '0.21.12',
+    date: '2026-11-10',
+    title: 'Lint acusa cor literal em ui/ e a pasta ui/ entra na regra de override visual',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Regra de lint nova, `governance/no-literal-colors`: acusa `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(`, `rgba(`, `hsl(` e `hsla(` em texto de código nos `.ts` e `.tsx` de `src/components/ui/` (os `*-variants.ts` entram) e de `src/components/brand/` (0 cores hoje), inclusive dentro de valor arbitrário do Tailwind e hex depois de `_` (`shadow-[0_0_0_3px_#93BDE4]`). `rgb(var(--x) / 0.5)` não é acusado: é token com alfa. As 56 combinações de arquivo e cor (46 cores distintas; 72 ocorrências em 13 arquivos) que `ui/` tem hoje e ainda não têm token ficam em `COLOR_EXCEPTIONS`, no `eslint.config.js`, por arquivo e com o motivo. A exceção vale por arquivo e cor, não por ocorrência. Cor nova em `ui/` precisa de token ou de exceção escrita. `composites/`, `icons/`, `layout/`, `domain/` e `patterns/` ficam fora até as fatias delas (FIPS-1303 e FIPS-1305).',
+      },
+      {
+        type: 'fix',
+        description:
+          'O CSS do pacote deixa de ler `scripts/` como fonte de classes do Tailwind (`@source not "../../scripts"` em `globals.css`). Sem isso, os trechos de código do teste de lint viravam utilitários publicados (`.bg-[#ff0000]`, `.shadow-[...]` e outros no `dist/styles.css`). Sai também um `.ring-[...]` que já vinha de `scripts/`. Nenhum elemento usa essas classes: a aparência é a mesma.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`src/components/ui/` deixa de ficar fora de `governance/no-visual-overrides`. As duas acusações que apareceram, `InputGroupInput` e `InputGroupTextarea` (o grupo desenha borda, raio e foco do campo, e o campo de dentro fica sem os dele), levam `eslint-disable-next-line` com o motivo. Nenhum componente muda e a aparência é a mesma. `npm run test:lint-governanca` roda o ESLint sobre trechos de código e confere onze casos.',
+      },
+    ],
+  },
+  {
+    version: '0.21.11',
+    date: '2026-11-10',
+    title: 'CI em pull request e lint sem erro',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`.github/workflows/ci.yml` roda em todo pull request contra a `main` e em todo push na `main`, com passos separados: lint, typecheck do site (`tsc -b`), testes (`npm test`, que roda contraste, hero, xlsx e hooks), build da biblioteca e build do site. O erro aponta o passo que falhou.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`npm run lint` passa de 45 erros para 0 e as 9 diretivas `ts-nocheck` de `src/docs` saem. Dos 18 efeitos acusados, 13 viram valor derivado ou hook (`useIsClient`, `useResetOnChange` e `useSyncedState`, novos) e 5 ficam com `eslint-disable-next-line` e o motivo escrito: `TutorialContextual.tsx`, `DocHeaderSectionNav.tsx`, `DialogDoc.tsx` (2) e `DrawerDoc.tsx`. `react-refresh/only-export-components` fica desligada só em `src/components/`, onde o arquivo do componente exporta também API pública do pacote. `governance/no-visual-overrides` segue ativa em tudo que cobria. Os botões de menu móvel do site e a demonstração do modal de formulário deixam de sobrescrever raio, altura e cor e usam o visual padrão do componente.',
+      },
+    ],
+  },
+  {
+    version: '0.21.10',
+    date: '2026-11-10',
+    title: 'useFipsTheme sai no pacote',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`useFipsTheme` e o tipo `UseFipsThemeResult` passam a sair em `src/index.ts`: `import { useFipsTheme } from \'@fips-app/ds-fips\'` devolve `{ dark, toggle, setDark }`. Era a razão de cada app ter a sua cópia do hook de tema. A escolha continua em `localStorage`, na chave `fips-theme` (`dark` ou `light`), e a classe `.dark` do `<html>` é aplicada ao importar o pacote, como na cópia que os apps já têm. Export novo e nada removido: `dist/index.d.ts` vai de 199 para 201 nomes.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O hook deixa de lançar com o armazenamento bloqueado: o acesso a `localStorage` rodava na importação e, com `SecurityError`, derrubava a tela inteira. Agora a leitura e a gravação são protegidas e o tema alterna só na visita. O `toggle` passa a ler o tema do momento do clique (antes usava o valor de quando o componente renderizou) e `setDark(valor)` entra no retorno para quem precisa forçar o tema. O estado do hook é a classe `.dark` do `<html>`, não o `localStorage`, e quem muda a classe por fora do hook também atualiza `dark`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`useDsTheme` sai: só o `ExportModal`, que o pacote não exporta, o usava, e a leitura da classe com `MutationObserver` agora está dentro de `useFipsTheme`. Dois hooks para o mesmo assunto viram um. A página Cores do site ganha a seção 05 com o import do pacote, os três retornos e a chave `fips-theme`; `foundations.md` e `components.md` da skill acompanham. `npm run test:tema` (11 testes) cobre importação sem `window`, armazenamento que lança, tema guardado, `toggle`, `setDark`, observador da classe, render no servidor e a exportação do hook e do tipo.',
+      },
+    ],
+  },
+  {
+    version: '0.21.9',
+    date: '2026-11-10',
+    title: 'Texto da aba ativa do Tabs legível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`TabsTrigger` pintava o texto da aba ativa com `--color-primary`, que não muda no `.dark` (`#004b9b` nos dois temas). No escuro a aba ativa media 2,06:1 sobre `--color-surface` (`#1a1a1a`), abaixo das 6,04:1 das inativas sobre a lista (`#252525`): a seleção ficava menos legível que o resto. O texto passa a ler `--color-primary-text`, que é o `--color-primary` no claro e o `--color-fips-blue-400` (`#93bde4`) no escuro: 8,82:1. O claro não muda (`#004b9b`, 8,47:1 sobre branco). Medido nos tokens do `globals.css` (`src/components/ui/tabs.tsx:29`).',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 do texto da aba ativa sobre o fundo dela nos dois temas, que a ativa seja mais legível que a inativa e que o claro siga no azul do `--color-primary`. A referência `components.md` da skill e o zip acompanham.',
+      },
+    ],
+  },
+  {
+    version: '0.21.8',
+    date: '2026-11-10',
+    title: 'Selinho de contagem da Sidebar visível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'No tema escuro, `getBadgeTone` da `Sidebar` pintava o selinho de contagem com tinta de 14% (`rgba(239,68,68,0.14)` e equivalentes). O número lia bem (6,68 a 9,18:1 contra o disco), mas o disco quase não se separava da barra `#1a1a1a`: 1,15 a 1,32:1, abaixo dos 3:1 de componente de interface (WCAG 1.4.11), e o anel de 1px tinha a mesma tinta (1,31 a 1,79:1 contra o azulejo do ícone). Passa a disco sólido nos quatro tons: vermelho `#DC3545` com `#FFFFFF` (disco 3,84:1 contra a barra, número 4,53:1), âmbar `#F6921E` com `#1A1A1A` (7,50:1 e 7,50:1), azul `#1A6FC4` com `#FFFFFF` (3,41:1 e 5,10:1) e verde `#008842` com `#FFFFFF` (3,81:1 e 4,56:1). O anel contra o azulejo mede 3,80 a 4,17:1. O tema claro não muda.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a conferir, nos quatro tons do escuro, o número contra o disco (4,5:1), o disco contra a barra (3:1) e o anel contra o azulejo (3:1). A página da `Sidebar` ganha a linha do selinho em "Contraste".',
+      },
+    ],
+  },
+  {
+    version: '0.21.7',
+    date: '2026-11-10',
+    title: 'Atalho ouro fechado do hero com a borda de 1,5px',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho` com `variante="ouro"` fechado não declarava largura de borda, e o preflight do Tailwind zera a borda de elemento sem largura: o atalho saía com borda 0 e medindo 27px, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px, `/docs/patterns/hero`). Na `HeroFileira`, onde o principal `ouro` fecha quando outro atalho abre, a fileira é centrada e os vizinhos andavam 1px para cada lado. O repouso `ouro` passa a levar `border-[1.5px]`, como o do `inverseOutline` já levava: a borda segue transparente, o desenho não muda e o atalho fechado passa a medir 29px a 1x (30px a 2x, onde o Chromium desenha a borda de 1,5px inteira), igual ao `inverseOutline`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:hero` passa a conferir a largura de borda de `ouro` e `inverseOutline`, fechados e abertos, e o principal aberto e o segundo fechado de uma `HeroFileira`.',
+      },
+    ],
+  },
+  {
+    version: '0.21.6',
+    date: '2026-11-10',
+    title: 'Linhas citadas no README do Switch',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O fim de `exports/switch/README.md` citava linhas da `foundations.md` que não eram as dos tokens do Switch: `:89-91` no claro (caíam em `--color-danger-text`, `--color-success-fill` e `--color-neutral-fill`), `:104` no escuro (linha em branco) e `:118-120` no escuro (outras linhas da tabela). Passa a citar `:92-94` e `:107` e `:123-125`, onde estão `--color-ring`, `--color-switch-on`, `--color-switch-off` e `--color-surface`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` confere que as linhas citadas no README do Switch apontam para esses tokens na `foundations.md`: se a tabela mudar de lugar, o teste cai em vez de a citação envelhecer calada.',
+      },
+    ],
+  },
+  {
+    version: '0.21.5',
+    date: '2026-11-10',
+    title: 'Select: a lista abre num portal e Modal, Drawer e card deixam de cortá-la',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'A lista do `Select` passa de `absolute` dentro do campo para um portal no `body` com `position: fixed` na coordenada do gatilho. Dentro do `Modal` (corpo `overflow-y-auto`, contêiner `overflow-hidden`) ela era cortada: a 1440x900, com 24 opções no fim do corpo, 0 de 4 opções inteiras ficavam clicáveis; agora são 4 de 4 e a roda do mouse alcança as 24 (rolagem de 0 a 828 px). Props e `ref` não mudam. Quem achava a lista como filha do campo por seletor CSS passa a usar `[role="listbox"]`. Teste de app com Testing Library que procura as opções com `within(container)` ou `container.querySelector(\'[role="option"]\')` deixa de achá-las, porque estão no `body`: use `screen`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'A lista sobe quando embaixo não cabe e o gatilho perde o canto de cima em vez do de baixo; sem espaço nos dois lados ela encolhe e rola. Acompanha a rolagem do corpo do `Modal`, o redimensionamento e o gatilho que muda de lugar sem rolagem (aviso que aparece acima do campo, acordeão, `Modal` ainda animando): com a lista aberta, cada quadro confere o gatilho e a altura da lista e só mede de novo quando algo mudou. Fecha quando o gatilho sai da área visível. Fica em `z-[70]` (acima do `Modal` e do `Drawer` em 50 e do tour em 60), devolve `pointer-events: auto` (o Radix põe `none` no `body`) e libera a roda e o toque (o travamento de rolagem do `Modal` cancelava os dois sobre a lista). Leva `data-lista-flutuante`, o marcador do `SelectBusca` dos apps. `ChipSelect` não mudou e continua `absolute`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:select`: 7 casos da conta de posição (`lista-flutuante.ts`), o render no servidor e a guarda do código, mais 13 casos num Chromium sem interface (`Modal` a 1440x900, 1440x420, 600x500 e 375x812 com toque, teclado, aviso acima do campo, `Drawer`, card com `overflow-hidden`, tema escuro). A parte sem navegador também roda no `npm test`. Os do navegador precisam do playwright (`npm i --no-save playwright`) ou do playwright-core com `DS_CHROME` apontando para um Chrome instalado; sem eles são pulados, com o motivo escrito no topo da saída. Seção 01-I da página do Select e notas da skill acompanham.',
+      },
+    ],
+  },
+  {
+    version: '0.21.4',
+    date: '2026-11-10',
+    title: 'Select e ChipSelect sem erro no jsdom',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Ao realçar uma opção pelo teclado, `Select` e `ChipSelect` chamavam `document.getElementById(...)?.scrollIntoView({ block: \'nearest\' })`. O `?.` cobre o elemento ausente, não o método ausente: no jsdom, que o vitest dos apps usa, `Element.prototype.scrollIntoView` não existe e o teste do app quebrava com `TypeError: document.getElementById(...)?.scrollIntoView is not a function`. A chamada passa a ser `scrollIntoView?.(...)`, num auxiliar interno (`src/lib/rolar-para-vista.ts`) que os dois componentes usam. No navegador a opção realçada continua rolando para a vista (`block: \'nearest\'`).',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:rolagem` chama o auxiliar com um `document` sem `scrollIntoView`, com elemento ausente e com o método presente, e confere que `select.tsx` e `chip-select.tsx` não chamam `scrollIntoView` direto. O teste também roda dentro de `npm test` (que o `publish.yml` executa), então a regressão trava a publicação.',
+      },
+    ],
+  },
+  {
+    version: '0.21.3',
+    date: '2026-11-10',
+    title: 'Regra da skill: um título por seção na listagem',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Regra escrita na skill (`patterns.md`, Data Listing e Header do card da tabela): um título por seção na listagem. O header do card da tabela (tile, título, "N registros" e ações) é o título da seção. Título ou contagem repetidos acima do card (cabeçalho de guia, `PageHeader` de seção, `h2` solto) estão fora do padrão, e as ações da listagem vão no slot do header do card. Só documentação: nenhum componente muda.',
+      },
+    ],
+  },
+  {
+    version: '0.21.2',
+    date: '2026-11-10',
+    title: 'Rótulo do atalho aberto do hero passa de 4,5:1 em todo o degradê',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`docHeaderNeuAccentBgHover`: o último ponto do degradê passa de `#cf730d` a `#dc8212`. O rótulo e o ícone `#002A68` sobre esse ponto vão de 3,99:1 a 4,73:1; os outros três pontos (`#FFD37B` 9,70:1, `#f7ad45` 7,20:1 e `#F6921E` 5,91:1) não mudam. Muda o pixel do canto inferior direito do azulejo no hover de `HeroAtalho`, `HeroFileira`, `UserChip` e `DocHeaderNeuIconButton`: fica mais claro.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê o degradê e a cor do rótulo de `docHeaderChrome.ts`, amostra o degradê a cada 1% e exige 4,5:1. Cobre também o atalho `ouro` em repouso (`--color-primary-hover` sobre `--color-accent`) nos dois temas. Confere também que `HeroAtalho`, `UserChip` e `DocHeaderNeuIconButton` pintam o fundo com `docHeaderNeuAccentBgHover`.',
+      },
+    ],
+  },
+  {
+    version: '0.21.1',
+    date: '2026-11-10',
+    title: 'Borda de campo do tema escuro passa de 3:1 em todas as superfícies',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-border-control` no escuro passa de `#666666` a `#727272`: 3,03:1, 2,87:1 e 2,67:1 viram 3,62:1, 3,43:1 e 3,19:1 sobre o cartão (`#1a1a1a`), o cartão suave (`#1f1f1f`) e a página (`#252525`). Muda o pixel da borda de `Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` e do botão `secondary` em todo app que usa o pacote: a borda de campo fica mais clara no escuro. `--color-border` (o divisor) e o claro não mudam no CSS. O hover (`--color-fg-muted`) continua mais claro que a borda. No export em TypeScript, `semanticColors.borderControl` passa de `#C0CCD2` a `#808D9A`, o mesmo valor do CSS desde a 0.20.16.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 3:1 da borda de campo sobre cartão, cartão suave e página nos dois temas. Referência (`foundations.md`, `components.md`) e página de cores do site acompanham.',
       },
     ],
   },

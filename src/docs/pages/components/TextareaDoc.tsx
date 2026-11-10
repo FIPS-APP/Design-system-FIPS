@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useSyncedState } from '../../../hooks/useSyncedState'
 import { CodeExportSection } from '../../components/CodeExport'
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground'
 
@@ -125,7 +126,7 @@ function DSTextarea({
   defaultValue?: string
   onChange?: (v: string) => void
 }) {
-  const [internal, setInternal] = useState(() => valueProp ?? defaultValue ?? '')
+  const [internal, setInternal] = useSyncedState(valueProp, defaultValue ?? '')
   const [focused, setFocused] = useState(false)
   const ref = useRef<HTMLTextAreaElement>(null)
   const fs = compact ? 12 : 13
@@ -138,22 +139,15 @@ function DSTextarea({
   const charCount = dv.length
   const overLimit = maxLength !== undefined && charCount > maxLength
 
-  useEffect(() => {
-    if (valueProp !== undefined) setInternal(valueProp)
-  }, [valueProp])
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const v = e.target.value
-      if (!controlled) setInternal(v)
-      onChange?.(v)
-      if (autoResize && ref.current) {
-        ref.current.style.height = 'auto'
-        ref.current.style.height = `${ref.current.scrollHeight}px`
-      }
-    },
-    [autoResize, onChange, controlled],
-  )
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const v = e.target.value
+    if (!controlled) setInternal(v)
+    onChange?.(v)
+    if (autoResize && ref.current) {
+      ref.current.style.height = 'auto'
+      ref.current.style.height = `${ref.current.scrollHeight}px`
+    }
+  }
 
   useEffect(() => {
     if (!autoResize || !ref.current) return
@@ -1360,7 +1354,7 @@ textarea::placeholder{color:${C.textLight}}
                 {token:"Borda focus",light:"#004B9B",dark:"#93BDE4"},
                 {token:"Background",light:"#FFFFFF",dark:"#252525"},
                 {token:"Texto",light:"#333B41",dark:"#E2E2E8"},
-                {token:"Placeholder",light:"#6B7784",dark:"#A1A1AA"},
+                {token:"Placeholder",light:"#64707D",dark:"#9CA3AF"},
                 {token:"Ring focus",light:"rgba(147,189,228,0.35)",dark:"rgba(147,189,228,0.2)"},
                 {token:"Bg disabled",light:"#F1F5F9",dark:"#1E1E1E"},
                 {token:"Borda erro",light:"#DC3545",dark:"#F87171"},

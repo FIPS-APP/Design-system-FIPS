@@ -8,7 +8,7 @@ Duas camadas. **Sempre importe pela raiz** (`src/index.ts`) num app consumidor.
 
 ### `src/index.ts` — entrada pública da library
 
-Reexporta `./tokens`, `cn`, **tudo** de `components/ui` (abaixo), mais:
+Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundations.md`, Dark mode), **tudo** de `components/ui` (abaixo), mais:
 
 - `FipsLogo` · `PageHero`, `PAGE_HERO_DEFAULT_DECORATION`
 - `HeroAtalho`, `HeroAtalhos`, `HeroFileira`
@@ -190,7 +190,7 @@ Heights reais:
 Caixa do campo (`Input`, `Select`, `Textarea`, `FieldTrigger`, `InputGroup` — todos compartilham):
 
 - **Radius**: `rounded-lg` (8px) — não `rounded-xl`.
-- **Borda**: `border border-[var(--color-border-control)]` (1px, sólida, sem alpha). No claro é `#808d9a` (3,39:1 sobre branco); no escuro é `#666666` (3,03:1 sobre o cartão). `--color-border` segue só como divisor. Hover: `--color-fg-muted` nos dois temas.
+- **Borda**: `border border-[var(--color-border-control)]` (1px, sólida, sem alpha). No claro é `#808d9a` (3,39:1 sobre branco); no escuro é `#727272` (3,62:1 sobre o cartão, 3,19:1 sobre a página). `--color-border` segue só como divisor. Hover: `--color-fg-muted` nos dois temas.
 - **Fonte**: compact `text-[13px]`, default `text-[1.08rem]` (`Textarea` default `text-[1.02rem]`).
 - **Sombra em repouso**: nenhuma (`boxShadow: none`). Só o anel de foco (`focus-visible:ring-2 ring-[var(--color-primary)]/25`).
 - **Pendente (`Input pending`)**: obrigatório ainda vazio. Fio de 2px em `--color-semantic-atencao-fg` (também no hover) e fundo em `--color-semantic-atencao-bg`; o `<input>` ganha `data-pending="true"`. Contraste do fio contra a célula: 5,18:1 no claro e 10,78:1 no escuro (WCAG 1.4.11 pede 3:1). O foco troca o fio pelo azul de foco. O erro vence: com `aria-invalid`, `disabled` ou `readOnly` o pendente não pinta. A cor não carrega sozinha: mantenha ao lado um `Badge variant="warning"` "Em branco" (ou texto), e passe `pending={!valor}` para o fio e o selo saírem juntos ao preencher. Pendências conhecidas: o texto do `Badge warning` mede 2,07:1 no claro até o #106 levá-lo para `--color-semantic-atencao-fg`, e o placeholder (`--color-fg-muted`) mede 4,30:1 sobre o fundo de atenção no claro até o #143. A guarda só lê o `disabled` do próprio campo: dentro de `<fieldset disabled>`, o fio laranja continua, então passe `pending={false}` nesse caso. Por ora só no `Input`.
@@ -214,7 +214,7 @@ Teclado e formulário (`Select` e `ChipSelect`): no gatilho, ArrowDown/ArrowUp a
 
 Nome acessível obrigatório pelo tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` só compilam com `aria-label` ou `aria-labelledby` (o `Button` com `asChild` leva o nome no filho; no `Switch` vale também um `id` ligado a um `<label htmlFor>`, que é o rótulo clicável ao lado). Sem nome, o `tsc` acusa TS2322 no próprio componente e a mensagem cita `AccessibleName` ou `asChild`, não o `aria-label`: a correção é passar o nome. No `AdminTableColumnMenu`, o nome da coluna é o rótulo do checkbox, o texto da aparência é o rótulo do switch, e a alça move a coluna com ArrowUp/ArrowDown (sem passar por coluna fixa).
 
-Cuidado — o dropdown do `Select` é `absolute` (sem portal). Ancestral com `overflow-hidden` corta a lista "pra dentro". Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. Nunca corrija no `Select` do DS (é sincronizado); corrija no consumidor.
+Dropdown do `Select`: **a partir da v0.21.2 a lista abre num portal para o `body`**, com `position: fixed` na coordenada do gatilho (`z-[70]`, acima de Modal e Drawer em `z-50` e do tour em `z-[60]`). Corpo rolável de Modal, Drawer e card com `overflow-hidden` não a cortam; ela sobe quando embaixo não cabe (o gatilho troca `rounded-b-none` por `rounded-t-none`), encolhe e rola por dentro quando falta espaço dos dois lados, acompanha a rolagem, o redimensionamento e o gatilho que muda de lugar sem rolar, e fecha quando o gatilho sai da área visível. Teste de app com Testing Library acha as opções por `screen`, não por `within(container)`, porque elas estão no `body`. Leva `data-lista-flutuante` (mesmo marcador do `SelectBusca` dos apps): componente do app que fecha por clique fora com `contains` deve ignorar alvos dentro de `[data-lista-flutuante]`. **Em versões anteriores à v0.21.2 (medido nas tags v0.5.0 a v0.20.26 e nos tarballs 0.12.3, 0.12.5 e 0.20.4) o dropdown é `absolute` (sem portal)**: ancestral com `overflow-hidden` ou `overflow-y-auto` corta a lista "pra dentro", e dentro de `Modal` o corte é certo. Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. O `ChipSelect` continua `absolute` em toda versão.
 
 ### Tipos de seleção (catálogo — qual usar quando)
 
@@ -249,7 +249,7 @@ Fontes:
 
 Direção de uso:
 
-- `Tabs`: navegação secundária e troca de contexto dentro da tela
+- `Tabs`: navegação secundária e troca de contexto dentro da tela. O texto da aba ativa lê `--color-primary-text` sobre `--color-surface` (`#004b9b` no claro, 8,47:1; `#93bde4` no escuro, 8,82:1); a inativa herda `--color-fg-muted` da lista. Não pinte a ativa com `--color-primary`: ele não muda no escuro e mede 2,06:1 ali
 - `Table`: listagem operacional densa, com wrapper card e hover de linha. Sistema de densidade (`compact|normal|comfortable`) + toggles de aparência (`zebra`, `verticalBorders`, `stickyHeader`, `wrapText`) e `framed`, todos via props propagadas por context. Hook `useTableDensity()` deixa descendentes (Badge) auto-ajustarem. API completa, métricas por densidade, `AdminTableColumnMenu`/`Pagination`/`SortHeader` e persistência em `localStorage`: ver **Data Listing → Tabela canônica** em `patterns.md`
 - `Dialog`: ações focadas, filtros avançados em desktop, confirmação
 - `Drawer`: detalhes e fluxos laterais, principalmente em tablet/mobile
