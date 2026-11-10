@@ -1,5 +1,6 @@
 @import './fontes-fips.css';
 @import 'tailwindcss';
+@source not "../../scripts";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
