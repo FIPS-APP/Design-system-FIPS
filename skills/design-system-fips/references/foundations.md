@@ -100,7 +100,7 @@ Fonte: `src/styles/globals.css` (`@layer base`)
 
 ### Dark mode — o que muda e o que **não** muda
 
-Dark é toggle da classe `.dark` no `<html>` (`useFipsTheme()`, persistido em `localStorage` chave `fips-theme`). Os neutros seguem o Gestão OPA: cartão `#1a1a1a` sobre página `#252525`. O bloco `.dark` redefine a camada de superfície, a borda de campo e os papéis de texto e de fundo cheio:
+Dark é toggle da classe `.dark` no `<html>`. O pacote exporta o hook: `import { useFipsTheme } from '@fips-app/ds-fips'` devolve `{ dark, toggle, setDark }` (tipo `UseFipsThemeResult`), guarda a escolha em `localStorage` na chave `fips-theme` (`dark` ou `light`) e aplica a escolha guardada ao importar o pacote, antes de o React pintar. Fora do navegador devolve `dark: false` e não toca em `window`; com o armazenamento bloqueado alterna só na visita. Não copie o arquivo do hook para o app. Os neutros seguem o Gestão OPA: cartão `#1a1a1a` sobre página `#252525`. O bloco `.dark` redefine a camada de superfície, a borda de campo e os papéis de texto e de fundo cheio:
 
 | Token | Light | Dark |
 | --- | --- | --- |

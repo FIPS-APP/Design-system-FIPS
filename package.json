@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.21.9",
+  "version": "0.21.10",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -35,7 +35,8 @@
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test:select": "node --test scripts/select-portal.test.mjs",
     "test:rolagem": "node --test scripts/rolagem-teclado.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs scripts/rolagem-teclado.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs scripts/rolagem-teclado.test.mjs scripts/tema.test.mjs",
+    "test:tema": "node --test scripts/tema.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {
