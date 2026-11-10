@@ -197,6 +197,7 @@ Regras:
 - **Chips de filtro ativo** (`ActiveFilterChips`) colados no título do header da Table — um chip por VALOR filtrado, nunca um badge de contagem; ver `components.md`
 - KPIs sparkline fora do card = variante documentada; `ListingKpiRow` (Indicadores rápidos clicáveis) é opcional e mora no `panelHeader` do card da toolbar quando usado — ver `components.md`
 - tabela dentro de card
+- **um título por seção**: o header do card da tabela (tile + título + "N registros …" + ações) **é** o título da seção. Não repita título nem contagem acima do card (cabeçalho de guia, `PageHeader` de seção, `h2` solto); as ações da listagem vão no slot de ações do header do card, não numa barra acima dele
 - coluna Ações usa `RowActionsMenu` (menu radial), não kebab genérico
 - detalhes da linha em painel lateral ou modal, não em navegação improvisada
 
@@ -305,6 +306,8 @@ O `<Table>` governado expressa densidade como **padding vertical**. A referênci
 - Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
 
 #### Header do card da tabela
+
+É o título da seção: nada de título ou contagem repetidos logo acima do card (ver Data Listing, "um título por seção").
 
 Padrão vindo do Data Listing (v0.11.23): `padding 18px 20px 14px`, `gap 14`, **`borderBottom` de 1px** separando header e tabela. Título 16px `lineHeight 1.2`; subtítulo 11px, `margin-top 3px`, `lineHeight 1.4`. Tile do ícone `48×48` com **aro**: fundo a 4% da cor do ícone, borda a 8% (`color-mix(in srgb, {cor} 8%, transparent)`).
 
