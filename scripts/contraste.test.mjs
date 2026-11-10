@@ -336,6 +336,40 @@ test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => 
   assert.deepEqual(token(TEXTO_ABA_ATIVA, 'claro'), token('--color-primary', 'claro'))
 })
 
+// ─── Toast e Tooltip: texto do tom sucesso ─────────────────────────────────
+// O fundo é fixo nos dois temas (#ECFDF5), então o par vale no claro e no escuro. #00904C sobre ele mede 3,91:1.
+const TONS_SUCESSO = [
+  'exports/toast/toast.tsx',
+  'exports/tooltip/Tooltip.tsx',
+  'src/docs/pages/components/ToastDoc.tsx',
+  'src/docs/pages/components/TooltipDoc.tsx',
+]
+
+// ToastDoc e TooltipDoc têm duas paletas `C` cada (a da demo do site e a do código copiável), e a DemoPill passa
+// o verde por JSX. A chave vira lista de valores e todos entram na conta.
+for (const arquivo of TONS_SUCESSO) {
+  test(`${arquivo}: texto do tom sucesso contra o fundo dele, mínimo 4,5:1`, () => {
+    const fonte = ler(arquivo)
+    const paleta = {}
+    for (const m of fonte.matchAll(/(\w+)\s*:\s*"(#[\da-f]{6})"/gi)) (paleta[m[1]] ??= new Set()).add(m[2])
+    const pares = []
+    for (const m of fonte.matchAll(/\bsucesso\s*:\s*\{([^}]*)\}/g)) {
+      const corpo = m[1]
+      const bg = corpo.match(/\bbg\s*:\s*"(#[\da-f]{6})"/i)
+      const texto = corpo.match(/\bcolor\s*:\s*(?:"(#[\da-f]{6})"|C\.(\w+))/i)
+      assert.ok(bg && texto, `${arquivo}: sucesso sem bg ou color legível (${corpo.trim().slice(0, 80)})`)
+      pares.push({ bg: bg[1], hex: texto[1], chave: texto[2] })
+    }
+    for (const m of fonte.matchAll(/\bbg="(#ECFDF5)"\s+color=\{C\.(\w+)\}/gi)) pares.push({ bg: m[1], chave: m[2] })
+    assert.ok(pares.length > 0, `${arquivo}: nenhum tom sucesso encontrado`)
+    for (const { bg, hex, chave } of pares) {
+      const valores = hex ? [hex] : [...(paleta[chave] ?? [])]
+      assert.ok(valores.length > 0, `${arquivo}: C.${chave} fora da paleta do arquivo`)
+      for (const v of valores) verifica(`${arquivo}: ${chave ? `C.${chave} = ` : ''}${v} sobre ${bg}`, cor(v, 'claro'), cor(bg, 'claro'), MINIMO_TEXTO)
+    }
+  })
+}
+
 // ─── Azul escuro de texto ──────────────────────────────────────────────────
 for (const t of TEMAS) {
   test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {
