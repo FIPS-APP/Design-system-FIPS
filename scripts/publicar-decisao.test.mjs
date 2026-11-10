@@ -29,10 +29,24 @@ test('main sem mudança de versão e fora do registro (run anterior falhou ou fo
 })
 
 test('main com a versão mudada para uma que já existe: falha dizendo qual versão', () => {
-  const r = decidir({ evento: 'main', versaoAntes: '0.20.31', versaoAtual: '0.20.30', jaPublicada: true })
+  const r = decidir({ evento: 'main', versaoAntes: '0.20.29', versaoAtual: '0.20.30', jaPublicada: true })
   assert.equal(r.acao, 'falhar')
   assert.match(r.mensagem, /0\.20\.30/)
   assert.match(r.mensagem, /já existe no registro/)
+})
+
+test('main com a versão menor que a do commit anterior: falha, não publica e não cria tag', () => {
+  const r = decidir({ evento: 'main', versaoAntes: '0.22.0', versaoAtual: '0.21.9', jaPublicada: false })
+  assert.deepEqual([r.acao, r.criarTag], ['falhar', false])
+  assert.match(r.mensagem, /0\.22\.0/)
+  assert.match(r.mensagem, /0\.21\.9/)
+})
+
+test('main com a versão maior em qualquer das três partes continua publicando', () => {
+  for (const [antes, atual] of [['0.21.9', '0.21.10'], ['0.9.0', '0.10.0'], ['0.22.0', '1.0.0']]) {
+    const r = decidir({ evento: 'main', versaoAntes: antes, versaoAtual: atual, jaPublicada: false })
+    assert.equal(r.acao, 'publicar', `${antes} -> ${atual}`)
+  }
 })
 
 test('main com commit anterior desconhecido: só publica o que o registro não tem', () => {

@@ -12,6 +12,13 @@
 import { appendFileSync, readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 
+const partes = (v) => v.split('.').map(Number)
+const menor = (a, b) => {
+  const [x, y] = [partes(a), partes(b)]
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i]
+  return false
+}
+
 export function decidir({ evento, tag, versaoAntes, versaoAtual, jaPublicada }) {
   if (evento === 'tag') {
     if (tag !== `v${versaoAtual}`) {
@@ -40,6 +47,14 @@ export function decidir({ evento, tag, versaoAntes, versaoAtual, jaPublicada }) 
     return jaPublicada
       ? { acao: 'pular', criarTag: false, mensagem: `A versão não mudou (${versaoAtual}) e já está no registro: nada a publicar.` }
       : { acao: 'publicar', criarTag: true, mensagem: `A versão não mudou (${versaoAtual}), mas não está no registro: publicando.` }
+  }
+
+  if (menor(versaoAtual, versaoAntes)) {
+    return {
+      acao: 'falhar',
+      criarTag: false,
+      mensagem: `A versão voltou de ${versaoAntes} para ${versaoAtual}: escolha um número maior que ${versaoAntes}.`,
+    }
   }
 
   if (jaPublicada) {
