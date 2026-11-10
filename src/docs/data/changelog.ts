@@ -25,6 +25,79 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.16',
+    date: '2026-11-10',
+    title: 'Anéis de foco do cabeçalho passam de 3:1',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o anel de foco em hex com transparência. `ring-[#2563EB]/25` media 1,43:1 sobre branco e 1,26:1 sobre `#1a1a1a`; `ring-[#F6921E]` de 28% a 40% media de 1,27:1 a 1,40:1 no claro e de 1,71:1 a 2,25:1 no escuro. `UserChip` e o ramo claro das seções passam a `--color-ring` cheio; o ramo escuro das seções passa a `#F6921E` cheio (7,50:1 sobre `#1a1a1a`).',
+      },
+      {
+        type: 'fix',
+        description:
+          '`DocHeaderNeuIconButton`: o anel de foco nunca aparecia, porque o botão leva `boxShadow` em `style` e o estilo em linha vence `focus-visible:ring-2`. O foco passa a `outline` sólido de 2px com recuo de 2px em `--color-ring`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` recusa `ring-[...]` com hex, `rgba` ou transparência nos três arquivos, confere o contorno do botão e o contraste do anel do ramo escuro contra o recuo `#1A1A1A`.',
+      },
+    ],
+  },
+  {
+    version: '0.21.15',
+    date: '2026-11-10',
+    title: 'Linha info do SettingsPreferenceRow deixa de clarear no hover',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`SettingsPreferenceRow` variante `info`: sai o `hover:bg-[color-mix(...)]`. No escuro a mistura com `--color-fips-blue-200` clareava o fundo e o trilho do `Switch` desligado caía de 3,09:1 (repouso) para 2,05:1 (hover) sobre o cartão. No claro a mistura dava a mesma cor de repouso, então o hover não mudava nada. O fundo fica fixo e o hover passa a reforçar a borda, de `--color-fips-blue-400` a 35% para cheio, nos dois temas.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` lê as classes da linha `info`, calcula o fundo de repouso e o de hover (inclusive `color-mix`, com alfa pré-multiplicado) e exige 3:1 do trilho desligado contra os dois nos dois temas.',
+      },
+    ],
+  },
+  {
+    version: '0.21.14',
+    date: '2026-11-10',
+    title: 'Foco do teclado visível no atalho aberto do hero',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`HeroAtalho`: o foco do teclado passa a ser um `outline` sólido branco de 3px com recuo de 2px. Antes era `focus-visible:ring-4` (uma `box-shadow`), que o `boxShadow` em linha do atalho aberto sobrescrevia: Tab no atalho ficava igual ao repouso, e todo foco de teclado abre o atalho. O contorno branco mede mais de 3:1 contra o fundo do `PageHero` nos dois temas. Apps que tinham CSS local para desenhar esse foco podem removê-lo.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` exige que a classe do atalho use `outline` sem `ring` e calcula o contraste do contorno contra o gradiente do `PageHero` (com a película branca de 8%) e contra o fundo escuro.',
+      },
+    ],
+  },
+  {
+    version: '0.21.13',
+    date: '2026-11-10',
+    title: 'Texto secundário do tema claro passa de 4,5:1 sobre cartão, cartão suave, página e listra da tabela',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          '`--color-fg-muted` no claro passa de `#6b7784` a `#64707d`: 4,57:1, 4,48:1 e 4,29:1 viram 5,05:1, 4,96:1 e 4,74:1 sobre o cartão (`#ffffff`), o cartão suave (`#fbfdff`) e a página (`#f5f8fc`). Sobre a listra opaca da tabela fica em 4,74:1 no claro e 6,35:1 no escuro, em qualquer superfície. Muda o pixel de todo texto secundário do pacote e dos apps, que fica um pouco mais escuro: legenda do `BrandLoader`, placeholder de `Input`, `Textarea` e `FieldTrigger`, botão `ghost`, `lead`, `small` e `caption`. O token do escuro não muda (`#9ca3af`, 6,04:1 ou mais sobre cartão, cartão suave e página). `--color-neutral-fill` e `--color-switch-off` leem o mesmo token no claro e acompanham: o cinza cheio com texto branco vai de 4,57:1 a 5,05:1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 de `--color-fg-muted` sobre cartão, cartão suave, página e listra da tabela nos dois temas, e que o `neutralFill` do `colors.ts` bata com o `globals.css`. `foundations.md`, `patterns.md`, `docs/tokens.md`, a página de cores do site e o README do Switch portátil acompanham.',
+      },
+    ],
+  },
+  {
     version: '0.21.12',
     date: '2026-11-10',
     title: 'Lint acusa cor literal em ui/ e a pasta ui/ entra na regra de override visual',
