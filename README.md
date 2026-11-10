@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.7`
+## Versão atual: `v0.21.8`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.8 | 2026-11-10 | Selinho de contagem da `Sidebar` no tema escuro (página do componente e demonstrações): passa da tinta de 14% a disco sólido nos quatro tons. O disco contra a barra `#1a1a1a` vai de 1,15 a 1,32:1 para 3,41 a 7,50:1; o número contra o disco fica em 4,53:1 ou mais; o anel contra o azulejo do ícone vai de 1,31 a 1,79:1 para 3,80 a 4,17:1. O tema claro não muda. `npm test` refaz as três contas nos quatro tons |
 | 0.21.7 | 2026-11-10 | Atalho `ouro` fechado do hero (`HeroAtalho` e `HeroFileira`) leva a borda de 1,5px, como o `inverseOutline`. Antes saía com borda 0 e 27px de largura, contra 29px do `inverseOutline` fechado e dos abertos (Chromium, 1440px); agora mede 29px a 1x (30px a 2x), igual ao `inverseOutline`. A borda segue transparente: o desenho não muda. `npm run test:hero` confere a largura de borda dos quatro estados |
 | 0.21.6 | 2026-11-10 | `exports/switch/README.md` cita as linhas certas da `foundations.md`: `:92-94` no claro, `:107` e `:123-125` no escuro (estava `:89-91`, `:104` e `:118-120`, que caíam em outros tokens e numa linha em branco). `npm test` passa a conferir que as linhas citadas declaram `--color-ring`, `--color-switch-on`, `--color-switch-off` e `--color-surface` |
 | 0.21.5 | 2026-11-10 | `Select` abre a lista num portal para o `body` (`position: fixed` na coordenada do gatilho, `z-[70]`): `Modal`, `Drawer` e card com `overflow-hidden` deixam de cortá-la. A 1440x900, com 24 opções no fim do corpo do `Modal`, 0 de 4 opções inteiras ficavam clicáveis; agora são 4 de 4 e a roda alcança as 24. Sobe quando embaixo não cabe (o gatilho troca `rounded-b-none` por `rounded-t-none`), encolhe e rola quando falta espaço dos dois lados, acompanha a rolagem, a janela e o gatilho que muda de lugar sem rolar (confere a cada quadro com a lista aberta) e fecha quando o gatilho sai da vista. Props e `ref` iguais. Leva `data-lista-flutuante`. Teste de app acha as opções por `screen`, não por `within(container)`: elas estão no `body`. `npm test` roda a parte sem navegador; `npm run test:select` também mede num Chromium sem interface (playwright, ou playwright-core com `DS_CHROME`). `ChipSelect` segue `absolute` |
