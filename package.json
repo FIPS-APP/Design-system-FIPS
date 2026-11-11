@@ -35,7 +35,7 @@
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test:select": "node --test scripts/select-portal.test.mjs",
     "test:rolagem": "node --test scripts/rolagem-teclado.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs scripts/rolagem-teclado.test.mjs scripts/tema.test.mjs scripts/hero-atalho.test.mjs scripts/xlsx.test.mjs scripts/hooks.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs scripts/rolagem-teclado.test.mjs scripts/tema.test.mjs scripts/hero-atalho.test.mjs scripts/xlsx.test.mjs scripts/hooks.test.mjs scripts/exports-site.test.mjs",
     "test:tema": "node --test scripts/tema.test.mjs",
     "test:hooks": "node --test scripts/hooks.test.mjs",
     "test:lint-governanca": "node --test scripts/lint-governanca.test.mjs",
