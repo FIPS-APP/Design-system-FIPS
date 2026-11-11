@@ -188,6 +188,18 @@ test('Documento: título como h1, metadado vazio com texto, campo nulo a preench
   assert.match(render(M.Folha, { children: 'x' }), /data-folha/)
 })
 
+test('Faixas do documento: tom legenda e título centralizado', () => {
+  const leg = render(M.FaixaSecaoDocumento, { nome: 'AUDITOR', tom: 'legenda', centralizado: true })
+  assert.match(leg, /data-tom="legenda"/)
+  assert.match(leg, /bg-\[var\(--documento-faixa-legenda\)\]/)
+  assert.match(leg, /<h3 class="[^"]*flex-1[^"]*text-center/)
+  assert.doesNotMatch(render(M.FaixaSecaoDocumento, { nome: 'S' }), /text-center/)
+  const cat = render(M.FaixaCategoriaDocumento, { nome: 'C', tom: 'legenda', centralizado: true })
+  assert.match(cat, /bg-\[var\(--documento-faixa-legenda\)\]/)
+  assert.match(cat, /<h4 class="[^"]*flex-1 text-center/)
+  assert.doesNotMatch(render(M.FaixaCategoriaDocumento, { nome: 'C' }), /text-center/)
+})
+
 test('TabelaClassificacao: bloco no telefone e tabela, detalhe só quando existe', () => {
   const linhas = [{ id: 'a', rotulo: 'Crítico', tom: 'critico', prazo: 'Imediata', descricao: 'Grave.' }]
   const s = render(M.TabelaClassificacao, { linhas })
@@ -311,13 +323,13 @@ for (const t of TEMAS) {
   test(`faixas do documento, tema ${t}: texto branco (e a 90%) 4,5:1`, () => {
     const faixas = {
       titulo: 'var(--documento-faixa-titulo)', rotulo: 'var(--documento-faixa-rotulo)', neutra: 'var(--documento-faixa-neutra)',
-      secao: 'var(--color-primary-hover)', categoria: 'var(--color-primary)',
+      secao: 'var(--color-primary-hover)', categoria: 'var(--color-primary)', legenda: 'var(--documento-faixa-legenda)',
     }
     for (const [nome, f] of Object.entries(faixas)) {
       const fundo = cor(f, t)
       verifica(`branco sobre faixa ${nome} / ${t}`, { r: 255, g: 255, b: 255, a: 1 }, fundo, 4.5)
       // O texto a 90% (referência de página, contagem) só existe nas faixas de seção, categoria e neutra.
-      if (['secao', 'categoria', 'neutra'].includes(nome))
+      if (['secao', 'categoria', 'neutra', 'legenda'].includes(nome))
         verifica(`branco 90% sobre faixa ${nome} / ${t}`, { r: 255, g: 255, b: 255, a: 0.9 }, fundo, 4.5)
     }
   })
