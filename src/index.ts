@@ -8,6 +8,10 @@ export { FipsLogo } from './components/brand/FipsLogo'
 export { BrandLoader } from './components/brand/BrandLoader'
 export type { BrandLoaderProps, BrandLoaderSize } from './components/brand/BrandLoader'
 export { PageHero, PAGE_HERO_DEFAULT_DECORATION, type PageHeroProps } from './composites'
+export { LoginDsShell, type LoginDsShellProps } from './components/composites/LoginDsShell'
+export { FipsTabBar, type FipsTabItem } from './components/composites/FipsTabBar'
+export { SettingsPreferenceRow } from './components/composites/SettingsPreferenceRow'
+export { BuscarPessoaModal, type Pessoa } from './components/composites/BuscarPessoaModal'
 export {
   PageHeader,
   type PageHeaderActionsProps,
