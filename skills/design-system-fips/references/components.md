@@ -838,7 +838,7 @@ Fonte: `src/components/composites/Documento.tsx` (+ `documento-variants.ts`). Do
 
 Fonte: `src/components/composites/{CartaoListagem,AlternadorDeVisao,AvisoSomenteLeitura,TabelaClassificacao}.tsx`. Doc: `/docs/components/listagem-apoio`.
 
-- **`CartaoListagem`**: `icone`, `titulo`, `quantidade`, `sufixoDaContagem?`, `filtrada?` (selo "Filtrado"), `chips?`, `acoes?`, `rodape?`, `semMoldura?`, `nivelTitulo?`. Raio `12/12/12/24`; o cabeçalho quebra e as ações descem no celular.
+- **`CartaoListagem`**: `icone`, `titulo`, `quantidade`, `sufixoDaContagem?`, `filtrada?` (selo "Filtrado"), `chips?`, `acoes?`, `rodape?`, `semMoldura?`, `nivelTitulo?`. Raio `12/12/12/24`; o cabeçalho quebra e as ações descem no celular. Cabeçalho compacto abaixo de `sm` (0.22.5): recuo 14/12/12/12 e espaço 12; de `sm` em diante 18/20/14/20 e 14. Medido a 375 px contra a Manutenção, que usa 14/12/12/12.
 - **`AlternadorDeVisao`**: `valor`, `onChange`, `opcoes?` (padrão tabela e cartões), `rotulo?`. Só o ícone abaixo de `md`; alvo de toque pelo modo.
 - **`AvisoSomenteLeitura`**: `children` (o motivo), `titulo?`. `role="status"`.
 - **`TabelaClassificacao`**: `linhas` `{ id, rotulo, descricao, tom, prazo, detalhe? }`, `titulo?`, `cabecalhos?`. Ponto e pílula no tom, fundo a 8% do tom, texto em `--color-fg` (e `--color-fg-muted-strong` no detalhe); no telefone cada linha vira bloco.

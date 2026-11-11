@@ -57,7 +57,7 @@ export function CartaoListagem({
         className,
       )}
     >
-      <div className="flex flex-wrap items-center gap-3.5 border-b border-[var(--color-border)] px-5 pb-3.5 pt-[18px]">
+      <div className="flex flex-wrap items-center gap-3 border-b border-[var(--color-border)] px-3 pb-3 pt-3.5 sm:gap-3.5 sm:px-5 sm:pb-3.5 sm:pt-[18px]">
         <div
           aria-hidden
           className="flex size-12 shrink-0 items-center justify-center rounded-[14px] border border-[color-mix(in_srgb,var(--color-primary-text)_8%,transparent)] bg-[color-mix(in_srgb,var(--color-primary-text)_4%,transparent)] text-[var(--color-primary-text)]"
