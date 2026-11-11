@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.24`
+## Versão atual: `v0.21.25`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.21.25 | 2026-11-11 | `Alert` warning passa de `--color-accent-strong` a `--color-semantic-atencao-fg` no texto: 2,07:1 vira 4,61:1 no claro (no escuro o texto passa de `#f6921e` a `#fdc24e`, 5,91:1 vira 8,49:1). O item "Importante" do `ChangelogModal` (2,14:1 a 4,77:1) e os ícones em hover do `UserAccountMenu` (2,11:1 a 4,70:1) leem o mesmo token. As eyebrows de 11 px sobre o degradê azul de `Modal`, `Drawer`, `ExportPreviewModal` e `ChangelogModal` passam a `--color-accent` (3,65:1 a 5,24:1 no pior ponto). `--color-accent-strong` fica para fundo e borda. `npm run test:badge` confere |
 | 0.21.24 | 2026-11-10 | `RadioGroup`, `Radio` (lista ou pílula) e `Checkbox` entram no pacote: rótulo clicável, descrição, erro com `aria-invalid`/`aria-describedby`, foco visível, claro e escuro, só tokens. Setas no grupo pelo teclado nativo; borda e marcação a 3:1 ou mais nos dois temas (`npm test`). Página nova Radio e Checkbox |
 | 0.21.23 | 2026-11-10 | `AbasDeSecao` segue o padrão de abas do WAI-ARIA quando troca conteúdo na mesma página: `tablist`, `tab`, `aria-selected`, `tabindex` móvel, setas, Home e End. `idBase` e `propsDoPainel` ligam aba e `tabpanel` (`aria-controls`). Com `href` segue `nav` com `aria-current="page"`. A 375px a faixa que rola esmaece a borda com mais abas |
 | 0.21.22 | 2026-11-10 | `PageHeader`: o ponto do chip de contagem usa o token `--fips-banner-stat-dot` (amarelo-400, 5,19:1 no claro e 8,01:1 no escuro sobre o chip) e `stats[].href` faz o chip virar link com foco visível |
