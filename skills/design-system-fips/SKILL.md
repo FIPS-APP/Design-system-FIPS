@@ -1,82 +1,53 @@
 ---
 name: design-system-fips
-description: Use when building, reviewing, documenting, or briefing another AI about interfaces that must match the Design System FIPS, including exact tokens, components, patterns, governance rules, and code-backed references.
+description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.23.1, geradas do pacote; o pacote instalado no app vence este texto.
 ---
 
-# Design System FIPS
+<!-- gerado por scripts/gerar-ai.mjs (dist + ai/padroes.json); não edite à mão -->
 
-Use this skill whenever the task involves FIPS interfaces or when another AI needs a portable package of the design rules.
+# Design System FIPS 0.23.1 (2026-11-11)
 
-Referências sincronizadas com a **v0.11.33** (2026-08-11) do repositório DS-FIPS.
+Gerado do pacote: 372 exports (166 componente, 15 funcao, 16 valor, 175 tipo), 91 tipos `*Props`, 262 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
 
-## Workflow
+## 1. Passo 0
+1. No app: `npx fips-ds passo0`. Mostra versão instalada e do registro, regime, padrões da tela e exports.
+2. Nome, prop, variante ou token: só o que está em `node_modules/@fips-app/ds-fips/ai/manifest.json`, no `dist/index.d.ts` ou no `dist/styles.css` instalados. Se este texto divergir do pacote instalado, vale o pacote.
 
-1. Read `references/source-of-truth.md`.
-2. Load only the reference file needed for the task:
-   - `references/foundations.md` for colors, typography, spacing, radii, shadows, and global CSS tokens.
-   - `references/components.md` for component APIs, variants, imports, and reusable snippets.
-   - `references/patterns.md` for screen composition, application shell, hero/header, data listing, modal workflow, and governance.
-3. Reuse existing tokens and components before creating anything new.
-4. If the requested UI diverges from the system, evolve the design system first and only then consume the new variant.
+## 2. Padrão de cada tela
+| Tela | Referência viva | Do pacote | Nesta versão |
+| --- | --- | --- | --- |
+| Entrada / login | Gestão OPA (OPA-GESTAO, master): src/pages/LoginPage.tsx | `LoginDsShell`. Antes da 0.23.0: não inventar nem copiar; parar e avisar | tem |
+| Casca (sidebar, header, rodapé Modo do menu + Versão) | Gestão OPA (OPA-GESTAO, master) | `AppShell`, `AppFipsHeaderLogo`, `UserAccountMenu`, `NotificacoesMenu`, `TutorialOverlay` | tem |
+| Home | Gestão OPA (OPA-GESTAO, master) | `HomeHero`. Destaque amarelo só aqui | tem |
+| Banner das telas internas | Gestão OPA (PatternPanelHero, que usa PageHeader) | `PageHeader`. Selo só para estado da tela, nunca o nome do sistema. Nunca PageHero com conteúdo próprio | tem |
+| Formulário, execução, editor | Manutenção leva-1 | `SecaoNumerada`, `SegmentoAvaliacao`, `AssinaturaCanvas`, `BarraAcoesRodape`, `CardChecklist` | tem |
+| Lista que colapsa no celular | Tecnopano | `ListingFilterToolbar`, `CartaoListagem`, `TabelaExpansivel` | tem |
 
-## Non-negotiables
+Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.
 
-- Brand identity source of truth is `docs/Brandbook PPT.pdf`. If the PDF is unavailable, follow the exact token tables and snippets in the reference files.
-- Headings use `Saira Expanded`. Body copy uses `Open Sans`.
-- Product UI stays inside the FIPS palette: deep institutional blue for structure, gold/orange for accents, restrained neutrals for surfaces and borders.
-- Use `PageHero` for module headers and `Field` plus `Input`/`Select`/`Textarea` for forms.
-- Do not create one-off local overrides for radius, shadow, border, spacing, or color just to satisfy one screen.
-- **Modal é componente, não montagem.** Use `<Modal>`/`<ModalFooter>` de `src/components/ui/Modal.tsx` (`@fips-app/ds-fips`) — nunca remonte a casca (`Dialog`/`DialogContent`/header/close/radius) na mão. Ver checklist abaixo. Hoje a própria doc do DS (`DialogDoc.tsx`) e alguns componentes reais (`ChangelogModal`, `ExportPreviewModal`, `BuscarPessoaModal`) não seguem essa regra — são dívida conhecida, não exemplo a copiar.
-- **`className` on governed primitives is for external layout only.** The ESLint rule `governance/no-visual-overrides` (`eslint.config.js`) blocks visual Tailwind classes (`bg-`, `text-`, `border`, `rounded`, `shadow`, `h-`/`min-h-`, `p-`/`px-`, `font-`, `leading-`, `tracking-`, `ring-`, `opacity-`) passed to `Button`, `Input`, `Select`, `Textarea`, `TabsList`, `TabsTrigger` anywhere outside `src/components/ui/**`. To change appearance, add a variant in the matching `*-variants.ts` (CVA) — never ad-hoc classes in JSX.
-- `--color-primary` and the other accent tokens are **identical in light and dark**. Any accent usage needs the manual `dark:…-[#93BDE4]` pair — see `references/foundations.md`.
+## 3. Proibido
+- Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant="default"`/`"destructive"`.
+- Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.
+- `className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.
+- Dependência `file:` ou tgz do pacote: não é fonte confiável. O certo é o registro.
+- Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app.
 
-## Building a modal? Use this checklist
+## 4. O que `npx fips-ds check` confere (sai com 1 se achar)
+- `import-inexistente`: nome importado de `@fips-app/ds-fips` que o `.d.ts` instalado não exporta.
+- `var-sem-declaracao`: `var(--x)` sem `--x:` no `styles.css` instalado nem no CSS do app.
+- `hex-literal`: cor hex literal em `.tsx`, `.jsx` ou `.css` do app.
+- `dependencia-local`: `@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; o certo é o registro.
+- `casca-local`: casca, entrada ou banner feitos no app: `login-v1-container`, `liquid-card`, `casca-hero-*`, `PaginaCabecalho`, `PageHero` com filhos.
+- `classname-visual`: classe visual (cor, borda, raio, sombra, altura, padding, fonte, anel, opacidade, size, outline) em `className` de `Button`, `Input`, `Select`, `Textarea`, `TabsList`, `TabsTrigger` do pacote, também com prefixo (`sm:`, `hover:`, `dark:`, `data-[...]:`).
 
-Spec completa (props, anatomia hero vs. não-hero, gaps conhecidos) em `references/components.md` → **Dialog/Modal — componente governado**.
+Lint das mesmas regras de primitivo e casca: `import governance from '@fips-app/ds-fips/eslint'` (ESLint 9, flat config).
 
-O modal curto (aviso, passo a passo, um botão) sai **sem** `hero`, sem `headerIcon` e sem `eyebrow`. O degradê, o selo dourado e o disco de ícone não são o padrão — no claro nem no escuro. Exemplo no site: botão "Simples (escuro)" em `/docs/components/dialog`.
+## 5. Antes de dizer "pronto"
+1. `npx fips-ds check` com 0 problemas.
+2. Typecheck, testes e build num `&&` só.
+3. Contraste de toda variante de Button/Badge trocada (número, dois temas); Select dentro de Modal aberto e inteiro; teste novo provado por mutação.
+4. Print lado a lado com a referência viva a 1440 e 375 px, claro e escuro.
 
-```tsx
-import { Modal, ModalFooter, Button } from '@fips-app/ds-fips'
-
-<Modal open={open} onOpenChange={setOpen}
-  title="Instale o Facilities no aparelho"
-  description="Fica como ícone na tela inicial e abre em tela cheia, sem a barra do navegador."
-  size="lg">
-  <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-snug text-[var(--color-fg)]">
-    <li>Abra o menu do navegador no canto superior</li>
-    <li>Escolha Instalar aplicativo ou Adicionar à tela inicial</li>
-    <li>Confirme em Instalar</li>
-  </ol>
-  <ModalFooter>
-    <Button variant="primary" onClick={() => setOpen(false)}>Entendi</Button>
-  </ModalFooter>
-</Modal>
-```
-
-- [ ] `<Modal>`/`<ModalFooter>` da library — nunca `Dialog`/`DialogContent`/header/close/radius remontados na mão
-- [ ] `onOpenChange`, não `onClose` — a prop real é essa, apesar de exemplos antigos (e da própria `DialogDoc.tsx`) usarem `onClose`
-- [ ] Modal curto: sem `hero`, sem `headerIcon`, sem `eyebrow`. Passos numa `<ol className="list-decimal">`, nunca disco azul
-- [ ] `hero` só no modal institucional longo, quando a faixa foi pedida. `eyebrow` só faz efeito com `hero` e nunca repete palavra do título
-- [ ] Não importe a cópia local que liga o degradê sempre (`tone` no Facilities e no QLP)
-- [ ] Tamanho pela prop `size` (`sm md lg xl 2xl 3xl full workflow`) — nunca `className="max-w-*"`
-- [ ] Campo dentro de modal = `Field density="compact"` + `Input`/`Select`/`Textarea` `density="compact"` — as duas props existem e as duas precisam ser passadas
-- [ ] Rodapé = `<ModalFooter>` como filho de `<Modal>` (pode estar em qualquer posição entre os filhos — é extraído automaticamente), texto de apoio no `hint`, nunca parágrafo solto
-- [ ] **Não invente `tone`/faixa sólida colorida** — essa prop não existe hoje no componente real; se o caso de uso precisar, evolua `Modal.tsx` primeiro (não remonte a casca no consumidor pra simular)
-- [ ] Fecha com `Esc`, clique no overlay e botão X — vem de graça do `Dialog` primitive por baixo
-
-## Fast repo lookups
-
-Use these searches when the repository is available:
-
-- `rg -n "PAGE_HERO_DEFAULT_DECORATION|PageHero" src`
-- `rg -n "buttonVariants|badgeVariants" src/components/ui`
-- `rg -n -- "--color-primary|--color-accent|--shadow-card|--font-heading" src/styles/globals.css`
-- `rg -n "DocPage|PatternGuidelines" src/docs`
-- `rg -n "ExportButtons|ExcelIcon|PdfIcon" src` (toolbar de listagem: par Excel/PDF)
-- `rg -n "DENSITY|rowH" src/docs/pages/patterns/DataListingDemo.tsx` (cadência canônica de linha da tabela)
-- `rg -n "version: '" src/docs/data/changelog.ts | head` (versão atual + histórico; o topo do array é a mais recente)
-- `rg -n "no-visual-overrides" -A 12 eslint.config.js` (regra de governança que roda no lint)
-- `cat src/components/ui/Modal.tsx` (componente real do Modal — props exatas, não a reimplementação local de `DialogDoc.tsx`)
-
-If the repository is not available, treat the portable references bundled with this skill as the source of truth until the codebase is synced.
+## 6. Regimes que mudam a regra
+- OPA-MOBILE: produção. Nunca concluir registro, nunca `?demo` online; `src/ds/` travado por sha256.
+- UI própria (OPA-GESTAO, CIPA-FIPS, fips-suprimentos, Governanca_BI, opa2.0) e `ui-sup` (fips-obrigacoes, fips-governanca, fips-qlp): respeitar a API local até a migração daquele app para o pacote.

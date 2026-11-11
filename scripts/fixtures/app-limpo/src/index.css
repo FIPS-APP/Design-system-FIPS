@@ -1,0 +1,7 @@
+/* cor do app vem de token do pacote */
+:root {
+  --color-app-destaque: var(--color-primary);
+}
+.faixa {
+  border-color: var(--color-app-destaque);
+}
