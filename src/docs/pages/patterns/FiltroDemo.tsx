@@ -457,6 +457,43 @@ function AntiPatternCard({ title, body }: { title: string; body: string }) {
 
 const BLOCK_STATUS = ['Aberto', 'Em análise', 'Concluído']
 
+function ToolbarTextoProprioPreview() {
+  const [scope, setScope] = useState<'minha' | 'todos'>('todos')
+  const [search, setSearch] = useState('')
+  const [period, setPeriod] = useState<ListingPeriodPreset>('Tudo')
+  const [showPeriod, setShowPeriod] = useState(false)
+  const [dateStart, setDateStart] = useState('')
+  const [dateEnd, setDateEnd] = useState('')
+
+  return (
+    <ListingFilterToolbar
+      filterActiveCount={0}
+      onOpenFilters={() => undefined}
+      scope={scope}
+      onScopeChange={setScope}
+      countMinha={4}
+      countTodos={27}
+      search={search}
+      onSearchChange={setSearch}
+      periodLabel={period}
+      period={period}
+      onPeriodChange={setPeriod}
+      showPeriod={showPeriod}
+      onShowPeriodChange={setShowPeriod}
+      dateStart={dateStart}
+      dateEnd={dateEnd}
+      onDateStartChange={setDateStart}
+      onDateEndChange={setDateEnd}
+      onApplyCustomPeriod={() => setShowPeriod(false)}
+      canApplyCustomPeriod={false}
+      searchPlaceholder="Buscar inspeções por número, auditor, local…"
+      scopeLabels={{ minha: 'Minhas inspeções', todos: 'Todas', grupo: 'Recorte' }}
+      countUnit="inspeções"
+      showExport={false}
+    />
+  )
+}
+
 function FilterBlockPreview() {
   const [status, setStatus] = useState('')
   const [search, setSearch] = useState('')
@@ -680,6 +717,7 @@ export default function FiltroDemo() {
             open={drawerOpen}
             onOpenChange={setDrawerOpen}
             eyebrow="Dashboard de OPAs"
+            emptyDescription="Refine os OPAs pelos campos abaixo"
             activeCount={activeCount}
             resultCount={resultCount}
             onClear={clear}
@@ -830,7 +868,7 @@ export default function FiltroDemo() {
             <AnatomyStep
               n="①"
               title="DrawerHero"
-              body="Gradiente gov 3 stops (--color-gov-gradient-from/to + #001A4A). Tile âmbar 44×44 radius 11. Eyebrow Saira 11px uppercase tracking 0.14em accent-strong. Título branco 21px/700. Subtítulo 12px white/65 — contador dinâmico ou copy vazia: «Refine os OPAs pelos campos abaixo». X glass top-right (DrawerClose)."
+              body="Gradiente gov 3 stops (--color-gov-gradient-from/to + #001A4A). Tile âmbar 44×44 radius 11. Eyebrow Saira 11px uppercase tracking 0.14em accent-strong. Título branco 21px/700. Subtítulo 12px white/65 — contador dinâmico ou copy vazia: «Refine os resultados pelos campos abaixo» (padrão neutro; o app passa o texto do produto em emptyDescription). X glass top-right (DrawerClose)."
             />
             <AnatomyStep
               n="②"
@@ -1178,6 +1216,26 @@ export default function FiltroDemo() {
   search={busca}
   onSearchChange={setBusca}
   actions={<ExportButtons onExcel={...} onPdf={...} />}
+/>`}</CodeBlock>
+        </PatternSection>
+
+        {/* 10b — Texto próprio */}
+        <PatternSection
+          id="texto-proprio"
+          n="10b"
+          title="Texto próprio na ListingFilterToolbar"
+          desc="Sem as props abaixo a toolbar mantém os textos do painel de OPAs. Outro app troca busca, alçada, unidade dos contadores e esconde Excel/PDF sem copiar o componente."
+        >
+          <ToolbarTextoProprioPreview />
+          <CodeBlock>{`<ListingFilterToolbar
+  {...propsDeSempre}
+  searchPlaceholder="Buscar inspeções por número, auditor, local…"
+  searchLabel="Buscar inspeções"   // aria-label; padrão "Buscar OPAs", ou "Buscar" com searchPlaceholder
+  scopeLabels={{ minha: 'Minhas inspeções', todos: 'Todas', grupo: 'Recorte' }}
+  countUnit="inspeções"            // tooltip e aria-label dos contadores; padrão "OPAs"
+  showExport={false}               // sem Excel nem PDF; padrão true
+  escopos={['minha']}              // só "Minha Área" (perfil que só vê o próprio); padrão ['minha', 'todos']
+  mostrarEscopo={false}            // esconde a alçada inteira; padrão true
 />`}</CodeBlock>
         </PatternSection>
 

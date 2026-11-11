@@ -60,9 +60,11 @@ export {
 export { Modal, ModalFooter, type ModalProps, type ModalFooterProps } from './Modal'
 export {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerPortal,

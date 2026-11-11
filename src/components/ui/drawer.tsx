@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/cn'
+import { criarRetornoDoFoco } from '../../lib/foco-de-retorno'
 
 const Drawer = DialogPrimitive.Root
 const DrawerTrigger = DialogPrimitive.Trigger
@@ -26,13 +27,18 @@ DrawerOverlay.displayName = 'DrawerOverlay'
 const DrawerContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { side?: 'left' | 'right'; showCloseButton?: boolean }
->(({ className, children, side = 'right', showCloseButton = true, ...props }, ref) => (
+>(({ className, children, side = 'right', showCloseButton = true, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
+  // O foco volta a quem abriu, mesmo quando o painel abre por estado e não por `DrawerTrigger`.
+  const retorno = React.useMemo(() => criarRetornoDoFoco(), [])
+  return (
   <DrawerPortal>
     <DrawerOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      onOpenAutoFocus={retorno.aoAbrir(onOpenAutoFocus)}
+      onCloseAutoFocus={retorno.aoFechar(onCloseAutoFocus)}
       className={cn(
-        'fixed inset-y-0 z-50 flex h-full w-full max-w-md flex-col bg-[var(--color-surface)] p-6 shadow-[var(--shadow-elevated)] transition-transform duration-200 data-[state=open]:translate-x-0 sm:p-7',
+        'fixed inset-y-0 z-50 flex h-full w-full max-w-md flex-col overflow-y-auto bg-[var(--color-surface)] p-6 shadow-[var(--shadow-elevated)] transition-transform duration-200 data-[state=open]:translate-x-0 sm:p-7',
         side === 'left'
           ? 'left-0 border-r border-[var(--color-border)] data-[state=closed]:-translate-x-full'
           : 'right-0 border-l border-[var(--color-border)] data-[state=closed]:translate-x-full',
@@ -51,11 +57,33 @@ const DrawerContent = React.forwardRef<
       ) : null}
     </DialogPrimitive.Content>
   </DrawerPortal>
-))
+  )
+})
 DrawerContent.displayName = 'DrawerContent'
 
 function DrawerHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn('mb-5 flex flex-col gap-2 pr-10', className)} {...props} />
+}
+
+/**
+ * Corpo rolável do painel: ocupa o espaço entre o cabeçalho e o rodapé e rola sozinho. Com ele o
+ * `DrawerFooter` fica sempre à vista, mesmo em janela baixa (1280x720, celular em paisagem).
+ */
+function DrawerBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn('min-h-0 flex-1 overflow-y-auto', className)} {...props} />
+}
+
+/** Rodapé do painel (ações). Fixo na base: não rola com o corpo nem sai da tela. */
+function DrawerFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        'sticky bottom-0 mt-auto flex shrink-0 gap-2 border-t border-[var(--color-border)] bg-[var(--color-surface)] pt-4',
+        className,
+      )}
+      {...props}
+    />
+  )
 }
 
 const DrawerTitle = React.forwardRef<
@@ -159,6 +187,8 @@ export {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
   DrawerHero,
   DrawerTitle,
   DrawerDescription,

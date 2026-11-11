@@ -1,7 +1,10 @@
 import { useState, useEffect, type CSSProperties, type MouseEventHandler, type ReactNode } from "react";
-import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles, Users, type LucideIcon } from "lucide-react";
+import { Check, X as XIcon, AlertTriangle, Info, ClipboardEdit, ClipboardList, Maximize2, HelpCircle, Download, Sparkles, Users, FileText, type LucideIcon } from "lucide-react";
 import { Select } from '../../../components/ui/select';
 import { Button } from '../../../components/ui/button';
+import { Field, FieldLabel } from '../../../components/ui/field';
+import { Input } from '../../../components/ui/input';
+import { Textarea } from '../../../components/ui/textarea';
 import { Modal as ModalDs, ModalFooter } from '../../../components/ui/Modal';
 import { ExportPreviewModal } from '../../../components/composites/ExportPreviewModal';
 import { ChangelogModal } from '../../../components/layout/ChangelogModal';
@@ -244,13 +247,71 @@ const EXPORT_ROWS = Array.from({ length: 24 }, (_, i) => ({
   detalhe: `Linha ${i + 1}`,
 }));
 
+/* ═══════════════════════════════════════════ TELA CHEIA ═══════════════════════════════════════════ */
+/* Conteúdo longo de exemplo: formulário de ocorrência com cinco blocos. Só primitives do DS (claro e escuro).
+   O último campo é um Select de propósito: a lista dele abre para baixo, dentro do corpo rolável do Modal. */
+function CampoDoc({ rotulo, children }: { rotulo: string; children: ReactNode }) {
+  return (
+    <Field density="compact">
+      <FieldLabel>{rotulo}</FieldLabel>
+      {children}
+    </Field>
+  );
+}
+function BlocoDoc({ titulo, children, colunas }: { titulo: string; children: ReactNode; colunas: string }) {
+  return (
+    <fieldset className="min-w-0 border-0 p-0">
+      <legend className="mb-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-fg-muted)]">{titulo}</legend>
+      <div className={colunas}>{children}</div>
+    </fieldset>
+  );
+}
+function ConteudoLongoDoc({ cheia }: { cheia: boolean }) {
+  const colunas = cheia ? "grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4" : "grid grid-cols-1 gap-3";
+  const op = (...v: string[]) => v.map((x) => ({ value: x, label: x }));
+  return (
+    <div className="space-y-5">
+      <BlocoDoc titulo="Identificação" colunas={colunas}>
+        <CampoDoc rotulo="Título"><Input density="compact" placeholder="Ex.: Desgaste de trilho no AMV 12" /></CampoDoc>
+        <CampoDoc rotulo="Registrado por"><Input density="compact" placeholder="Nome do colaborador" /></CampoDoc>
+        <CampoDoc rotulo="Data"><Input density="compact" type="date" /></CampoDoc>
+        <CampoDoc rotulo="Turno"><Select density="compact" aria-label="Turno" defaultValue="Manhã" options={op("Manhã", "Tarde", "Noite", "Integral")} /></CampoDoc>
+      </BlocoDoc>
+      <BlocoDoc titulo="Local" colunas={colunas}>
+        <CampoDoc rotulo="Pátio"><Input density="compact" placeholder="Ex.: Pátio Norte" /></CampoDoc>
+        <CampoDoc rotulo="Linha"><Input density="compact" placeholder="Ex.: Linha 3" /></CampoDoc>
+        <CampoDoc rotulo="Trecho"><Input density="compact" placeholder="Ex.: Km 12 ao Km 14" /></CampoDoc>
+        <CampoDoc rotulo="Marco quilométrico"><Input density="compact" inputMode="decimal" placeholder="Ex.: 12,4" /></CampoDoc>
+      </BlocoDoc>
+      <BlocoDoc titulo="Ocorrência" colunas={colunas}>
+        <CampoDoc rotulo="Tipo"><Select density="compact" aria-label="Tipo" defaultValue="Via permanente" options={op("Via permanente", "Material rodante", "Sinalização", "Segurança")} /></CampoDoc>
+        <CampoDoc rotulo="Gravidade"><Select density="compact" aria-label="Gravidade" defaultValue="Média" options={op("Baixa", "Média", "Alta", "Crítica")} /></CampoDoc>
+        <div className={cheia ? "md:col-span-2" : ""}>
+          <CampoDoc rotulo="Descrição"><Textarea rows={3} placeholder="Descreva o que foi observado, sem dados pessoais." /></CampoDoc>
+        </div>
+      </BlocoDoc>
+      <BlocoDoc titulo="Providências" colunas={colunas}>
+        <CampoDoc rotulo="Ação imediata"><Input density="compact" placeholder="Ex.: Isolamento da área" /></CampoDoc>
+        <CampoDoc rotulo="Prazo"><Input density="compact" type="date" /></CampoDoc>
+        <CampoDoc rotulo="Área responsável"><Select density="compact" aria-label="Área responsável" defaultValue="Via Permanente" options={op("Via Permanente", "Operação", "SSMA", "Planejamento")} /></CampoDoc>
+        <CampoDoc rotulo="Prioridade"><Select density="compact" aria-label="Prioridade" defaultValue="Normal" options={op("Baixa", "Normal", "Alta", "Urgente")} /></CampoDoc>
+      </BlocoDoc>
+      <BlocoDoc titulo="Fechamento" colunas={colunas}>
+        <CampoDoc rotulo="Observações"><Textarea rows={3} placeholder="Notas para quem vai conferir." /></CampoDoc>
+        <CampoDoc rotulo="Situação (último campo)"><Select density="compact" aria-label="Situação" defaultValue="Aberta" options={op("Aberta", "Em análise", "Aguardando peça", "Concluída")} /></CampoDoc>
+      </BlocoDoc>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */
 export default function DialogDoc(){
   const [w,setW]=useState(typeof window!=="undefined"?window.innerWidth:1200);
   useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
   const mob=w<640;
   const [m,setM]=useState<string|null>(null);
-  const open=(id:string)=>setM(id);const close=()=>setM(null);
+  const [cheia,setCheia]=useState(false);
+  const open=(id:string)=>{setCheia(false);setM(id)};const close=()=>setM(null);
 
   return(
     <div style={{minHeight:"100vh",background:"var(--color-surface-muted)",fontFamily:Fn.body,color:C.cinzaEscuro}}>
@@ -277,6 +338,27 @@ export default function DialogDoc(){
         </ol>
         <ModalFooter>
           <Button variant="primary" onClick={close}>Entendi</Button>
+        </ModalFooter>
+      </ModalDs>
+
+      {/* 0b/0c. LONGO COM TELA CHEIA — claro e escuro. Estado controlado (`telaCheia` +
+          `aoMudarTelaCheia`) para o conteúdo trocar de 1 para 4 colunas quando amplia. */}
+      <ModalDs
+        open={m==="longo"||m==="longo-escuro"}
+        onOpenChange={(aberto) => { if (!aberto) close(); }}
+        className={m==="longo-escuro" ? "dark" : undefined}
+        title="Registrar ocorrência de via"
+        description="Formulário longo: amplie em Tela cheia para ver todos os blocos de uma vez."
+        size="lg"
+        permiteTelaCheia
+        atalhoTelaCheia
+        telaCheia={cheia}
+        aoMudarTelaCheia={setCheia}
+      >
+        <ConteudoLongoDoc cheia={cheia} />
+        <ModalFooter hint="Alt+Enter: tela cheia">
+          <Button variant="outline" onClick={close}>Cancelar</Button>
+          <Button variant="primary" onClick={close}>Salvar ocorrência</Button>
         </ModalFooter>
       </ModalDs>
 
@@ -475,6 +557,8 @@ export default function DialogDoc(){
                   laranja/azul institucional); os estruturais e os compostos ocupam faixas
                   distintas para nenhum par repetir — no claro E no escuro. */}
               <Btn label="Simples (escuro)" icon={Info} color={Btn3.azulNavy} onClick={()=>open("simples")}/>
+              <Btn label="Longo (tela cheia)" icon={FileText} color={Btn3.azulInst} onClick={()=>open("longo")}/>
+              <Btn label="Longo (escuro)" icon={FileText} color={Btn3.azulNavy} onClick={()=>open("longo-escuro")}/>
               <Btn label="Confirmação" icon={Check} color={C.verdeFloresta} onClick={()=>open("confirm")}/>
               <Btn label="Destrutivo" icon={XIcon} danger onClick={()=>open("delete")}/>
               <Btn label="Alerta" icon={AlertTriangle} color={C.amareloEscuro} onClick={()=>open("alert")}/>
@@ -487,7 +571,7 @@ export default function DialogDoc(){
               <Btn label="Novidades" icon={Sparkles} color={C.amareloOuro} fg={Btn3.azulNavy} onClick={()=>open("changelog")}/>
               <Btn label="Responsável" icon={Users} color={C.azulCeu} fg={Btn3.azulNavy} onClick={()=>open("responsavel")}/>
             </div>
-            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>12 variantes. A primeira, Simples (escuro), é o modal do pacote com o hero desligado: cabeçalho plano, lista numerada, botão Entendi. Sem selo, sem disco de ícone, sem degradê. As outras onze são confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha), novidades (ChangelogModal — header gov, versão atual + histórico expansível) e buscar responsável (BuscarPessoaModal — campo de busca + lista com avatar/cargo/área; sem busca, traz quem tem equipe). Todos fecham com ESC, clique no overlay ou botão X.</p>
+            <p style={{fontSize:11,color:C.textMuted,marginTop:14,lineHeight:1.6}}>14 variantes. As três primeiras são o modal do pacote com o hero desligado. Simples (escuro) é o modal curto: cabeçalho plano, lista numerada, botão Entendi, sem selo, sem disco de ícone, sem degradê, sem rolagem. Longo (tela cheia) e Longo (escuro) trazem o botão Tela cheia ao lado do X (veja a seção 11). As outras onze são confirmação, destrutivo, alerta, informativo, formulário, lista, popup redimensionável, tutorial step-by-step, exportação (ExportPreviewModal — Tudo/Tabela/Expandida, chips, drag, Imprimir/Planilha), novidades (ChangelogModal — header gov, versão atual + histórico expansível) e buscar responsável (BuscarPessoaModal — campo de busca + lista com avatar/cargo/área; sem busca, traz quem tem equipe). Todos fecham com ESC, clique no overlay ou botão X.</p>
           </DSCard>
         </Section>
 
@@ -721,7 +805,7 @@ export default function DialogDoc(){
                   "Fechar sem confirmação em modal com dados preenchidos",
                   "Título genérico como \"Atenção\" — seja específico",
                   "Dois botões primários no footer (ambos coloridos)",
-                  "Modal para conteúdo que precisa de scroll longo",
+                  "Rolagem dentro do modal normal — conteúdo longo vai para Tela cheia (permiteTelaCheia)",
                   "Abrir modal automaticamente sem ação do usuário",
                 ].map((t,i)=>(
                   <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start"}}>
@@ -1089,6 +1173,66 @@ export default function DialogDoc(){
               </div>
             </DSCard>
           </div>
+        </Section>
+
+
+        {/* ═══════════════════ 11 — TELA CHEIA ═══════════════════ */}
+        <Section n="11" title="Tela cheia e a regra de não rolar" desc="Modal curto não rola. Conteúdo grande liga o botão Tela cheia, ao lado do X de fechar, e o corpo rola dentro da tela cheia.">
+          <DSCard mob={mob}>
+            <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr 1fr",gap:20}}>
+              {[
+                {t:"Curto: sem rolagem",d:"Aviso, confirmação, passo a passo, um botão. Cabeçalho plano, sem hero, sem eyebrow. Cabe na altura da janela, então nunca rola. É o padrão e não leva nenhuma prop nova.",b:"Simples (escuro)",id:"simples"},
+                {t:"Longo: Tela cheia",d:"Formulário com vários blocos, tabela, pré-visualização. Liga permiteTelaCheia: o botão Maximize2 aparece ao lado do X, o modal ocupa 96% da janela e só o corpo rola; cabeçalho e rodapé ficam fixos.",b:"Longo (tela cheia)",id:"longo"},
+                {t:"Longo no escuro",d:"Mesmo modal com a classe dark no cartão (o portal não herda o tema da página). O botão usa os mesmos tokens do X e mantém contraste e foco visível.",b:"Longo (escuro)",id:"longo-escuro"},
+              ].map(c=>(
+                <div key={c.id} style={{display:"flex",flexDirection:"column",gap:10}}>
+                  <span style={{fontSize:14,fontWeight:700,color:C.azulEscuro,fontFamily:Fn.title}}>{c.t}</span>
+                  <p style={{fontSize:12,color:C.cinzaEscuro,lineHeight:1.55,margin:0}}>{c.d}</p>
+                  <div><Btn label={c.b} color={Btn3.azulInst} onClick={()=>open(c.id)}/></div>
+                </div>
+              ))}
+            </div>
+          </DSCard>
+
+          <div style={{marginTop:16}}>
+            <DSCard mob={mob}>
+              <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title}}>Uso</span>
+              <pre style={{margin:"10px 0 0",padding:14,background:C.neutro,borderRadius:8,fontSize:12,lineHeight:1.6,fontFamily:Fn.mono,color:C.cinzaEscuro,overflowX:"auto"}}>{`{/* Não controlado: o Modal guarda o estado e volta ao normal ao fechar */}
+<Modal open={aberto} onOpenChange={setAberto} title="Registrar ocorrência" size="lg"
+  permiteTelaCheia atalhoTelaCheia>
+  <Formulario />
+  <ModalFooter>...</ModalFooter>
+</Modal>
+
+{/* Controlado: o conteúdo muda com o tamanho (1 coluna → 4 colunas) */}
+const [cheia, setCheia] = useState(false)
+<Modal ... permiteTelaCheia telaCheia={cheia} aoMudarTelaCheia={setCheia}>
+  <Formulario colunas={cheia ? 4 : 1} />
+</Modal>`}</pre>
+            </DSCard>
+          </div>
+
+          <div style={{marginTop:16}}>
+            <DSCard mob={mob} s={{display:"flex",gap:mob?24:40,flexWrap:"wrap"}}>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Props</span>
+                <TokenRow label="permiteTelaCheia" value="boolean · padrão false"/>
+                <TokenRow label="telaCheia" value="boolean · controlado"/>
+                <TokenRow label="telaCheiaInicial" value="boolean · padrão false"/>
+                <TokenRow label="aoMudarTelaCheia" value="(telaCheia: boolean) => void"/>
+                <TokenRow label="atalhoTelaCheia" value="boolean · Alt+Enter"/>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                <span style={{fontSize:11,fontWeight:700,letterSpacing:".5px",color:C.textLight,textTransform:"uppercase",fontFamily:Fn.title,marginBottom:4}}>Botão</span>
+                <TokenRow label="Posição" value="À esquerda do X, mesmo topo"/>
+                <TokenRow label="Ícone" value="Maximize2 / Minimize2"/>
+                <TokenRow label="aria-label" value="Tela cheia / Restaurar"/>
+                <TokenRow label="aria-pressed" value="true em tela cheia"/>
+                <TokenRow label="Tamanho do modal" value="96vw × 96dvh"/>
+              </div>
+            </DSCard>
+          </div>
+          <p style={{fontSize:12,color:C.cinzaChumbo,lineHeight:1.6,margin:"14px 0 0"}}>Select dentro do modal: a lista abre para baixo, dentro do corpo rolável, e num modal comum o último campo não deixa espaço para ela. Com permiteTelaCheia o Modal traz a lista aberta para a vista (nas duas larguras, em Tela cheia e no tamanho normal). Sem a prop, o comportamento do Select é o de sempre: coloque o campo no alto do corpo ou use pílulas quando houver até 4 opções.</p>
         </Section>
 
         <div style={{textAlign:"center",padding:"20px 0 0",borderTop:`1px solid ${C.cardBorder}`,marginTop:20}}>

@@ -504,8 +504,8 @@ export default function DSFIPSDashboard(){
                       return <g key={i} onClick={()=>toggle("month",d.l)} onMouseEnter={()=>setHovBar(i)} onMouseLeave={()=>setHovBar(null)} style={{cursor:"pointer"}}>
                         <rect x={x} y={-20} width={bw} height={chartH+40} fill="transparent"/>
                         <rect x={x} y={chartH-bh} width={bw} height={bh} rx={5} fill={barColor} opacity={isDimmed?.15:isActive?1:hovBar===i?.9:.55+(.45*d.v/(max||1))}/>
-                        <text x={x+bw/2} y={chartH-bh-6} textAnchor="middle" fontSize="10" fontWeight="700" fill={isDimmed?"#6b7784":barLabelColor} fontFamily={Fn.mono}>{d.v}</text>
-                        <text x={x+bw/2} y={chartH+14} textAnchor="middle" fontSize="9" fill={isActive?barColor:dark?"#A1A1AA":"#6b7784"} fontFamily={Fn.body} fontWeight={isActive?700:400}>{d.l}</text>
+                        <text x={x+bw/2} y={chartH-bh-6} textAnchor="middle" fontSize="10" fontWeight="700" fill={isDimmed?"#66727f":barLabelColor} fontFamily={Fn.mono}>{d.v}</text>
+                        <text x={x+bw/2} y={chartH+14} textAnchor="middle" fontSize="9" fill={isActive?barColor:dark?"#A1A1AA":"#66727f"} fontFamily={Fn.body} fontWeight={isActive?700:400}>{d.l}</text>
                         {isActive&&<rect x={x-2} y={chartH-bh-2} width={bw+4} height={bh+4} rx={6} fill="none" stroke={barColor} strokeWidth="1.5" strokeDasharray="4 2"/>}
                       </g>;
                     })}
