@@ -35,7 +35,7 @@ export function PillFilter({
             onClick={() => onChange(o.value)}
             aria-pressed={active}
             className={cn(
-              'inline-flex items-center gap-1 rounded-md border px-2 py-[3px] text-[11px] font-semibold transition-all duration-100',
+              'inline-flex items-center gap-1 rounded-md border px-2 py-[3px] text-[11px] font-semibold transition duration-100',
               active
                 ? o.color
                   ? 'border-transparent text-white shadow-sm'
