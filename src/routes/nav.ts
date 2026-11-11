@@ -101,6 +101,7 @@ export const navGroups: NavGroup[] = [
     items: [
       { label: 'Button', to: '/docs/components/button', icon: Component },
       { label: 'Field', to: '/docs/components/field', icon: FormInput },
+      { label: 'Radio e Checkbox', to: '/docs/components/radio-checkbox', icon: SearchCheck },
       { label: 'Input', to: '/docs/components/input', icon: FormInput },
       { label: 'Progress', to: '/docs/components/progress', icon: Gauge },
       { label: 'Select', to: '/docs/components/select', icon: SearchCheck },

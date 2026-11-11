@@ -156,7 +156,7 @@ function DSSelect({
   const [val, setVal] = useSyncedState(cv, '')
   const [hi, setHi] = useState(-1)
   const ref = useRef<HTMLDivElement>(null)
-  const sz = compact ? { h: 30, fs: 12 } : { h: 35, fs: 13 }
+  const sz = compact ? { h: 32, fs: 12 } : { h: 35, fs: 13 }
   const bc = error ? C.danger : open ? C.azulProfundo : C.inputBorder
   const getL = (v: string) => {
     const o = options.find((x) => (typeof x === 'string' ? x === v : x.value === v))
@@ -351,7 +351,7 @@ function DSAutocomplete({
   const [selected, setSelected] = useState('')
   const iRef = useRef<HTMLInputElement>(null)
   const wRef = useRef<HTMLDivElement>(null)
-  const sz = compact ? { h: 30, fs: 12 } : { h: 35, fs: 13 }
+  const sz = compact ? { h: 32, fs: 12 } : { h: 35, fs: 13 }
   const filtered = options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
   useEffect(() => {
     if (!open) return
@@ -572,7 +572,7 @@ function DSMultiSelect({
           display: 'flex',
           alignItems: 'center',
           gap: 6,
-          minHeight: compact ? 30 : 35,
+          minHeight: compact ? 32 : 35,
           padding: '4px 12px',
           background: C.inputBg,
           border: `1.5px solid ${open ? C.azulProfundo : C.inputBorder}`,
@@ -1496,7 +1496,7 @@ export function DSSelect({
   const [val, setVal] = useState(cv ?? "");
   const [hi, setHi] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
-  const sz = compact ? { h: 30, fs: 12 } : { h: 35, fs: 13 };
+  const sz = compact ? { h: 32, fs: 12 } : { h: 35, fs: 13 };
   const bc = error ? C.danger : open ? C.azulProfundo : C.inputBorder;
   const getL = (v: string) => {
     const o = options.find((x) => (typeof x === "string" ? x === v : x.value === v));
@@ -2243,7 +2243,7 @@ input::placeholder{color:${C.textLight}}
               >
                 Dimensões
               </span>
-              <TokenRow label="Select height" value="35px / 30px" />
+              <TokenRow label="Select height" value="35px / 32px" />
               <TokenRow label="Checkbox/Radio" value="18 × 18px" />
               <TokenRow label="Toggle" value="42 × 24px" />
               <TokenRow label="Toggle compact" value="36 × 20px" />

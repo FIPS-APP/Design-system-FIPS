@@ -138,8 +138,8 @@ Cores por variante (claro → escuro):
 | --- | --- | --- | --- | --- |
 | `default` | `#004B9B` | `#FFFFFF` | `#1A6FC4` | `#FFFFFF` |
 | `secondary` | `#F2F4F8` | fg | — | — |
-| `success` | `#ECFDF5` | `#00904C` | `rgba(0,168,62,.15)` | `#4ADE80` |
-| `warning` | `#FFF7ED` | `#C2410C` | `rgba(251,191,36,.15)` | `#FBBF24` |
+| `success` | `#ECFDF5` | `#006D35` | `rgba(0,168,62,.15)` | `#8BE5AD` |
+| `warning` | `#FFF0D6` | `#C2410C` | `rgba(246,146,30,.14)` | `#FDC24E` |
 | `danger` | `#FEF2F2` | `#B91C1C` | `rgba(248,113,113,.15)` | `#F87171` |
 | `outline` | transparent | fg | — | — |
 | `info` | `#D3E3F4` | `#002A68` | `rgba(147,189,228,.15)` | `#93BDE4` |
@@ -236,6 +236,8 @@ Fonte: `src/docs/pages/components/SelectDoc.tsx` (Seção 01, **9 tipos**). Só 
 > Divergência proposital: o `ChipSelect` real do Governança BI (e o de `DrawerDoc.tsx`) **não** tem busca, só radio. A busca é uma evolução isolada do `Chip Filtro` do DS-FIPS.
 
 ## Tabs, Table, Dialog, Drawer, Tooltip, Progress
+
+Movimento: nenhum componente de `ui` e `composites` usa `transition-all` (transição só de cor, opacidade, sombra, transform e filter). Com `prefers-reduced-motion: reduce`, um bloco global em `globals.css` zera duração de animação e transição (spinner parado, sem shimmer, Dialog sem escala, Drawer sem deslizar); o `CircularCommandMenu` usa `MotionConfig reducedMotion="user"` e abre sem animar nem a opacidade dos itens. `Progress` anima por `transform` (com `background-size` na mesma duração e curva) e o toggle do menu de colunas por `translateX`. Anel de foco dos botões de fechar (Drawer, Modal hero), do `TabsContent` e do gatilho do menu radial só aparece com `focus-visible` (teclado).
 
 Fontes:
 
@@ -552,7 +554,7 @@ Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `on
 
 Fonte: `src/components/composites/AbasDeSecao.tsx`
 
-Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
+Sem `href` é `tablist`/`tab` (`aria-selected`, setas, Home, End; `idBase` + `propsDoPainel` ligam o `tabpanel`); com `href` é `nav` com `aria-current="page"`. Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
 
 ```tsx
 import { useState } from 'react'

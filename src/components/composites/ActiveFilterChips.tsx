@@ -60,7 +60,7 @@ export function ActiveFilterChips({
           onClick={c.remove}
           title={`Remover filtro: ${c.label}`}
           className={cn(
-            'inline-flex items-center gap-1 whitespace-nowrap rounded transition-all hover:brightness-95',
+            'inline-flex items-center gap-1 whitespace-nowrap rounded transition hover:brightness-95',
             'border border-[var(--color-border-strong)] bg-[var(--color-surface-muted)]',
             'py-0.5 pl-2 pr-1 text-[10px] font-semibold text-[var(--color-fg)]',
           )}
@@ -77,7 +77,7 @@ export function ActiveFilterChips({
           onClick={onOpenFilters}
           title="Ver todos os filtros ativos"
           className={cn(
-            'inline-flex items-center whitespace-nowrap rounded transition-all hover:brightness-95',
+            'inline-flex items-center whitespace-nowrap rounded transition hover:brightness-95',
             'border border-[var(--color-border-strong)] bg-[var(--color-surface-muted)]',
             'px-2 py-0.5 text-[10px] font-semibold text-[var(--color-fg-muted)]',
           )}

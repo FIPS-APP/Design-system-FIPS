@@ -336,6 +336,40 @@ test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => 
   assert.deepEqual(token(TEXTO_ABA_ATIVA, 'claro'), token('--color-primary', 'claro'))
 })
 
+// ─── Toast e Tooltip: texto do tom sucesso ─────────────────────────────────
+// O fundo é fixo nos dois temas (#ECFDF5), então o par vale no claro e no escuro. #00904C sobre ele mede 3,91:1.
+const TONS_SUCESSO = [
+  'exports/toast/toast.tsx',
+  'exports/tooltip/Tooltip.tsx',
+  'src/docs/pages/components/ToastDoc.tsx',
+  'src/docs/pages/components/TooltipDoc.tsx',
+]
+
+// ToastDoc e TooltipDoc têm duas paletas `C` cada (a da demo do site e a do código copiável), e a DemoPill passa
+// o verde por JSX. A chave vira lista de valores e todos entram na conta.
+for (const arquivo of TONS_SUCESSO) {
+  test(`${arquivo}: texto do tom sucesso contra o fundo dele, mínimo 4,5:1`, () => {
+    const fonte = ler(arquivo)
+    const paleta = {}
+    for (const m of fonte.matchAll(/(\w+)\s*:\s*"(#[\da-f]{6})"/gi)) (paleta[m[1]] ??= new Set()).add(m[2])
+    const pares = []
+    for (const m of fonte.matchAll(/\bsucesso\s*:\s*\{([^}]*)\}/g)) {
+      const corpo = m[1]
+      const bg = corpo.match(/\bbg\s*:\s*"(#[\da-f]{6})"/i)
+      const texto = corpo.match(/\bcolor\s*:\s*(?:"(#[\da-f]{6})"|C\.(\w+))/i)
+      assert.ok(bg && texto, `${arquivo}: sucesso sem bg ou color legível (${corpo.trim().slice(0, 80)})`)
+      pares.push({ bg: bg[1], hex: texto[1], chave: texto[2] })
+    }
+    for (const m of fonte.matchAll(/\bbg="(#ECFDF5)"\s+color=\{C\.(\w+)\}/gi)) pares.push({ bg: m[1], chave: m[2] })
+    assert.ok(pares.length > 0, `${arquivo}: nenhum tom sucesso encontrado`)
+    for (const { bg, hex, chave } of pares) {
+      const valores = hex ? [hex] : [...(paleta[chave] ?? [])]
+      assert.ok(valores.length > 0, `${arquivo}: C.${chave} fora da paleta do arquivo`)
+      for (const v of valores) verifica(`${arquivo}: ${chave ? `C.${chave} = ` : ''}${v} sobre ${bg}`, cor(v, 'claro'), cor(bg, 'claro'), MINIMO_TEXTO)
+    }
+  })
+}
+
 // ─── Azul escuro de texto ──────────────────────────────────────────────────
 for (const t of TEMAS) {
   test(`--color-primary-hover-text, tema ${t}: texto contra --color-surface`, () => {
@@ -481,6 +515,73 @@ for (const [t, objeto] of [['claro', 'semanticColors'], ['escuro', 'darkSemantic
   })
 }
 
+test('PageHeader: ponto do chip de contagem passa de 3:1 sobre o chip (6% de branco sobre o banner), nos dois temas', () => {
+  const fonte = ler('src/components/composites/PageHeader.tsx')
+  assert.match(fonte, /\?\? 'var\(--fips-banner-stat-dot\)'/, 'PageHeader.tsx: o ponto sem dotColor tem que usar --fips-banner-stat-dot')
+  const mistura = (a, b, t) => ({ r: a.r * (1 - t) + b.r * t, g: a.g * (1 - t) + b.g * t, b: a.b * (1 - t) + b.b * t })
+  // Fundos do banner: extremos do degradê de cada tema (o mais claro é o pior caso).
+  const fundos = {
+    claro: [token('--color-gov-gradient-from', 'claro'), token('--color-gov-gradient-to', 'claro'), cor('#001a4a', 'claro')],
+    escuro: ['#1e2a3a', '#162030', '#1a2840'].map((c) => cor(c, 'escuro')),
+  }
+  for (const t of TEMAS) {
+    const declarado = css.match(/--fips-banner-stat-dot:\s*([^;]+);/)
+    assert.ok(declarado, '--fips-banner-stat-dot não existe em globals.css')
+    const ponto = cor(declarado[1].trim(), t)
+    for (const fundo of fundos[t]) {
+      const r = contraste(ponto, mistura(fundo, BRANCO, 0.06))
+      assert.ok(r >= MINIMO, `${t}: ponto ${r.toFixed(2)}:1 < ${MINIMO}`)
+    }
+  }
+})
+
+// ─── Radio e Checkbox ──────────────────────────────────────────────────────
+const CHECKBOX = 'src/components/ui/choice-styles.ts'
+const RADIO = 'src/components/ui/radio.tsx'
+
+test('Radio e Checkbox: nenhuma cor fixa, só token', () => {
+  for (const arquivo of [CHECKBOX, 'src/components/ui/checkbox.tsx', RADIO]) {
+    const hex = ler(arquivo).match(/#[\da-f]{3,8}\b/gi)
+    assert.equal(hex, null, `hex em ${arquivo}: ${hex}`)
+  }
+})
+
+test('Radio e Checkbox: anel de foco cheio, recuo na cor do fundo, sem transparência', () => {
+  const caixa = ler(CHECKBOX)
+  assert.match(caixa, /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'caixa sem anel cheio')
+  assert.match(caixa, /focus-visible:ring-offset-\[var\(--color-surface\)\]/, 'caixa sem recuo na cor do fundo')
+  const pilula = ler(RADIO)
+  assert.match(pilula, /has-\[:focus-visible\]:ring-\[var\(--color-ring\)\](?!\/)/, 'pílula sem anel cheio')
+  assert.match(pilula, /has-\[:focus-visible\]:ring-offset-\[var\(--color-surface\)\]/, 'pílula sem recuo na cor do fundo')
+})
+
+for (const t of TEMAS) {
+  test(`Radio e Checkbox, tema ${t}: borda em repouso e caixa marcada contra cada fundo`, () => {
+    const borda = classe(CHECKBOX, /\bborder-2 border-\[var\((--[\w-]+)\)\]/)
+    const marcada = classe(CHECKBOX, /\bchecked:bg-\[var\((--[\w-]+)\)\]/)
+    // Escuro: só o cartão, como nos campos (a borda #666666 mede 2,87:1 sobre o cartão suave, #115).
+    for (const fundo of t === 'claro' ? FUNDOS : ['--color-surface']) {
+      verifica(`${borda} contra ${fundo}`, token(borda, t), token(fundo, t))
+      verifica(`${marcada} (caixa marcada) contra ${fundo}`, token(marcada, t), token(fundo, t))
+    }
+    verifica(`marca branca contra ${marcada}`, BRANCO, token(marcada, t))
+  })
+
+  test(`Radio e Checkbox, tema ${t}: erro (--color-danger) contra cada fundo e marca branca sobre ele`, () => {
+    for (const fundo of FUNDOS) verifica(`--color-danger contra ${fundo}`, token('--color-danger', t), token(fundo, t))
+    verifica('marca branca contra --color-danger', BRANCO, token('--color-danger', t))
+  })
+
+  test(`Radio pílula, tema ${t}: texto branco sobre a pílula marcada (4,5:1) e borda da pílula em repouso`, () => {
+    const marcada = classe(RADIO, /has-\[:checked\]:bg-\[var\((--[\w-]+)\)\]/)
+    verifica(`texto branco contra ${marcada}`, BRANCO, token(marcada, t), MINIMO_TEXTO)
+    // Pílula marcada: o fundo é --color-primary (texto) e o contorno --color-switch-on, que separa a pílula do cartão.
+    for (const fundo of FUNDOS) verifica(`--color-switch-on (contorno) contra ${fundo}`, token('--color-switch-on', t), token(fundo, t))
+    for (const fundo of t === 'claro' ? FUNDOS : ['--color-surface']) verifica(`--color-border-control contra ${fundo}`, token('--color-border-control', t), token(fundo, t))
+    verifica('texto --color-fg contra --color-surface', token('--color-fg', t), token('--color-surface', t), MINIMO_TEXTO)
+  })
+}
+
 test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CONTRASTE_RELATORIO }, () => {
   for (const t of TEMAS) {
     const linha = (rotulo, a, b) => console.log(`${t.padEnd(6)} ${rotulo.padEnd(30)} ${contraste(a, b).toFixed(2)}:1`)
@@ -491,6 +592,10 @@ test('relatório dos números (CONTRASTE_RELATORIO=1)', { skip: !process.env.CON
     linha('botão / trilho ligado', BRANCO, token('--color-switch-on', t))
     linha('anel de foco / cartão', token('--color-ring', t), cartao)
     linha('anel de foco / faixa', token('--color-ring', t), token('--color-surface-muted', t))
+    linha('caixa/rádio marcado / cartão', token('--color-switch-on', t), cartao)
+    linha('marca branca / caixa marcada', BRANCO, token('--color-switch-on', t))
+    linha('borda do controle / cartão', token('--color-border-control', t), cartao)
+    linha('erro (danger) / cartão', token('--color-danger', t), cartao)
     linha('azul de texto / cartão', token('--color-primary-hover-text', t), cartao)
     linha('trilho desligado / linha info', token('--color-switch-off', t), compor(TOKENS[t]['--color-semantic-info-bg'], t))
   }

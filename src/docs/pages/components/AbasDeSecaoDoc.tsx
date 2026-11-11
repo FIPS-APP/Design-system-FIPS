@@ -1,6 +1,7 @@
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { Palette, SlidersHorizontal, Smartphone } from 'lucide-react'
 import { AbasDeSecao, type AbaDeSecao } from '../../../components/composites/AbasDeSecao'
+import { propsDoPainel } from '../../../components/composites/abasDeSecaoUtil'
 
 const ABAS: AbaDeSecao[] = [
   { id: 'modo', label: 'Modo', icon: SlidersHorizontal },
@@ -8,7 +9,7 @@ const ABAS: AbaDeSecao[] = [
   { id: 'aparelho', label: 'Aparelho', icon: Smartphone },
 ]
 
-const SEIS: AbaDeSecao[] = ['Início', 'Registro', 'Meus OPAs', 'Pendências', 'Ajustes', 'Ajuda'].map((label) => ({
+const SEIS: AbaDeSecao[] = ['Início', 'Registro', 'Meus OPAs', 'Pendências', 'Resultados e gráficos', 'Ajuda'].map((label) => ({
   id: label,
   label,
 }))
@@ -45,6 +46,8 @@ function Moldura({
   ativaInicial?: string
 }) {
   const [ativa, setAtiva] = useState(ativaInicial ?? abas[0].id)
+  const idBase = `demo-${demo}`
+  const painel = propsDoPainel(idBase, ativa)
   const estilo = {
     width: largura,
     maxWidth: '100%',
@@ -61,18 +64,18 @@ function Moldura({
     >
       {posicao === 'topo' ? (
         <>
-          <AbasDeSecao abas={abas} ativa={ativa} onSelecionar={setAtiva} posicao="topo" label={`Abas ${demo}`} />
-          <div data-rolavel className="h-[calc(100%-var(--abas-secao-altura))] overflow-y-auto p-4">
+          <AbasDeSecao abas={abas} ativa={ativa} onSelecionar={setAtiva} posicao="topo" label={`Abas ${demo}`} idBase={idBase} />
+          <div {...painel} data-rolavel className="h-[calc(100%-var(--abas-secao-altura))] overflow-y-auto p-4">
             <Texto />
           </div>
         </>
       ) : (
         <>
-          <div data-rolavel className="abas-secao-reserva h-full overflow-y-auto p-4">
+          <div {...painel} data-rolavel className="abas-secao-reserva h-full overflow-y-auto p-4">
             <Texto />
           </div>
           {extra}
-          <AbasDeSecao abas={abas} ativa={ativa} onSelecionar={setAtiva} posicao="rodape" label={`Abas ${demo}`} />
+          <AbasDeSecao abas={abas} ativa={ativa} onSelecionar={setAtiva} posicao="rodape" label={`Abas ${demo}`} idBase={idBase} />
           <div
             data-barra
             className="absolute inset-x-0 bottom-0 z-40 flex h-[46px] items-center justify-around bg-[var(--color-fips-blue-950)] text-xs text-white"
@@ -89,7 +92,7 @@ function Moldura({
 }
 
 const CODIGO = `import { useState } from 'react'
-import { AbasDeSecao } from '@fips-app/ds-fips'
+import { AbasDeSecao, propsDoPainel } from '@fips-app/ds-fips'
 
 // O app publica a altura da própria barra inferior:
 // :root { --barra-inferior-altura: 54px; }
@@ -100,10 +103,11 @@ export function Configuracoes() {
   const [aba, setAba] = useState('modo')
   return (
     <>
-      <main className="abas-secao-reserva">…conteúdo…</main>
+      <main className="abas-secao-reserva" {...propsDoPainel('config', aba)}>…conteúdo…</main>
       <AbasDeSecao
         posicao="rodape"
         label="Configurações"
+        idBase="config"
         abas={[
           { id: 'modo', label: 'Modo' },
           { id: 'tema', label: 'Tema' },
@@ -214,6 +218,34 @@ export default function AbasDeSecaoDoc() {
             e um contêiner interno em modo fácil herdaria o 35px da raiz.
           </li>
         </ol>
+      </Secao>
+
+      <Secao titulo="Acessibilidade">
+        <ul className="max-w-3xl list-disc space-y-2 pl-5 text-sm leading-relaxed text-[var(--color-fg-muted)]">
+          <li>
+            <strong>Abas na mesma página</strong> (sem <code>href</code>): padrão de abas do WAI-ARIA. A faixa é um{' '}
+            <code>tablist</code> com o <code>label</code>; cada aba é <code>role="tab"</code> com{' '}
+            <code>aria-selected</code>. Só a aba ativa entra na ordem do Tab (<code>tabindex="0"</code>); as outras
+            ficam em <code>-1</code> e se alcançam pelas setas. Setas para os lados, Home e End movem o foco e
+            ativam a aba, com volta nas pontas.
+          </li>
+          <li>
+            <strong>Painel:</strong> passe <code>idBase</code> e espalhe <code>propsDoPainel(idBase, ativa)</code>{' '}
+            no contêiner do conteúdo. A aba ganha <code>aria-controls</code> e o painel vira{' '}
+            <code>role="tabpanel"</code> rotulado pela aba. Sem <code>idBase</code> a aba não declara{' '}
+            <code>aria-controls</code>, porque o painel está fora do componente.
+          </li>
+          <li>
+            <strong>Navegação entre páginas</strong> (<code>href</code> em alguma aba): continua <code>nav</code> com
+            links e <code>aria-current="page"</code>, sem papéis de aba, porque trocar de página não é trocar de
+            painel.
+          </li>
+          <li>
+            <strong>Celular:</strong> quando as abas não cabem, a faixa rola na horizontal e a borda que tem mais abas
+            esmaece por 28px (<code>data-rolagem-esq</code> e <code>data-rolagem-dir</code>). A aba ativa sempre é
+            rolada para dentro da faixa. A moldura "seis abas" abaixo tem "Resultados e gráficos" a 375px.
+          </li>
+        </ul>
       </Secao>
 
       <Secao titulo="Uso">

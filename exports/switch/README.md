@@ -13,4 +13,4 @@ O `Switch.tsx` lê quatro tokens e não traz valor de reserva em `var()`. Sem el
 | `--color-surface` (recuo do anel, obrigatório) | `#ffffff` | `#1a1a1a` |
 | `--color-ring` (anel de foco, obrigatório) | `#0090d0` | `#f6921e` |
 
-Os valores são os de `src/styles/globals.css` e de `skills/design-system-fips/references/foundations.md` (`:95-97` no claro, `:110` e `:131-133` no escuro). Escreva o hex, não o nome de outro token: quem copia pode não ter `--color-primary` nem `--color-fg-muted`.
+Os valores são os de `src/styles/globals.css` e de `skills/design-system-fips/references/foundations.md` (`:96-98` no claro, `:111` e `:132-134` no escuro). Escreva o hex, não o nome de outro token: quem copia pode não ter `--color-primary` nem `--color-fg-muted`.

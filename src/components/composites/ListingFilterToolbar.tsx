@@ -190,7 +190,7 @@ export function ListingFilterToolbar({
           onClick={() => onShowPeriodChange(!showPeriod)}
           aria-expanded={showPeriod}
           aria-haspopup="listbox"
-          className="inline-flex items-center transition-all"
+          className="inline-flex items-center transition"
           style={{
             gap: 6,
             padding: '7px 12px',
@@ -332,7 +332,7 @@ export function ListingFilterToolbar({
                   type="button"
                   onClick={onApplyCustomPeriod}
                   disabled={!canApplyCustomPeriod}
-                  className="text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
                   style={{
                     padding: '5px 12px',
                     fontSize: 11,
@@ -360,7 +360,7 @@ export function ListingFilterToolbar({
             aria-label="Exportar Excel"
             onClick={onExportExcel}
             disabled={exportDisabled}
-            className="inline-flex items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-45"
+            className="inline-flex items-center justify-center transition disabled:cursor-not-allowed disabled:opacity-45"
             style={{
               width: 34,
               height: 34,
@@ -378,7 +378,7 @@ export function ListingFilterToolbar({
             aria-label="Exportar PDF"
             onClick={onExportPdf}
             disabled={exportDisabled}
-            className="inline-flex items-center justify-center transition-all disabled:cursor-not-allowed disabled:opacity-45"
+            className="inline-flex items-center justify-center transition disabled:cursor-not-allowed disabled:opacity-45"
             style={{
               width: 34,
               height: 34,
