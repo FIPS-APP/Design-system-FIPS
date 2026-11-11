@@ -24,3 +24,14 @@ test('AppHeader no celular: recuo 16, espaço 12 entre menu e logo, 6 entre os b
   assert.match(dir, /\bgap-1\.5\b/)
   assert.match(dir, /\bsm:gap-2\.5\b/)
 })
+
+test('SecaoNumerada: cabeçalho com recuo de 24 em qualquer largura do cartão', () => {
+  // Coluna estreita a 1440 px e celular a 375 px: padL 24 (era 20 abaixo de @2xl). Manutenção leva-1: 24.
+  const f = fonte('SecaoNumerada.tsx')
+  const linha = f.split('\n').find((l) => l.includes("'flex items-center gap-3 px-"))
+  assert.ok(linha, 'linha do cabeçalho não achada')
+  assert.match(linha, /\bpx-6\b/)
+  assert.match(linha, /\bpy-4\b/)
+  assert.match(linha, /\bgap-3\b/)
+  assert.doesNotMatch(linha, /\bpx-5\b/)
+})
