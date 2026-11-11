@@ -5,8 +5,16 @@ import { BannerIconBox, BannerJunctionLines, FIPS_BANNER_CONTENT_CLASS } from '.
 export type PageHeaderStat = {
   label: string
   value: string | number
+  /** Cor do ponto. Sem ela vale `--fips-banner-stat-dot` (amarelo-400, 5,19:1 no claro e 8,01:1 no escuro sobre o chip). */
   dotColor?: string
+  /** Com `href` o chip vira um link (`<a>`), com o mesmo visual e foco visível. Sem `href` segue um `<span>`. */
+  href?: string
 }
+
+const STAT_CLS =
+  'inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.06] px-2.5 py-1 font-sans text-[11px] font-semibold text-white/75'
+const STAT_LINK_CLS =
+  'no-underline hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]'
 
 /** Só data-*: o slot de ações serve de âncora de tutorial, não de lugar para estilo. */
 export type PageHeaderActionsProps = { [K in `data-${string}`]?: string | number | boolean | undefined }
@@ -110,19 +118,23 @@ export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(function P
             {description ? <Description className="fips-page-header__descricao">{description}</Description> : null}
             {hasStats ? (
               <div className="fips-page-header__stats">
-                {stats!.map((s) => (
-                  <span
-                    key={s.label}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.06] px-2.5 py-1 font-sans text-[11px] font-semibold text-white/75"
-                  >
-                    <span
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ background: s.dotColor ?? 'var(--color-accent-strong)' }}
-                      aria-hidden
-                    />
-                    {s.label} <strong className="font-bold text-white">{s.value}</strong>
-                  </span>
-                ))}
+                {stats!.map((s) => {
+                  const Chip = s.href ? 'a' : 'span'
+                  return (
+                    <Chip
+                      key={s.label}
+                      {...(s.href ? { href: s.href } : {})}
+                      className={cn(STAT_CLS, s.href && STAT_LINK_CLS)}
+                    >
+                      <span
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ background: s.dotColor ?? 'var(--fips-banner-stat-dot)' }}
+                        aria-hidden
+                      />
+                      {s.label} <strong className="font-bold text-white">{s.value}</strong>
+                    </Chip>
+                  )
+                })}
               </div>
             ) : null}
           </div>

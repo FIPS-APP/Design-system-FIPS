@@ -92,7 +92,7 @@ export function FipsTabBar({
             disabled={tab.disabled}
             onClick={() => !tab.disabled && onChange(tab.id)}
             className={cn(
-              'relative flex items-center gap-1.5 px-4 py-2 text-[11px] font-semibold transition-all',
+              'relative flex items-center gap-1.5 px-4 py-2 text-[11px] font-semibold transition',
               stretch && 'min-w-0 flex-1 justify-center',
             )}
             style={tabButtonStyle(isActive, tab.disabled)}
