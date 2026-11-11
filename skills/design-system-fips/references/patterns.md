@@ -222,7 +222,7 @@ Não faça:
 
 Fonte: `src/components/composites/FilterBlock.tsx` · demo: Filtro §10 (`src/docs/pages/patterns/FiltroDemo.tsx`). Para telas **sem alçada nem período**; com alçada ou período use `ListingFilterToolbar`.
 
-- Ordem: **Filtros** (botão `outline` `sm` que é o `DrawerTrigger` do drawer à esquerda) · **Busca** · `trailing` · `actions`. Card `rounded-[10px_10px_10px_18px]`, controles de 30px, `flex-wrap`, busca `min-w-[160px] flex-1`.
+- Ordem: **Filtros** (botão `outline` `sm` que é o `DrawerTrigger` do drawer à esquerda) · **Busca** · `trailing` · `actions`. Card `rounded-[12px_12px_12px_24px]` sem padding próprio (0.21.0; faixa interna `px-[18px] py-3.5`, `gap-2.5`, como na Manutenção), botões de 30px, busca de 34px (linha de 64px), `flex-wrap`, busca `min-w-[160px] flex-1`.
 - **`search` e `onSearchChange` são obrigatórios**: toda tela com o bloco tem busca. Não existe versão sem o campo. `filters` e `actions` são opcionais.
 - Exportar é **uma vaga só** (`actions`): `ExportButtons` (par Excel/PDF), um PDF sozinho ou um botão desabilitado enquanto a exportação não existe.
 - Drawer: `DrawerHero` + miolo rolável + rodapé `Limpar tudo` (desabilitado sem filtro nem busca) e `Ver N resultado(s)`. `activeCount` vira o badge do botão.
@@ -239,7 +239,7 @@ Fecha por overlay, X ou `Escape` — **não** por click-outside. `role="dialog"`
 
 **Seleção é single-select** (`"" = Todos`), não multi-select por checkbox: `{status: string, dept: string, priority: string}`. É a convenção das duas referências de produção.
 
-**Cores dos pills são hex fixo, não token** — o pill ativo é fundo cheio + texto branco, e tokens semânticos (`--color-gov-azul-profundo` etc.) **clareiam no dark**, o que poria texto branco sobre fundo claro. Usar hex saturado nos dois temas: `STATUS_PILL_COLOR` (`#00A83E`/`#F6921E`/`#002A68`/`#DC3545`), `PRIO_PILL_COLOR` (`#DC3545`/`#F6921E`/`#0090D0`/`#6B7784`) e `PILL_PRIMARY` `#0057B8` (pill "Todos" **e** botão `Ver N resultado(s)`).
+**Cores dos pills são hex fixo, não token** — o pill ativo é fundo cheio + texto branco, e tokens semânticos (`--color-gov-azul-profundo` etc.) **clareiam no dark**, o que poria texto branco sobre fundo claro. Usar hex saturado nos dois temas: `STATUS_PILL_COLOR` (`#00A83E`/`#F6921E`/`#002A68`/`#DC3545`), `PRIO_PILL_COLOR` (`#DC3545`/`#F6921E`/`#0090D0`/`#64707D`) e `PILL_PRIMARY` `#0057B8` (pill "Todos" **e** botão `Ver N resultado(s)`).
 
 ### Footer de paginação
 
@@ -304,7 +304,7 @@ O `<Table>` governado expressa densidade como **padding vertical**. A referênci
 | `comfortable` | 56px | 13px | 20px |
 
 - Célula: `padding: 0 padX` (a altura vem da linha). **Exceção:** com "quebra de linha" ligada, volta a padding vertical — é o único caso em que a linha precisa crescer.
-- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, Saira Expanded, `borderBottom 2px`, **sempre centralizado** — o `th` **não** segue `col.align`, ao contrário da célula (`td`), que continua respeitando (`left` por padrão, `right` em valor monetário). Cabeçalho centralizado é o padrão do DS desde a v0.12.3; a v0.11.32 tinha feito o caminho inverso (centro → esquerda) e foi revertida.
+- **`th`**: `padding 8px padX`, `fontSize 9`, `fontWeight 700`, `uppercase`, `letter-spacing 1px`, **Saira** (largura normal, `--font-saira`, desde a 0.21.0; antes Saira Expanded), `borderBottom 2px`, **sempre centralizado** — o `th` **não** segue `col.align`, ao contrário da célula (`td`), que continua respeitando (`left` por padrão, `right` em valor monetário). Cabeçalho centralizado é o padrão do DS desde a v0.12.3; a v0.11.32 tinha feito o caminho inverso (centro → esquerda) e foi revertida.
 - Skeleton de carregamento usa a mesma `rowH`, senão as linhas "pulam" de altura ao sair do loading.
 - Card da tabela leva `box-shadow: 0 1px 3px rgba(0,75,155,.04)`.
 
@@ -512,3 +512,15 @@ Checklist rápido:
 - formulários usam composição oficial
 - cores e fontes vêm dos tokens oficiais
 - espaçamento segue a escala de 4px
+
+## Execução de inspeção (formulário de campo)
+
+Página: `/docs/patterns/execucao-inspecao` (`src/docs/pages/patterns/ExecucaoInspecaoDemo.tsx`). Escolher o formulário com `CardChecklist` em grade (`ul` + `como="li"`), preencher com `SecaoNumerada` (identificação, itens, assinatura), uma `SegmentoAvaliacao` por item, `AssinaturaCanvas` obrigatória e a `BarraAcoesRodape` presa ao fim com `EstadoSalvamento`, "Salvar rascunho" (`inverseOutline`) e "Finalizar" (`ouro`). Pendências ao tentar finalizar: botão no `aviso` da barra e `erro` nos campos. A regra (quais respostas, o que bloqueia) é do app. Props em `components.md` → "Formulário de execução".
+
+## Home padrão
+
+Página: `/docs/patterns/home-padrao` (`src/docs/pages/patterns/HomePadraoDemo.tsx`). Ordem: `HomeHero` (foto clara, sobretítulo, título em duas cores, `HeroFileira`), `FaixaPilares` sobreposta ao pé do hero, `CicloDeVida` (cabeçalho com pílula de contagem, etapas com selo de papel), seções numeradas em `SecaoHome` (`CartoesInformativos`, `CartoesConceito`, `CartoesResponsabilidade`, `PassosGrade` + `TabelaReferencia` + `NotasOperacionais`, `IndicadoresNumerados`, perfis em `CartoesResponsabilidade` com `detalhes`) e `ChamadaFinal`. Contêiner do corpo: `mx-auto flex max-w-7xl flex-col gap-10 px-4 pt-10 sm:px-6`. Texto, ícones, rotas e permissões são do app; props em `components.md` → "Home padrão (blocos da Home)".
+
+## Dashboard com os gráficos do pacote
+
+Monte o painel com `CartaoGrafico` em grade (`grid gap-4 lg:grid-cols-2`) e um gráfico em cada cartão: `GraficoBarras` (ranking e série no tempo), `GraficoRosca` (distribuição), `GraficoLinha` (evolução, com a meta em série `tracejada`), `GraficoFunil` (etapas), `MapaDeCalor` (local por mês). `onSelecionar` em todos faz o painel filtrar por clique: guarde a categoria escolhida no estado da tela e passe-a em `selecionado`. Props em `components.md` → "Gráficos". Página: `/docs/components/graficos`.

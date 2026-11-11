@@ -52,7 +52,7 @@ export function FormSectionCard({
         background: 'var(--color-surface)',
         borderRadius: '12px 12px 12px 24px',
         border: '1px solid var(--color-border)',
-        boxShadow: '0 1px 3px rgba(0,75,155,.04)',
+        boxShadow: 'var(--shadow-card)',
         padding: '14px 16px',
       }}
       {...rest}
