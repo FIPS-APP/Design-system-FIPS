@@ -210,7 +210,7 @@ export default function AppShellDoc() {
       <Secao titulo="Montada">
         <p className="mb-3 max-w-3xl text-sm text-[var(--color-fg-muted)]">
           A casca abaixo roda de verdade (tela cheia, dentro de um quadro): passe o ponteiro no menu, recolha, troque
-          o tema, abra o sino, a conta, o procedimento e o tutorial. No celular, o botão da esquerda abre a gaveta.
+          o tema, abra o sino, a conta, o procedimento e o tutorial. No celular, o botão da esquerda abre a gaveta: o foco vai para o primeiro item, Tab fica no menu e Esc devolve o foco ao botão.
         </p>
         <div className="mb-3 flex flex-wrap items-center gap-x-6 gap-y-2">
           <Seletor

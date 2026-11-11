@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,6 +40,7 @@
     "test:lint-governanca": "node --test scripts/lint-governanca.test.mjs",
     "test:listagens": "node --test scripts/listagens.test.mjs",
     "test:casca": "node --test scripts/app-shell.test.mjs",
+    "test:gaveta": "node --test scripts/app-shell-gaveta.test.mjs",
     "test:rodada3": "node --test scripts/rodada3.test.mjs",
     "test": "node --test scripts/*.test.mjs",
     "preview": "vite preview"
