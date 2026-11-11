@@ -127,7 +127,7 @@ const PRIO_COLOR:Record<string,string>={"Crítica":C.danger,"Alta":C.amareloEscu
    é sempre texto branco sobre a cor, então usa o tom saturado dos badges em vez
    do token light/dark (que em muitos casos clareia no dark e perde contraste). */
 const STATUS_PILL_COLOR:Record<string,string>={"Aprovada":"#00A83E","Pendente":"#F6921E","Em análise":"#002A68","Recusada":"#DC3545"};
-const PRIO_PILL_COLOR:Record<string,string>={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#6B7784"};
+const PRIO_PILL_COLOR:Record<string,string>={"Crítica":"#DC3545","Alta":"#F6921E","Média":"#0090D0","Baixa":"#66727F"};
 /* Cor fixa do pill "Todos" (sem cor semântica própria) — não usa C.azulProfundo
    porque esse token É theme-aware (var(--color-gov-azul-profundo)) e clareia pra
    #93BDE4 no dark, o que quebraria o texto branco por cima. */

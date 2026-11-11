@@ -75,7 +75,7 @@ const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(({ classN
       {children}
       {required ? (
         <>
-          <span aria-hidden className="ml-1 text-[var(--color-danger)]">*</span>
+          <span aria-hidden className="ml-1 text-[var(--color-danger-text)]">*</span>
           <span className="sr-only">obrigatório</span>
         </>
       ) : null}

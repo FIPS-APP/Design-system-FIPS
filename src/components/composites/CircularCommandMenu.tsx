@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react'
+import { useState, useEffect, useCallback, useId, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, MotionConfig, useReducedMotionConfig } from 'framer-motion'
 import { cn } from '../../lib/cn'
 import { useIsClient } from '../../lib/useIsClient'
+import { acaoDoTeclado, textoDoRealce } from './menu-radial-logica'
 
 export type CommandItem = {
   id: string
@@ -61,6 +62,11 @@ function CircularCommandMenuBase({
   const mounted = useIsClient()
   const triggerRef = useRef<HTMLButtonElement>(null)
   const reduceMotion = useReducedMotionConfig()
+  const itensRef = useRef<(HTMLButtonElement | null)[]>([])
+  const menuId = useId()
+  // Foco real nos itens (padrão de menu). Dentro de um Dialog/Drawer o foco fica no gatilho: o focus trap
+  // do painel devolveria o foco de um item que mora fora dele, e o realce é anunciado por texto.
+  const [focoNosItens, setFocoNosItens] = useState(true)
 
   const enabledItems = items.filter((i) => !i.disabled)
   const itemCount = enabledItems.length
@@ -81,8 +87,21 @@ function CircularCommandMenuBase({
   const open = () => {
     computeCenter()
     setActiveIndex(0)
+    setFocoNosItens(!triggerRef.current?.closest('[role="dialog"]'))
     setIsOpen(true)
   }
+
+  // Fecha e devolve o foco ao gatilho (Esc, ação escolhida, clique fora, fechar).
+  const fechar = useCallback((devolverFoco = true) => {
+    setIsOpen(false)
+    if (devolverFoco) triggerRef.current?.focus({ preventScroll: true })
+  }, [])
+
+  // O foco acompanha o realce: Tab vai para o item certo e o leitor de tela o anuncia.
+  useEffect(() => {
+    if (!isOpen || !focoNosItens) return
+    itensRef.current[activeIndex]?.focus({ preventScroll: true })
+  }, [isOpen, focoNosItens, activeIndex, itemCount])
 
   useEffect(() => {
     if (!isOpen) return
@@ -97,42 +116,41 @@ function CircularCommandMenuBase({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!isOpen || itemCount === 0) return
-      switch (e.key) {
-        case 'ArrowRight':
-        case 'ArrowDown':
+      if (!isOpen || e.defaultPrevented) return
+      const acao = acaoDoTeclado(e.key, activeIndex, itemCount)
+      switch (acao.tipo) {
+        case 'mover':
           e.preventDefault()
-          setActiveIndex((prev) => (prev + 1) % itemCount)
+          setActiveIndex(acao.indice)
           break
-        case 'ArrowLeft':
-        case 'ArrowUp':
-          e.preventDefault()
-          setActiveIndex((prev) => (prev - 1 + itemCount) % itemCount)
-          break
-        case 'Enter': {
+        case 'ativar': {
           e.preventDefault()
           const selectedItem = enabledItems[activeIndex]
           if (selectedItem) {
             selectedItem.onClick?.()
             onSelect?.(selectedItem)
           }
-          setIsOpen(false)
+          fechar()
           break
         }
-        case 'Escape':
-          e.preventDefault()
-          setIsOpen(false)
+        case 'fechar':
+          // Esc fecha só o menu (o painel em volta não deve fechar junto).
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+          fechar()
           break
         default:
           break
       }
     },
-    [isOpen, activeIndex, enabledItems, itemCount, onSelect],
+    [isOpen, activeIndex, enabledItems, itemCount, onSelect, fechar],
   )
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyDown, true)
+    return () => window.removeEventListener('keydown', handleKeyDown, true)
   }, [handleKeyDown])
 
   const getItemPosition = (index: number) => {
@@ -154,6 +172,7 @@ function CircularCommandMenuBase({
         whileTap={{ scale: 0.95 }}
         aria-expanded={isOpen}
         aria-haspopup="menu"
+        aria-controls={isOpen ? menuId : undefined}
         aria-label={ariaLabel}
       >
         <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
@@ -181,22 +200,31 @@ function CircularCommandMenuBase({
               <>
                 <div
                   className="fixed inset-0 z-[200]"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => fechar()}
                   aria-hidden
                 />
                 {itemCount > 0 && (
                   <div
                     className="pointer-events-none fixed z-[210]"
                     style={{ left: center.x, top: center.y }}
+                    id={menuId}
                     role="menu"
+                    aria-label={ariaLabel}
                   >
+                    {/* Foco no gatilho (menu em painel): o realce é anunciado aqui. */}
+                    {!focoNosItens && enabledItems[activeIndex] ? (
+                      <span className="sr-only" role="status" aria-live="polite">
+                        {textoDoRealce(enabledItems[activeIndex].label, activeIndex, itemCount)}
+                      </span>
+                    ) : null}
                     <motion.button
                       type="button"
                       initial={{ scale: 0, rotate: 0 }}
                       animate={{ scale: 1, rotate: 45 }}
                       exit={{ scale: 0, rotate: 0 }}
                       transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 25 }}
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => fechar()}
+                      tabIndex={-1}
                       style={{ marginLeft: -18, marginTop: -18 }}
                       className="cmd-glass-center pointer-events-auto absolute top-0 left-0 flex h-9 w-9 items-center justify-center rounded-full"
                       aria-label="Fechar menu"
@@ -221,7 +249,15 @@ function CircularCommandMenuBase({
                       return (
                         <motion.button
                           key={item.id}
+                          ref={(el) => {
+                            itensRef.current[index] = el
+                          }}
                           type="button"
+                          tabIndex={isActive ? 0 : -1}
+                          // Espaço ativa no keydown (tratado acima); o clique que o navegador dispara no keyup não repete.
+                          onKeyUp={(e) => {
+                            if (e.key === ' ') e.preventDefault()
+                          }}
                           style={{ zIndex: isActive ? 30 : 1 }}
                           initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
                           animate={{
@@ -240,11 +276,11 @@ function CircularCommandMenuBase({
                             e.stopPropagation()
                             item.onClick?.()
                             onSelect?.(item)
-                            setIsOpen(false)
+                            fechar()
                           }}
                           onMouseEnter={() => setActiveIndex(index)}
                           className={cn(
-                            'cmd-glass pointer-events-auto absolute flex h-9 w-9 items-center justify-center rounded-full transition-[box-shadow,border-color]',
+                            'cmd-glass pointer-events-auto absolute flex h-9 w-9 items-center justify-center rounded-full transition-[box-shadow,border-color] focus-visible:outline-none',
                             isActive && !item.danger && 'ring-2 ring-[var(--color-primary)]',
                             isActive && item.danger && 'ring-2 ring-[var(--color-danger)]',
                           )}

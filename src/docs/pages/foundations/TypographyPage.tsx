@@ -131,7 +131,7 @@ export default function DSFIPSTypography(){
                   preview={
                     <div>
                       <span style={{fontSize:Math.min(s.px,24),fontWeight:s.weight,fontFamily:s.family,color:"#333B41",lineHeight:s.lh,display:"block",marginBottom:8}}>{s.sample}</span>
-                      <code style={{fontSize:10,fontFamily:"'Fira Code', monospace",color:"#6B7784"}}>{s.token} - {familyName} {s.weight} {s.px}px</code>
+                      <code style={{fontSize:10,fontFamily:"'Fira Code', monospace",color:"#64707D"}}>{s.token} - {familyName} {s.weight} {s.px}px</code>
                     </div>
                   }
                 >

@@ -25,6 +25,31 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.22.0',
+    date: '2026-11-11',
+    title: 'Padrões dos apps no pacote',
+    entries: [
+      { type: 'feature', description: 'Casca do app: AppShell, AppHeader, AppSidebar, HeaderTile, UserChip, UserAccountMenu, NotificacoesMenu e TutorialOverlay, com o CSS em camada própria.' },
+      { type: 'feature', description: 'Home padrão: HomeHero, FaixaPilares, CicloDeVida, SecaoHome, CartoesInformativos, CartoesConceito, CartoesResponsabilidade, PassosGrade e TabelaReferencia.' },
+      { type: 'feature', description: 'Formulário de execução: SecaoNumerada, SegmentoAvaliacao, AssinaturaCanvas, BarraAcoesRodape, EstadoSalvamento e CardChecklist.' },
+      { type: 'feature', description: 'TabelaExpansivel: linha que abre um painel de detalhe e vira cartão no celular.' },
+      { type: 'feature', description: 'Modal: botão de tela cheia ao lado do X (permiteTelaCheia).' },
+      { type: 'improvement', description: 'ListingFilterToolbar aceita texto próprio; AdminTablePagination implementa linhas por página.' },
+      { type: 'improvement', description: 'Medidas conferidas contra o Gestão OPA e a Manutenção (rodada 2): --shadow-card tem uma declaração só, a neutra (0 2px 8px / 0 10px 24px, tom #0f172a); CardChecklist sobre Card + CardContent (raio 16, padding 24/20); HomeHero sem fundo atrás da foto; SecaoHome com 8px entre as linhas; th de tabela em Saira (largura normal; a fonte entra no pacote); ListingKpiRow sem título por padrão (prop titulo); BarraAcoesRodape na variante rodape por padrão (faixa reta, botões sm; a de cartão é variante="cartao"); AssinaturaCanvas com quadro de borda sólida de até 32rem (PNG 520x160); FipsLogo variante="branca" para o CabecalhoDocumento; FaixaCategoriaDocumento sem text-white no contêiner; FilterBlock com raio 12/24 e faixa interna 14/18; AdminTablePagination em 11px com fundo suave; CartaoListagem com cabeçalho 18/14.' },
+      { type: 'feature', description: 'Gráficos: GraficoBarras com onSelecionarBarra (drill-down por série) e um valor por barra no modo agrupado; GraficoLinha com onSelecionarPonto e último rótulo do eixo sempre visível; GraficoFunil com onSelecionarEtapa; prop maximo (escala fixa) nos três; CartaoGrafico com permiteBaixarImagem (PNG sem dependência). Todas as props são opcionais.' },
+      { type: 'feature', description: 'ListingFilterToolbar: escopos e mostrarEscopo (esconder "Toda jurisdição"); o rótulo "Filtros" some abaixo de md, só o ícone.' },
+      { type: 'improvement', description: 'O CSS do pacote sai em subcamadas (utilities.ds-fips, components.ds-fips): a utilidade que o app escreve (grid-cols-1 @3xl:grid-cols-4, hidden lg:grid) vence a mesma utilidade do pacote em qualquer ordem de import.' },
+      { type: 'fix', description: 'Contraste (rodada 3): asterisco de campo obrigatório em --color-danger-text; texto de pill escuro quando o branco não passa de 4,5:1.' },
+      { type: 'improvement', description: 'Muda para quem já usa: ListingKpiRow deixa de renderizar o h2 "Indicadores rápidos" e o hint padrão; para voltar, passe titulo="Indicadores rápidos".' },
+      { type: 'improvement', description: 'Muda para quem já usa: AdminTablePagination ganha fundo --color-surface-muted e passa de px-6 py-3 para px-4 py-2.5 em todo consumidor.' },
+      { type: 'improvement', description: 'Muda para quem já usa: --shadow-card no claro deixa o tom azulado e passa à sombra neutra do @theme (0 2px 8px / 0 10px 24px em #0f172a) em todo Card.' },
+      { type: 'fix', description: 'AppHeader sem rolagem horizontal em 320 px e entre 640 e 1000 px com trilha longa; AppSidebar aceita versao.numero com ou sem "v"; Ctrl+P esconde a casca e imprime no tema claro; TutorialOverlay prende o foco, devolve o foco ao fechar e não cobre o destaque no celular.' },
+      { type: 'fix', description: 'Foco devolvido a quem abriu Modal, Dialog e Drawer ao fechar; DrawerContent rola e exporta DrawerBody/DrawerFooter na raiz (rodapé sempre à vista). Overflow no painel corta dropdown absolute do app que passe da borda; Select/ChipSelect/Período do DS compensam com lista na tela. Modal em tela cheia ocupa 96% da janela mesmo com max-w do app.' },
+      { type: 'fix', description: 'Listas de ChipSelect e Período inteiras na tela e dentro do corpo rolável de Modal e Drawer (viram para cima, encurtam ou deslocam; o Select já abre em portal desde a 0.21.5); CircularCommandMenu operável por teclado (foco no item, setas, Home, End, Enter, Espaço, Esc, Tab).' },
+      { type: 'fix', description: 'FilterDrawer com texto padrão neutro (emptyDescription); ListingKpiRow com filtravel por cartão (div quando não filtra); GraficoBarras sem segmento fino coberto pelo vizinho; balão do gráfico abre por toque; TabelaExpansivel com aoClicarLinha; BarraAcoesRodape com variante montagem; AssinaturaCanvas 158,9 px; SecaoNumerada 16/20 e 16/24; sombra neutra em StatsCard, FormSectionCard e ListingFilterToolbar; trilho do escopo no escuro, ícones Excel/PDF e Período à direita no celular como no Gestão OPA.' },
+    ],
+  },
+  {
     version: '0.21.24',
     date: '2026-11-10',
     title: 'Radio, RadioGroup e Checkbox',

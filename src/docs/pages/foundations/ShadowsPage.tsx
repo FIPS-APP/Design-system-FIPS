@@ -7,7 +7,7 @@ const Fn={title:"'Saira Expanded',sans-serif",body:"'Open Sans',sans-serif",mono
 const alpha=(c:string,a:number)=>`color-mix(in srgb, ${c} ${Math.round(a*100)}%, transparent)`;
 const shadows={
   none:{label:"Nenhuma",value:"none",level:0,token:"shadow-none"},
-  card:{label:"Card",value:"0 1px 3px rgba(0,75,155,.04), 0 4px 14px rgba(0,75,155,.03)",level:1,token:"shadow-card"},
+  card:{label:"Card",value:"0 2px 8px rgba(15,23,42,.04), 0 10px 24px rgba(15,23,42,.06)",level:1,token:"shadow-card"},
   elevated:{label:"Elevated",value:"0 4px 14px rgba(0,75,155,.08)",level:2,token:"shadow-elevated"},
   dropdown:{label:"Dropdown",value:"0 8px 24px rgba(0,75,155,.12)",level:3,token:"shadow-dropdown"},
   guia:{label:"Guia ativa",value:"0 -4px 12px rgba(0,42,104,.10)",level:3,token:"shadow-guia"},
