@@ -68,6 +68,7 @@ export default function DocumentoDoc() {
             </TabelaDocumento>
             <FaixaSecaoDocumento nome="2. Extintores" tom="indisponivel" />
             <FaixaCategoriaDocumento nome="Por transcrever" tom="indisponivel" contagem="0 itens" />
+            <FaixaSecaoDocumento nome="Auditor: T todos / ATEC área técnica" tom="legenda" centralizado />
           </Folha>
           <NotaDeDoc>
             A escada de cor é a hierarquia do papel: verde no título, grafite nos rótulos dos metadados, azul-noite na seção, azul na
@@ -84,8 +85,8 @@ export default function DocumentoDoc() {
               ['Folha', 'children, className', 'Borda de 1px, sem raio, overflow escondido.'],
               ['CabecalhoDocumento', 'titulo, metadados[], marca?, nivel? (1 | 2)', 'metadado: { rotulo, valor, quandoVazio? }. `marca` é o bloco à esquerda (logo em branco); sem ele o título ocupa a linha. Lista vazia some com a grade.'],
               ['BlocoDeCamposDocumento', 'titulo, campos[], valores? (curtos | longos), textoVazio?, nivelTitulo?', 'campo: { rotulo, valor | null }; null sai "a preencher". 1, 2 ou 3 colunas pela largura do bloco (34rem, 42rem ou 53rem).'],
-              ['FaixaSecaoDocumento', 'nome, paginas?, acoes?, progresso?, tom?, nivelTitulo?', 'paginas vira "páginas 1 e 2 do impresso". progresso: { feitos, total }.'],
-              ['FaixaCategoriaDocumento', 'nome, contagem?, progresso?, tom?, nivelTitulo?', 'A barra usa ProgressoPorFaixa. tom: normal | indisponivel.'],
+              ['FaixaSecaoDocumento', 'nome, paginas?, acoes?, progresso?, tom?, nivelTitulo?, centralizado?', 'paginas vira "páginas 1 e 2 do impresso". progresso: { feitos, total }. tom: normal | indisponivel | legenda (grafite, a linha de legenda do papel). centralizado centra o título na faixa.'],
+              ['FaixaCategoriaDocumento', 'nome, contagem?, progresso?, tom?, nivelTitulo?, centralizado?', 'A barra usa ProgressoPorFaixa. tom: normal | indisponivel | legenda. centralizado centra o título.'],
               ['TabelaDocumento', 'props da Table do DS menos framed, zebra e verticalBorders', 'Grade rente, densidade compacta.'],
               ['CabecalhoTabelaDocumento / CelulaCabecalhoDocumento / CelulaDocumento', 'props do elemento', 'Faixa escura de cabeçalho; célula de 42px com fio embaixo e à direita.'],
               ['CorpoTabelaDocumento / LinhaTabelaDocumento', 'props do elemento', 'O corpo e a linha da Table do DS.'],

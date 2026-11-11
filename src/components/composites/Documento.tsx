@@ -112,7 +112,7 @@ export interface ProgressoDaFaixa {
   total: number
 }
 
-export type TomFaixaDocumento = 'normal' | 'indisponivel'
+export type TomFaixaDocumento = 'normal' | 'indisponivel' | 'legenda'
 
 export interface FaixaSecaoDocumentoProps {
   nome: string
@@ -124,10 +124,12 @@ export interface FaixaSecaoDocumentoProps {
   progresso?: ProgressoDaFaixa
   /** Nome acessível da barra. Padrão: "Progresso de <nome>". */
   rotuloDoProgresso?: string
-  /** `indisponivel`: a seção existe no impresso e ainda não pode ser preenchida (cinza). */
+  /** `indisponivel`: a seção existe no impresso e ainda não pode ser preenchida (cinza). `legenda`: a linha de legenda do papel (grafite). */
   tom?: TomFaixaDocumento
   /** Nível do título. Padrão 3. */
   nivelTitulo?: 2 | 3 | 4
+  /** Título centralizado na faixa (o impresso da folha de referência). */
+  centralizado?: boolean
   className?: string
 }
 
@@ -140,6 +142,7 @@ export function FaixaSecaoDocumento({
   rotuloDoProgresso,
   tom = 'normal',
   nivelTitulo = 3,
+  centralizado = false,
   className,
 }: FaixaSecaoDocumentoProps) {
   const Titulo = `h${nivelTitulo}` as 'h2' | 'h3' | 'h4'
@@ -147,7 +150,14 @@ export function FaixaSecaoDocumento({
   const temBarra = progresso !== undefined && progresso.total > 0
   return (
     <div data-faixa="secao" data-tom={tom} className={cn(faixaDocumento({ nivel: 'secao', tom }), className)}>
-      <Titulo className="font-heading min-w-0 flex-1 text-[12px] font-bold uppercase tracking-[0.08em] text-white">{nome}</Titulo>
+      <Titulo
+        className={cn(
+          'font-heading min-w-0 flex-1 text-[12px] font-bold uppercase tracking-[0.08em] text-white',
+          centralizado && 'text-center',
+        )}
+      >
+        {nome}
+      </Titulo>
       {referencia ? <span className="font-mono text-[11px] text-white/90">{referencia} do impresso</span> : null}
       {temBarra ? (
         <div className="flex min-w-[160px] flex-1 items-center gap-2">
@@ -178,6 +188,8 @@ export interface FaixaCategoriaDocumentoProps {
   tom?: TomFaixaDocumento
   /** Nível do título. Padrão 4. */
   nivelTitulo?: 2 | 3 | 4
+  /** Título centralizado na faixa. */
+  centralizado?: boolean
   className?: string
 }
 
@@ -192,13 +204,21 @@ export function FaixaCategoriaDocumento({
   rotuloDoProgresso,
   tom = 'normal',
   nivelTitulo = 4,
+  centralizado = false,
   className,
 }: FaixaCategoriaDocumentoProps) {
   const Titulo = `h${nivelTitulo}` as 'h2' | 'h3' | 'h4'
   const temBarra = progresso !== undefined && progresso.total > 0
   return (
     <div data-faixa="categoria" data-tom={tom} className={cn(faixaDocumento({ nivel: 'categoria', tom }), className)}>
-      <Titulo className="font-heading min-w-0 text-[12.5px] font-bold uppercase tracking-[0.06em] text-white">{nome}</Titulo>
+      <Titulo
+        className={cn(
+          'font-heading min-w-0 text-[12.5px] font-bold uppercase tracking-[0.06em] text-white',
+          centralizado && 'flex-1 text-center',
+        )}
+      >
+        {nome}
+      </Titulo>
       {contagem !== undefined ? <span className="font-mono text-[11px] text-white/90">{contagem}</span> : null}
       {temBarra ? (
         <div className="flex min-w-[160px] flex-1 items-center gap-2">

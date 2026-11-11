@@ -735,7 +735,7 @@ import { SecaoNumerada, SegmentoAvaliacao, AssinaturaCanvas, BarraAcoesRodape, E
   dados={[{ rotulo: 'Última inspeção', valor: '28/10/2026' }]} acao={{ rotulo: 'Iniciar inspeção', onClick: iniciar }} />
 ```
 
-- `SecaoNumerada`: `id`, `numero` (chip "01"), `titulo` (heading, `nivelTitulo` 2 ou 3), `dica?`, `icone?`, `acao?` (no lugar do ícone), `className?`, `corpoClassName?`. **Não estende** `FormSectionCard`/`FormSectionHeader` (cabeçalho compacto do registro, chip com ícone, sem heading); partilham o canto `12px 12px 12px 24px`. O cartão é `@container`.
+- `SecaoNumerada`: `id`, `numero` (chip "01"), `titulo` (heading, `nivelTitulo` 2 ou 3), `dica?`, `icone?`, `acao?` (no lugar do ícone), `tom?` (`primario` | `sucesso`; sem tom o título é `--color-fg`), `iconeEmRelevo?` (relevo 3D no ícone, padrão `false`), `className?`, `corpoClassName?`. **Não estende** `FormSectionCard`/`FormSectionHeader` (cabeçalho compacto do registro, chip com ícone, sem heading); partilham o canto `12px 12px 12px 24px`. O cartão é `@container`.
 - `SegmentoAvaliacao`: `opcoes` (`{ valor, rotulo, nome?, tom? }`, tons `sucesso` | `atencao` (amarelo) | `aviso` (laranja) | `neutro` | `critico`), `valor`, `onChange(v | null)`, `rotulo`, `grande?`, `permitirLimpar?`, `desabilitado?`. `button` com `aria-pressed`, alvo de 44px, setas/Home/End movem o foco. Contraste do texto marcado e não marcado medido nos dois temas (mínimo 5,81:1 marcado, 6,71:1 não marcado e hover), em `scripts/formulario-execucao.test.mjs`.
 - `AssinaturaCanvas`: `rotulo`, `valor?`, `onChange(dataUrl | null)`, `obrigatoria?`, `erro?`, `desabilitado?`, `largura?`/`altura?` (PNG 520x160; quadro de até 32rem, borda sólida de 1px, como na Manutenção), `dicaVazio?`, `dicaRegistrada?`. Papel branco nos dois temas; precisa de ponteiro, o app oferece outro caminho a quem não desenha.
 - `BarraAcoesRodape`: `variante?` (`rodape` padrão desde a 0.21.0: faixa reta de largura inteira, linha no topo, sombra para cima, estado à esquerda e ações à direita, botões `size="sm"` de 30px como o rodapé da Manutenção | `cartao`: cartão flutuante de antes, botões `lg` de 42px), `label?`, `estado?`, `aviso?`, `children` (ações), `className?`; `position: sticky`; faixa azul no claro, superfície com borda no escuro; `--barra-acoes-base` desloca a barra acima de uma navegação fixa. `EstadoSalvamento`: `estado` (`limpo` | `sujo` | `salvando` | `erro`), `salvoEm?`, `erro?`, região `status` ("Salvo às hh:mm"). Ações em `inverseOutline` e a principal em `ouro`.
@@ -831,7 +831,7 @@ Fonte: `src/components/composites/Documento.tsx` (+ `documento-variants.ts`). Do
 
 - **`Folha`**: `children`. **`CabecalhoDocumento`**: `titulo`, `metadados` `{ rotulo, valor, quandoVazio? }[]`, `marca?` (o pacote não empacota imagem: o app passa a logo em branco), `nivel?` (1 | 2). Faixa verde no título, barra grafite sobre cada valor.
 - **`BlocoDeCamposDocumento`**: `titulo`, `campos` `{ rotulo, valor | null }` (`null` sai "a preencher"), `valores?` (`curtos` | `longos`), `textoVazio?`; colunas por contêiner.
-- **`FaixaSecaoDocumento`**: `nome`, `paginas?` ("páginas 1 e 2 do impresso"), `acoes?`, `progresso?` `{ feitos, total }`, `tom?` (`normal` | `indisponivel`). **`FaixaCategoriaDocumento`**: `nome`, `contagem?`, `progresso?` (usa `ProgressoPorFaixa`), `tom?`. Escada de cor: secão azul-noite, categoria azul, indisponível cinza; texto branco com 4,5:1 ou mais.
+- **`FaixaSecaoDocumento`**: `nome`, `paginas?` ("páginas 1 e 2 do impresso"), `acoes?`, `progresso?` `{ feitos, total }`, `tom?` (`normal` | `indisponivel` | `legenda`), `centralizado?` (título centralizado). **`FaixaCategoriaDocumento`**: `nome`, `contagem?`, `progresso?` (usa `ProgressoPorFaixa`), `tom?`, `centralizado?`. Escada de cor: secão azul-noite, categoria azul, indisponível cinza, legenda grafite (`--documento-faixa-legenda`, branco a 15,13:1 nos dois temas); texto branco com 4,5:1 ou mais.
 - **`TabelaDocumento`** (props da `Table` menos `framed`, `zebra`, `verticalBorders`), `CabecalhoTabelaDocumento`, `CelulaCabecalhoDocumento`, `CorpoTabelaDocumento`, `LinhaTabelaDocumento`, `CelulaDocumento` (42px, fio embaixo e à direita).
 
 ## Listagem e classificação (CartaoListagem, AlternadorDeVisao, AvisoSomenteLeitura, TabelaClassificacao)
@@ -842,3 +842,21 @@ Fonte: `src/components/composites/{CartaoListagem,AlternadorDeVisao,AvisoSomente
 - **`AlternadorDeVisao`**: `valor`, `onChange`, `opcoes?` (padrão tabela e cartões), `rotulo?`. Só o ícone abaixo de `md`; alvo de toque pelo modo.
 - **`AvisoSomenteLeitura`**: `children` (o motivo), `titulo?`. `role="status"`.
 - **`TabelaClassificacao`**: `linhas` `{ id, rotulo, descricao, tom, prazo, detalhe? }`, `titulo?`, `cabecalhos?`. Ponto e pílula no tom, fundo a 8% do tom, texto em `--color-fg` (e `--color-fg-muted-strong` no detalhe); no telefone cada linha vira bloco.
+
+## Entrada (LoginDsShell) — v0.23.0
+
+Fonte: `src/components/composites/LoginDsShell.tsx` + `src/styles/entrada.css` (sai no `styles.css` do pacote, em `@layer components`). Igual à entrada da Gestão OPA: coluna esquerda com "Excelência / sobre trilhos", texto e rota animada dos princípios; cartão de vidro à direita com a marca, um texto curto e o botão de contorno do provedor.
+
+```tsx
+import { LoginDsShell } from '@fips-app/ds-fips'
+
+<LoginDsShell
+  onClick={iniciarLogin}          // ou href="/auth/entrar"
+  carregando={carregando}
+  erro={erro}
+  rodape={import.meta.env.DEV ? <EntrarComo /> : null}
+/>
+```
+
+Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
+

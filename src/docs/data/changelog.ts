@@ -36,6 +36,28 @@ export const CHANGELOG: ChangelogVersion[] = [
     ],
   },
   {
+    version: '0.23.0',
+    date: '2026-11-11',
+    title: 'Entrada no pacote',
+    entries: [
+      { type: 'feature', description: 'LoginDsShell exportado: a tela de entrada da Gestão OPA (coluna "Excelência sobre trilhos" com a rota dos princípios, cartão de vidro com marca, texto e botão de contorno do provedor). Props: onClick ou href, rotulo, icone, texto, erro, carregando, rotuloCarregando, rodape (o "Entrar como" de desenvolvimento), logo, logoAlt, fundo e className.' },
+      { type: 'feature', description: 'O CSS da entrada sai no styles.css do pacote, em @layer components. Cores só por token: #fdc24e e #f6921e viram --color-fips-yellow-400 e -600, #002a68 vira --color-fips-blue-950, #00396b vira --color-fips-azulejo-600, #001430 vira --color-fips-blue-950 misturado a preto, #FF4D4D vira --color-fips-red-600 e #FFB4B4 vira --color-fips-red-300. O trem animado vem embutido.' },
+      { type: 'improvement', description: 'A página /docs/login usa o componente do pacote e o código copiável passa a ser o uso do pacote, não uma cópia da tela.' },
+      { type: 'feature', description: 'O teste novo lista FipsTabBar e BuscarPessoaModal (PR #145) e SettingsPreferenceRow (PR #6) como pendentes: o site mostra os três e o export sai nesses PRs.' },
+      { type: 'improvement', description: 'Novo teste scripts/exports-site.test.mjs (no npm test): todo componente da biblioteca usado numa página do site tem export, e página sem componente tem nome de export ou motivo escrito na lista de exceção.' },
+    ],
+  },
+  {
+    version: '0.22.3',
+    date: '2026-11-11',
+    title: 'Faixas do documento e SecaoNumerada com tom',
+    entries: [
+      { type: 'feature', description: 'FaixaSecaoDocumento e FaixaCategoriaDocumento: prop centralizado (título centralizado na faixa) e tom="legenda" (fundo grafite pelo token --documento-faixa-legenda, branco a 15,13:1 nos dois temas).' },
+      { type: 'feature', description: 'SecaoNumerada: prop tom (primario | sucesso) para a cor do chip, do título e do ícone, e iconeEmRelevo para o relevo 3D do ícone. Títulos e ícones medidos nos dois temas: primario 8,47:1 (claro) e 8,82:1 (escuro), sucesso 5,44:1 e 11,53:1.' },
+      { type: 'improvement', description: 'Todas as props são opcionais: quem não passa nenhuma recebe a mesma marcação de antes.' },
+    ],
+  },
+  {
     version: '0.22.0',
     date: '2026-11-11',
     title: 'Padrões dos apps no pacote',

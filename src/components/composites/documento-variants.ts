@@ -6,6 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
  *
  * - `secao`: azul-noite, abre o nível de cima.
  * - `categoria`: azul, o nível de dentro.
+ * - `legenda`: grafite quase preto, a linha de legenda do papel (por exemplo a de quem audita cada item).
  * - `neutra`: cinza, secção ou categoria ainda indisponível (por transcrever).
  * Todas levam texto branco com 4,5:1 ou mais, nos dois temas. O branco da `categoria` está em cada filho
  * (título, contagem, "feitos/total"), não no contêiner, como na Manutenção; a `secao` mantém o dela.
@@ -19,6 +20,7 @@ export const faixaDocumento = cva('flex flex-wrap items-center gap-x-3 gap-y-1',
     tom: {
       normal: '',
       indisponivel: 'bg-[var(--documento-faixa-neutra)]',
+      legenda: 'bg-[var(--documento-faixa-legenda)]',
     },
   },
   compoundVariants: [

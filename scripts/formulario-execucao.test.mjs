@@ -148,6 +148,15 @@ for (const t of TEMAS) {
     assert.match(fonte, /text-sm font-bold text-white/)
     for (const ponta of [m[1], m[2]]) verifica(`chip / ${t} / ${ponta.slice(0, 22)}`, avaliar('white', t), avaliar(ponta, t))
   })
+  test(`SecaoNumerada com tom, tema ${t}: título e ícone sobre o cartão, número branco no chip`, () => {
+    const fonte = ler(COMP + 'SecaoNumerada.tsx')
+    const superficie = avaliar('var(--color-surface)', t)
+    for (const token of ['--color-primary-text', '--color-success-text'])
+      verifica(`tom ${token} sobre o cartão / ${t}`, avaliar(`var(${token})`, t), superficie)
+    const m = fonte.match(/bg-\[linear-gradient\(135deg,(color-mix\(in_srgb,var\(--color-success-fill\)_88%,black\)),(color-mix\(in_srgb,var\(--color-success-fill\)_65%,black\))\)\]/)
+    assert.ok(m, 'degradê do chip de sucesso não encontrado')
+    for (const ponta of [m[1], m[2]]) verifica(`chip sucesso / ${t} / ${ponta.slice(0, 30)}`, avaliar('white', t), avaliar(ponta, t))
+  })
   test(`BarraAcoesRodape, tema ${t}: texto de estado, erro e botões contra a faixa`, () => {
     const barra = ler(COMP + 'BarraAcoesRodape.tsx')
     assert.match(barra, /bg-\[var\(--color-primary-hover\)\]/)
@@ -229,6 +238,22 @@ test('SecaoNumerada: chip "03" aria-hidden, heading com o número só para leito
   assert.match(s, /<h2 id="a-titulo"[^>]*><span class="sr-only">3\.<\/span> Itens<\/h2>/)
   assert.match(html('SecaoNumerada', { id: 'b', numero: 1, titulo: 'X', nivelTitulo: 3 }, 'c'), /<h3 id="b-titulo"/)
   assert.doesNotMatch(html('SecaoNumerada', { id: 'c', numero: 1, titulo: 'X' }), /border-b/)
+})
+
+test('SecaoNumerada: tom e iconeEmRelevo', () => {
+  const base = { id: 'a', numero: 1, titulo: 'X', icone: M.Sparkles }
+  const padrao = html('SecaoNumerada', base, 'c')
+  assert.doesNotMatch(padrao, /data-tom|data-relevo|drop-shadow/)
+  assert.match(padrao, /text-\[var\(--color-fg\)\]/)
+  const prim = html('SecaoNumerada', { ...base, tom: 'primario' }, 'c')
+  assert.match(prim, /data-tom="primario"/)
+  assert.match(prim, /<h2[^>]*text-\[var\(--color-primary-text\)\]/)
+  const suc = html('SecaoNumerada', { ...base, tom: 'sucesso', iconeEmRelevo: true }, 'c')
+  assert.match(suc, /data-tom="sucesso"/)
+  assert.match(suc, /<h2[^>]*text-\[var\(--color-success-text\)\]/)
+  assert.match(suc, /color-success-fill\)_88%/)
+  assert.match(suc, /data-relevo="true"/)
+  assert.match(suc, /drop-shadow\(0 4px 5px color-mix\(in srgb, var\(--color-success-text\) 40%, transparent\)\)/)
 })
 
 test('SegmentoAvaliacao: aria-pressed só na marcada, nome acessível com o rótulo curto', () => {

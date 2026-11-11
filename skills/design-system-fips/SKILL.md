@@ -7,7 +7,7 @@ description: Use antes de criar, editar ou revisar tela, componente ou CSS de ap
 
 # Design System FIPS 0.23.1 (2026-11-11)
 
-Gerado do pacote: 370 exports (165 componente, 15 funcao, 16 valor, 174 tipo), 90 tipos `*Props`, 261 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
+Gerado do pacote: 372 exports (166 componente, 15 funcao, 16 valor, 175 tipo), 91 tipos `*Props`, 262 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
 
 ## 1. Passo 0
 1. No app: `npx fips-ds passo0`. Mostra versão instalada e do registro, regime, padrões da tela e exports.
@@ -16,7 +16,7 @@ Gerado do pacote: 370 exports (165 componente, 15 funcao, 16 valor, 174 tipo), 9
 ## 2. Padrão de cada tela
 | Tela | Referência viva | Do pacote | Nesta versão |
 | --- | --- | --- | --- |
-| Entrada / login | Gestão OPA (OPA-GESTAO, master): src/pages/LoginPage.tsx | `LoginDsShell`. Antes da 0.23.0: não inventar nem copiar; parar e avisar | falta `LoginDsShell` (desde a 0.23.0) |
+| Entrada / login | Gestão OPA (OPA-GESTAO, master): src/pages/LoginPage.tsx | `LoginDsShell`. Antes da 0.23.0: não inventar nem copiar; parar e avisar | tem |
 | Casca (sidebar, header, rodapé Modo do menu + Versão) | Gestão OPA (OPA-GESTAO, master) | `AppShell`, `AppFipsHeaderLogo`, `UserAccountMenu`, `NotificacoesMenu`, `TutorialOverlay` | tem |
 | Home | Gestão OPA (OPA-GESTAO, master) | `HomeHero`. Destaque amarelo só aqui | tem |
 | Banner das telas internas | Gestão OPA (PatternPanelHero, que usa PageHeader) | `PageHeader`. Selo só para estado da tela, nunca o nome do sistema. Nunca PageHero com conteúdo próprio | tem |
