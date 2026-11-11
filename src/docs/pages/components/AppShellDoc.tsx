@@ -320,6 +320,7 @@ export default function AppShellDoc() {
             ['renderLink', 'RenderizarLinkDaCasca', 'Liga os links ao roteador do app. Sem ele, <a href> (recarrega a página).'],
             ['preferenciasPadrao', '{ recolherAuto; segundos }', 'Padrão de quem nunca mexeu. Padrão do DS: automático, 3 s.'],
             ['recolhidoInicial', 'boolean', 'O menu já nasce recolhido.'],
+            ['aoMudarRecolhido', '(recolhido: boolean) => void', 'Chamada a cada troca entre aberto e recolhido (botão, recolher sozinho, ponteiro). Não roda na montagem. O app grava aqui e passa o valor em recolhidoInicial.'],
             ['classeDoConteudo', 'string', 'Classe do contêiner @container do conteúdo.'],
           ]}
         />
