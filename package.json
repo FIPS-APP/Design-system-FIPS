@@ -41,6 +41,7 @@
     "test:hooks": "node --test scripts/hooks.test.mjs",
     "test:lint-governanca": "node --test scripts/lint-governanca.test.mjs",
     "test:abas": "node --test scripts/abas-de-secao.test.mjs",
+    "test:exports": "node --test scripts/exports-site.test.mjs",
     "preview": "vite preview"
   },
   "peerDependencies": {
