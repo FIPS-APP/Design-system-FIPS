@@ -8,6 +8,7 @@
  * playwright-core com um Chrome instalado (`DS_CHROME=/caminho/do/chrome`). Sem nenhum dos dois a parte 2
  * é pulada e o aviso no topo da saída diz o motivo.
  *
+ * Também cobre aoMudarRecolhido (recolher/expandir avisa o app; a montagem não).
  * Rodar: npm run test:gaveta (a parte 1 também roda no npm test)
  */
 import { test, describe, before, after } from 'node:test'
@@ -77,6 +78,8 @@ createRoot(document.getElementById('root')).render(
     chavePreferencias="teste:gaveta"
     menu={{ nome: 'App', grupos, versao: { numero: '0.1.0', aoAbrir: () => {} } }}
     cabecalho={{ trilha: [{ label: 'Home' }] }}
+    recolhidoInicial={new URLSearchParams(location.search).has('recolhido')}
+    aoMudarRecolhido={(v) => { (window.__recolhido ??= []).push(v) }}
   >
     <main style={{ padding: 16 }}><button id="no-conteudo">Dentro da página</button></main>
   </AppShell>,
@@ -125,12 +128,14 @@ describe('gaveta do AppShell no navegador', { skip: semNavegador || false }, () 
     rmSync(TMP, { recursive: true, force: true })
   })
 
-  async function abrir(largura) {
+  async function abrir(largura, busca = '') {
     const ctx = await browser.newContext({ viewport: { width: largura, height: 812 }, locale: 'pt-BR' })
     const page = await ctx.newPage()
+    // Sem recolher sozinho: o único que muda o menu é o clique do teste.
+    await page.addInitScript(() => localStorage.setItem('teste:gaveta', JSON.stringify({ recolherAuto: false, segundos: 3 })))
     const erros = []
     page.on('pageerror', (e) => erros.push(String(e)))
-    await page.goto(base)
+    await page.goto(base + busca)
     await page.waitForSelector('[data-casca="menu"]')
     return { page, ctx, erros }
   }
@@ -227,6 +232,30 @@ describe('gaveta do AppShell no navegador', { skip: semNavegador || false }, () 
       await page.focus('[data-casca="menu"] a[href]:last-of-type')
       await page.focus('#no-conteudo')
       assert.equal((await ativo(page)).noMenu, false)
+    } finally {
+      await ctx.close()
+    }
+  })
+
+  test('1440px: recolher chama aoMudarRecolhido(true), expandir chama (false); a montagem não chama', async () => {
+    const { page, ctx } = await abrir(1440)
+    try {
+      assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
+      await page.click('button[aria-label="Recolher menu lateral"]')
+      await page.click('button[aria-label="Expandir menu lateral"]')
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [true, false])
+    } finally {
+      await ctx.close()
+    }
+  })
+
+  test('1440px: remontar com recolhidoInicial nasce recolhido, sem chamar aoMudarRecolhido', async () => {
+    const { page, ctx } = await abrir(1440, '?recolhido')
+    try {
+      assert.equal(await page.getAttribute('[data-casca="menu"]', 'data-collapsed'), 'true')
+      assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
+      await page.click('button[aria-label="Expandir menu lateral"]')
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [false])
     } finally {
       await ctx.close()
     }

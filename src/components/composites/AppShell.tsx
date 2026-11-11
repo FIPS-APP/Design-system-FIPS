@@ -29,6 +29,12 @@ export interface AppShellProps {
   renderLink?: RenderizarLinkDaCasca
   /** Menu já nasce recolhido (e, com "Automático", abre quando o ponteiro entra). Padrão: aberto. */
   recolhidoInicial?: boolean
+  /**
+   * Chamada a cada troca do menu entre aberto e recolhido (botão do cabeçalho, recolher sozinho ou abrir
+   * pelo ponteiro), com o novo valor. Não é chamada na montagem. O app que quer lembrar a escolha grava aqui e
+   * passa o valor lido em `recolhidoInicial`. Opcional: quem não passa não muda.
+   */
+  aoMudarRecolhido?: (recolhido: boolean) => void
   /** Conteúdo da tela. */
   children: ReactNode
   className?: string
@@ -57,6 +63,7 @@ export function AppShell({
   cabecalho,
   renderLink,
   recolhidoInicial = false,
+  aoMudarRecolhido,
   children,
   className,
   classeDoConteudo,
@@ -67,6 +74,16 @@ export function AppShell({
   const timerRef = useRef<number | null>(null)
   const ponteiroNoMenuRef = useRef(false)
   const raizRef = useRef<HTMLDivElement | null>(null)
+
+  // Avisa o app a cada troca do recolhido (não na montagem: o valor inicial veio dele).
+  const recolhidoAnteriorRef = useRef(recolhido)
+  const aoMudarRecolhidoRef = useRef(aoMudarRecolhido)
+  aoMudarRecolhidoRef.current = aoMudarRecolhido
+  useEffect(() => {
+    if (recolhidoAnteriorRef.current === recolhido) return
+    recolhidoAnteriorRef.current = recolhido
+    aoMudarRecolhidoRef.current?.(recolhido)
+  }, [recolhido])
 
   useEffect(() => {
     guardarPreferencias(chavePreferencias, prefs)
