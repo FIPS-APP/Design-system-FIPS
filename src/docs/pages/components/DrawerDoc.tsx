@@ -98,7 +98,7 @@ function Drawer({open,onClose,title,subtitle,header,children,footer,side="right"
 
 /* ═══════════════════════════════════════════ MINI COMPONENTS ═══════════════════════════════════════════ */
 function FInput({label,placeholder,value,required,compact,icon,type="text",onChange,height}:{label?:string;placeholder?:string;value?:string;required?:boolean;compact?:boolean;icon?:ReactNode;type?:string;onChange?:(v:string)=>void;height?:number}){
-  const h=height??(compact?30:35);
+  const h=height??(compact?32:35);
   return(
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
       {label&&<label style={{fontSize:compact?11:12,fontWeight:600,color:C.cinzaEscuro,fontFamily:Fn.body,marginLeft:7,display:"flex",gap:3}}>{label}{required&&<span style={{color:C.danger}}>*</span>}</label>}

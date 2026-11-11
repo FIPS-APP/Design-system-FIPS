@@ -61,6 +61,10 @@ try {
   caso('edge="bleed" e compact viram classes', /fips-page-header--bleed/.test(render(h(PageHeader, { title: 'x', edge: 'bleed' }))) && /fips-page-header--compact/.test(render(h(PageHeader, { title: 'x', compact: true }))))
   const comStats = render(h(PageHeader, { title: 'x', stats: [{ label: 'TOTAL', value: 3 }] }))
   caso('stats renderizam chips e a classe --stats', /fips-page-header--stats/.test(comStats) && /TOTAL/.test(comStats))
+  const chipLink = render(h(PageHeader, { title: 'x', stats: [{ label: 'ABERTAS', value: 2, href: '/metas?status=abertas' }, { label: 'TOTAL', value: 3 }] }))
+  caso('chip com href vira <a> com o mesmo visual e foco visível', /<a href="\/metas\?status=abertas" class="[^"]*rounded-md[^"]*border-white\/10[^"]*focus-visible:outline-2[^"]*">/.test(chipLink))
+  caso('chip sem href segue <span>, sem foco nem link', /<span class="[^"]*rounded-md[^"]*">[^]*TOTAL/.test(chipLink) && conta(chipLink, /<a /g) === 1 && !/<span class="[^"]*focus-visible/.test(chipLink))
+  caso('ponto do chip usa o token --fips-banner-stat-dot por padrão e respeita dotColor', /background:var\(--fips-banner-stat-dot\)/.test(chipLink) && /background:#00C64C/.test(render(h(PageHeader, { title: 'x', stats: [{ label: 'A', value: 1, dotColor: '#00C64C' }] }))))
   caso('descrição em string é p; em JSX é div', /<p class="fips-page-header__descricao"/.test(base) && /<div class="fips-page-header__descricao"/.test(render(h(PageHeader, { title: 'x', description: h('span', null, 'a') }))))
 
   // 3. Tile com as opacidades do padrão, só por token
