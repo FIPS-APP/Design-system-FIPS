@@ -31,8 +31,8 @@ Cada pasta contém um componente self-contained (.tsx) + README com instruções
 | [TabsGuia](./tabs-guia) | Tabs estilo folder/guia para posicionar acima de tabelas como filtro | 26 |
 | [TabsBordered](./tabs-bordered) | Tabs com borda sutil, suporta orientação vertical com borda lateral laranja 2px | 26 |
 | [FipsTabBar](./fips-tab-bar) | Abas segmentadas em card (Configurações Suprimentos) | 100 |
-| [Switch](./switch) | Toggle Radix 42×24px | 32 |
-| [SettingsPreferenceRow](./settings-preference-row) | Linha de preferência com switch | 41 |
+| [Switch](./switch) | Toggle Radix 42×24px | 40 |
+| [SettingsPreferenceRow](./settings-preference-row) | Linha de preferência com switch | 47 |
 | [PageHeader / PatternPanelHero](./pattern-panel-hero) | Banner de página com h1, medida pela largura do cartão, ações na última linha abaixo de 560px e stats chips; PatternPanelHero é o apelido. Leva `page-header.css` | 258 |
 | [DSTextarea](./d-s-textarea) | Textarea com auto-resize, maxLength counter com cor, estados error/disabled/readOnly | 96 |
 | [toast](./toast) |  | 91 |

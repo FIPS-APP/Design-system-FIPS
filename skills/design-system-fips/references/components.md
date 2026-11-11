@@ -205,13 +205,17 @@ Composição recomendada:
 
 ```tsx
 <Field density="compact" inset="icon">
-  <FieldLabel required>Razao social</FieldLabel>
-  <Input density="compact" placeholder="Nome da empresa" />
-  <FieldMessage tone="danger">Campo obrigatorio</FieldMessage>
+  <FieldLabel htmlFor="razao" required>Razao social</FieldLabel>
+  <Input id="razao" density="compact" placeholder="Nome da empresa" aria-invalid aria-describedby="razao-erro" />
+  <FieldMessage id="razao-erro" tone="danger">Campo obrigatorio</FieldMessage>
 </Field>
 ```
 
 Teclado e formulário (`Select` e `ChipSelect`): no gatilho, ArrowDown/ArrowUp abrem e movem o realce, Home/End vão ao primeiro/último, Enter ou Espaço selecionam, Escape fecha sem mudar o valor (e não fecha o Dialog/Drawer em volta), Tab fecha. O realce é anunciado por `aria-activedescendant`, com `aria-controls` no listbox. `Select` aceita `name` e entra no `FormData` do submit nativo por um input oculto. No `ChipSelect` com busca, as mesmas teclas funcionam no campo, e o foco automático no campo só acontece com ponteiro fino (no toque não abre o teclado virtual; o gatilho vira o combobox e anuncia o realce). A opção realçada pelo teclado ganha barra lateral de 3px (contraste de pelo menos 3:1 contra a lista nos dois temas) e só o teclado rola a lista: abrir com clique e passar o mouse não rolam nada. O input oculto do `Select` leva o valor atual, mas não volta ao `defaultValue` num `form.reset()` e não aceita `required`. Em formulário com reset ou validação nativa, controle `value` e valide no submit.
+
+`FieldMessage` sai com `role="alert"` no tom `danger` (erro anunciado na hora) e `aria-live="polite"` nos tons `default` e `success`. Ligue o campo à mensagem com `aria-describedby` apontando para o `id` dela.
+
+Nome acessível obrigatório pelo tipo: `Progress`, `Switch`, `Button` com `size="icon"` ou `"iconSm"` e `InputGroupButton` com `size="icon-xs"` ou `"icon-sm"` só compilam com `aria-label` ou `aria-labelledby` (o `Button` com `asChild` leva o nome no filho; no `Switch` vale também um `id` ligado a um `<label htmlFor>`, que é o rótulo clicável ao lado). Sem nome, o `tsc` acusa TS2322 no próprio componente e a mensagem cita `AccessibleName` ou `asChild`, não o `aria-label`: a correção é passar o nome. No `AdminTableColumnMenu`, o nome da coluna é o rótulo do checkbox, o texto da aparência é o rótulo do switch, e a alça move a coluna com ArrowUp/ArrowDown (sem passar por coluna fixa).
 
 Dropdown do `Select`: **a partir da v0.21.2 a lista abre num portal para o `body`**, com `position: fixed` na coordenada do gatilho (`z-[70]`, acima de Modal e Drawer em `z-50` e do tour em `z-[60]`). Corpo rolável de Modal, Drawer e card com `overflow-hidden` não a cortam; ela sobe quando embaixo não cabe (o gatilho troca `rounded-b-none` por `rounded-t-none`), encolhe e rola por dentro quando falta espaço dos dois lados, acompanha a rolagem, o redimensionamento e o gatilho que muda de lugar sem rolar, e fecha quando o gatilho sai da área visível. Teste de app com Testing Library acha as opções por `screen`, não por `within(container)`, porque elas estão no `body`. Leva `data-lista-flutuante` (mesmo marcador do `SelectBusca` dos apps): componente do app que fecha por clique fora com `contains` deve ignorar alvos dentro de `[data-lista-flutuante]`. **Em versões anteriores à v0.21.2 (medido nas tags v0.5.0 a v0.20.26 e nos tarballs 0.12.3, 0.12.5 e 0.20.4) o dropdown é `absolute` (sem portal)**: ancestral com `overflow-hidden` ou `overflow-y-auto` corta a lista "pra dentro", e dentro de `Modal` o corte é certo. Ver **Data Listing → Cuidado (clipping)** em `patterns.md`. O `ChipSelect` continua `absolute` em toda versão.
 

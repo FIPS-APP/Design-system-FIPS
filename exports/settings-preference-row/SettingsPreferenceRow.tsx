@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import { cn } from '../../lib/cn'
 import { Switch } from '../ui/switch'
 
@@ -19,6 +19,7 @@ export function SettingsPreferenceRow({
   disabled,
   variant = 'default',
 }: SettingsPreferenceRowProps) {
+  const id = useId()
   return (
     <div
       className={cn(
@@ -29,12 +30,18 @@ export function SettingsPreferenceRow({
       )}
     >
       <div className="min-w-0">
-        <div className="text-sm font-medium text-[var(--color-fg)]">{label}</div>
+        <div id={`${id}-rotulo`} className="text-sm font-medium text-[var(--color-fg)]">{label}</div>
         {description ? (
-          <p className="mt-0.5 text-xs text-[var(--color-fg-muted)]">{description}</p>
+          <p id={`${id}-descricao`} className="mt-0.5 text-xs text-[var(--color-fg-muted)]">{description}</p>
         ) : null}
       </div>
-      <Switch checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
+      <Switch
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        disabled={disabled}
+        aria-labelledby={`${id}-rotulo`}
+        aria-describedby={description ? `${id}-descricao` : undefined}
+      />
     </div>
   )
 }

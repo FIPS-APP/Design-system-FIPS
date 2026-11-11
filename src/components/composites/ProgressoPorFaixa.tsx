@@ -17,7 +17,7 @@ export interface ProgressoPorFaixaProps {
   /** Valor que fecha a barra. Padrão 100. */
   maximo?: number
   /** Nome acessível da barra ("Preenchimento da seção Cotas"). A barra do DS não emite nome sozinha. */
-  rotulo?: string
+  rotulo: string
   className?: string
 }
 
