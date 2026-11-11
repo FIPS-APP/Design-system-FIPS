@@ -842,3 +842,21 @@ Fonte: `src/components/composites/{CartaoListagem,AlternadorDeVisao,AvisoSomente
 - **`AlternadorDeVisao`**: `valor`, `onChange`, `opcoes?` (padrão tabela e cartões), `rotulo?`. Só o ícone abaixo de `md`; alvo de toque pelo modo.
 - **`AvisoSomenteLeitura`**: `children` (o motivo), `titulo?`. `role="status"`.
 - **`TabelaClassificacao`**: `linhas` `{ id, rotulo, descricao, tom, prazo, detalhe? }`, `titulo?`, `cabecalhos?`. Ponto e pílula no tom, fundo a 8% do tom, texto em `--color-fg` (e `--color-fg-muted-strong` no detalhe); no telefone cada linha vira bloco.
+
+## Entrada (LoginDsShell) — v0.23.0
+
+Fonte: `src/components/composites/LoginDsShell.tsx` + `src/styles/entrada.css` (sai no `styles.css` do pacote, em `@layer components`). Igual à entrada da Gestão OPA: coluna esquerda com "Excelência / sobre trilhos", texto e rota animada dos princípios; cartão de vidro à direita com a marca, um texto curto e o botão de contorno do provedor.
+
+```tsx
+import { LoginDsShell } from '@fips-app/ds-fips'
+
+<LoginDsShell
+  onClick={iniciarLogin}          // ou href="/auth/entrar"
+  carregando={carregando}
+  erro={erro}
+  rodape={import.meta.env.DEV ? <EntrarComo /> : null}
+/>
+```
+
+Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
+

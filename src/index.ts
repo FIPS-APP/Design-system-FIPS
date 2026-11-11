@@ -8,6 +8,7 @@ export { FipsLogo } from './components/brand/FipsLogo'
 export { BrandLoader } from './components/brand/BrandLoader'
 export type { BrandLoaderProps, BrandLoaderSize } from './components/brand/BrandLoader'
 export { PageHero, PAGE_HERO_DEFAULT_DECORATION, type PageHeroProps } from './composites'
+export { LoginDsShell, type LoginDsShellProps } from './components/composites/LoginDsShell'
 export {
   PageHeader,
   type PageHeaderActionsProps,
