@@ -860,4 +860,3 @@ import { LoginDsShell } from '@fips-app/ds-fips'
 
 Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
 
-Também exportados desde a 0.23.0: `FipsTabBar` (+ `FipsTabItem`), `SettingsPreferenceRow` e `BuscarPessoaModal` (+ `Pessoa`).
