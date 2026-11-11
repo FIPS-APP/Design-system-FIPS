@@ -129,6 +129,8 @@ function BannerConteudo2() {
     { label: 'AGUARDANDO', value: '1004', dotColor: C.amareloEscuro },
     { label: 'APROVADOS', value: '8', dotColor: C.verdeFloresta },
     { label: 'ENTREGUES', value: '2', dotColor: C.danger },
+    // Sem dotColor: o ponto leva o token --fips-banner-stat-dot. Com href: o chip vira link.
+    { label: 'EM ABERTO', value: '3', href: '#banner-de-fluxo' },
   ]
   return (
     <PageHeader
@@ -188,7 +190,7 @@ const PAGEHEADER_PROPS: [string, string][] = [
   ['info', 'Elemento ao lado do título, por exemplo o ícone de ajuda "como funciona".'],
   ['actions', 'Botões size="sm", como filhos diretos (fragmento, sem div em volta). À direita; com o cartão abaixo de 560px, na última linha, lado a lado e com a mesma largura. Com mais de dois botões a linha quebra.'],
   ['actionsProps', 'Só data-*: vai para o slot de ações. Serve de âncora para o tutorial guiado.'],
-  ['stats', 'Chips de contagem abaixo do resumo: [{ label, value, dotColor? }]. É o Banner de Fluxo.'],
+  ['stats', 'Chips de contagem abaixo do resumo: [{ label, value, dotColor?, href? }]. É o Banner de Fluxo. Sem dotColor o ponto de 6px usa o token --fips-banner-stat-dot (amarelo-400: 5,19:1 sobre o chip no claro e 8,01:1 no escuro). Com href o chip vira um link (a) com o mesmo visual, realce no hover e anel de foco em --color-accent; sem href segue um span.'],
   ['headingLevel', 'Nível do título, de 1 a 6. O padrão é 1. A página tem um h1 só: nos outros banners use 2.'],
   ['edge', '"card" (padrão) ou "bleed". Com bleed, abaixo de 560px de cartão o banner perde o raio e encosta nas bordas da tela. A margem lateral é do pai.'],
   ['demais props', 'data-*, aria-*, className, style, id e ref vão para a raiz do componente.'],

@@ -22,6 +22,7 @@
 
   --color-fips-green-500: #00c64c;
   --color-fips-green-700: #00904c;
+  --color-fips-green-800: #006d35;
   --color-fips-green-300: #8be5ad;
   --color-fips-red-600: #ef4444;
   --color-fips-red-100: #fee2e2;
@@ -61,6 +62,21 @@
       var(--barra-inferior-altura, 0px) + var(--abas-secao-empilha, 0px) +
         env(safe-area-inset-bottom, 0px) + var(--abas-secao-altura) + 8px
     );
+  }
+
+  /* Faixa de abas que rola: a borda com mais abas esmaece, para o rótulo cortado não
+     parecer erro. O atributo é posto por AbasDeSecao conforme a rolagem. */
+  .abas-secao-faixa[data-rolagem-esq] {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px);
+    mask-image: linear-gradient(to right, transparent 0, #000 28px);
+  }
+  .abas-secao-faixa[data-rolagem-dir] {
+    -webkit-mask-image: linear-gradient(to left, transparent 0, #000 28px);
+    mask-image: linear-gradient(to left, transparent 0, #000 28px);
+  }
+  .abas-secao-faixa[data-rolagem-esq][data-rolagem-dir] {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
   }
 
   .btn-shimmer:hover {
@@ -272,7 +288,8 @@
     --color-semantic-atencao-fg: #c2410c;
     --color-semantic-atencao-border: #fdba74;
     --color-semantic-sucesso-bg: #ecfdf5;
-    --color-semantic-sucesso-fg: #00904c;
+    /* Texto pequeno sobre o fundo claro do Badge: 6,15:1 sobre #ecfdf5 (o green-700 dava 3,91:1). */
+    --color-semantic-sucesso-fg: var(--color-fips-green-800);
     --color-semantic-sucesso-border: #a7f3d0;
     --color-semantic-critico-bg: #fef2f2;
     --color-semantic-critico-fg: var(--color-danger-strong);
@@ -367,6 +384,8 @@
     --fips-banner-content-shadow: 0 4px 20px rgba(0, 42, 104, 0.12);
     --fips-banner-content-border-color: transparent;
     --fips-banner-junction-opacity: 0.12;
+    /* Ponto do chip de contagem do PageHeader: amarelo-400 mede 5,19:1 sobre o chip no claro e 8,01:1 no escuro. */
+    --fips-banner-stat-dot: var(--color-accent);
   }
 
   .dark {
@@ -788,4 +807,20 @@
 .fips-row-action:hover {
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+/* Movimento reduzido (preferência do sistema): nada gira, desliza, escala ou brilha.
+   Fora de @layer e com !important para vencer utilitários e estilos inline. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .btn-shimmer:hover {
+    animation: none;
+    background-image: none;
+  }
 }
