@@ -160,7 +160,7 @@ export function AppHeader({
 
   return (
     <header data-casca="cabecalho" className={cn('sticky top-0 z-20', className)}>
-      <div className="flex h-14 items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-surface-muted)] px-3 sm:gap-3 sm:px-6">
+      <div className="flex h-14 items-center gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-muted)] px-4 sm:gap-3 sm:px-6">
         {aoAlternarGaveta ? (
           <HeaderTile
             exibicao="celular"
@@ -188,7 +188,7 @@ export function AppHeader({
 
         {trilha.length > 0 ? <HeaderTrilha passos={trilha} renderLink={renderLink} /> : null}
 
-        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2.5">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2.5">
           {acoesExtras}
           {sino}
           {procedimento ? (

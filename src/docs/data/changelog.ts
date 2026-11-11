@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.22.5',
+    date: '2026-11-11',
+    title: 'Celular conferido contra as referências',
+    entries: [
+      { type: 'improvement', description: 'AppHeader abaixo de 640 px: recuo de 16 px (era 12), espaço de 12 px entre o menu e o logo (era 8) e de 6 px entre os botões da direita (era 4). A 375 px o botão de menu fica em x=16 e o sino em x=159, como na Gestão OPA. De 640 px em diante nada muda.' },
+    ],
+  },
+  {
     version: '0.22.0',
     date: '2026-11-11',
     title: 'Padrões dos apps no pacote',
