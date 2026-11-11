@@ -273,7 +273,7 @@ describe('gaveta do AppShell no navegador', { skip: semNavegador || false }, () 
     }
   })
 
-  test("1440px, automático: depois de 3 s sem ponteiro o menu recolhe e chama (true, 'auto')", async () => {
+  test("1440px, automático: depois de 3 s sem ponteiro o menu recolhe e chama (true, 'auto'); expandir pelo botão chama (false, 'botao')", async () => {
     const { page, ctx } = await abrir(1440, '', { auto: true, relogio: true })
     try {
       assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
@@ -281,6 +281,8 @@ describe('gaveta do AppShell no navegador', { skip: semNavegador || false }, () 
       await page.waitForSelector('[data-casca="menu"][data-collapsed="true"]')
       assert.deepEqual(await page.evaluate(() => window.__recolhido), [[true, 'auto']])
       assert.equal(await page.getAttribute('[data-casca="menu"]', 'data-collapsed'), 'true')
+      await page.click('button[aria-label="Expandir menu lateral"]')
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [[true, 'auto'], [false, 'botao']])
     } finally {
       await ctx.close()
     }
