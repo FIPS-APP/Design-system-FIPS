@@ -40,6 +40,11 @@ test('main com a versão menor que a do commit anterior: falha, não publica e n
   assert.deepEqual([r.acao, r.criarTag], ['falhar', false])
   assert.match(r.mensagem, /0\.22\.0/)
   assert.match(r.mensagem, /0\.21\.9/)
+  // Descida só no patch (caso mais provável com vários bumps abertos na mesma minor).
+  assert.equal(
+    decidir({ evento: 'main', versaoAntes: '0.21.30', versaoAtual: '0.21.27', jaPublicada: false }).acao,
+    'falhar',
+  )
 })
 
 test('main com a versão maior em qualquer das três partes continua publicando', () => {
