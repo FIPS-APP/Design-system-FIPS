@@ -47,7 +47,7 @@ export function ScopeSegment<K extends string>({
             onClick={() => onChange(key)}
             aria-pressed={isActive}
             title={`${count} ${countUnit} com os filtros e o período atuais`}
-            className="inline-flex items-center transition-all"
+            className="inline-flex items-center transition"
             style={{
               gap: 5,
               padding: '5px 10px',

@@ -15,6 +15,7 @@ const RadiusPage = lazy(() => import('./docs/pages/foundations/RadiusPage'))
 const ShadowsPage = lazy(() => import('./docs/pages/foundations/ShadowsPage'))
 const IconsPage = lazy(() => import('./docs/pages/foundations/IconsPage'))
 const ButtonDoc = lazy(() => import('./docs/pages/components/ButtonDoc'))
+const RadioCheckboxDoc = lazy(() => import('./docs/pages/components/RadioCheckboxDoc'))
 const FieldDoc = lazy(() => import('./docs/pages/components/FieldDoc'))
 const InputDoc = lazy(() => import('./docs/pages/components/InputDoc'))
 const ProgressDoc = lazy(() => import('./docs/pages/components/ProgressDoc'))
@@ -82,6 +83,7 @@ export default function App() {
         <Route path="foundations/shadows" element={renderLazyRoute(<ShadowsPage />)} />
         <Route path="foundations/icons" element={renderLazyRoute(<IconsPage />)} />
         <Route path="components/button" element={renderLazyRoute(<ButtonDoc />)} />
+        <Route path="components/radio-checkbox" element={renderLazyRoute(<RadioCheckboxDoc />)} />
         <Route path="components/field" element={renderLazyRoute(<FieldDoc />)} />
         <Route path="components/input" element={renderLazyRoute(<InputDoc />)} />
         <Route path="components/progress" element={renderLazyRoute(<ProgressDoc />)} />

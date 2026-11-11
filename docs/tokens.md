@@ -1,6 +1,6 @@
 # Tokens — Design System FIPS
 
-> Gerado automaticamente a partir de `src/tokens/` em 2026-11-10. Não edite à mão — rode `npm run tokens:gen` para regenerar.
+> Gerado automaticamente a partir de `src/tokens/` em 2026-11-11. Não edite à mão — rode `npm run tokens:gen` para regenerar.
 
 ## Paleta oficial (Brandbook)
 
@@ -20,6 +20,7 @@
 | `verdeClaro` | <span style="display:inline-block;width:80px;height:36px;background:#8BE5AD;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#8BE5AD</span> | `#8BE5AD` |
 | `verdeFloresta` | <span style="display:inline-block;width:80px;height:36px;background:#00C64C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00C64C</span> | `#00C64C` |
 | `verdeFlorestaEscuro` | <span style="display:inline-block;width:80px;height:36px;background:#00904C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00904C</span> | `#00904C` |
+| `verdeFlorestaProfundo` | <span style="display:inline-block;width:80px;height:36px;background:#006D35;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#006D35</span> | `#006D35` |
 | `branco` | <span style="display:inline-block;width:80px;height:36px;background:#FFFFFF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FFFFFF</span> | `#FFFFFF` |
 | `neutroClaro` | <span style="display:inline-block;width:80px;height:36px;background:#E8EBFF;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#E8EBFF</span> | `#E8EBFF` |
 
@@ -45,6 +46,9 @@
 | `primaryText` | <span style="display:inline-block;width:80px;height:36px;background:#004B9B;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#004B9B</span> | `#004B9B` |
 | `dangerText` | <span style="display:inline-block;width:80px;height:36px;background:#B91C1C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#B91C1C</span> | `#B91C1C` |
 | `successFill` | <span style="display:inline-block;width:80px;height:36px;background:#00904C;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#00904C</span> | `#00904C` |
+| `accentText` | <span style="display:inline-block;width:80px;height:36px;background:#9A4A00;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#9A4A00</span> | `#9A4A00` |
+| `successText` | <span style="display:inline-block;width:80px;height:36px;background:#007A40;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#007A40</span> | `#007A40` |
+| `foregroundMutedStrong` | <span style="display:inline-block;width:80px;height:36px;background:#505B65;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#505B65</span> | `#505B65` |
 | `neutralFill` | <span style="display:inline-block;width:80px;height:36px;background:#64707D;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#64707D</span> | `#64707D` |
 | `sidebar` | <span style="display:inline-block;width:80px;height:36px;background:#004B9B;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#004B9B</span> | `#004B9B` |
 | `sidebarMuted` | <span style="display:inline-block;width:80px;height:36px;background:#002A68;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#002A68</span> | `#002A68` |
@@ -64,6 +68,9 @@
 | `primaryText` | <span style="display:inline-block;width:80px;height:36px;background:#93BDE4;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#93BDE4</span> | `#93BDE4` |
 | `dangerText` | <span style="display:inline-block;width:80px;height:36px;background:#FCA5A5;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#FCA5A5</span> | `#FCA5A5` |
 | `successFill` | <span style="display:inline-block;width:80px;height:36px;background:#008842;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#008842</span> | `#008842` |
+| `accentText` | <span style="display:inline-block;width:80px;height:36px;background:#F6921E;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#F6921E</span> | `#F6921E` |
+| `successText` | <span style="display:inline-block;width:80px;height:36px;background:#8BE5AD;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#8BE5AD</span> | `#8BE5AD` |
+| `foregroundMutedStrong` | <span style="display:inline-block;width:80px;height:36px;background:#BBC0C6;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#000">#BBC0C6</span> | `#BBC0C6` |
 | `neutralFill` | <span style="display:inline-block;width:80px;height:36px;background:#5B6470;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#5B6470</span> | `#5B6470` |
 | `primary` | <span style="display:inline-block;width:80px;height:36px;background:#93BDE4;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#93BDE4</span> | `#93BDE4` |
 | `primaryHover` | <span style="display:inline-block;width:80px;height:36px;background:#658EC9;border:1px solid #ccc;border-radius:6px;text-align:center;line-height:36px;font-family:ui-monospace,monospace;font-size:11px;color:#fff">#658EC9</span> | `#658EC9` |
