@@ -141,9 +141,9 @@ test('18. AdminTablePagination: 11px, fundo suave, padding 10/16', () => {
   assert.ok(!raiz.includes('px-6'))
 })
 
-test('19. CartaoListagem: cabeçalho com 18px em cima e 14px embaixo', () => {
+test('19. CartaoListagem: cabeçalho com 18px em cima e 14px embaixo de sm em diante (14/12/12/12 no celular)', () => {
   const s = render(M.CartaoListagem, { icone: M.Sparkles, titulo: 'Lista', quantidade: 2 }, 'corpo')
-  assert.match(s, /border-b border-\[var\(--color-border\)\] px-5 pb-3\.5 pt-\[18px\]/)
+  assert.match(s, /border-b border-\[var\(--color-border\)\] px-3 pb-3 pt-3\.5 sm:gap-3\.5 sm:px-5 sm:pb-3\.5 sm:pt-\[18px\]/)
   assert.doesNotMatch(s, /px-5 py-4/)
 })
 
