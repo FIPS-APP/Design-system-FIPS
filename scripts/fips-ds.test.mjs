@@ -132,3 +132,20 @@ test('número de issue não é cor: "#153" em comentário, texto de JSX e string
     fs.rmSync(app, { recursive: true, force: true })
   }
 })
+
+test('definição de token com hex no CSS passa; hex fora de token é acusado', () => {
+  const app = copiaDoLimpo()
+  try {
+    const css = path.join(app, 'src/tokens-do-app.css')
+    fs.writeFileSync(css, ':root {\n  --color-marca-app: #004b9b;\n  --sombra-app: 0 1px 2px #0000001a;\n}\n')
+    const r = check(app)
+    assert.equal(r.status, 0, r.saida)
+    // mutação: a mesma cor fora de definição de token é acusada
+    fs.appendFileSync(css, '.caixa { color: #004b9b; }\n')
+    const depois = check(app)
+    assert.equal(depois.status, 1, depois.saida)
+    assert.deepEqual(depois.problemas.map((p) => `${p.codigo} ${p.detalhe}`), ['hex-literal #004b9b'])
+  } finally {
+    fs.rmSync(app, { recursive: true, force: true })
+  }
+})

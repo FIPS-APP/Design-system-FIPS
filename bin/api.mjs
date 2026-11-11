@@ -234,7 +234,9 @@ export function conferir(app, { ds } = {}) {
   for (const [arq, texto] of textos) {
     const ehCss = arq.endsWith('.css')
     const semComentario = ehCss ? texto.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')) : texto
-    if (ehCss) for (const m of semComentario.matchAll(HEX)) add('hex-literal', arq, linhaDe(texto, m.index), m[0])
+    // Em CSS, a definição de token (`--nome: #hex;`) é o lugar certo do hex: só conta hex fora dela.
+    const semDefinicaoDeToken = ehCss ? semComentario.replace(/--[\w-]+\s*:[^;{}]*/g, (m) => m.replace(/[^\n]/g, ' ')) : semComentario
+    if (ehCss) for (const m of semDefinicaoDeToken.matchAll(HEX)) add('hex-literal', arq, linhaDe(texto, m.index), m[0])
     if (declaradas) {
       for (const m of semComentario.matchAll(/var\(\s*(--[A-Za-z0-9_-]+)/g)) if (!declaradas.has(m[1])) add('var-sem-declaracao', arq, linhaDe(texto, m.index), m[1])
     }
