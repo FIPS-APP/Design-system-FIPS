@@ -36,3 +36,7 @@ src/__canvas_providers.tsx
 /ds FIPS/
 /ds system fips/
 /Open
+
+# Gerados no build (scripts/gerar-ai.mjs); vão no pacote, não no git.
+/ai/manifest.json
+/ai/SKILL.md

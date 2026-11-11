@@ -1,0 +1,57 @@
+{
+  "nota": "Entrada do gerador (scripts/gerar-ai.mjs). Tela, componente do pacote e referência viva. Se o componente ainda não existe na versão, o manifest diz que falta.",
+  "padroes": [
+    {
+      "tela": "Entrada / login",
+      "referencia": "Gestão OPA (OPA-GESTAO, master): src/pages/LoginPage.tsx",
+      "componentes": ["LoginDsShell"],
+      "desde": "0.23.0",
+      "nota": "Antes da 0.23.0: não inventar nem copiar; parar e avisar"
+    },
+    {
+      "tela": "Casca (sidebar, header, rodapé Modo do menu + Versão)",
+      "referencia": "Gestão OPA (OPA-GESTAO, master)",
+      "componentes": ["AppShell", "AppFipsHeaderLogo", "UserAccountMenu", "NotificacoesMenu", "TutorialOverlay"]
+    },
+    {
+      "tela": "Home",
+      "referencia": "Gestão OPA (OPA-GESTAO, master)",
+      "componentes": ["HomeHero"],
+      "nota": "Destaque amarelo só aqui"
+    },
+    {
+      "tela": "Banner das telas internas",
+      "referencia": "Gestão OPA (PatternPanelHero, que usa PageHeader)",
+      "componentes": ["PageHeader"],
+      "nota": "Selo só para estado da tela, nunca o nome do sistema. Nunca PageHero com conteúdo próprio"
+    },
+    {
+      "tela": "Formulário, execução, editor",
+      "referencia": "Manutenção leva-1",
+      "componentes": ["SecaoNumerada", "SegmentoAvaliacao", "AssinaturaCanvas", "BarraAcoesRodape", "CardChecklist"]
+    },
+    {
+      "tela": "Lista que colapsa no celular",
+      "referencia": "Tecnopano",
+      "componentes": ["ListingFilterToolbar", "CartaoListagem", "TabelaExpansivel"]
+    }
+  ],
+  "marca": "Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.",
+  "proibicoes": [
+    "Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant=\"default\"`/`\"destructive\"`.",
+    "Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.",
+    "`className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.",
+    "Dependência `file:` ou tgz do pacote: não é fonte confiável. O certo é o registro.",
+    "Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app."
+  ],
+  "regimes": [
+    "OPA-MOBILE: produção. Nunca concluir registro, nunca `?demo` online; `src/ds/` travado por sha256.",
+    "UI própria (OPA-GESTAO, CIPA-FIPS, fips-suprimentos, Governanca_BI, opa2.0) e `ui-sup` (fips-obrigacoes, fips-governanca, fips-qlp): respeitar a API local até a migração daquele app para o pacote."
+  ],
+  "antesDePronto": [
+    "`npx fips-ds check` com 0 problemas.",
+    "Typecheck, testes e build num `&&` só.",
+    "Contraste de toda variante de Button/Badge trocada (número, dois temas); Select dentro de Modal aberto e inteiro; teste novo provado por mutação.",
+    "Print lado a lado com a referência viva a 1440 e 375 px, claro e escuro."
+  ]
+}

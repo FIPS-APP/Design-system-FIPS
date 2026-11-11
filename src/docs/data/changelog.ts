@@ -25,6 +25,17 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.23.1',
+    date: '2026-11-11',
+    title: 'O pacote se explica e confere o app',
+    entries: [
+      { type: 'feature', description: 'O pacote leva `ai/manifest.json` e `ai/SKILL.md`, gerados no build: exports por tipo, props de cada `*Props` exportada (lidas pelo compilador do TypeScript no `dist/index.d.ts`), tokens de `:root` e `.dark` do `dist/styles.css` e o padrão de cada tela (`ai/padroes.json`). Export `@fips-app/ds-fips/ai/manifest.json`.' },
+      { type: 'feature', description: '`npx fips-ds passo0` mostra versão instalada e do registro, regime, padrões da tela e contagem de exports. `npx fips-ds check` sai com 1 quando acha import que o pacote não exporta, `var(--x)` sem declaração, hex literal, dependência `file:`/tgz, casca ou banner local e `className` visual em primitivo do pacote, inclusive com prefixo de variante.' },
+      { type: 'feature', description: 'Regras de lint de governança exportadas em `@fips-app/ds-fips/eslint` (sem dependência nova).' },
+      { type: 'improvement', description: '`skills/design-system-fips/SKILL.md` e o zip de downloads passam a ser gerados do `ai/SKILL.md`.' },
+    ],
+  },
+  {
     version: '0.22.0',
     date: '2026-11-11',
     title: 'Padrões dos apps no pacote',
