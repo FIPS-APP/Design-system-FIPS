@@ -234,6 +234,8 @@ Fonte: `src/docs/pages/components/SelectDoc.tsx` (Seção 01, **9 tipos**). Só 
 
 ## Tabs, Table, Dialog, Drawer, Tooltip, Progress
 
+Movimento: nenhum componente de `ui` e `composites` usa `transition-all` (transição só de cor, opacidade, sombra, transform e filter). Com `prefers-reduced-motion: reduce`, um bloco global em `globals.css` zera duração de animação e transição (spinner parado, sem shimmer, Dialog sem escala, Drawer sem deslizar); o `CircularCommandMenu` usa `MotionConfig reducedMotion="user"` e abre sem animar nem a opacidade dos itens. `Progress` anima por `transform` (com `background-size` na mesma duração e curva) e o toggle do menu de colunas por `translateX`. Anel de foco dos botões de fechar (Drawer, Modal hero), do `TabsContent` e do gatilho do menu radial só aparece com `focus-visible` (teclado).
+
 Fontes:
 
 - `src/components/ui/tabs.tsx`
@@ -529,7 +531,7 @@ Armadilha: o estado e o "saiu" moram na fileira, nunca em cada atalho. Com o `on
 
 Fonte: `src/components/composites/AbasDeSecao.tsx`
 
-Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
+Sem `href` é `tablist`/`tab` (`aria-selected`, setas, Home, End; `idBase` + `propsDoPainel` ligam o `tabpanel`); com `href` é `nav` com `aria-current="page"`. Faixa de abas de seção, no topo (`posicao="topo"`, padrão) ou fixa acima da barra de navegação inferior (`posicao="rodape"`), para o celular: no topo ela sai da tela assim que a página rola.
 
 ```tsx
 import { useState } from 'react'

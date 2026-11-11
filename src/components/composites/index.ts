@@ -60,6 +60,7 @@ export { ListingFilterToolbar, LISTING_PERIOD_PRESETS } from './ListingFilterToo
 export { PillFilter } from './PillFilter'
 export { PillGroup } from './PillGroup'
 export { AbasDeSecao } from './AbasDeSecao'
+export { idDaAba, idPainelDeAba, propsDoPainel } from './abasDeSecaoUtil'
 export type { AbasDeSecaoProps, AbaDeSecao } from './AbasDeSecao'
 export { HeroAtalho, HeroAtalhos } from './HeroAtalho'
 export type { HeroAtalhoProps, HeroAtalhosProps, HeroAtalhoAtributos } from './HeroAtalho'

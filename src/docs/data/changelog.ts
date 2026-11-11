@@ -25,39 +25,63 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.21.19',
+    version: '0.21.24',
     date: '2026-11-10',
-    title: 'Alert warning e texto laranja passam de 4,5:1 no claro',
+    title: 'Radio, RadioGroup e Checkbox',
     entries: [
       {
-        type: 'fix',
+        type: 'feature',
         description:
-          '`Alert` com tom `warning`: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6` no claro) a `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto passa de `#f6921e` a `#fdc24e` (5,91:1 vira 8,49:1 sobre o cartão). Fundo e borda não mudam.',
-      },
-      {
-        type: 'fix',
-        description:
-          'Mesmo token no item "Importante" do `ChangelogModal` (claro 2,14:1 vira 4,77:1) e nos ícones em hover do `UserAccountMenu` (claro 2,11:1 vira 4,70:1; escuro `#f6921e` vira `#fdc24e`, 5,77:1 vira 8,30:1 com o fundo de hover a /12).',
-      },
-      {
-        type: 'fix',
-        description:
-          'Eyebrow de 11 px do cabeçalho de `Modal` (hero), `Drawer`, `ExportPreviewModal` e `ChangelogModal`: passa de `--color-accent-strong` a `--color-accent` (`#fdc24e`). Sobre o começo do degradê azul `#004B9B` vai de 3,65:1 a 5,24:1; no escuro, o pior ponto vai de 4,91:1 a 7,06:1.',
-      },
-      {
-        type: 'improvement',
-        description:
-          '`npm run test:badge` passa a cobrir o `Alert` warning (texto contra o fundo em cartão, cartão suave e faixa, nos dois temas), as quatro eyebrows contra o degradê do cabeçalho, o item do `ChangelogModal` e o ícone do `UserAccountMenu`, e recusa o laranja `#f6921e` como cor de texto em `src` fora de `src/docs`, por qualquer um dos nomes (`--color-accent-strong`, `--color-warning`, `--color-fips-yellow-600` e o hex). Dois ícones que já usavam esse laranja antes (`AbasDeSecao` e `DocHeaderSectionNav`) ficam numa lista fechada no teste; qualquer uso novo falha. O teste do menu da conta passa a medir os três ícones contra todos os fundos de hover, no claro e no escuro, e o das eyebrows de `ChangelogModal` e `ExportPreviewModal` compõe o trilho branco a 6% sobre o degradê (pior ponto: 4,55:1).',
-      },
-      {
-        type: 'improvement',
-        description:
-          'As referências da skill (`components.md` e `patterns.md`) deixam de ensinar o laranja como texto: eyebrow do header `hero` em `--color-accent`, ícone do hover do menu e tom `breaking` do `ChangelogModal` em `--color-semantic-atencao-fg`. O zip da skill foi regerado.',
+          '`RadioGroup` + `Radio` (escolha única, em lista ou em pílula com `variant="pill"`) e `Checkbox` (com `indeterminate`) saem no pacote, com tipos. Rótulo clicável, descrição e erro ligados por `aria-describedby`/`aria-invalid`, foco visível, desabilitado, claro e escuro, só com tokens. Setas no grupo de rádio pelo teclado nativo. Borda e marcação medidas a 3:1 ou mais nos dois temas por `npm test`. Página nova: /docs/components/radio-checkbox.',
       },
     ],
   },
   {
-    version: '0.21.18',
+    version: '0.21.23',
+    date: '2026-11-10',
+    title: 'AbasDeSecao: padrão de abas do WAI-ARIA e fade de rolagem no celular',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Sem `href`, `AbasDeSecao` deixa de sair como botões dentro de `nav` com `aria-current` e passa a `tablist` com `tab`, `aria-selected` e `tabindex` móvel. Setas, Home e End movem o foco e ativam a aba. Com `href` segue `nav` com links e `aria-current="page"`.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Props e helpers novos, todos opcionais: `idBase` (a aba ganha `aria-controls`), `propsDoPainel(idBase, id)` (o painel vira `tabpanel` rotulado pela aba), `idDaAba` e `idPainelDeAba`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'A 375px, quando as abas não cabem, a borda com mais abas esmaece por 28px e o rótulo cortado deixa de parecer erro (`data-rolagem-esq` e `data-rolagem-dir`).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Consumidores que consultam `button` com `aria-current="true"` passam a consultar `tab` com `aria-selected="true"`. Quem usa `href` não muda.',
+      },
+    ],
+  },
+  {
+    version: '0.21.22',
+    date: '2026-11-10',
+    title: 'PageHeader: ponto do chip por token e chip com link',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'O ponto de 6px do chip de contagem do `PageHeader` (sem `dotColor`) passa de `--color-accent-strong` (3,61:1 sobre o chip no claro) para o token `--fips-banner-stat-dot`, que vale `--color-accent` (amarelo-400): 5,19:1 no claro e 8,01:1 no escuro, medidos sobre o chip renderizado. O resto do chip não muda; `dotColor` continua mandando.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`PageHeaderStat` ganha `href` opcional: o chip vira um `<a>` com o mesmo visual, realce no hover e anel de foco em `--color-accent`. Sem `href` segue um `<span>`.',
+      },
+    ],
+  },
+  {
+    version: '0.21.21',
     date: '2026-11-10',
     title: 'Badge warning legível no tema claro',
     entries: [
@@ -79,7 +103,7 @@ export const CHANGELOG: ChangelogVersion[] = [
     ],
   },
   {
-    version: '0.21.17',
+    version: '0.21.20',
     date: '2026-11-10',
     title: 'Badge success legível no tema claro',
     entries: [
@@ -87,6 +111,57 @@ export const CHANGELOG: ChangelogVersion[] = [
         type: 'fix',
         description:
           '`Badge` com `variant="success"` no claro: o texto passa de `#00904c` para `#006d35` (novo primitivo `--color-fips-green-800`, lido por `--color-semantic-sucesso-fg`). Contraste de 3,91:1 para 6,15:1 sobre o fundo `#ecfdf5`. Fundo, borda e tema escuro não mudam (escuro: 9,18:1 sobre o cartão `#1a1a1a`, 8,65:1 sobre o suave `#1f1f1f`, 8,03:1 sobre a faixa `#252525`). O `RuleTile` com tom `sucesso` lê o mesmo par e melhora junto. As cópias em `exports/badge/Badge.tsx` e na doc do Badge acompanham o valor.',
+      },
+    ],
+  },
+  {
+    version: '0.21.19',
+    date: '2026-11-10',
+    title: 'Sem transition-all e com movimento reduzido',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Componentes de `ui` e `composites` sem `transition-all` (cada transição lista as propriedades) e animações que respeitam `prefers-reduced-motion`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Atenção para quem consome o pacote: o bloco global de `prefers-reduced-motion` do `styles.css` (globals.css, fora de @layer e com !important) vale para qualquer app que importe esse arquivo e zera também as animações do próprio app quando a pessoa pede menos movimento no sistema.',
+      },
+    ],
+  },
+  {
+    version: '0.21.18',
+    date: '2026-11-10',
+    title: 'Texto do tom sucesso do Toast e do Tooltip legível',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O texto do tom `sucesso` do `Toast` e do `Tooltip` era `#00904C` sobre `#ECFDF5`: 3,91:1, abaixo dos 4,5:1 de texto pequeno (12 e 13px). Passa a `#006D35`, 6,15:1 sobre o mesmo fundo (`verdeFlorestaProfundo` na paleta, o valor do `Badge` success). O fundo é fixo nos dois temas, então o par vale no claro e no escuro. Muda em `exports/toast/toast.tsx`, `exports/tooltip/Tooltip.tsx` e nas páginas `ToastDoc` e `TooltipDoc`, que mostram e copiam o mesmo par. Borda `#A7F3D0` e acento `#00C64C` não mudam.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm test` passa a exigir 4,5:1 do texto do tom `sucesso` contra o fundo dele nos quatro arquivos.',
+      },
+    ],
+  },
+  {
+    version: '0.21.17',
+    date: '2026-11-10',
+    title: 'Altura do campo compacto: 32px registrada e páginas de doc alinhadas',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          'Registro da decisão: a altura do campo compacto é 32px (`h-8`), borda de 1px por token. Foi decidida na 0.11.15, que desfez os 35px da 0.11.14 (tirados de uma página de documentação, não de um app) e voltou para 32px com base no campo real do QLP. Vale para `Input`, `Select` e `FieldTrigger` com `density="compact"` (`h-8`). Ficam de fora: `Textarea` compacto, que tem altura mínima de 92px por ser de várias linhas, e `InputGroup`, que não tem prop `density` e mede sempre `h-12`. Quem precisa de alvo maior no celular (OPA Mobile, 35px no escritório e 48px no pátio, por token do próprio app) resolve no app; densidade nova no pacote só entra com issue própria.',
+      },
+      {
+        type: 'fix',
+        description:
+          'As páginas Field, Input, Select, Drawer, Visão geral e Espaçamento do site diziam "Compacto 30px"; o componente entrega 32px. Texto, `TokenRow`, a altura dos exemplos e o código copiável da página Field passam a 32px. Continua em 30px o exemplo de `Textarea` com altura automática, fora desta decisão. Fica como estava, sem decisão: a página diz Desktop 35px e Mobile 42px, e o pacote entrega 48px na densidade padrão (`h-12`).',
       },
     ],
   },

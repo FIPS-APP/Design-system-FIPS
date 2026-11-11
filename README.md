@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.21.19`
+## Versão atual: `v0.21.24`
 
 ## Favicon e ícones de app
 
@@ -111,9 +111,14 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.21.19 | 2026-11-10 | `Alert` warning passa de `--color-accent-strong` a `--color-semantic-atencao-fg` no texto: 2,07:1 vira 4,61:1 no claro (no escuro o texto passa de `#f6921e` a `#fdc24e`, 5,91:1 vira 8,49:1). O item "Importante" do `ChangelogModal` (2,14:1 a 4,77:1) e os ícones em hover do `UserAccountMenu` (2,11:1 a 4,70:1) leem o mesmo token. As eyebrows de 11 px sobre o degradê azul de `Modal`, `Drawer`, `ExportPreviewModal` e `ChangelogModal` passam a `--color-accent` (3,65:1 a 5,24:1 no pior ponto). `--color-accent-strong` fica para fundo e borda. `npm run test:badge` confere |
-| 0.21.18 | 2026-11-10 | `Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto lê o mesmo token (`#fdc24e`, valor igual ao de antes, sem hex na classe). Fundo e borda não mudam. `npm run test:badge` cobre success e warning |
-| 0.21.17 | 2026-11-10 | `Badge` success no claro: texto de `#00904c` para `#006d35` (`--color-fips-green-800`), de 3,91:1 para 6,15:1 sobre `#ecfdf5`. Fundo, borda e tema escuro sem mudança |
+| 0.21.24 | 2026-11-10 | `RadioGroup`, `Radio` (lista ou pílula) e `Checkbox` entram no pacote: rótulo clicável, descrição, erro com `aria-invalid`/`aria-describedby`, foco visível, claro e escuro, só tokens. Setas no grupo pelo teclado nativo; borda e marcação a 3:1 ou mais nos dois temas (`npm test`). Página nova Radio e Checkbox |
+| 0.21.23 | 2026-11-10 | `AbasDeSecao` segue o padrão de abas do WAI-ARIA quando troca conteúdo na mesma página: `tablist`, `tab`, `aria-selected`, `tabindex` móvel, setas, Home e End. `idBase` e `propsDoPainel` ligam aba e `tabpanel` (`aria-controls`). Com `href` segue `nav` com `aria-current="page"`. A 375px a faixa que rola esmaece a borda com mais abas |
+| 0.21.22 | 2026-11-10 | `PageHeader`: o ponto do chip de contagem usa o token `--fips-banner-stat-dot` (amarelo-400, 5,19:1 no claro e 8,01:1 no escuro sobre o chip) e `stats[].href` faz o chip virar link com foco visível |
+| 0.21.21 | 2026-11-10 | `Badge` com `variant="warning"` no claro: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6`) para `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto lê o mesmo token (`#fdc24e`, valor igual ao de antes, sem hex na classe). Fundo e borda não mudam. `npm run test:badge` cobre success e warning |
+| 0.21.20 | 2026-11-10 | `Badge` success no claro: texto de `#00904c` para `#006d35` (`--color-fips-green-800`), de 3,91:1 para 6,15:1 sobre `#ecfdf5`. Fundo, borda e tema escuro sem mudança |
+| 0.21.19 | 2026-11-10 | Sem `transition-all` nos componentes de `ui` e `composites` e animações com `prefers-reduced-motion` respeitado; o bloco global de movimento reduzido vale para todo app que importa o `styles.css` |
+| 0.21.18 | 2026-11-10 | Tom `sucesso` do `Toast` e do `Tooltip` (exemplos portáteis em `exports/` e páginas do site): o texto passa de `#00904C` (3,91:1 sobre `#ECFDF5`) a `#006D35`, 6,15:1. Fundo, borda e acento não mudam. `npm test` exige 4,5:1 do texto do `sucesso` nos quatro arquivos |
+| 0.21.17 | 2026-11-10 | A altura do campo compacto é 32px (`h-8`), decisão da 0.11.15 que se mantém: `Input`, `Select` e `FieldTrigger` entregam 32px com `density="compact"`; `Textarea` compacto tem altura mínima de 92px e `InputGroup` não tem `density` (sempre `h-12`). As páginas Field, Input, Select, Drawer, Visão geral e Espaçamento do site diziam 30px e passam a dizer 32px, e o código copiável da página Field também. Nenhum componente muda |
 | 0.21.16 | 2026-11-10 | Anéis de foco de `UserChip`, `DocHeaderNeuIconButton` e `DocHeaderSectionNav` deixam o hex com transparência (`#2563EB` a 25% media 1,43:1 no claro e 1,26:1 no escuro; `#F6921E` de 28% a 40% media de 1,27:1 a 2,25:1). Passam a `--color-ring` cheio (claro) e `#F6921E` cheio (ramo escuro das seções). O anel do `DocHeaderNeuIconButton` nunca aparecia, porque o `boxShadow` em linha o cobria: passa a contorno `outline`. `npm test` confere |
 | 0.21.15 | 2026-11-10 | `SettingsPreferenceRow` variante `info`: o hover deixa de clarear o fundo da linha e passa a reforçar a borda (`--color-fips-blue-400` cheio). No escuro o trilho do `Switch` desligado contra a linha em hover vai de 2,05:1 a 3,09:1 (sobre o cartão). No claro o fundo de hover já era igual ao de repouso. `npm test` calcula o fundo de hover, inclusive `color-mix` |
 | 0.21.14 | 2026-11-10 | `HeroAtalho` e `HeroFileira`: o foco do teclado aparece no atalho aberto. O anel (`ring`) nunca chegava à tela porque o `boxShadow` em linha do atalho aberto o cobria; passa a contorno branco (`outline`) de 3px com recuo de 2px, 3:1 ou mais contra o fundo do `PageHero` nos dois temas. `npm test` confere a classe e o contraste |
