@@ -1239,6 +1239,7 @@
     --documento-faixa-titulo: color-mix(in srgb, var(--color-fips-green-700) 90%, black);
     --documento-faixa-rotulo: var(--color-fips-gray-900);
     --documento-faixa-neutra: #5b6571;
+    --documento-faixa-legenda: #262626;
   }
 
   .dark {

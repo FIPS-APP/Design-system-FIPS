@@ -37,6 +37,16 @@ export const CHANGELOG: ChangelogVersion[] = [
     ],
   },
   {
+    version: '0.22.3',
+    date: '2026-11-11',
+    title: 'Faixas do documento e SecaoNumerada com tom',
+    entries: [
+      { type: 'feature', description: 'FaixaSecaoDocumento e FaixaCategoriaDocumento: prop centralizado (título centralizado na faixa) e tom="legenda" (fundo grafite pelo token --documento-faixa-legenda, branco a 15,13:1 nos dois temas).' },
+      { type: 'feature', description: 'SecaoNumerada: prop tom (primario | sucesso) para a cor do chip, do título e do ícone, e iconeEmRelevo para o relevo 3D do ícone. Títulos e ícones medidos nos dois temas: primario 8,47:1 (claro) e 8,82:1 (escuro), sucesso 5,44:1 e 11,53:1.' },
+      { type: 'improvement', description: 'Todas as props são opcionais: quem não passa nenhuma recebe a mesma marcação de antes.' },
+    ],
+  },
+  {
     version: '0.22.0',
     date: '2026-11-11',
     title: 'Padrões dos apps no pacote',

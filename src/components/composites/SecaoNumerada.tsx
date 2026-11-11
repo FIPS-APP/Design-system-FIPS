@@ -20,8 +20,45 @@ export interface SecaoNumeradaProps {
   className?: string
   /** Classes do corpo (espaço entre os blocos da seção). */
   corpoClassName?: string
+  /** Cor do cabeçalho (chip, título e ícone). Sem `tom` é o visual de sempre. `primario` pinta o título de azul; `sucesso` usa os tokens de sucesso no chip, no título e no ícone. */
+  tom?: 'primario' | 'sucesso'
+  /** Dá relevo 3D ao ícone (sombras em camadas no matiz do tom). Desligado por padrão. */
+  iconeEmRelevo?: boolean
   children?: ReactNode
 }
+
+const CHIP_PRIMARIO =
+  'bg-[linear-gradient(135deg,var(--color-primary),color-mix(in_srgb,var(--color-primary)_75%,var(--color-fips-blue-950)))]'
+
+const TONS = {
+  padrao: {
+    chip: CHIP_PRIMARIO,
+    titulo: 'text-[var(--color-fg)]',
+    icone: 'text-[var(--color-primary-text)]',
+    matiz: 'var(--color-primary-text)',
+  },
+  primario: {
+    chip: CHIP_PRIMARIO,
+    titulo: 'text-[var(--color-primary-text)]',
+    icone: 'text-[var(--color-primary-text)]',
+    matiz: 'var(--color-primary-text)',
+  },
+  sucesso: {
+    chip: 'bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-success-fill)_88%,black),color-mix(in_srgb,var(--color-success-fill)_65%,black))]',
+    titulo: 'text-[var(--color-success-text)]',
+    icone: 'text-[var(--color-success-text)]',
+    matiz: 'var(--color-success-text)',
+  },
+} as const
+
+/** Sombras em camadas no matiz do tom: dá volume ao ícone. */
+const relevo = (matiz: string) =>
+  [
+    `drop-shadow(0 -1px 0 color-mix(in srgb, ${matiz} 35%, white))`,
+    `drop-shadow(0 1px 0 color-mix(in srgb, ${matiz} 70%, black))`,
+    `drop-shadow(0 2px 0 color-mix(in srgb, ${matiz} 55%, black))`,
+    `drop-shadow(0 4px 5px color-mix(in srgb, ${matiz} 40%, transparent))`,
+  ].join(' ')
 
 /**
  * Cartão numerado de seção de formulário: chip com o número ("01", "02"…), título, dica e um
@@ -47,14 +84,18 @@ export function SecaoNumerada({
   nivelTitulo = 2,
   className,
   corpoClassName,
+  tom,
+  iconeEmRelevo = false,
   children,
 }: SecaoNumeradaProps) {
+  const t = TONS[tom ?? 'padrao'] ?? TONS.padrao
   const Titulo = nivelTitulo === 3 ? 'h3' : 'h2'
   const temCorpo = children !== undefined && children !== null && children !== false
   return (
     <section
       id={id}
       aria-labelledby={`${id}-titulo`}
+      data-tom={tom}
       className={cn(
         '@container scroll-mt-20 rounded-[12px_12px_12px_24px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]',
         className,
@@ -68,14 +109,14 @@ export function SecaoNumerada({
       >
         <span
           aria-hidden
-          className="font-heading flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--color-primary),color-mix(in_srgb,var(--color-primary)_75%,var(--color-fips-blue-950)))] text-sm font-bold text-white"
+          className={cn('font-heading flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white', t.chip)}
         >
           {String(numero).padStart(2, '0')}
         </span>
         <div className="min-w-0">
           <Titulo
             id={`${id}-titulo`}
-            className="font-heading text-base font-semibold tracking-tight text-[var(--color-fg)]"
+            className={cn('font-heading text-base font-semibold tracking-tight', t.titulo)}
           >
             <span className="sr-only">{numero}.</span> {titulo}
           </Titulo>
@@ -84,7 +125,12 @@ export function SecaoNumerada({
         {acao ? (
           <div className="ml-auto shrink-0">{acao}</div>
         ) : Icone ? (
-          <Icone className="ml-auto hidden h-5 w-5 shrink-0 text-[var(--color-primary-text)] @md:block" aria-hidden />
+          <Icone
+            className={cn('ml-auto hidden h-5 w-5 shrink-0 @md:block', t.icone)}
+            style={iconeEmRelevo ? { filter: relevo(t.matiz) } : undefined}
+            data-relevo={iconeEmRelevo ? 'true' : undefined}
+            aria-hidden
+          />
         ) : null}
       </div>
       {temCorpo ? <div className={cn('p-4 @2xl:p-5', corpoClassName)}>{children}</div> : null}
