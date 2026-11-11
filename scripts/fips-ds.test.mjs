@@ -108,3 +108,27 @@ test('npm pack --dry-run leva ai/ e bin/', { skip: !fs.existsSync(path.join(RAIZ
   const arquivos = JSON.parse(r.stdout)[0].files.map((f) => f.path)
   for (const f of ['ai/manifest.json', 'ai/SKILL.md', 'ai/padroes.json', 'bin/fips-ds.mjs', 'bin/api.mjs', 'eslint/index.js']) assert.ok(arquivos.includes(f), `${f} fora do pacote`)
 })
+
+test('número de issue não é cor: "#153" em comentário, texto de JSX e string comum passa', () => {
+  const app = copiaDoLimpo()
+  try {
+    fs.writeFileSync(
+      path.join(app, 'src/numero-de-issue.tsx'),
+      [
+        '// o DS ainda não tem campo de arquivo (#153)',
+        '/** ver #153 e #a1b */',
+        "export const Aviso = () => <p title=\"veja a issue #153\">Pendente desde o #153</p>",
+        "export const ROTULO = 'issue #153 no repositório'",
+      ].join('\n'),
+    )
+    const r = check(app)
+    assert.equal(r.status, 0, r.saida)
+    // mutação: cor de verdade no mesmo arquivo é acusada
+    fs.appendFileSync(path.join(app, 'src/numero-de-issue.tsx'), "\nexport const C = () => <div className=\"bg-[#153]\" style={{ borderColor: '#abc' }} />\n")
+    const depois = check(app)
+    assert.equal(depois.status, 1, depois.saida)
+    assert.deepEqual(depois.problemas.map((p) => p.detalhe).sort(), ['#153', '#abc'])
+  } finally {
+    fs.rmSync(app, { recursive: true, force: true })
+  }
+})

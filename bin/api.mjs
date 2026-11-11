@@ -163,6 +163,22 @@ export const VISUAL =
 export const semPrefixo = (t) => t.replace(/^(?:\[[^\]]*\]:|[^:[\]]+(?:\[[^\]]*\])?[^:[\]]*:)+/, '').replace(/^!/, '')
 
 const HEX = /(?<![A-Za-z0-9&])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])/g
+// Em .tsx/.jsx só conta hex dentro de string em contexto de cor: a string inteira é a cor ('#fff'),
+// ou o # vem depois de `[`, `:`, `(` ou `,` (Tailwind arbitrário, CSS em string, função de cor),
+// ou depois de espaço numa string que parece declaração CSS (tem `:` ou `;`).
+// Comentário e texto de JSX ficam de fora: "veja #153" é número de issue, não cor.
+const HEX_EM_STRING = (s) => {
+  const achados = []
+  for (const m of s.matchAll(HEX)) {
+    const antes = s.slice(0, m.index).trimEnd()
+    const ult = antes.slice(-1)
+    const inteira = s.trim() === m[0]
+    const contexto = ['[', ':', '(', ','].includes(s[m.index - 1]) || ['[', ':', '(', ','].includes(ult)
+    const declaracaoCss = /\s/.test(s[m.index - 1] || '') && /[:;]/.test(s)
+    if (inteira || contexto || declaracaoCss) achados.push(m)
+  }
+  return achados
+}
 const SINAIS_CLASSE = [/login-v1-container/g, /liquid-card/g, /casca-hero-[\w-]*/g]
 const IGNORAR = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', 'vendor'])
 
@@ -218,7 +234,7 @@ export function conferir(app, { ds } = {}) {
   for (const [arq, texto] of textos) {
     const ehCss = arq.endsWith('.css')
     const semComentario = ehCss ? texto.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')) : texto
-    if (!arq.endsWith('.ts')) for (const m of semComentario.matchAll(HEX)) add('hex-literal', arq, linhaDe(texto, m.index), m[0])
+    if (ehCss) for (const m of semComentario.matchAll(HEX)) add('hex-literal', arq, linhaDe(texto, m.index), m[0])
     if (declaradas) {
       for (const m of semComentario.matchAll(/var\(\s*(--[A-Za-z0-9_-]+)/g)) if (!declaradas.has(m[1])) add('var-sem-declaracao', arq, linhaDe(texto, m.index), m[1])
     }
@@ -239,6 +255,9 @@ export function conferir(app, { ds } = {}) {
       }
     }
     const visitar = (n) => {
+      if (!arq.endsWith('.ts') && (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n) || ts.isTemplateHead(n) || ts.isTemplateMiddle(n) || ts.isTemplateTail(n))) {
+        for (const m of HEX_EM_STRING(n.text)) add('hex-literal', arq, linha(n), m[0])
+      }
       if (ts.isIdentifier(n) && n.text === 'PaginaCabecalho') add('casca-local', arq, linha(n), 'PaginaCabecalho')
       if (ts.isJsxElement(n) && n.openingElement.tagName.getText(sf) === 'PageHero') {
         const filhos = n.children.filter((f) => !(ts.isJsxText(f) && !f.text.trim()))
