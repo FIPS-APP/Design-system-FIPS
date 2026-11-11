@@ -227,6 +227,8 @@ export default function FormularioExecucaoDoc() {
             >
               <p className="text-sm text-[var(--color-fg-muted)]">Com <code>acao</code> o botão ocupa o lugar do ícone.</p>
             </SecaoNumerada>
+            <SecaoNumerada id="demo-s4" numero={4} titulo="Tom primário com relevo" dica="Título azul e ícone em relevo" icone={ShieldCheck} tom="primario" iconeEmRelevo />
+            <SecaoNumerada id="demo-s5" numero={5} titulo="Tom sucesso com relevo" dica="Chip, título e ícone em verde" icone={ClipboardCheck} tom="sucesso" iconeEmRelevo />
             <SecaoNumerada id="demo-s3" numero={3} titulo="Sem corpo" dica="Sem filhos, o divisor some" icone={ClipboardCheck} />
           </div>
           <Tabela
@@ -237,6 +239,8 @@ export default function FormularioExecucaoDoc() {
               ['icone', 'LucideIcon', 'Enfeite à direita; some em contêiner abaixo de 28rem.'],
               ['acao', 'ReactNode', 'Substitui o ícone (botão "Editar dados").'],
               ['nivelTitulo', '2 | 3', 'Padrão 2. Use 3 dentro de outra seção.'],
+              ['tom', "'primario' | 'sucesso'", 'Cor do cabeçalho. Sem tom, título em fg. primario: título azul. sucesso: chip, título e ícone com os tokens de sucesso.'],
+              ['iconeEmRelevo', 'boolean', 'Relevo 3D no ícone, no matiz do tom. Padrão false.'],
               ['className / corpoClassName', 'string', 'Margem do cartão e espaço entre blocos do corpo.'],
             ]}
           />
