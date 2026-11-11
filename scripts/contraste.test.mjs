@@ -787,3 +787,35 @@ test('Anéis do cabeçalho: UserChip e ramo claro das seções leem --color-ring
   assert.match(ler(ANEIS.userChip), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'UserChip sem --color-ring cheio')
   assert.match(ler(ANEIS.secoes), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'ramo claro das seções sem --color-ring cheio')
 })
+
+// ─── FipsTabBar: aba ativa ─────────────────────────────────────────────────
+const TABBAR = 'src/components/composites/FipsTabBar.tsx'
+
+function ramoAtivo() {
+  const fonte = ler(TABBAR)
+  const i = fonte.indexOf('if (active) {')
+  assert.notEqual(i, -1, `${TABBAR}: ramo if (active) não encontrado`)
+  return fonte.slice(i, fonte.indexOf('\n  }', i))
+}
+
+test('FipsTabBar: texto da aba ativa lê --color-primary-text, 4,5:1 sobre o fundo misturado, nos dois temas', () => {
+  const ramo = ramoAtivo()
+  const txt = ramo.match(/color: 'var\((--[\w-]+)\)'/)
+  assert.ok(txt, 'cor do texto da aba ativa não encontrada')
+  const mix = ramo.match(/color-mix\(in srgb, var\((--[\w-]+)\) (\d+)%, transparent\)/)
+  assert.ok(mix, 'fundo da aba ativa não encontrado')
+  for (const t of TEMAS) {
+    const a = Number(mix[2]) / 100
+    const m = token(mix[1], t)
+    const s = token('--color-surface', t)
+    const f = (c, b) => Math.round(c * a + b * (1 - a))
+    const fundo = { r: f(m.r, s.r), g: f(m.g, s.g), b: f(m.b, s.b) }
+    verifica(`FipsTabBar texto ativo, tema ${t}`, token(txt[1], t), fundo, MINIMO_TEXTO)
+  }
+})
+
+test('FipsTabBar: borda da aba ativa lê --color-primary-text, 3:1 sobre o cartão, nos dois temas', () => {
+  const b = ramoAtivo().match(/border: '1px solid var\((--[\w-]+)\)'/)
+  assert.ok(b, 'borda da aba ativa não encontrada')
+  for (const t of TEMAS) verifica(`FipsTabBar borda ativa, tema ${t}`, token(b[1], t), token('--color-surface', t))
+})

@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.21.30',
+    date: '2026-11-11',
+    title: 'FipsTabBar legível no tema escuro',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'FipsTabBar: a aba ativa pinta texto e borda com --color-primary-text, que vira no tema escuro. Antes usava --color-primary, que fica no navy nos dois temas: texto a 1,92:1 e borda a 2,06:1 no escuro. Agora o texto fica em 4,5:1 ou mais e a borda em 3:1 ou mais nos dois temas, com teste em npm test.',
+      },
+    ],
+  },
+  {
     version: '0.21.24',
     date: '2026-11-10',
     title: 'Radio, RadioGroup e Checkbox',
