@@ -29,7 +29,7 @@ export const CHANGELOG: ChangelogVersion[] = [
     date: '2026-11-11',
     title: 'AppShell avisa quando o menu recolhe',
     entries: [
-      { type: 'feature', description: 'AppShell: prop aoMudarRecolhido(recolhido: boolean), chamada a cada troca do menu entre aberto e recolhido (botão do cabeçalho, recolher sozinho ou ponteiro). O app grava a escolha e passa o valor lido em recolhidoInicial, e ela sobrevive à recarga. Opcional e sem chamada na montagem: quem não passa não muda.' },
+      { type: 'feature', description: 'AppShell: prop aoMudarRecolhido(recolhido, origem), chamada a cada troca do menu entre aberto e recolhido, com a origem botao (clique no cabeçalho), auto (recolher sozinho) ou ponteiro. Para lembrar a escolha, o app grava só com origem botao e passa o valor lido em recolhidoInicial; ela sobrevive à recarga. Opcional e sem chamada na montagem: quem não passa não muda.' },
     ],
   },
   {

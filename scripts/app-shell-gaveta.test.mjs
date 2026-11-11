@@ -79,7 +79,7 @@ createRoot(document.getElementById('root')).render(
     menu={{ nome: 'App', grupos, versao: { numero: '0.1.0', aoAbrir: () => {} } }}
     cabecalho={{ trilha: [{ label: 'Home' }] }}
     recolhidoInicial={new URLSearchParams(location.search).has('recolhido')}
-    aoMudarRecolhido={(v) => { (window.__recolhido ??= []).push(v) }}
+    aoMudarRecolhido={(v, origem) => { (window.__recolhido ??= []).push([v, origem]) }}
   >
     <main style={{ padding: 16 }}><button id="no-conteudo">Dentro da página</button></main>
   </AppShell>,
@@ -128,11 +128,12 @@ describe('gaveta do AppShell no navegador', { skip: semNavegador || false }, () 
     rmSync(TMP, { recursive: true, force: true })
   })
 
-  async function abrir(largura, busca = '') {
+  async function abrir(largura, busca = '', { auto = false, relogio = false } = {}) {
     const ctx = await browser.newContext({ viewport: { width: largura, height: 812 }, locale: 'pt-BR' })
     const page = await ctx.newPage()
-    // Sem recolher sozinho: o único que muda o menu é o clique do teste.
-    await page.addInitScript(() => localStorage.setItem('teste:gaveta', JSON.stringify({ recolherAuto: false, segundos: 3 })))
+    // Por padrão sem recolher sozinho: o único que muda o menu é o clique do teste.
+    await page.addInitScript((recolherAuto) => localStorage.setItem('teste:gaveta', JSON.stringify({ recolherAuto, segundos: 3 })), auto)
+    if (relogio) await page.clock.install()
     const erros = []
     page.on('pageerror', (e) => erros.push(String(e)))
     await page.goto(base + busca)
@@ -237,25 +238,49 @@ describe('gaveta do AppShell no navegador', { skip: semNavegador || false }, () 
     }
   })
 
-  test('1440px: recolher chama aoMudarRecolhido(true), expandir chama (false); a montagem não chama', async () => {
+  test("1440px: recolher chama aoMudarRecolhido(true, 'botao'), expandir chama (false, 'botao'); a montagem não chama", async () => {
     const { page, ctx } = await abrir(1440)
     try {
       assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
       await page.click('button[aria-label="Recolher menu lateral"]')
       await page.click('button[aria-label="Expandir menu lateral"]')
-      assert.deepEqual(await page.evaluate(() => window.__recolhido), [true, false])
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [[true, 'botao'], [false, 'botao']])
     } finally {
       await ctx.close()
     }
   })
 
-  test('1440px: remontar com recolhidoInicial nasce recolhido, sem chamar aoMudarRecolhido', async () => {
+  test('1440px: nascer recolhido com recolhidoInicial, sem chamar aoMudarRecolhido', async () => {
     const { page, ctx } = await abrir(1440, '?recolhido')
     try {
       assert.equal(await page.getAttribute('[data-casca="menu"]', 'data-collapsed'), 'true')
       assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
       await page.click('button[aria-label="Expandir menu lateral"]')
-      assert.deepEqual(await page.evaluate(() => window.__recolhido), [false])
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [[false, 'botao']])
+    } finally {
+      await ctx.close()
+    }
+  })
+
+  test("1440px, automático: o ponteiro no menu recolhido chama (false, 'ponteiro')", async () => {
+    const { page, ctx } = await abrir(1440, '?recolhido', { auto: true })
+    try {
+      assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
+      await page.hover('[data-casca="menu"]')
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [[false, 'ponteiro']])
+    } finally {
+      await ctx.close()
+    }
+  })
+
+  test("1440px, automático: depois de 3 s sem ponteiro o menu recolhe e chama (true, 'auto')", async () => {
+    const { page, ctx } = await abrir(1440, '', { auto: true, relogio: true })
+    try {
+      assert.equal(await page.evaluate(() => window.__recolhido ?? null), null)
+      await page.clock.fastForward(3100)
+      await page.waitForSelector('[data-casca="menu"][data-collapsed="true"]')
+      assert.deepEqual(await page.evaluate(() => window.__recolhido), [[true, 'auto']])
+      assert.equal(await page.getAttribute('[data-casca="menu"]', 'data-collapsed'), 'true')
     } finally {
       await ctx.close()
     }
