@@ -92,6 +92,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Tipo de alteração | Incremento | Exemplo |
 |---|---|---|
+| 0.21.19 | 2026-10-22 | `SettingsPreferenceRowSelect`: linha de preferência com `Select`. Catorze tokens `--neu-*` para o azulejo neumórfico do header e da sidebar, sem mudar nenhum pixel; `docHeaderNeuAccentGloss` também lê token |
 | **Correção / patch** (bugfix, ajuste visual, refactor) | `+0.0.1` | 0.4.0 → 0.4.1 |
 | **Nova feature / tela** | `+0.1.0` | 0.4.0 → 0.5.0 |
 | **Breaking change** (mudança incompatível) | `+1.0.0` | 0.4.0 → 1.0.0 |
