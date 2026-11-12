@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.8',
+    date: '2026-11-12',
+    title: 'Pacote local da versão publicada',
+    entries: [
+      { type: 'feature', description: '`npx fips-ds vendor X` baixa a versão publicada para uma pasta temporária, confere o sha512 com o `dist.integrity` do registro e só então move para `vendor/fips-app-ds-fips-X.tgz`, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com `--save-exact`, removendo o tgz e o `.integrity` da versão anterior. Token só pelo ambiente (`NODE_AUTH_TOKEN`, conferido antes); registro do escopo fixo na linha de comando; E401 e E403 viram mensagem sobre o token; prazo de 10 minutos só para o install.' },
+      { type: 'improvement', description: '`npx fips-ds check` aceita `file:vendor/fips-app-ds-fips-X.tgz` (também `file:./vendor/` e, com o `package.json` em subpasta, `file:../vendor/`) quando o tgz está íntegro contra o `.integrity` que está no app, o `package.json` de dentro tem `version` X e o `package-lock.json` resolve no mesmo arquivo e com a mesma integridade. O check não sabe de onde o `.integrity` veio: a conferência com o registro é feita só pelo comando `vendor`. Fora de `vendor/`, `link:`, URL e tgz sem `.integrity` continuam `dependencia-local`. Dois tgz em `vendor/` geram aviso; vale o referenciado.' },
+      { type: 'fix', description: 'O `vendor` chama o npm pelo node (`npm_execpath` ou o `npm-cli.js` ao lado do node), sem `npm.cmd` e sem shell: no Windows o `npm.cmd` sem shell dá EINVAL desde o Node 18.20.2, 20.12.2 e 21.7.3.' },
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-11-12',
     title: 'Toast, Button touch, exports do site e correções de contraste e celular',

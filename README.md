@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.24.0`
+## Versão atual: `v0.24.8`
 
 ## Favicon e ícones de app
 
@@ -74,17 +74,16 @@ A medida segue a largura do cartão (container query de 560px). `PatternPanelHer
 
 ### 4. Tgz vendorizado (apps que não leem o registro)
 
-Alguns apps carregam o pacote como arquivo em `vendor/` (`"@fips-app/ds-fips": "file:vendor/fips-app-ds-fips-X.Y.Z.tgz"`). **O arquivo sai do GitHub Packages, não de `npm pack` local**: o build local grava nos comentários `//#region` do `dist/index.js` o caminho da máquina, os bytes mudam e o `sha512` do lock deixa de bater com o do registro, e cada app passa a carregar um tgz diferente para a mesma versão.
+O certo é o registro. A exceção é o app que não lê o registro (CI ou Docker sem token com `read:packages`): ele carrega o pacote como arquivo em `<app>/vendor/` (a pasta do `package.json`), `"@fips-app/ds-fips": "file:vendor/fips-app-ds-fips-X.Y.Z.tgz"`. Com o `package.json` em subpasta `app/`, o `npx fips-ds check` também aceita `file:../vendor/...`; nesse caso mova a pasta à mão, o comando `vendor` grava em `<app>/vendor`. Só vale para versões do pacote que já trazem este check.
+
+**O arquivo sai do GitHub Packages, não de `npm pack` local**: o build local grava nos comentários `//#region` do `dist/index.js` o caminho da máquina, os bytes mudam e o `sha512` do lock deixa de bater com o do registro.
 
 ```bash
-export GITHUB_TOKEN=ghp_xxx   # read:packages
-npm pack @fips-app/ds-fips@X.Y.Z \
-  --registry=https://npm.pkg.github.com \
-  --//npm.pkg.github.com/:_authToken="$GITHUB_TOKEN" \
-  --pack-destination vendor
+export NODE_AUTH_TOKEN=...   # token com read:packages, só no ambiente
+npx fips-ds vendor X.Y.Z
 ```
 
-Confira contra o registro antes de commitar: `npm view @fips-app/ds-fips@X.Y.Z dist.integrity --registry=https://npm.pkg.github.com` tem de ser o `sha512` do arquivo (`openssl dgst -sha512 -binary vendor/fips-app-ds-fips-X.Y.Z.tgz | base64 -w0`). Depois: `package.json` apontando para o arquivo novo, o tgz antigo fora, `npm install` para regerar o lock.
+O comando baixa para uma pasta temporária, confere o sha512 com o `dist.integrity` do registro, move para `vendor/`, grava `vendor/fips-app-ds-fips-X.Y.Z.tgz.integrity`, instala com versão exata e remove o tgz e o `.integrity` da versão anterior. Depois, `npx fips-ds check` confere que o tgz continua íntegro contra o `.integrity` do app.
 
 ## Versionamento
 
@@ -111,6 +110,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.24.8 | 2026-11-12 | Pacote local da versão publicada: `npx fips-ds vendor X` baixa o tgz publicado para `vendor/`, confere com o `dist.integrity` do registro, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com versão exata. `npx fips-ds check` aceita o tgz íntegro contra o `.integrity` do app. Corrige o `vendor` no Windows (npm chamado pelo node, sem `npm.cmd`). Muda para quem já usa: nada |
 | 0.24.0 | 2026-11-12 | Rodada de 12/11 (#121, #145, #175, #6, #176, #177, #180, #183, #184, #185, #186). Novos no pacote: `Toast`, `ToastViewport` e `useToast`; `Button` com `size="touch"` (48 px); `DrawerHero`, `useTableDensity`, `FipsTabBar`, `BuscarPessoaModal`, `SettingsPreferenceRow` e `SettingsPreferenceRowSelect` com os tipos; `AppShell` com `aoMudarRecolhido`. Correções: `Alert` warning e texto laranja passam de 4,5:1; aba ativa do `FipsTabBar` legível no escuro; foco preso na gaveta do `AppShell`; rótulo Segurança da entrada a 5,25:1; celular com as medidas das referências (`AppHeader`, `SecaoNumerada`, `CartaoListagem`) e busca do `FilterBlock` em segunda linha abaixo de 640 px. Tokens `--neu-*` do azulejo neumórfico. Detalhe por PR no changelog do site. Muda para quem já usa: nada removido |
 | 0.23.1 | 2026-11-11 | O pacote se explica e confere o app: `ai/manifest.json` e `ai/SKILL.md` gerados no build (exports por tipo, props das `*Props`, tokens de `:root` e `.dark`, padrão de cada tela); `npx fips-ds passo0` e `npx fips-ds check` (import inexistente, `var()` sem declaração, hex literal, dependência `file:`/tgz, casca ou banner local, `className` visual em primitivo, inclusive com prefixo); regras de lint em `@fips-app/ds-fips/eslint`; `skills/design-system-fips/SKILL.md` gerado. |
 | 0.23.0 | 2026-11-11 | Entrada no pacote: `LoginDsShell` exportado, igual à tela da Gestão OPA (coluna "Excelência sobre trilhos" com a rota dos princípios, cartão de vidro com marca, texto e botão de contorno do provedor). Props: `onClick` ou `href`, `rotulo`, `icone`, `texto`, `erro`, `carregando`, `rotuloCarregando`, `rodape`, `logo`, `logoAlt`, `fundo`, `className`. CSS no `styles.css` do pacote, em `@layer components`, só com token (hex trocados: `#fdc24e` por `--color-fips-yellow-400`, `#f6921e` por `--color-fips-yellow-600`, `#002a68` por `--color-fips-blue-950`, `#00396b` por `--color-fips-azulejo-600`, `#001430` por mistura de `--color-fips-blue-950` com preto, `#FF4D4D` por `--color-fips-red-600`, `#FFB4B4` por `--color-fips-red-300`). A página `/docs/login` usa o componente do pacote. Os outros três componentes que o site mostra sem export saem nos PRs próprios: `FipsTabBar` e `BuscarPessoaModal` no #145, `SettingsPreferenceRow` no #6. Novo teste `scripts/exports-site.test.mjs`: componente que o site mostra tem export. Muda para quem já usa: nada; quem tinha cópia local da entrada pode trocar pelo pacote |
