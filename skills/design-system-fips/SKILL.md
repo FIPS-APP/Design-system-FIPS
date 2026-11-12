@@ -29,14 +29,14 @@ Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.
 - Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant="default"`/`"destructive"`.
 - Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.
 - `className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.
-- Dependência `file:` ou tgz do pacote: não é fonte confiável. O certo é o registro.
+- Dependência `file:` ou tgz do pacote: só vale o tgz gerado por `npx fips-ds vendor <versão publicada>` (com `.integrity`); tgz de branch é proibido.
 - Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app.
 
 ## 4. O que `npx fips-ds check` confere (sai com 1 se achar)
 - `import-inexistente`: nome importado de `@fips-app/ds-fips` que o `.d.ts` instalado não exporta.
 - `var-sem-declaracao`: `var(--x)` sem `--x:` no `styles.css` instalado nem no CSS do app.
 - `hex-literal`: cor hex literal em `.tsx`, `.jsx` ou `.css` do app.
-- `dependencia-local`: `@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; o certo é o registro.
+- `dependencia-local`: `@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; só vale `file:vendor/fips-app-ds-fips-X.tgz` gerado por `npx fips-ds vendor X` (sha512 igual ao `.integrity` tirado do registro, versão X dentro do tgz, lock no mesmo arquivo).
 - `casca-local`: casca, entrada ou banner feitos no app: `login-v1-container`, `liquid-card`, `casca-hero-*`, `PaginaCabecalho`, `PageHero` com filhos.
 - `classname-visual`: classe visual (cor, borda, raio, sombra, altura, padding, fonte, anel, opacidade, size, outline) em `className` de `Button`, `Input`, `Select`, `Textarea`, `TabsList`, `TabsTrigger` do pacote, também com prefixo (`sm:`, `hover:`, `dark:`, `data-[...]:`).
 

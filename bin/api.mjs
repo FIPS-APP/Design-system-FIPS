@@ -2,8 +2,11 @@
 // Usado por `bin/fips-ds.mjs` (no app) e por `scripts/gerar-ai.mjs` (no build do pacote).
 // Nada aqui é digitado à mão: exports e props saem do compilador do TypeScript sobre o `.d.ts`,
 // tokens saem do `styles.css`.
+import crypto from 'node:crypto'
 import fs from 'node:fs'
+import zlib from 'node:zlib'
 import path from 'node:path'
+import { execFileSync } from 'node:child_process'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { GOVERNED_COMPONENTS } from '../eslint/index.js'
@@ -147,12 +150,84 @@ export function declaracoes(texto) {
   return new Set([...texto.matchAll(/(?<![\w-])(--[A-Za-z0-9_-]+)\s*['"]?\s*:/g)].map((m) => m[1]))
 }
 
+// ---------- pacote local da versão publicada (vendor) ----------
+// `npx fips-ds vendor X` baixa o tgz publicado para `vendor/` e grava ao lado o `dist.integrity` do registro.
+export const VENDOR = /^file:(?:\.\/)?(vendor\/fips-app-ds-fips-(\d+\.\d+\.\d+(?:-[\w.]+)?)\.tgz)$/
+export const sha512 = (buf) => 'sha512-' + crypto.createHash('sha512').update(buf).digest('base64')
+
+// `version` do `package/package.json` dentro do tgz (tar ustar, sem dependência).
+export function versaoDoTgz(arq) {
+  const tar = zlib.gunzipSync(fs.readFileSync(arq))
+  for (let i = 0; i + 512 <= tar.length;) {
+    const cab = tar.subarray(i, i + 512)
+    if (cab.every((b) => b === 0)) break
+    const txt = (a, b) => cab.subarray(a, b).toString('utf8').replace(/\0.*$/s, '')
+    const nome = [txt(345, 500), txt(0, 100)].filter(Boolean).join('/')
+    const tam = parseInt(txt(124, 136).trim() || '0', 8)
+    if (nome === 'package/package.json') return JSON.parse(tar.subarray(i + 512, i + 512 + tam).toString('utf8')).version
+    i += 512 + Math.ceil(tam / 512) * 512
+  }
+  return null
+}
+
+// Motivo para recusar a dependência vendorizada, ou null se ela é a cópia exata da versão publicada.
+export function conferirVendor(app, espec, avisos = []) {
+  const m = espec.match(VENDOR)
+  if (!m) return 'fora de vendor/fips-app-ds-fips-X.tgz'
+  const [, rel, versao] = m
+  const tgz = path.join(app, rel)
+  const pastaVendor = path.join(app, 'vendor')
+  const todos = fs.existsSync(pastaVendor) ? fs.readdirSync(pastaVendor).filter((f) => /^fips-app-ds-fips-.*\.tgz$/.test(f)) : []
+  if (todos.length > 1) avisos.push(`vendor/ tem ${todos.length} tgz do pacote; vale só o referenciado: ${rel}`)
+  if (!fs.existsSync(tgz)) return `${rel} não existe`
+  if (!fs.existsSync(`${tgz}.integrity`)) return `${rel}.integrity não existe: gere com npx fips-ds vendor ${versao}`
+  const esperado = fs.readFileSync(`${tgz}.integrity`, 'utf8').trim()
+  if (sha512(fs.readFileSync(tgz)) !== esperado) return `integridade de ${rel} não bate com ${rel}.integrity (tgz trocado ou de branch)`
+  let dentro
+  try { dentro = versaoDoTgz(tgz) } catch (e) { return `não li ${rel}: ${e.message}` }
+  if (dentro !== versao) return `${rel} tem version ${dentro} por dentro, não ${versao}`
+  const lockPath = path.join(app, 'package-lock.json')
+  if (fs.existsSync(lockPath)) {
+    const ent = JSON.parse(fs.readFileSync(lockPath, 'utf8')).packages?.[`node_modules/${PACOTE}`]
+    const norm = (r) => String(r).replace(/^file:(?:\.\/)?/, '')
+    if (ent?.resolved && norm(ent.resolved) !== rel) return `package-lock.json resolve ${PACOTE} em ${ent.resolved}, não em ${espec}`
+    if (ent?.integrity && ent.integrity !== esperado) return `package-lock.json tem outra integridade para ${rel}`
+  }
+  return null
+}
+
+// Baixa a versão publicada para `<app>/vendor/`, confere com o `dist.integrity` do registro, grava o `.integrity`
+// e instala com versão exata. O token vem só do ambiente (NODE_AUTH_TOKEN), pelo `.npmrc` do app.
+export function vendor(app, versao, { npm = process.platform === 'win32' ? 'npm.cmd' : 'npm', log = () => {} } = {}) {
+  app = path.resolve(app)
+  if (!/^\d+\.\d+\.\d+(?:-[\w.]+)?$/.test(versao || '')) throw new Error(`versão inválida: "${versao ?? ''}" (use a versão publicada, ex.: 0.23.1)`)
+  const rodar = (args) => execFileSync(npm, args, { cwd: app, encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] })
+  const integridade = rodar(['view', `${PACOTE}@${versao}`, 'dist.integrity']).trim()
+  if (!/^sha512-/.test(integridade)) throw new Error(`o registro não deu dist.integrity sha512 para ${PACOTE}@${versao} (deu "${integridade}")`)
+  const pasta = path.join(app, 'vendor')
+  fs.mkdirSync(pasta, { recursive: true })
+  const nome = `fips-app-ds-fips-${versao}.tgz`
+  const tgz = path.join(pasta, nome)
+  const baixado = path.join(pasta, JSON.parse(rodar(['pack', `${PACOTE}@${versao}`, '--pack-destination', pasta, '--json']))[0].filename)
+  if (baixado !== tgz) fs.renameSync(baixado, tgz)
+  const calculada = sha512(fs.readFileSync(tgz))
+  if (calculada !== integridade) {
+    fs.rmSync(tgz, { force: true })
+    throw new Error(`integridade do tgz baixado (${calculada}) não bate com o registro (${integridade})`)
+  }
+  fs.writeFileSync(`${tgz}.integrity`, integridade + '\n')
+  log(`vendor/${nome} e vendor/${nome}.integrity gravados (${integridade})`)
+  rodar(['install', '--save-exact', `file:vendor/${nome}`])
+  log(`${PACOTE}: "file:vendor/${nome}" no package.json`)
+  return { tgz, integridade }
+}
+
 // ---------- o que o check confere ----------
 export const REGRAS = [
   { codigo: 'import-inexistente', descricao: 'nome importado de `@fips-app/ds-fips` que o `.d.ts` instalado não exporta' },
   { codigo: 'var-sem-declaracao', descricao: '`var(--x)` sem `--x:` no `styles.css` instalado nem no CSS do app' },
   { codigo: 'hex-literal', descricao: 'cor hex literal em `.tsx`, `.jsx` ou `.css` do app' },
-  { codigo: 'dependencia-local', descricao: '`@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; o certo é o registro' },
+  { codigo: 'dependencia-local', descricao: '`@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; só vale `file:vendor/fips-app-ds-fips-X.tgz` gerado por `npx fips-ds vendor X` (sha512 igual ao `.integrity` tirado do registro, versão X dentro do tgz, lock no mesmo arquivo)' },
   { codigo: 'casca-local', descricao: 'casca, entrada ou banner feitos no app: `login-v1-container`, `liquid-card`, `casca-hero-*`, `PaginaCabecalho`, `PageHero` com filhos' },
   { codigo: 'classname-visual', descricao: `classe visual (cor, borda, raio, sombra, altura, padding, fonte, anel, opacidade, size, outline) em \`className\` de ${[...GOVERNED_COMPONENTS].map((n) => '`' + n + '`').join(', ')} do pacote, também com prefixo (\`sm:\`, \`hover:\`, \`dark:\`, \`data-[...]:\`)` },
 ]
@@ -205,7 +280,11 @@ export function conferir(app, { ds } = {}) {
     const pkg = JSON.parse(fs.readFileSync(pkgApp, 'utf8'))
     for (const campo of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
       const v = pkg[campo]?.[PACOTE]
-      if (v && (/^(file:|link:|https?:|git)/.test(v) || /\.tgz$/.test(v))) add('dependencia-local', pkgApp, 1, `${campo}: "${PACOTE}": "${v}"`)
+      if (!v || !(/^(file:|link:|https?:|git)/.test(v) || /\.tgz$/.test(v))) continue
+      if (VENDOR.test(v)) {
+        const motivo = conferirVendor(app, v, avisos)
+        if (motivo) add('dependencia-local', pkgApp, 1, `${campo}: "${PACOTE}": "${v}" (${motivo})`)
+      } else add('dependencia-local', pkgApp, 1, `${campo}: "${PACOTE}": "${v}"`)
     }
   }
 
