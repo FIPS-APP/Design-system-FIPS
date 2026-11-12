@@ -609,11 +609,13 @@ function constanteDoChrome(nome) {
   return m[1]
 }
 
-// Lê `linear-gradient(135deg,#a,#b 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
+// Lê `linear-gradient(135deg,#a,var(--b) 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
 function paradasDoDegrade(valor) {
   const itens = valor.match(/linear-gradient\([^,]+,(.+)\)$/)[1].split(/,(?![^(]*\))/).map((s) => s.trim())
   const paradas = itens.map((item, i) => {
-    const [hex, pos] = item.split(/\s+/)
+    const [valor, pos] = item.split(/\s+/)
+    // A parada pode ser hex ou var(--neu-accent-bg-*), resolvida pelo globals.css.
+    const hex = resolver(valor, 'claro')
     assert.match(hex, /^#[\da-f]{6}$/i, `parada fora de hex de 6 dígitos: ${item}`)
     return [cor(hex, 'claro'), pos ? Number(pos.replace('%', '')) : i === 0 ? 0 : i === itens.length - 1 ? 100 : NaN]
   })
