@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.0',
+    date: '2026-11-12',
+    title: 'Rodada de 12/11 b',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Reúne os PRs #187, #189, #190, #191, #192, #193, #194 e #195: `Skeleton`; `DropdownMenu` e `Separator`; `SelectBusca`; `Button` com `xs`, `grade` e `dangerStrong`; mapa oficial de status do `Badge`; `npx fips-ds vendor X`; laranja de texto da casca e da Home acima de 4,5:1. Detalhe de cada um nas entradas 0.23.6 e 0.24.1 a 0.24.7. Dependências novas, com versão exata: `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7. Nada removido.',
+      },
+    ],
+  },
+  {
     version: '0.24.7',
     date: '2026-11-12',
     title: 'Button size grade para grade densa',
