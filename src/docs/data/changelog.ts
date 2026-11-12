@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.5',
+    date: '2026-11-12',
+    title: 'Button dangerStrong e xs',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Button` ganha `variant="dangerStrong"` (fundo `--color-btn-danger-strong`, texto branco: 6,47:1 em repouso e 8,31:1 no hover, claro e escuro) e `size="xs"` (24 px de altura, fonte de 11 px, só para linha densa com mouse; não é alvo de toque). Tokens novos `--color-btn-danger-strong` e `--color-btn-danger-strong-hover`. `touch` e as demais variantes não mudam.',
+      },
+    ],
+  },
+  {
     version: '0.24.4',
     date: '2026-11-12',
     title: 'Select com busca',

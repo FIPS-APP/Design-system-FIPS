@@ -60,6 +60,7 @@ function DSButton({ variant = "primary", size = "medium", disabled = false, load
     medium: { padding: "8px 20px", fontSize: "13px", height: "36px", iconSize: 14 },
     large:  { padding: "10px 28px", fontSize: "14px", height: "42px", iconSize: 16 },
     touch:  { padding: "12px 28px", fontSize: "14px", height: "48px", iconSize: 20 },
+    xs:     { padding: "0 10px", fontSize: "11px", height: "24px", iconSize: 12 },
   };
 
   const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
@@ -73,6 +74,7 @@ function DSButton({ variant = "primary", size = "medium", disabled = false, load
     accent:    { bg: C.amareloEscuro, bgH: isDark ? "#FDC24E" : "#E0820A", color: isDark ? "#002A68" : C.branco, border: "transparent" },
     save:      { bg: isDark ? "#008842" : C.verdeFloresta, bgH: isDark ? "#006D35" : C.verdeEscuro, color: C.branco, border: "transparent" },
     danger:    { bg: isDark ? "#DC2626" : C.danger, bgH: isDark ? "#B91C1C" : C.dangerDark, color: C.branco, border: "transparent" },
+    dangerStrong: { bg: "#B91C1C", bgH: "#991B1B", color: C.branco, border: "transparent" },
     link:      { bg: "transparent",   bgH: "transparent",    color: isDark ? "#93BDE4" : "#004B9B", border: "transparent", underline: true },
     ouro:      { bg: "var(--color-accent)", bgH: "var(--color-accent-strong)", color: "var(--color-primary-hover)", border: "transparent" },
   };
@@ -274,8 +276,8 @@ const Fn = {
   mono: "'Fira Code', monospace",
 };
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "inverse" | "ghost" | "accent" | "ouro" | "save" | "danger" | "link";
-type ButtonSize = "small" | "medium" | "large" | "touch";
+type ButtonVariant = "dangerStrong" | "primary" | "secondary" | "outline" | "inverse" | "ghost" | "accent" | "ouro" | "save" | "danger" | "link";
+type ButtonSize = "xs" | "small" | "medium" | "large" | "touch";
 
 interface ButtonProps {
   variant?: ButtonVariant;
@@ -296,6 +298,7 @@ export function Button({ variant = "primary", size = "medium", disabled = false,
     medium: { padding: "8px 20px", fontSize: "13px", height: "36px", iconSize: 14 },
     large:  { padding: "10px 28px", fontSize: "14px", height: "42px", iconSize: 16 },
     touch:  { padding: "12px 28px", fontSize: "14px", height: "48px", iconSize: 20 },
+    xs:     { padding: "0 10px", fontSize: "11px", height: "24px", iconSize: 12 },
   };
 
   const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
@@ -309,6 +312,7 @@ export function Button({ variant = "primary", size = "medium", disabled = false,
     accent:    { bg: C.amareloEscuro, bgH: isDark ? "#FDC24E" : "#E0820A", color: isDark ? "#002A68" : C.branco, border: "transparent" },
     save:      { bg: isDark ? "#008842" : C.verdeFloresta, bgH: isDark ? "#006D35" : C.verdeEscuro, color: C.branco, border: "transparent" },
     danger:    { bg: isDark ? "#DC2626" : C.danger, bgH: isDark ? "#B91C1C" : C.dangerDark, color: C.branco, border: "transparent" },
+    dangerStrong: { bg: "#B91C1C", bgH: "#991B1B", color: C.branco, border: "transparent" },
     link:      { bg: "transparent",   bgH: "transparent",    color: isDark ? "#93BDE4" : "#004B9B", border: "transparent", underline: true },
     ouro:      { bg: C.amareloOuro,   bgH: C.amareloEscuro,  color: C.azulEscuro,   border: "transparent" },
   };
@@ -730,6 +734,49 @@ export default function DSFIPSButtons() {
                 <p style={{...guideText, color: C.danger}}>Telas de escritório com mouse, tabelas e listagens. Nelas, Medium ou Small.</p>
                 <div style={guideLabel}>Exemplo FIPS</div>
                 <p style={guideExemplo}>"Concluir etapa" e "Próximo item" na inspeção em campo.</p>
+              </div>
+            </div>
+
+            {/* XS */}
+            <div style={guideCard}>
+              <div style={guideHeader}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <DSButton variant="secondary" size="xs">Filtrar</DSButton>
+                  <DSButton variant="dangerStrong" size="xs">Excluir</DSButton>
+                </div>
+              </div>
+              <div style={guideBody}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: C.cinzaEscuro, fontFamily: FONTS.title }}>Extra pequeno</span>
+                  <code style={guideToken}>size="xs" · height: 24px · font: 11px</code>
+                </div>
+                <div style={{...guideLabel, marginTop: 14}}>Significado</div>
+                <p style={guideText}>Altura de 24px, padding de 10px, fonte de 11px, ícone de 12px. Não é alvo de toque principal.</p>
+                <div style={guideLabel}>Onde usar</div>
+                <p style={guideText}>Ações secundárias dentro de linhas densas de tabela e chips de filtro, com mouse.</p>
+                <div style={guideLabel}>Onde NÃO usar</div>
+                <p style={{...guideText, color: C.danger}}>Ação principal, celular ou campo (use Touch, 48px). Fora de linha densa, prefira Small.</p>
+              </div>
+            </div>
+
+            {/* DANGER STRONG */}
+            <div style={guideCard}>
+              <div style={guideHeader}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <DSButton variant="dangerStrong">Excluir definitivamente</DSButton>
+                </div>
+              </div>
+              <div style={guideBody}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: C.cinzaEscuro, fontFamily: FONTS.title }}>Danger strong</span>
+                  <code style={guideToken}>variant="dangerStrong" · fundo #B91C1C · texto branco</code>
+                </div>
+                <div style={{...guideLabel, marginTop: 14}}>Significado</div>
+                <p style={guideText}>Vermelho cheio e escuro, texto branco a 6,47:1 em repouso e 8,31:1 no hover, nos dois temas.</p>
+                <div style={guideLabel}>Onde usar</div>
+                <p style={guideText}>Confirmação final de ação destrutiva e irreversível, dentro de modal.</p>
+                <div style={guideLabel}>Onde NÃO usar</div>
+                <p style={{...guideText, color: C.danger}}>Ações reversíveis (use danger) e mais de um por tela.</p>
               </div>
             </div>
 
