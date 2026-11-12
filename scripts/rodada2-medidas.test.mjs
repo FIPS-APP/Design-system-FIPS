@@ -134,6 +134,15 @@ test('17. FilterBlock: raio 12/24, padding 0 no cartão, faixa interna 14/18 com
   assert.match(s, /<input[^>]*class="h-\[34px\]/)
 })
 
+test('17b. FilterBlock: abaixo de 640px a busca desce para a 2ª linha em largura total; de 640px em diante fica na linha', () => {
+  const s = render(M.FilterBlock, { search: '', onSearchChange() {}, filters: 'x' })
+  const caixa = s.match(/<div class="([^"]*)"><svg[^>]*lucide-search/)[1].split(/\s+/)
+  for (const c of ['order-last', 'w-full', 'basis-full', 'sm:order-none', 'sm:w-auto', 'sm:flex-1', 'sm:min-w-[160px]']) {
+    assert.ok(caixa.includes(c), `falta ${c}: ${caixa.join(' ')}`)
+  }
+  assert.ok(!caixa.includes('flex-1') && !caixa.includes('min-w-[160px]'), 'flex-1 e min-w sem prefixo prendem a busca na 1ª linha no celular')
+})
+
 test('18. AdminTablePagination: 11px, fundo suave, padding 10/16', () => {
   const s = render(M.AdminTablePagination, { page: 1, pageCount: 2, itemsPerPage: 10, totalItems: 12, onPageChange() {} })
   const raiz = s.match(/^<div class="([^"]*)"/)[1]
