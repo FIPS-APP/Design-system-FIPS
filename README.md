@@ -92,6 +92,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Tipo de alteração | Incremento | Exemplo |
 |---|---|---|
+| 0.23.5 | 2026-11-11 | `Button` ganha `size="touch"`: altura de 48 px (o `lg` tem 42 px), mesmo padding, raio e fonte do `lg`, ícone de 20 px, para app de campo usado com luva. Cores das variantes não mudam (contraste igual). Muda para quem já usa: nada; quem tirava a altura do botão com `min-h-12` por `className` troca por `size="touch"`. `npm test` mede a altura |
 | 0.23.4 | 2026-11-11 | `LoginDsShell`: o rótulo da estação Segurança usa `--color-fips-red-300` (5,25:1 sobre a coluna, nos dois temas; era 2,65:1 com `--color-fips-red-600`). O ponto da estação e as outras 4 estações não mudam. |
 | 0.23.3 | 2026-11-11 | `Toast` no pacote, com `ToastViewport` e `useToast`: cinco variantes (`sucesso`, `erro`, `atencao`, `info`, `neutro`), título, mensagem, ação opcional, X e barra de tempo, pilha de até 5 no canto superior direito. Cores só por token semântico (nada de hex): texto de 4,88:1 a 10,70:1 no claro e de 6,04:1 a 12,51:1 no escuro; destaque de 3,44:1 a 10,49:1 no claro e de 4,01:1 a 9,18:1 no escuro. A página `/docs/components/toast` usa o componente do pacote e a exceção sai de `scripts/exports-site.test.mjs`. Muda para quem já usa: nada |
 | 0.23.2 | 2026-11-11 | `FilterBlock` no celular como na Gestão OPA: abaixo de 640 px a busca vai para uma segunda linha, em largura total; de 640 px em diante nada muda. |

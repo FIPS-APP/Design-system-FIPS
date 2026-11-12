@@ -59,6 +59,7 @@ function DSButton({ variant = "primary", size = "medium", disabled = false, load
     small:  { padding: "6px 14px", fontSize: "12px", height: "30px", iconSize: 13 },
     medium: { padding: "8px 20px", fontSize: "13px", height: "36px", iconSize: 14 },
     large:  { padding: "10px 28px", fontSize: "14px", height: "42px", iconSize: 16 },
+    touch:  { padding: "12px 28px", fontSize: "14px", height: "48px", iconSize: 20 },
   };
 
   const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
@@ -274,7 +275,7 @@ const Fn = {
 };
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "inverse" | "ghost" | "accent" | "ouro" | "save" | "danger" | "link";
-type ButtonSize = "small" | "medium" | "large";
+type ButtonSize = "small" | "medium" | "large" | "touch";
 
 interface ButtonProps {
   variant?: ButtonVariant;
@@ -294,6 +295,7 @@ export function Button({ variant = "primary", size = "medium", disabled = false,
     small:  { padding: "6px 14px", fontSize: "12px", height: "30px", iconSize: 13 },
     medium: { padding: "8px 20px", fontSize: "13px", height: "36px", iconSize: 14 },
     large:  { padding: "10px 28px", fontSize: "14px", height: "42px", iconSize: 16 },
+    touch:  { padding: "12px 28px", fontSize: "14px", height: "48px", iconSize: 20 },
   };
 
   const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
@@ -610,21 +612,21 @@ export default function DSFIPSButtons() {
           </div>
         </Section>
 
-        <Section number="03" title="Tamanhos" desc="Três tamanhos padronizados. Cada um é projetado para um contexto de uso específico no ecossistema FIPS.">
+        <Section number="03" title="Tamanhos" desc="Quatro tamanhos padronizados. Cada um é projetado para um contexto de uso específico no ecossistema FIPS.">
           {/* Preview row */}
           <Card style={{ marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "flex-end", gap: 20, flexWrap: "wrap" }}>
-              {["small", "medium", "large"].map((sz) => (
+              {["small", "medium", "large", "touch"].map((sz) => (
                 <div key={sz} style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
                   <DSButton variant="primary" size={sz}>{sz.charAt(0).toUpperCase() + sz.slice(1)}</DSButton>
-                  <span style={{ fontSize: 10, color: C.textLight, fontFamily: FONTS.mono }}>{sz === "small" ? "30px" : sz === "medium" ? "36px" : "42px"}</span>
+                  <span style={{ fontSize: 10, color: C.textLight, fontFamily: FONTS.mono }}>{sz === "small" ? "30px" : sz === "medium" ? "36px" : sz === "large" ? "42px" : "48px"}</span>
                 </div>
               ))}
               <Divider />
-              {["small", "medium", "large"].map((sz) => (
+              {["small", "medium", "large", "touch"].map((sz) => (
                 <div key={`s-${sz}`} style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
                   <DSButton variant="save" size={sz}>{sz.charAt(0).toUpperCase() + sz.slice(1)}</DSButton>
-                  <span style={{ fontSize: 10, color: C.textLight, fontFamily: FONTS.mono }}>{sz === "small" ? "30px" : sz === "medium" ? "36px" : "42px"}</span>
+                  <span style={{ fontSize: 10, color: C.textLight, fontFamily: FONTS.mono }}>{sz === "small" ? "30px" : sz === "medium" ? "36px" : sz === "large" ? "42px" : "48px"}</span>
                 </div>
               ))}
             </div>
@@ -704,6 +706,30 @@ export default function DSFIPSButtons() {
                 <p style={{...guideText, color: C.danger}}>Nunca em tabelas ou listagens — ocupa muito espaço. Não usar para ações secundárias. Evitar múltiplos Large na mesma área.</p>
                 <div style={guideLabel}>Exemplo FIPS</div>
                 <p style={guideExemplo}>"Entrar" na tela de login do portal FIPS; "Submeter ideia" no App Ideias; "Aprovar requisição" (verde) em fluxos finais de aprovação; "Iniciar treinamento" no SSMA.</p>
+              </div>
+            </div>
+
+            {/* TOUCH */}
+            <div style={guideCard}>
+              <div style={guideHeader}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <DSButton variant="primary" size="touch">Touch</DSButton>
+                  <DSButton variant="save" size="touch" icon={<IconCheck size={20} />}>Concluir</DSButton>
+                </div>
+              </div>
+              <div style={guideBody}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: C.cinzaEscuro, fontFamily: FONTS.title }}>Touch</span>
+                  <code style={guideToken}>size="touch" · height: 48px · font: 14px</code>
+                </div>
+                <div style={{...guideLabel, marginTop: 14}}>Significado</div>
+                <p style={guideText}>Alvo de toque de 48px, mesmo padding, raio e fonte do Large, ícone de 20px. Só a altura muda; as cores das variantes são as mesmas.</p>
+                <div style={guideLabel}>Onde usar</div>
+                <p style={guideText}>Apps de campo usados com luva ou em movimento: inspeção, execução, formulários no celular.</p>
+                <div style={guideLabel}>Onde NÃO usar</div>
+                <p style={{...guideText, color: C.danger}}>Telas de escritório com mouse, tabelas e listagens. Nelas, Medium ou Small.</p>
+                <div style={guideLabel}>Exemplo FIPS</div>
+                <p style={guideExemplo}>"Concluir etapa" e "Próximo item" na inspeção em campo.</p>
               </div>
             </div>
 
