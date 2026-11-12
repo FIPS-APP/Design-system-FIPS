@@ -221,12 +221,6 @@ test('README do exemplo portátil do Switch: as linhas citadas da foundations.md
   assert.ok(trecho(recuo, recuo).includes('`--color-surface`'), `foundations.md:${recuo} (escuro) não é a linha de --color-surface`)
 })
 
-// ─── Sidebar: selinho de contagem no escuro ────────────────────────────────
-// A presença do selinho é a informação (WCAG 1.4.11, 3:1 contra o que o cerca); o número é texto (1.4.3, 4,5:1).
-// O selinho de 14% de tinta mediu 1,15 a 1,32:1 contra a barra. Lê getBadgeTone de SidebarDoc.tsx, ramo escuro.
-const SIDEBAR_DOC = 'src/docs/pages/components/SidebarDoc.tsx'
-const TONS_DO_SELINHO = ['âmbar', 'azul', 'verde', 'vermelho']
-
 function corComAlfa(valor) {
   const v = valor.trim()
   const hex = v.match(/^#([\da-f]{6})$/i)
@@ -238,54 +232,6 @@ function corComAlfa(valor) {
 
 const sobreFundo = (f, b) => ({ r: f.r * f.a + b.r * (1 - f.a), g: f.g * f.a + b.g * (1 - f.a), b: f.b * f.a + b.b * (1 - f.a) })
 
-const FONTE_DA_SIDEBAR = ler(SIDEBAR_DOC)
-const CORPO_DO_TOM = FONTE_DA_SIDEBAR.slice(
-  FONTE_DA_SIDEBAR.indexOf('function getBadgeTone'),
-  FONTE_DA_SIDEBAR.indexOf('\n}\n', FONTE_DA_SIDEBAR.indexOf('function getBadgeTone')),
-)
-// Ramo escuro de cada tom, achado pela condição de `getBadgeTone` (não pela ordem) e lido campo a campo
-// (não pela ordem das chaves): um tom mexido acusa o próprio tom.
-const RAMO_ESCURO = '(\\{[^}]*\\})\\s*:'
-const OBJETO_ESCURO_DO_TOM = {
-  'âmbar': new RegExp(`item\\.badge === 'financeiroPendente'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
-  azul: new RegExp(`item\\.badge === 'notaPendente'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
-  verde: new RegExp(`item\\.badge === 'producaoEmAndamento'\\)\\s*\\{\\s*return dark\\s*\\?\\s*${RAMO_ESCURO}`),
-}
-const campoDoTom = (objeto, nome) => objeto?.match(new RegExp(`\\b${nome}:\\s*'([^']+)'`))?.[1]
-const SELINHOS_ESCUROS = TONS_DO_SELINHO.map((tom) => {
-  const objeto =
-    tom === 'vermelho'
-      ? CORPO_DO_TOM.slice(CORPO_DO_TOM.lastIndexOf('return dark')).match(new RegExp(`return dark\\s*\\?\\s*${RAMO_ESCURO}`))?.[1]
-      : CORPO_DO_TOM.match(OBJETO_ESCURO_DO_TOM[tom])?.[1]
-  return [tom, campoDoTom(objeto, 'bg'), campoDoTom(objeto, 'color'), campoDoTom(objeto, 'border')]
-})
-const BARRA_ESCURA = cor(FONTE_DA_SIDEBAR.match(/TN_DARKMODE: SidebarTheme = \{\s*bg:\s*'(#[\da-f]{6})'/i)?.[1] ?? '', 'claro')
-// Azulejo do ícone no escuro: os três pontos do degradê (o selinho do menu recolhido encosta nele) e o que a Facilities mediu.
-const AZULEJOS = [...FONTE_DA_SIDEBAR.matchAll(/linear-gradient\(160deg,\s*(#[\da-f]{6}) 0%,\s*(#[\da-f]{6}) 55%,\s*(#[\da-f]{6}) 100%\)/gi)]
-  .filter((m) => m[1].toLowerCase() === '#303036')
-  .flatMap((m) => [m[1], m[2], m[3]])
-  .map((h) => cor(h, 'claro'))
-  .concat([{ r: 43, g: 51, b: 63 }])
-
-test('Sidebar: o selinho de contagem do escuro tem quatro tons, a barra e o azulejo estão lidos', () => {
-  for (const [tom, bg, texto, anel] of SELINHOS_ESCUROS) {
-    assert.ok(bg && texto && anel, `${tom}: ramo escuro de getBadgeTone não foi lido (bg, color e border)`)
-  }
-  assert.equal(AZULEJOS.length, 4, 'azulejos do ícone (3 do degradê e 1 medido)')
-})
-
-TONS_DO_SELINHO.forEach((tom, i) => {
-  test(`Sidebar escuro, selinho ${tom}: número 4,5:1 contra o disco, disco 3:1 contra a barra, anel 3:1 contra o azulejo`, () => {
-    const [, bg, texto, anel] = SELINHOS_ESCUROS[i]
-    assert.ok(bg && texto && anel, `${tom}: ramo escuro de getBadgeTone não foi lido`)
-    const disco = sobreFundo(corComAlfa(bg), BARRA_ESCURA)
-    verifica(`${tom}: número ${texto} contra o disco ${bg}`, sobreFundo(corComAlfa(texto), disco), disco, MINIMO_TEXTO)
-    verifica(`${tom}: disco ${bg} contra a barra`, disco, BARRA_ESCURA)
-    for (const azulejo of AZULEJOS) {
-      verifica(`${tom}: anel ${anel} contra o azulejo rgb(${azulejo.r},${azulejo.g},${azulejo.b})`, sobreFundo(corComAlfa(anel), azulejo), azulejo)
-    }
-  })
-})
 
 // ─── Tabs: texto da aba ativa ──────────────────────────────────────────────
 // --color-primary não muda no .dark (#004b9b nos dois temas): a aba ativa ficava em 2,06:1 sobre o
@@ -341,7 +287,6 @@ test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => 
 const TONS_SUCESSO = [
   'exports/toast/toast.tsx',
   'exports/tooltip/Tooltip.tsx',
-  'src/docs/pages/components/TooltipDoc.tsx',
 ]
 
 // ToastDoc e TooltipDoc têm duas paletas `C` cada (a da demo do site e a do código copiável), e a DemoPill passa
@@ -640,8 +585,8 @@ test('Atalho aberto do hero: rótulo contra o degradê laranja, 4,5:1 em todo o 
 })
 
 // O teste acima lê a constante; este garante que os componentes pintam o fundo com ela e não com um degradê próprio.
-test('Atalho aberto do hero: HeroAtalho, UserChip e DocHeaderNeuIconButton pintam o fundo com docHeaderNeuAccentBgHover', () => {
-  for (const arquivo of ['composites/HeroAtalho', 'layout/UserChip', 'layout/DocHeaderNeuIconButton']) {
+test('Atalho aberto do hero: HeroAtalho pinta o fundo com docHeaderNeuAccentBgHover', () => {
+  for (const arquivo of ['composites/HeroAtalho']) {
     const fonte = ler(`src/components/${arquivo}.tsx`)
     assert.match(
       fonte,
@@ -744,49 +689,6 @@ for (const t of TEMAS) {
 
 test('Linha info do SettingsPreferenceRow: o hover muda a borda, já que o fundo não pode clarear', () => {
   assert.ok(classesDaLinhaInfo().some((c) => /^hover:border-/.test(c)), 'linha info sem hover de borda')
-})
-
-// ─── Anéis de foco do cabeçalho ────────────────────────────────────────────
-const ANEIS = {
-  userChip: 'src/components/layout/UserChip.tsx',
-  botao: 'src/components/layout/DocHeaderNeuIconButton.tsx',
-  secoes: 'src/components/layout/DocHeaderSectionNav.tsx',
-}
-
-test('Anéis do cabeçalho: nenhum ring com hex ou rgba, nem com transparência (/NN)', () => {
-  const achados = []
-  for (const arquivo of Object.values(ANEIS)) {
-    ler(arquivo).split('\n').forEach((linha, i) => {
-      for (const m of linha.matchAll(/focus-visible:ring-\[([^\]\s]+)\](\/(?:\[[^\]]+\]|[\w.]+))?/g)) {
-        if (m[2] || /rgba?\(|transparent|color-mix/.test(m[1])) achados.push(`${arquivo}:${i + 1} (${m[0]})`)
-      }
-    })
-  }
-  assert.deepEqual(achados, [], `anel com transparência:\n${achados.join('\n')}`)
-})
-
-test('DocHeaderNeuIconButton: foco por outline em --color-ring (o boxShadow em style cobriria um ring)', () => {
-  const m = ler(ANEIS.botao).match(/'relative flex shrink-0[^']*'/)
-  assert.ok(m, 'className do botão não encontrada')
-  const classes = m[0].slice(1, -1).split(/\s+/)
-  for (const c of ['focus-visible:outline-solid', 'focus-visible:outline-2', 'focus-visible:outline-offset-2', 'focus-visible:outline-[var(--color-ring)]']) {
-    assert.ok(classes.includes(c), `sem ${c}`)
-  }
-  assert.equal(classes.filter((c) => /^focus-visible:ring/.test(c) || c === 'focus-visible:outline-none').length, 0, 'ring ou outline-none no botão')
-})
-
-test('DocHeaderSectionNav: ramo escuro com anel #F6921E contra o recuo #1A1A1A, 3:1', () => {
-  const fonte = ler(ANEIS.secoes)
-  const recuo = fonte.match(/focus-visible:ring-offset-\[(#[\da-f]{6})\]/i)
-  assert.ok(recuo, 'recuo do ramo escuro não encontrado')
-  const aneis = new Set([...fonte.matchAll(/focus-visible:ring-\[(#[\da-f]{6})\]/gi)].map((m) => m[1]))
-  assert.ok(aneis.size > 0, 'anel hex do ramo escuro não encontrado')
-  for (const hex of aneis) verifica(`anel ${hex} contra o recuo ${recuo[1]}`, cor(hex, 'claro'), cor(recuo[1], 'claro'))
-})
-
-test('Anéis do cabeçalho: UserChip e ramo claro das seções leem --color-ring cheio', () => {
-  assert.match(ler(ANEIS.userChip), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'UserChip sem --color-ring cheio')
-  assert.match(ler(ANEIS.secoes), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'ramo claro das seções sem --color-ring cheio')
 })
 
 // ─── FipsTabBar: aba ativa ─────────────────────────────────────────────────

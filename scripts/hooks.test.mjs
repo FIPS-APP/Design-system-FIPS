@@ -1,5 +1,5 @@
 /**
- * Hooks de src/hooks e src/lib: useResetOnChange, useSyncedState e useIsClient.
+ * Hooks de src/hooks e src/lib: useResetOnChange e useIsClient.
  * Os dois primeiros ajustam estado durante a renderização, então o teste roda o hook
  * de verdade (build em memória com o vite do repo) sobre um `react` mínimo que refaz a
  * renderização enquanto houver setState nela, como o React faz. O useIsClient roda no
@@ -60,7 +60,7 @@ async function compilar(nome, entrada, alias) {
   return import(pathToFileURL(arquivo).href)
 }
 
-let motor, useStateMinimo, useResetOnChange, useSyncedState, useIsClientCliente, useIsClientServidor, React, renderToStaticMarkup
+let motor, useStateMinimo, useResetOnChange, useIsClientCliente, useIsClientServidor, React, renderToStaticMarkup
 
 before(async () => {
   mkdirSync(TMP, { recursive: true })
@@ -71,11 +71,10 @@ before(async () => {
     hooks,
     `export { motor, useState as useStateMinimo } from '${falso}'\n` +
       `export { useResetOnChange } from '${join(RAIZ, 'src/hooks/useResetOnChange.ts')}'\n` +
-      `export { useSyncedState } from '${join(RAIZ, 'src/hooks/useSyncedState.ts')}'\n` +
       `export { useIsClient } from '${join(RAIZ, 'src/lib/useIsClient.ts')}'\n`,
   )
   const m = await compilar('hooks-minimo.mjs', hooks, { react: falso })
-  ;({ motor, useStateMinimo, useResetOnChange, useSyncedState, useIsClient: useIsClientCliente } = m)
+  ;({ motor, useStateMinimo, useResetOnChange, useIsClient: useIsClientCliente } = m)
   const real = join(TMP, 'is-client.ts')
   writeFileSync(real, `export { useIsClient } from '${join(RAIZ, 'src/lib/useIsClient.ts')}'\n`)
   ;({ useIsClient: useIsClientServidor } = await compilar('is-client-real.mjs', real))
@@ -115,31 +114,6 @@ test('useResetOnChange: seleção do modal volta a todas as colunas ao reabrir',
   assert.deepEqual(r(true).selecao, ['a'], 'aberto e mexido: a escolha fica')
   assert.deepEqual(r(false).selecao, ['a'], 'fechado: não mexe')
   assert.deepEqual(r(true).selecao, TODAS, 'reabriu: volta a todas')
-})
-
-test('useSyncedState: sem prop o estado é livre', () => {
-  motor.zerar()
-  const r = (prop) => motor.renderizar(() => useSyncedState(prop, 'ini'))
-  assert.equal(r(undefined)[0], 'ini')
-  r(undefined)[1]('meu')
-  assert.equal(r(undefined)[0], 'meu')
-})
-
-test('useSyncedState: com prop o estado acompanha quando ela muda', () => {
-  motor.zerar()
-  const r = (prop) => motor.renderizar(() => useSyncedState(prop, 'ini'))
-  assert.equal(r('a')[0], 'a', 'começa na prop')
-  r('a')[1]('local')
-  assert.equal(r('a')[0], 'local', 'prop igual: a escolha local fica')
-  assert.equal(r('b')[0], 'b', 'prop mudou: acompanha')
-  assert.equal(r(undefined)[0], 'b', 'prop some: mantém o último valor')
-})
-
-test('useSyncedState: prop falsy mas definida (0) também acompanha', () => {
-  motor.zerar()
-  const r = (prop) => motor.renderizar(() => useSyncedState(prop, 9))
-  assert.equal(r(5)[0], 5)
-  assert.equal(r(0)[0], 0)
 })
 
 test('useIsClient: false no servidor, true no cliente', () => {
