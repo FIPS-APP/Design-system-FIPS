@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.23.6',
+    date: '2026-11-11',
+    title: 'Pacote local da versão publicada',
+    entries: [
+      { type: 'feature', description: '`npx fips-ds vendor X` baixa a versão publicada para `vendor/fips-app-ds-fips-X.tgz`, confere o sha512 com o `dist.integrity` do registro, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com `--save-exact`. Token só pelo ambiente (`NODE_AUTH_TOKEN`). Se o tgz baixado não bater, apaga e sai com erro.' },
+      { type: 'improvement', description: '`npx fips-ds check` aceita `file:vendor/fips-app-ds-fips-X.tgz` só quando o sha512 do tgz é igual ao `.integrity`, o `package.json` de dentro do tgz tem `version` X e o `package-lock.json` resolve no mesmo arquivo. Tgz sem `.integrity`, trocado à mão ou de branch continua `dependencia-local`. Dois tgz em `vendor/` geram aviso; vale o referenciado.' },
+    ],
+  },
+  {
     version: '0.23.1',
     date: '2026-11-11',
     title: 'O pacote se explica e confere o app',
