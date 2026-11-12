@@ -85,6 +85,7 @@ export {
 } from './input-group'
 export { Progress, type ProgressProps } from './progress'
 export { Select, type SelectProps } from './select'
+export { SelectBusca, type SelectBuscaProps } from './select-busca'
 export {
   Table,
   TableBody,
