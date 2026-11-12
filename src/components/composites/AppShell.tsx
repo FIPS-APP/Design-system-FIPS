@@ -44,7 +44,9 @@ export interface AppShellProps {
  *
  * Comportamento: recolhe sozinho após N segundos sem o ponteiro no menu (preferência do usuário,
  * guardada em `chavePreferencias`); abre ao passar o ponteiro; gaveta abaixo de 1024px, que fecha no
- * Esc, no fundo e ao navegar, e trava a rolagem da página enquanto aberta.
+ * Esc, no fundo e ao navegar, e trava a rolagem da página enquanto aberta. Na gaveta o foco entra no primeiro
+ * item do menu, o resto da página fica `inert` (Tab não sai do menu) e, ao fechar, o foco volta ao botão
+ * "Abrir menu".
  *
  * O app dono do roteador passa `renderLink`, o item ativo (`ativo` nos itens) e a aba ativa.
  */
@@ -64,6 +66,7 @@ export function AppShell({
   const [gavetaAberta, setGavetaAberta] = useState(false)
   const timerRef = useRef<number | null>(null)
   const ponteiroNoMenuRef = useRef(false)
+  const raizRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     guardarPreferencias(chavePreferencias, prefs)
@@ -145,8 +148,31 @@ export function AppShell({
     }
   }, [gavetaAberta])
 
+  // Foco da gaveta: ao abrir vai para o primeiro item do menu e o corpo da página fica `inert` (nem Tab nem
+  // leitor de tela chegam nele); ao fechar o foco volta ao botão "Abrir menu". Passou de 1024px com a gaveta
+  // aberta: o menu vira fixo, então a gaveta fecha.
+  useEffect(() => {
+    if (!gavetaAberta) return
+    const raiz = raizRef.current
+    const corpo = raiz?.querySelector<HTMLElement>('[data-casca="corpo"]')
+    if (!raiz || !corpo) return
+    corpo.setAttribute('inert', '')
+    raiz.querySelector<HTMLElement>('[data-casca="menu"] nav a[href], [data-casca="menu"] nav button')?.focus({ preventScroll: true })
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const aoMudar = () => {
+      if (mq.matches) setGavetaAberta(false)
+    }
+    aoMudar()
+    mq.addEventListener('change', aoMudar)
+    return () => {
+      mq.removeEventListener('change', aoMudar)
+      corpo.removeAttribute('inert')
+      raiz.querySelector<HTMLElement>('[data-casca="corpo"] button[aria-label="Abrir menu"]')?.focus({ preventScroll: true })
+    }
+  }, [gavetaAberta])
+
   return (
-    <div className={cn('min-h-svh', className)}>
+    <div ref={raizRef} className={cn('min-h-svh', className)}>
       <AppSidebar
         {...menu}
         renderLink={menu.renderLink ?? renderLink}
@@ -167,6 +193,7 @@ export function AppShell({
           type="button"
           onClick={fecharGaveta}
           aria-label="Fechar menu"
+          tabIndex={-1}
           data-casca="fundo-da-gaveta"
           className="fixed inset-0 z-20 bg-black/40 backdrop-blur-sm lg:hidden"
         />

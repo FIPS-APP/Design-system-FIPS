@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.22.1',
+    date: '2026-11-11',
+    title: 'Teclado na gaveta do menu',
+    entries: [
+      { type: 'fix', description: 'AppShell: na gaveta (abaixo de 1024 px) o foco entra no primeiro item do menu, o resto da página fica inert (Tab não chega nela) e, ao fechar (Esc, fundo ou item), o foco volta ao botão "Abrir menu". O menu ganha role="dialog" e aria-modal="true" só no modo gaveta. No desktop nada muda.' },
+    ],
+  },
+  {
     version: '0.21.19',
     date: '2026-10-22',
     title: 'Tokens do azulejo neumórfico e linha de preferência com escolha',
