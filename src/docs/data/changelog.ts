@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.2',
+    date: '2026-11-12',
+    title: 'CurrencyInput',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo `CurrencyInput` (+ `CurrencyInputProps`, `formatCurrency`, `parseCurrency`): campo de valor em reais. Mostra 1.234,56 e entrega o decimal em texto ("1234.56"), o mesmo contrato dos apps. Aceita colar 1.234,56 e 1234.56, `allowNegative` opcional, `aria-invalid` e `id` de `Field`. Página no site com exemplo de Field e de erro. Nada removido.',
+      },
+    ],
+  },
+  {
     version: '0.25.0',
     date: '2026-11-12',
     title: 'Rodada de 12/11 b',

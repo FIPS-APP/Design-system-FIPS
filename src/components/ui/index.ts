@@ -109,6 +109,8 @@ export {
 export { Progress, type ProgressProps } from './progress'
 export { Select, type SelectProps } from './select'
 export { Skeleton, type SkeletonProps } from './skeleton'
+export { CurrencyInput, type CurrencyInputProps } from './currency-input'
+export { formatCurrency, parseCurrency } from './currency'
 export { SelectBusca, type SelectBuscaProps } from './select-busca'
 export {
   Table,
