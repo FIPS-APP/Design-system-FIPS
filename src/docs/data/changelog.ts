@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.4',
+    date: '2026-11-12',
+    title: 'CopyableCode',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`CopyableCode` (+ `CopyableCodeProps`, `copiarTexto`, `linkWhatsApp`) sai pelo pacote: texto ou código com botão "Copiar" de rótulo visível. O retorno "Copiado" é anunciado por `role="status"`; sem `navigator.clipboard` ou com recusa, cai no `execCommand`, e se nada copiar mostra o aviso e seleciona o texto. Com `whatsapp`, o valor vira telefone e ganha o link `https://wa.me/<número>`. Contraste medido nos dois temas (texto 10,70:1 a 13,45:1, contorno 3,39:1 e 3,62:1); teste em `scripts/copyable-code.test.mjs`.',
+      },
+    ],
+  },
+  {
     version: '0.25.0',
     date: '2026-11-12',
     title: 'Rodada de 12/11 b',
