@@ -113,6 +113,10 @@ export function AppSidebar({
     <aside
       data-tutorial="menu"
       data-casca="menu"
+      // Só na gaveta (abaixo de 1024px): no desktop o menu é fixo e a página continua ativa.
+      role={gavetaAberta ? 'dialog' : undefined}
+      aria-modal={gavetaAberta ? true : undefined}
+      aria-label={gavetaAberta ? 'Menu' : undefined}
       data-collapsed={recolhido ? 'true' : undefined}
       onPointerEnter={aoEntrarPonteiro}
       onPointerLeave={aoSairPonteiro}

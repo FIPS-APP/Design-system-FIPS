@@ -168,6 +168,7 @@ Tamanhos:
 - `sm`
 - `md`
 - `lg`
+- `touch`
 - `icon`
 - `iconSm`
 

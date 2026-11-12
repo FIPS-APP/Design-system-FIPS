@@ -336,12 +336,11 @@ test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => 
   assert.deepEqual(token(TEXTO_ABA_ATIVA, 'claro'), token('--color-primary', 'claro'))
 })
 
-// ─── Toast e Tooltip: texto do tom sucesso ─────────────────────────────────
+// ─── Toast (cópia de exports/) e Tooltip: texto do tom sucesso (o Toast do pacote é medido em contraste-toast.test.mjs) ─────────────────────────────────
 // O fundo é fixo nos dois temas (#ECFDF5), então o par vale no claro e no escuro. #00904C sobre ele mede 3,91:1.
 const TONS_SUCESSO = [
   'exports/toast/toast.tsx',
   'exports/tooltip/Tooltip.tsx',
-  'src/docs/pages/components/ToastDoc.tsx',
   'src/docs/pages/components/TooltipDoc.tsx',
 ]
 
@@ -610,11 +609,13 @@ function constanteDoChrome(nome) {
   return m[1]
 }
 
-// Lê `linear-gradient(135deg,#a,#b 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
+// Lê `linear-gradient(135deg,#a,var(--b) 34%,#c 100%)` e devolve as paradas [cor, posição 0 a 100].
 function paradasDoDegrade(valor) {
   const itens = valor.match(/linear-gradient\([^,]+,(.+)\)$/)[1].split(/,(?![^(]*\))/).map((s) => s.trim())
   const paradas = itens.map((item, i) => {
-    const [hex, pos] = item.split(/\s+/)
+    const [valor, pos] = item.split(/\s+/)
+    // A parada pode ser hex ou var(--neu-accent-bg-*), resolvida pelo globals.css.
+    const hex = resolver(valor, 'claro')
     assert.match(hex, /^#[\da-f]{6}$/i, `parada fora de hex de 6 dígitos: ${item}`)
     return [cor(hex, 'claro'), pos ? Number(pos.replace('%', '')) : i === 0 ? 0 : i === itens.length - 1 ? 100 : NaN]
   })
@@ -786,4 +787,36 @@ test('DocHeaderSectionNav: ramo escuro com anel #F6921E contra o recuo #1A1A1A, 
 test('Anéis do cabeçalho: UserChip e ramo claro das seções leem --color-ring cheio', () => {
   assert.match(ler(ANEIS.userChip), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'UserChip sem --color-ring cheio')
   assert.match(ler(ANEIS.secoes), /focus-visible:ring-\[var\(--color-ring\)\](?!\/)/, 'ramo claro das seções sem --color-ring cheio')
+})
+
+// ─── FipsTabBar: aba ativa ─────────────────────────────────────────────────
+const TABBAR = 'src/components/composites/FipsTabBar.tsx'
+
+function ramoAtivo() {
+  const fonte = ler(TABBAR)
+  const i = fonte.indexOf('if (active) {')
+  assert.notEqual(i, -1, `${TABBAR}: ramo if (active) não encontrado`)
+  return fonte.slice(i, fonte.indexOf('\n  }', i))
+}
+
+test('FipsTabBar: texto da aba ativa lê --color-primary-text, 4,5:1 sobre o fundo misturado, nos dois temas', () => {
+  const ramo = ramoAtivo()
+  const txt = ramo.match(/color: 'var\((--[\w-]+)\)'/)
+  assert.ok(txt, 'cor do texto da aba ativa não encontrada')
+  const mix = ramo.match(/color-mix\(in srgb, var\((--[\w-]+)\) (\d+)%, transparent\)/)
+  assert.ok(mix, 'fundo da aba ativa não encontrado')
+  for (const t of TEMAS) {
+    const a = Number(mix[2]) / 100
+    const m = token(mix[1], t)
+    const s = token('--color-surface', t)
+    const f = (c, b) => Math.round(c * a + b * (1 - a))
+    const fundo = { r: f(m.r, s.r), g: f(m.g, s.g), b: f(m.b, s.b) }
+    verifica(`FipsTabBar texto ativo, tema ${t}`, token(txt[1], t), fundo, MINIMO_TEXTO)
+  }
+})
+
+test('FipsTabBar: borda da aba ativa lê --color-primary-text, 3:1 sobre o cartão, nos dois temas', () => {
+  const b = ramoAtivo().match(/border: '1px solid var\((--[\w-]+)\)'/)
+  assert.ok(b, 'borda da aba ativa não encontrada')
+  for (const t of TEMAS) verifica(`FipsTabBar borda ativa, tema ${t}`, token(b[1], t), token('--color-surface', t))
 })

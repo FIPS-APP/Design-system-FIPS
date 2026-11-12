@@ -27,8 +27,6 @@ const PASTAS_DA_BIBLIOTECA = [
 const EXCECOES = {
   'src/docs/pages/components/HeaderDoc.tsx':
     'documenta o cabeçalho do próprio site de documentação; nas apps o cabeçalho vem do AppShell',
-  'src/docs/pages/components/ToastDoc.tsx':
-    'protótipo desenhado na página; o pacote ainda não tem aviso passageiro (pendência registrada)',
   'src/docs/pages/patterns/DashboardDemo.tsx':
     'protótipo de painel montado na página; os gráficos do pacote estão em GraficosDoc',
 }
@@ -81,11 +79,7 @@ function componentesImportados(arquivo) {
 }
 
 // Componente que o site mostra e cujo export sai num PR já aberto. Sai daqui quando o PR entrar.
-const PENDENTES_EM_PR = {
-  FipsTabBar: 'export no PR #145',
-  BuscarPessoaModal: 'export no PR #145',
-  SettingsPreferenceRow: 'export no PR #6',
-}
+const PENDENTES_EM_PR = {}
 
 const exportados = exportsDoPacote()
 
@@ -122,4 +116,54 @@ test('exceção aponta para página que existe e ainda não tem componente', () 
     assert.ok(todas.has(rel), `exceção para página inexistente: ${rel}`)
     assert.equal(componentesImportados(join(raiz, rel)).length, 0, `exceção sobrando: ${rel} já importa componente`)
   }
+})
+
+// Componentes que o site documenta e o pacote precisa exportar (FIPS-1190), e nenhum arquivo do pacote vem de src/docs.
+
+const RAIZ = join(fileURLToPath(new URL('.', import.meta.url)), '..')
+
+const ENTRADA = join(RAIZ, 'src/index.ts')
+
+function programaDoPacote() {
+  const leitura = ts.readConfigFile(join(RAIZ, 'tsconfig.lib.json'), ts.sys.readFile)
+  const config = ts.parseJsonConfigFileContent(leitura.config, ts.sys, RAIZ)
+  return ts.createProgram([ENTRADA], { ...config.options, noEmit: true, emitDeclarationOnly: false })
+}
+
+function exportadosDoPacote() {
+  const entrada = ENTRADA
+  const programa = programaDoPacote()
+  const checador = programa.getTypeChecker()
+  return new Set(
+    checador.getExportsOfModule(checador.getSymbolAtLocation(programa.getSourceFile(entrada))).map((s) => s.getName()),
+  )
+}
+
+const ESPERADOS = {
+  DrawerHero: 'Drawer: header hero institucional',
+  DrawerHeroProps: 'tipo das props do DrawerHero',
+  useTableDensity: 'hook de densidade da Table (o Badge usa)',
+  TableDensity: 'tipo devolvido por useTableDensity',
+  FipsTabBar: 'barra de abas do cabeçalho',
+  FipsTabItem: 'tipo do item do FipsTabBar',
+  FipsTabBarProps: 'tipo das props do FipsTabBar',
+  BuscarPessoaModal: 'modal Buscar responsável',
+  BuscarPessoaModalProps: 'tipo das props do BuscarPessoaModal',
+  Pessoa: 'tipo da pessoa do BuscarPessoaModal',
+  PatternPanelHero: 'já saía (apelido do PageHeader); não pode regredir',
+}
+
+test('o pacote exporta os componentes documentados no site', () => {
+  const exportados = exportadosDoPacote()
+  const faltando = Object.keys(ESPERADOS).filter((nome) => !exportados.has(nome))
+  assert.deepEqual(faltando, [], `não saem em src/index.ts: ${faltando.join(', ')}`)
+})
+
+test('nenhum arquivo do pacote vem de src/docs', () => {
+  const docs = join(RAIZ, 'src/docs').replaceAll('\\', '/') + '/'
+  const doSite = programaDoPacote()
+    .getSourceFiles()
+    .map((f) => f.fileName)
+    .filter((f) => f.startsWith(docs))
+  assert.deepEqual(doSite, [], `o pacote alcança arquivos do site: ${doSite.join(', ')}`)
 })

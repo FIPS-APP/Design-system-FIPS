@@ -9,7 +9,7 @@ export type FipsTabItem = {
   disabled?: boolean
 }
 
-type FipsTabBarProps = {
+export type FipsTabBarProps = {
   tabs: FipsTabItem[]
   activeId: string
   onChange: (id: string) => void
@@ -37,8 +37,8 @@ function tabButtonStyle(active: boolean, disabled?: boolean): CSSProperties {
     return {
       borderRadius: TAB_RADIUS,
       background: 'color-mix(in srgb, var(--color-primary) 15%, transparent)',
-      color: 'var(--color-primary)',
-      border: '1px solid var(--color-primary)',
+      color: 'var(--color-primary-text)',
+      border: '1px solid var(--color-primary-text)',
       cursor: 'pointer',
       fontWeight: 700,
       opacity: 1,

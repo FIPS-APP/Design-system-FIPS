@@ -20,6 +20,12 @@ export {
   type PatternPanelHeroProps,
   type PatternPanelHeroStat,
 } from './components/composites/PatternPanelHero'
+export { FipsTabBar, type FipsTabBarProps, type FipsTabItem } from './components/composites/FipsTabBar'
+export {
+  BuscarPessoaModal,
+  type BuscarPessoaModalProps,
+  type Pessoa,
+} from './components/composites/BuscarPessoaModal'
 export {
   BannerJunctionLines,
   BannerIconBox,
@@ -74,6 +80,11 @@ export {
   RowActionsMenu,
   type RowMenuAction,
 } from './components/composites/RowActionsMenu'
+export { SettingsPreferenceRow } from './components/composites/SettingsPreferenceRow'
+export {
+  SettingsPreferenceRowSelect,
+  type SettingsPreferenceRowSelectProps,
+} from './components/composites/SettingsPreferenceRowSelect'
 export {
   ActiveFilterChips,
   MAX_FILTER_CHIPS,
@@ -118,6 +129,16 @@ export {
   type PhotoEvidenceDropzoneProps,
 } from './components/composites/PhotoEvidenceDropzone'
 export { Alert, type AlertProps } from './components/composites/Alert'
+export {
+  Toast,
+  ToastViewport,
+  useToast,
+  type ToastProps,
+  type ToastVariant,
+  type ToastData,
+  type ToastItem,
+  type ToastViewportProps,
+} from './components/composites/Toast'
 export { Lightbox, type LightboxProps } from './components/composites/Lightbox'
 export {
   HeroAtalho,
@@ -216,6 +237,7 @@ export {
   NotificacoesMenu,
   TutorialOverlay,
   type AppShellProps,
+  type OrigemDoRecolhido,
   type AppHeaderProps,
   type AcaoDoCabecalho,
   type AppSidebarProps,

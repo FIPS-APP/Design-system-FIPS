@@ -103,7 +103,7 @@ export function SecaoNumerada({
     >
       <div
         className={cn(
-          'flex items-center gap-3 px-5 py-4 @2xl:px-6',
+          'flex items-center gap-3 px-6 py-4',
           temCorpo && 'border-b border-[var(--color-border)]',
         )}
       >
