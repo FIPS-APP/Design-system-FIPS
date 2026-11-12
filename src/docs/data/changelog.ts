@@ -25,6 +25,17 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.1',
+    date: '2026-11-12',
+    title: 'Laranja de texto na casca e na Home',
+    entries: [
+      { type: 'fix', description: 'AppHeader: o ícone da aba ativa usa --color-accent-text. No tema claro vai de 2,32:1 para 6,26:1 sobre a faixa de abas; no escuro continua 7,50:1.' },
+      { type: 'fix', description: 'UserAccountMenu: o ícone do item em hover usa --color-accent-text. No tema claro vai de 2,11:1 para 5,68:1; no escuro continua 5,77:1.' },
+      { type: 'improvement', description: 'AppSidebar (botões de segundos, 4,56:1 e 5,22:1) e HomeHero (destaque de 36 a 48 px, 5,91:1) ficam com o laranja: o fundo é azul escuro nos dois temas. O teste de contraste mede os dois.' },
+      { type: 'improvement', description: 'test:badge entra na linha test do package.json.' },
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-11-12',
     title: 'Toast, Button touch, exports do site e correções de contraste e celular',

@@ -247,7 +247,7 @@ export function AppHeader({
                   <Icone
                     className={cn(
                       'shrink-0 transition-colors duration-200',
-                      ativa ? 'text-[var(--color-accent-strong)]' : 'text-[var(--color-fg-muted)]',
+                      ativa ? 'text-[var(--color-accent-text)]' : 'text-[var(--color-fg-muted)]',
                     )}
                     style={{ width: ABAS.iconSizePx, height: ABAS.iconSizePx }}
                     strokeWidth={1.5}
