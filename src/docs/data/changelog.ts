@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.6',
+    date: '2026-11-12',
+    title: 'Mapa oficial de status para o Badge',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`StatusBadge` e `statusBadge(status)`: levam o status que o app guarda (`em_andamento`, `Fora do Prazo`, `CONCLUIDA`) à variante do `Badge`. Sete grupos: pendente (`warning`), andamento (`info`), concluído (`success`), atrasado (`danger`), cancelado (`outline`), rascunho (`secondary`) e crítico (`danger`). 68 sinônimos levantados em oito apps; a busca ignora caixa, acento e pontuação, e status desconhecido volta `secondary`. Também saem `STATUS_BADGE_GRUPOS`, `STATUS_BADGE_SINONIMOS` e `normalizarStatus`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Sem tom novo: o texto de `warning`, `info`, `success`, `danger`, `outline` e `secondary` passa de 4,5:1 nos dois temas sobre as três superfícies (pior caso 4,61:1 em `warning` no claro). Travado em `scripts/status-badge.test.mjs`, que entra na linha `test`.',
+      },
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-11-12',
     title: 'Toast, Button touch, exports do site e correções de contraste e celular',
