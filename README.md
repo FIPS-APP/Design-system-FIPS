@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.24.2`
+## Versão atual: `v0.24.3`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.24.3 | 2026-11-12 | `DropdownMenu` (com `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuGroup`, `DropdownMenuPortal`, `DropdownMenuRadioGroup`) e `Separator` no pacote, sobre Radix, no visual do menu da conta da Gestão OPA. Item `variant="destructive"` com 6,47:1 no claro e 9,17:1 no escuro. Dependências `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7 fixas. Novo `scripts/dropdown-menu.test.mjs` no `npm test`. |
 | 0.24.2 | 2026-11-12 | Novo no pacote: `Skeleton` (+ `SkeletonProps`), bloco de carregamento na API do shadcn (`className` e props de div), cor `--color-border`, `aria-hidden` por padrão e parado com redução de movimento. Página no site com exemplo de cartão e de linha de tabela. Muda para quem já usa: nada removido |
 | 0.24.1 | 2026-11-12 | Laranja `#f6921e` deixa de ser cor de texto sobre fundo claro: ícone da aba ativa do `AppHeader` (2,32:1 para 6,26:1) e ícone do `UserAccountMenu` em hover (2,11:1 para 5,68:1) passam para `--color-accent-text`. `AppSidebar` (4,56:1 e 5,22:1) e `HomeHero` (5,91:1) ficam, por estarem sobre azul escuro. `test:badge` entra na linha `test`. Muda para quem já usa: nada removido |
 | 0.24.0 | 2026-11-12 | Rodada de 12/11 (#121, #145, #175, #6, #176, #177, #180, #183, #184, #185, #186). Novos no pacote: `Toast`, `ToastViewport` e `useToast`; `Button` com `size="touch"` (48 px); `DrawerHero`, `useTableDensity`, `FipsTabBar`, `BuscarPessoaModal`, `SettingsPreferenceRow` e `SettingsPreferenceRowSelect` com os tipos; `AppShell` com `aoMudarRecolhido`. Correções: `Alert` warning e texto laranja passam de 4,5:1; aba ativa do `FipsTabBar` legível no escuro; foco preso na gaveta do `AppShell`; rótulo Segurança da entrada a 5,25:1; celular com as medidas das referências (`AppHeader`, `SecaoNumerada`, `CartaoListagem`) e busca do `FilterBlock` em segunda linha abaixo de 640 px. Tokens `--neu-*` do azulejo neumórfico. Detalhe por PR no changelog do site. Muda para quem já usa: nada removido |

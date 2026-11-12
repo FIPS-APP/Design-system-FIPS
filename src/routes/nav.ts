@@ -118,6 +118,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Sidebar', to: '/docs/components/sidebar', icon: PanelLeft },
       { label: 'Casca do app (AppShell)', to: '/docs/components/casca-do-app', icon: AppWindow },
       { label: 'Skeleton', to: '/docs/components/skeleton', icon: Gauge },
+      { label: 'DropdownMenu e Separator', to: '/docs/components/dropdown-menu', icon: SlidersHorizontal },
       { label: 'Toast', to: '/docs/components/toast', icon: Sparkles },
       { label: 'Tooltip', to: '/docs/components/tooltip', icon: MousePointer2 },
       { label: 'Formulário de execução', to: '/docs/components/formulario-execucao', icon: ClipboardCheck },

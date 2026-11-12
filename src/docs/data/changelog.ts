@@ -25,6 +25,38 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.3',
+    date: '2026-11-12',
+    title: 'DropdownMenu e Separator no pacote',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuGroup`, `DropdownMenuPortal` e `DropdownMenuRadioGroup`, na API do shadcn sobre `@radix-ui/react-dropdown-menu`. Visual do menu da conta da Gestão OPA: raio `10px 10px 10px 16px`, borda, cartão e `--shadow-elevated`, item de 12px, foco em acento a 20% (12% no escuro). Entrada de 150ms, sem animação com movimento reduzido. O `UserAccountMenu` não muda.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`DropdownMenuItem` ganha `variant="destructive"` (Excluir, Sair): texto em `--color-danger-text`, 6,47:1 no claro e 9,17:1 no escuro; em foco, 5,68:1 e 8,33:1. O rótulo mede 5,05:1 e 6,86:1.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`Separator` sobre `@radix-ui/react-separator`: linha de 1px em `--color-border`, horizontal ou vertical, decorativa por padrão.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Dependências `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7, fixas. A 2.1.16 usa a mesma `react-dismissable-layer` do `Dialog` (1.1.11); com a 2.2.1 havia duas cópias e o Esc num menu aberto dentro do `Modal` fechava os dois.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Novo `scripts/dropdown-menu.test.mjs` no `npm test`: contraste nos dois temas, só token, uma só cópia das camadas do Radix e, com playwright, teclado (setas, Home, End, Esc, foco de volta ao gatilho) e o menu inteiro dentro do `Modal` a 375px. Página `/docs/components/dropdown-menu`.',
+      },
+    ],
+  },
+  {
     version: '0.24.2',
     date: '2026-11-12',
     title: 'Skeleton',

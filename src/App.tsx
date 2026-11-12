@@ -32,6 +32,7 @@ const AbasDeSecaoDoc = lazy(() => import('./docs/pages/components/AbasDeSecaoDoc
 const TabelaExpansivelDoc = lazy(() => import('./docs/pages/components/TabelaExpansivelDoc'))
 const SidebarDoc = lazy(() => import('./docs/pages/components/SidebarDoc'))
 const SkeletonDoc = lazy(() => import('./docs/pages/components/SkeletonDoc'))
+const DropdownMenuDoc = lazy(() => import('./docs/pages/components/DropdownMenuDoc'))
 const ToastDoc = lazy(() => import('./docs/pages/components/ToastDoc'))
 const TooltipDoc = lazy(() => import('./docs/pages/components/TooltipDoc'))
 const FormularioExecucaoDoc = lazy(() => import('./docs/pages/components/FormularioExecucaoDoc'))
@@ -102,6 +103,7 @@ export default function App() {
         <Route path="components/sidebar" element={renderLazyRoute(<SidebarDoc />)} />
         <Route path="components/casca-do-app" element={renderLazyRoute(<AppShellDoc />)} />
         <Route path="components/skeleton" element={renderLazyRoute(<SkeletonDoc />)} />
+        <Route path="components/dropdown-menu" element={renderLazyRoute(<DropdownMenuDoc />)} />
         <Route path="components/toast" element={renderLazyRoute(<ToastDoc />)} />
         <Route path="components/tooltip" element={renderLazyRoute(<TooltipDoc />)} />
         <Route path="components/formulario-execucao" element={renderLazyRoute(<FormularioExecucaoDoc />)} />
