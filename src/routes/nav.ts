@@ -105,6 +105,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Input', to: '/docs/components/input', icon: FormInput },
       { label: 'Progress', to: '/docs/components/progress', icon: Gauge },
       { label: 'Select', to: '/docs/components/select', icon: SearchCheck },
+      { label: 'Select com busca', to: '/docs/components/select-busca', icon: SearchCheck },
       { label: 'Textarea', to: '/docs/components/textarea', icon: AppWindow },
       { label: 'Badge', to: '/docs/components/badge', icon: Blocks },
       { label: 'Card', to: '/docs/components/card', icon: LayoutTemplate },

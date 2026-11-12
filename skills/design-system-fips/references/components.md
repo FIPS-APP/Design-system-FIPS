@@ -29,7 +29,7 @@ Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundat
 - `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
 - `Field`, `FieldLabel`, `FieldHint`, `FieldMessage` · `FieldTrigger`
 - `Input` · `InputGroup`, `InputGroupAddon`, `InputGroupButton`, `InputGroupText`, `InputGroupInput`, `InputGroupTextarea`
-- `Select` · `Textarea` · `Switch` · `Progress`
+- `Select` · `SelectBusca` · `Textarea` · `Switch` · `Progress`
 - `Table`, `TableHeader`, `TableHead`, `TableBody`, `TableRow`, `TableCell`, `TableEmpty`
 - `AdminTableColumnMenu`, `AdminTablePagination`, `AdminTableSortHeader`, `AdminTableCompanyCell`, `AdminTableStatusDots`
 - `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`
