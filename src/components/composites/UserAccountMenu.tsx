@@ -206,7 +206,7 @@ export function UserAccountMenu({
                         >
                           {Icone ? (
                             <Icone
-                              className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-strong)]"
+                              className="h-3.5 w-3.5 text-[var(--color-fg-muted)] transition-colors group-hover:text-[var(--color-accent-text)]"
                               aria-hidden
                             />
                           ) : null}
