@@ -15,6 +15,15 @@ export type Pessoa = {
   qtd_lideranca?: number | null
 }
 
+export interface BuscarPessoaModalProps {
+  open: boolean
+  onOpenChange: (aberto: boolean) => void
+  onSelect: (pessoa: Pessoa) => void
+  people: Pessoa[]
+  title?: string
+  descricao?: ReactNode
+}
+
 /**
  * Modal "Buscar responsável" — anatomia portada VERBATIM do OPA-Gestão
  * (`OPA-GESTAO/src/composites/Modal.tsx`, tone `gov`), que herdou do NDM/QLP.
@@ -36,14 +45,7 @@ export function BuscarPessoaModal({
   people,
   title = 'Buscar responsável',
   descricao = 'Busque pelo nome, cargo ou matrícula. Sem busca, a lista traz quem tem equipe.',
-}: {
-  open: boolean
-  onOpenChange: (aberto: boolean) => void
-  onSelect: (pessoa: Pessoa) => void
-  people: Pessoa[]
-  title?: string
-  descricao?: ReactNode
-}) {
+}: BuscarPessoaModalProps) {
   const [q, setQ] = useState('')
 
   const hits = useMemo(() => {

@@ -55,6 +55,7 @@
     "test:listagens": "node --test scripts/listagens.test.mjs",
     "test:casca": "node --test scripts/app-shell.test.mjs",
     "test:rodada3": "node --test scripts/rodada3.test.mjs",
+    "test:exports": "node --test scripts/exports-site.test.mjs",
     "preview": "vite preview",
     "test:fips-ds": "node --test scripts/fips-ds.test.mjs"
   },
