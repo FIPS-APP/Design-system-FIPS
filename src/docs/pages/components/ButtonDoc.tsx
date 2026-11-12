@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button as RealButton } from "../../../components/ui/button";
 import { CodeExportSection } from '../../components/CodeExport';
 
 /* ═══════════════════════════════════════════
@@ -734,6 +735,22 @@ export default function DSFIPSButtons() {
             </div>
 
           </div>
+        </Section>
+
+        <Section number="03.1" title="Grade densa: size grade" desc="Um botão por célula em tabela de muitas colunas. Altura mínima de 30 px como o sm, padding lateral de 8 px, o texto quebra em até 2 linhas, centralizado, e o botão nunca passa da largura da célula.">
+          <Card style={{ marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 72px)", gap: 8 }}>
+              {["Não se aplica", "Lançar", "Sem meta", "Justificar", "Não se aplica", "Lançar"].map((t, i) => (
+                <div key={i} style={{ width: 72, minWidth: 0 }}>
+                  <RealButton variant="outline" size="grade" className="w-full">{t}</RealButton>
+                </div>
+              ))}
+            </div>
+          </Card>
+          <Card>
+            <pre style={{ margin: 0, fontFamily: FONTS.mono, fontSize: 12, overflowX: "auto" }}>{`<Button variant="outline" size="grade" className="w-full">Não se aplica</Button>`}</pre>
+            <p style={{ fontSize: 12, color: C.textMuted, margin: "10px 0 0" }}>Use w-full dentro da célula. O foco, o raio e as cores são os do sm; a altura cresce só quando o texto quebra.</p>
+          </Card>
         </Section>
 
         <Section number="04" title="Estados" desc="Estados interativos e funcionais. O loading aplica spinner inline e desabilita a ação.">
