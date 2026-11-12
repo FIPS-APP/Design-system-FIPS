@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.23.3',
+    date: '2026-11-11',
+    title: 'Toast no pacote',
+    entries: [
+      { type: 'feature', description: '`Toast`, `ToastViewport` e `useToast` exportados. Variantes `sucesso`, `erro`, `atencao`, `info` e `neutro`; props `title`, `message`, `actionLabel`, `onAction`, `onClose` e `duration`. Pilha de até 5 no canto superior direito, entrada e saída deslizando, barra de tempo de 3px; com redução de movimento, sem animação. `erro` usa `role="alert"`, as demais `role="status"`.' },
+      { type: 'improvement', description: 'Cores só por token semântico (`--color-semantic-*`, `--color-success-text`, `--color-danger`, `--color-fg`, `--color-fg-muted`), sem hex. Medido sobre o cartão: texto de 4,88:1 a 10,70:1 no claro e de 6,04:1 a 12,51:1 no escuro; destaque (borda lateral e ícone) de 3,44:1 a 10,49:1 no claro e de 4,01:1 a 9,18:1 no escuro. O protótipo usava verde `#00C64C` (2,17:1) e laranja `#F6921E` (2,19:1) como destaque; saem por `--color-success-text` e `--color-semantic-atencao-fg`. Botão de ação e X passam a usar a cor do texto, sem opacidade, para manter 4,5:1.' },
+      { type: 'improvement', description: 'A página `/docs/components/toast` usa o componente do pacote e a exceção sai de `scripts/exports-site.test.mjs`. Novo `scripts/contraste-toast.test.mjs` no `npm test`.' },
+    ],
+  },
+  {
     version: '0.23.1',
     date: '2026-11-11',
     title: 'O pacote se explica e confere o app',

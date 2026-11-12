@@ -926,6 +926,35 @@
 }
 
 @layer components {
+  /* ─── Toast: entrada, saída e barra de tempo ─── */
+  .fips-toast {
+    animation: fipsToastEntrada 0.35s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .fips-toast[data-saindo='true'] {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+  .fips-toast-tempo {
+    width: 100%;
+    animation-name: fipsToastTempo;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  @keyframes fipsToastEntrada {
+    from { opacity: 0; transform: translateX(110%); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fipsToastTempo {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fips-toast { animation: none; transition: none; }
+  }
+}
+
+@layer components {
   /* ─── Azulejo do cabeçalho (HeaderTile) ─── */
   .fips-header-tile {
     position: relative;

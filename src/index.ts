@@ -118,6 +118,16 @@ export {
   type PhotoEvidenceDropzoneProps,
 } from './components/composites/PhotoEvidenceDropzone'
 export { Alert, type AlertProps } from './components/composites/Alert'
+export {
+  Toast,
+  ToastViewport,
+  useToast,
+  type ToastProps,
+  type ToastVariant,
+  type ToastData,
+  type ToastItem,
+  type ToastViewportProps,
+} from './components/composites/Toast'
 export { Lightbox, type LightboxProps } from './components/composites/Lightbox'
 export {
   HeroAtalho,
