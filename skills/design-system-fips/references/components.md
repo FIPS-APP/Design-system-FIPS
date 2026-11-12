@@ -864,6 +864,14 @@ import { LoginDsShell } from '@fips-app/ds-fips'
 Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
 
 
+## DropdownMenu e Separator — v0.24.3
+
+Fonte: `src/components/ui/dropdown-menu.tsx` e `separator.tsx`. API do shadcn sobre Radix; visual do `UserAccountMenu`.
+
+- **`DropdownMenu`** (Root), **`DropdownMenuTrigger`** (`asChild` com `Button`), **`DropdownMenuContent`** (`align`, `side`, `sideOffset` 6; portal, `z-50`), **`DropdownMenuItem`** (`variant`: `default` | `destructive`; `onSelect`; `disabled`), **`DropdownMenuCheckboxItem`** (`checked`, `onCheckedChange`), **`DropdownMenuLabel`**, **`DropdownMenuSeparator`**, **`DropdownMenuGroup`**, **`DropdownMenuPortal`**, **`DropdownMenuRadioGroup`**. Sem `className` visual: o item destrutivo é `variant="destructive"`, não `text-red-*`.
+- **`Separator`**: `orientation` (`horizontal` | `vertical`), `decorative` (padrão `true`).
+- Teclado do Radix: setas, Home, End, inicial do item, Esc, foco de volta ao gatilho. Gatilho só com ícone leva `aria-label`.
+
 ## Toast — v0.23.3
 
 Fonte: `src/components/composites/Toast.tsx`. Aviso passageiro; cores só por token.

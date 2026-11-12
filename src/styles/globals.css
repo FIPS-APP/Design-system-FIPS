@@ -980,6 +980,20 @@
 }
 
 @layer components {
+  /* ─── DropdownMenu: entrada de 150ms (a mesma do menu da conta); sem animação com redução de movimento ─── */
+  .fips-dropdown-menu[data-state='open'] {
+    animation: fipsDropdownEntrada 0.15s ease-out;
+  }
+  @keyframes fipsDropdownEntrada {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fips-dropdown-menu[data-state='open'] { animation: none; }
+  }
+}
+
+@layer components {
   /* ─── Azulejo do cabeçalho (HeaderTile) ─── */
   .fips-header-tile {
     position: relative;
