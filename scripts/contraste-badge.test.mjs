@@ -183,6 +183,9 @@ const TEXTO_LARANJA = new RegExp(
 const ICONES_JA_EXISTENTES = [
   ['src/components/composites/AbasDeSecao.tsx', "text-[var(--color-fips-yellow-600)]"],
   ['src/components/layout/DocHeaderSectionNav.tsx', "text-[#F6921E]"],
+  // Laranja sobre fundo ESCURO nos dois temas: o teste 'Laranja como texto sobre fundo escuro' mede cada um.
+  ['src/components/composites/AppSidebar.tsx', "text-[var(--color-accent-strong)]"],
+  ['src/components/composites/HomeHero.tsx', "text-[var(--color-accent-strong)]"],
 ]
 
 test('Nenhum componente novo lê o laranja #f6921e como cor de texto (é fundo e borda: 2,32:1 sobre branco)', () => {
@@ -284,5 +287,40 @@ for (const t of ['claro', 'escuro']) {
         assert.ok(c >= 3, `${icone} sobre ${fundo[1]}/${fundo[2]}: ${c.toFixed(2)}:1, mínimo 3:1`)
       }
     }
+  })
+}
+
+// ─── Laranja de texto na casca e na Home (FIPS-1541) ───────────────────────
+// AppHeader (ícone da aba ativa) e UserAccountMenu (ícone em hover) ficam sobre fundo CLARO no tema claro:
+// lá o --color-accent-strong dava 2,32:1 e 2,11:1. Passaram para --color-accent-text (6,26:1 e 5,68:1).
+// AppSidebar (botões de segundos, 10 px) e HomeHero (título de 36 a 48 px) ficam sobre azul escuro nos dois temas.
+const FUNDO_AZUL = { r: 0, g: 42, b: 104, a: 1 } // --color-fips-blue-950, fundo do menu (tema claro) e base do HomeHero
+
+for (const t of ['claro', 'escuro']) {
+  test(`Laranja de texto sobre fundo claro, tema ${t}: ícone da aba ativa e ícone do menu da conta (>= 3:1)`, () => {
+    const header = ler('src/components/composites/AppHeader.tsx')
+    const menu = ler('src/components/composites/UserAccountMenu.tsx')
+    assert.match(header, /ativa \? 'text-\[var\(--color-accent-text\)\]'/)
+    assert.match(menu, /group-hover:text-\[var\(--color-accent-text\)\]/)
+    const icone = token('--color-accent-text', t)
+    const faixa = token('--color-surface', t)
+    const abaHover = sobre({ ...token('--color-primary', t), a: 0.04 }, faixa)
+    const itemHover = sobre({ ...token('--color-accent', t), a: t === 'claro' ? 0.2 : 0.12 }, faixa)
+    for (const [nome, fundo] of [['faixa de abas', faixa], ['aba em hover', abaHover], ['item do menu em hover', itemHover]]) {
+      const c = contraste(icone, fundo)
+      assert.ok(c >= 3, `${nome}, ${t}: ${c.toFixed(2)}:1, mínimo 3:1`)
+    }
+  })
+
+  test(`Laranja de texto sobre fundo escuro, tema ${t}: botões de segundos do menu (10 px, >= 4,5:1) e destaque do HomeHero (>= 3:1)`, () => {
+    const laranja = token('--color-accent-strong', t)
+    // Menu lateral: azul 950 no claro, --color-surface no escuro. Botão ativo = laranja a 20% sobre o fundo.
+    const menu = t === 'claro' ? FUNDO_AZUL : token('--color-surface', t)
+    const ativo = sobre({ ...laranja, a: 0.2 }, menu)
+    const cMenu = contraste(laranja, ativo)
+    assert.ok(cMenu >= MINIMO, `segundos ativo, ${t}: ${cMenu.toFixed(2)}:1, mínimo ${MINIMO}:1`)
+    // HomeHero: texto de 36 px (>= 24 px, régua de texto grande 3:1) sobre azul 950 puro (sem foto, pior caso só do azul).
+    const cHero = contraste(laranja, FUNDO_AZUL)
+    assert.ok(cHero >= 3, `destaque do HomeHero, ${t}: ${cHero.toFixed(2)}:1, mínimo 3:1`)
   })
 }

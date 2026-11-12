@@ -1,13 +1,13 @@
 ---
 name: design-system-fips
-description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.24.0, geradas do pacote; o pacote instalado no app vence este texto.
+description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.25.0, geradas do pacote; o pacote instalado no app vence este texto.
 ---
 
 <!-- gerado por scripts/gerar-ai.mjs (dist + ai/padroes.json); não edite à mão -->
 
-# Design System FIPS 0.24.0 (2026-11-12)
+# Design System FIPS 0.25.0 (2026-11-12)
 
-Gerado do pacote: 394 exports (173 componente, 17 funcao, 16 valor, 188 tipo), 97 tipos `*Props`, 276 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
+Gerado do pacote: 419 exports (187 componente, 19 funcao, 19 valor, 194 tipo), 101 tipos `*Props`, 279 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
 
 ## 1. Passo 0
 1. No app: `npx fips-ds passo0`. Mostra versão instalada e do registro, regime, padrões da tela e exports.
@@ -29,14 +29,14 @@ Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.
 - Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant="default"`/`"destructive"`.
 - Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.
 - `className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.
-- Dependência `file:` ou tgz do pacote: não é fonte confiável. O certo é o registro.
+- Dependência `file:` ou tgz do pacote: o certo é o registro. Exceção para app sem leitura do registro (CI, Docker): o tgz gerado por `npx fips-ds vendor <versão>` em `<app>/vendor` (a pasta do `package.json`; `file:../vendor/` quando o `package.json` fica em `app/`), só para versões do pacote que já trazem este check. Tgz de branch é proibido.
 - Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app.
 
 ## 4. O que `npx fips-ds check` confere (sai com 1 se achar)
 - `import-inexistente`: nome importado de `@fips-app/ds-fips` que o `.d.ts` instalado não exporta.
 - `var-sem-declaracao`: `var(--x)` sem `--x:` no `styles.css` instalado nem no CSS do app.
 - `hex-literal`: cor hex literal em `.tsx`, `.jsx` ou `.css` do app.
-- `dependencia-local`: `@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; o certo é o registro.
+- `dependencia-local`: `@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; só passa `file:vendor/fips-app-ds-fips-X.tgz` (ou `file:../vendor/...` com o `package.json` em subpasta) com tgz íntegro contra o `.integrity` do app, versão X dentro do tgz e lock no mesmo arquivo.
 - `casca-local`: casca, entrada ou banner feitos no app: `login-v1-container`, `liquid-card`, `casca-hero-*`, `PaginaCabecalho`, `PageHero` com filhos.
 - `classname-visual`: classe visual (cor, borda, raio, sombra, altura, padding, fonte, anel, opacidade, size, outline) em `className` de `Button`, `Input`, `Select`, `Textarea`, `TabsList`, `TabsTrigger` do pacote, também com prefixo (`sm:`, `hover:`, `dark:`, `data-[...]:`).
 

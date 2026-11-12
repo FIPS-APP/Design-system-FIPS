@@ -25,6 +25,126 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.0',
+    date: '2026-11-12',
+    title: 'Rodada de 12/11 b',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Reúne os PRs #187, #189, #190, #191, #192, #193, #194 e #195: `Skeleton`; `DropdownMenu` e `Separator`; `SelectBusca`; `Button` com `xs`, `grade` e `dangerStrong`; mapa oficial de status do `Badge`; `npx fips-ds vendor X` (npm chamado pelo node, sem `npm.cmd`, também no Windows; `check` aceita `file:vendor/` e `file:../vendor/`); laranja de texto da casca e da Home acima de 4,5:1. Detalhe de cada um nas entradas 0.23.6 e 0.24.1 a 0.24.7. Dependências novas, com versão exata: `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7. Nada removido.',
+      },
+    ],
+  },
+  {
+    version: '0.24.7',
+    date: '2026-11-12',
+    title: 'Button size grade para grade densa',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Button` ganha `size="grade"`: altura mínima de 30 px (a do `sm`), padding lateral de 8 px, texto que quebra em até 2 linhas, centralizado, e largura máxima igual à do pai. Para células estreitas, como o lançamento mensal de 12 colunas com "Não se aplica". Foco, raio e cores são os do `sm`; nenhum token novo.',
+      },
+    ],
+  },
+  {
+    version: '0.24.6',
+    date: '2026-11-12',
+    title: 'Mapa oficial de status para o Badge',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`StatusBadge` e `statusBadge(status)`: levam o status que o app guarda (`em_andamento`, `Fora do Prazo`, `CONCLUIDA`) à variante do `Badge`. Sete grupos: pendente (`warning`), andamento (`info`), concluído (`success`), atrasado (`danger`), cancelado (`outline`), rascunho (`secondary`) e crítico (`danger`). 68 sinônimos levantados em oito apps; a busca ignora caixa, acento e pontuação, e status desconhecido volta `secondary`. Também saem `STATUS_BADGE_GRUPOS`, `STATUS_BADGE_SINONIMOS` e `normalizarStatus`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Sem tom novo: o texto de `warning`, `info`, `success`, `danger`, `outline` e `secondary` passa de 4,5:1 nos dois temas sobre as três superfícies (pior caso 4,61:1 em `warning` no claro). Travado em `scripts/status-badge.test.mjs`, que entra na linha `test`.',
+      },
+    ],
+  },
+  {
+    version: '0.24.5',
+    date: '2026-11-12',
+    title: 'Button dangerStrong e xs',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Button` ganha `variant="dangerStrong"` (fundo `--color-btn-danger-strong`, texto branco: 6,47:1 em repouso e 8,31:1 no hover, claro e escuro) e `size="xs"` (24 px de altura, fonte de 11 px, só para linha densa com mouse; não é alvo de toque). Tokens novos `--color-btn-danger-strong` e `--color-btn-danger-strong-hover`. `touch` e as demais variantes não mudam.',
+      },
+    ],
+  },
+  {
+    version: '0.24.4',
+    date: '2026-11-12',
+    title: 'Select com busca',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`SelectBusca`: select de formulário com busca para lista longa (usuário, local, equipamento). Seleção única, filtro sem acento nem caixa, lista num portal para o `body` (não é cortada pelo corpo de Modal ou Drawer), teclado e `aria` de combobox (`aria-activedescendant`). Usa `FieldTrigger` e `lista-flutuante`. Documentado em `/docs/components/select-busca`. `ChipSelect` com `searchable` segue como filtro de barra de ferramentas.',
+      },
+    ],
+  },
+  {
+    version: '0.24.3',
+    date: '2026-11-12',
+    title: 'DropdownMenu e Separator no pacote',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuGroup`, `DropdownMenuPortal` e `DropdownMenuRadioGroup`, na API do shadcn sobre `@radix-ui/react-dropdown-menu`. Visual do menu da conta da Gestão OPA: raio `10px 10px 10px 16px`, borda, cartão e `--shadow-elevated`, item de 12px, foco em acento a 20% (12% no escuro). Entrada de 150ms, sem animação com movimento reduzido. O `UserAccountMenu` não muda.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`DropdownMenuItem` ganha `variant="destructive"` (Excluir, Sair): texto em `--color-danger-text`, 6,47:1 no claro e 9,17:1 no escuro; em foco, 5,68:1 e 8,33:1. O rótulo mede 5,05:1 e 6,86:1.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`Separator` sobre `@radix-ui/react-separator`: linha de 1px em `--color-border`, horizontal ou vertical, decorativa por padrão.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Dependências `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7, fixas. A 2.1.16 usa a mesma `react-dismissable-layer` do `Dialog` (1.1.11); com a 2.2.1 havia duas cópias e o Esc num menu aberto dentro do `Modal` fechava os dois.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Novo `scripts/dropdown-menu.test.mjs` no `npm test`: contraste nos dois temas, só token, uma só cópia das camadas do Radix e, com playwright, teclado (setas, Home, End, Esc, foco de volta ao gatilho) e o menu inteiro dentro do `Modal` a 375px. Página `/docs/components/dropdown-menu`.',
+      },
+    ],
+  },
+  {
+    version: '0.24.2',
+    date: '2026-11-12',
+    title: 'Skeleton',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Skeleton` (+ `SkeletonProps`) sai pelo pacote: bloco de carregamento na API do shadcn (`className` e props de div). Cor `--color-border` (1,33:1 sobre o cartão no claro, 1,28:1 no escuro), `aria-hidden` por padrão e parado com redução de movimento. Página no site com exemplo de cartão e de linha de tabela; teste em `scripts/skeleton.test.mjs`.',
+      },
+    ],
+  },
+  {
+    version: '0.24.1',
+    date: '2026-11-12',
+    title: 'Laranja de texto na casca e na Home',
+    entries: [
+      { type: 'fix', description: 'AppHeader: o ícone da aba ativa usa --color-accent-text. No tema claro vai de 2,32:1 para 6,26:1 sobre a faixa de abas; no escuro continua 7,50:1.' },
+      { type: 'fix', description: 'UserAccountMenu: o ícone do item em hover usa --color-accent-text. No tema claro vai de 2,11:1 para 5,68:1; no escuro continua 5,77:1.' },
+      { type: 'improvement', description: 'AppSidebar (botões de segundos, 4,56:1 e 5,22:1) e HomeHero (destaque de 36 a 48 px, 5,91:1) ficam com o laranja: o fundo é azul escuro nos dois temas. O teste de contraste mede os dois.' },
+      { type: 'improvement', description: 'test:badge entra na linha test do package.json.' },
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-11-12',
     title: 'Toast, Button touch, exports do site e correções de contraste e celular',
@@ -91,6 +211,16 @@ export const CHANGELOG: ChangelogVersion[] = [
       { type: 'fix', description: '`LoginDsShell`: o rótulo da estação Segurança passa de `--color-fips-red-600` para `--color-fips-red-300`. Contraste sobre a coluna institucional, medido no navegador nos dois temas: de 2,65:1 para 5,25:1. O ponto da estação e as outras 4 estações não mudam.' },
       { type: 'feature', description: '`Button` aceita `size="touch"`: altura de 48 px (o `lg` tem 42 px), mesmo padding, raio e fonte do `lg`, ícone de 20 px. Para app de campo usado com luva. As cores das variantes não mudam.' },
       { type: 'improvement', description: 'A página do Button mostra o tamanho Touch na prévia e no guia de tamanhos. `npm test` confere a altura e a ausência de mudança no `lg`.' },
+    ],
+  },
+  {
+    version: '0.23.6',
+    date: '2026-11-11',
+    title: 'Pacote local da versão publicada',
+    entries: [
+      { type: 'feature', description: '`npx fips-ds vendor X` baixa a versão publicada para uma pasta temporária, confere o sha512 com o `dist.integrity` do registro e só então move para `vendor/fips-app-ds-fips-X.tgz`, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com `--save-exact`, removendo o tgz e o `.integrity` da versão anterior. Token só pelo ambiente (`NODE_AUTH_TOKEN`, conferido antes); registro do escopo fixo na linha de comando; E401 e E403 viram mensagem sobre o token; prazo de 10 minutos só para o install.' },
+      { type: 'improvement', description: '`npx fips-ds check` aceita `file:vendor/fips-app-ds-fips-X.tgz` (também `file:./vendor/` e, com o `package.json` em subpasta, `file:../vendor/`) quando o tgz está íntegro contra o `.integrity` que está no app, o `package.json` de dentro tem `version` X e o `package-lock.json` resolve no mesmo arquivo e com a mesma integridade. O check não sabe de onde o `.integrity` veio: a conferência com o registro é feita só pelo comando `vendor`. Fora de `vendor/`, `link:`, URL e tgz sem `.integrity` continuam `dependencia-local`. Dois tgz em `vendor/` geram aviso; vale o referenciado.' },
+      { type: 'fix', description: 'O `vendor` chama o npm pelo node (`npm_execpath` ou o `npm-cli.js` ao lado do node), sem `npm.cmd` e sem shell: no Windows o `npm.cmd` sem shell dá EINVAL desde o Node 18.20.2, 20.12.2 e 21.7.3.' },
     ],
   },
   {

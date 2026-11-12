@@ -29,7 +29,7 @@ Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundat
 - `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
 - `Field`, `FieldLabel`, `FieldHint`, `FieldMessage` · `FieldTrigger`
 - `Input` · `InputGroup`, `InputGroupAddon`, `InputGroupButton`, `InputGroupText`, `InputGroupInput`, `InputGroupTextarea`
-- `Select` · `Textarea` · `Switch` · `Progress`
+- `Select` · `SelectBusca` · `Textarea` · `Switch` · `Progress`
 - `Table`, `TableHeader`, `TableHead`, `TableBody`, `TableRow`, `TableCell`, `TableEmpty`
 - `AdminTableColumnMenu`, `AdminTablePagination`, `AdminTableSortHeader`, `AdminTableCompanyCell`, `AdminTableStatusDots`
 - `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`
@@ -57,13 +57,16 @@ Variantes exatas:
 - `successStrong` (verde escuro — `--color-btn-success-hover` em repouso e `--color-btn-success` no hover, inverso da variante `success`; no escuro `--color-success-strong` é cor de texto e não serve de fundo)
 - `ouro`
 - `danger`
+- `dangerStrong` (vermelho cheio `--color-btn-danger-strong`, texto branco; confirmação final destrutiva; 6,47:1 em repouso, 8,31:1 no hover)
 - `link`
 
 Tamanhos exatos:
 
+- `xs` (24 px, só para linha densa com mouse; não é alvo de toque)
 - `sm`
 - `md`
 - `lg`
+- `grade`
 - `touch`
 - `icon`
 - `iconSm`
@@ -863,6 +866,14 @@ import { LoginDsShell } from '@fips-app/ds-fips'
 
 Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
 
+
+## DropdownMenu e Separator — v0.24.3
+
+Fonte: `src/components/ui/dropdown-menu.tsx` e `separator.tsx`. API do shadcn sobre Radix; visual do `UserAccountMenu`.
+
+- **`DropdownMenu`** (Root), **`DropdownMenuTrigger`** (`asChild` com `Button`), **`DropdownMenuContent`** (`align`, `side`, `sideOffset` 6; portal, `z-50`), **`DropdownMenuItem`** (`variant`: `default` | `destructive`; `onSelect`; `disabled`), **`DropdownMenuCheckboxItem`** (`checked`, `onCheckedChange`), **`DropdownMenuLabel`**, **`DropdownMenuSeparator`**, **`DropdownMenuGroup`**, **`DropdownMenuPortal`**, **`DropdownMenuRadioGroup`**. Sem `className` visual: o item destrutivo é `variant="destructive"`, não `text-red-*`.
+- **`Separator`**: `orientation` (`horizontal` | `vertical`), `decorative` (padrão `true`).
+- Teclado do Radix: setas, Home, End, inicial do item, Esc, foco de volta ao gatilho. Gatilho só com ícone leva `aria-label`.
 
 ## Toast — v0.23.3
 

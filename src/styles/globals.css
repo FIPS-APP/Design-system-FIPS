@@ -300,6 +300,8 @@
     --color-btn-success-hover: var(--color-success-strong);
     --color-btn-danger: var(--color-danger);
     --color-btn-danger-hover: #c82333;
+    --color-btn-danger-strong: #b91c1c;
+    --color-btn-danger-strong-hover: #991b1b;
     --color-btn-accent-fg: #ffffff;
     --color-btn-accent-hover: var(--color-warning);
     --color-ring: var(--color-fips-sky-600);
@@ -403,6 +405,8 @@
     --color-btn-success-hover: color-mix(in srgb, var(--color-success-fill) 80%, black);
     --color-btn-danger: #dc2626;
     --color-btn-danger-hover: #b91c1c;
+    --color-btn-danger-strong: #b91c1c;
+    --color-btn-danger-strong-hover: #991b1b;
     --color-btn-accent-fg: var(--color-primary-hover);
     --color-btn-accent-hover: var(--color-accent);
     --color-ring: var(--color-fips-yellow-600);
@@ -976,6 +980,20 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .fips-toast { animation: none; transition: none; }
+  }
+}
+
+@layer components {
+  /* ─── DropdownMenu: entrada de 150ms (a mesma do menu da conta); sem animação com redução de movimento ─── */
+  .fips-dropdown-menu[data-state='open'] {
+    animation: fipsDropdownEntrada 0.15s ease-out;
+  }
+  @keyframes fipsDropdownEntrada {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fips-dropdown-menu[data-state='open'] { animation: none; }
   }
 }
 
