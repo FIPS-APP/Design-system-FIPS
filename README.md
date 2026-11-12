@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.24.6`
+## Versão atual: `v0.24.7`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.24.7 | 2026-11-12 | `Button` com `size="grade"` para grade densa (1 botão por célula): altura mínima de 30 px como o `sm`, padding lateral de 8 px, texto quebra em até 2 linhas e centralizado, sem passar da largura do pai. Sem cor nova. Muda para quem já usa: nada removido |
 | 0.24.6 | 2026-11-12 | Mapa oficial de status do Badge: `StatusBadge`, `statusBadge`, `STATUS_BADGE_GRUPOS`, `STATUS_BADGE_SINONIMOS` e `normalizarStatus`. Sete grupos (pendente, andamento, concluído, atrasado, cancelado, rascunho, crítico) sobre as variantes que o `Badge` já tem, sem tom novo, com texto acima de 4,5:1 nos dois temas. Muda para quem já usa: nada removido |
 | 0.24.5 | 2026-11-12 | `Button` com variante `dangerStrong` (vermelho cheio, texto branco 6,47:1 em repouso e 8,31:1 no hover) e tamanho `xs` (24 px, só para linha densa com mouse). Muda para quem já usa: nada removido |
 | 0.24.4 | 2026-11-12 | `SelectBusca`: select de formulário com busca, seleção única, lista em portal que não é cortada por Modal ou Drawer, teclado e `aria` de combobox. `ChipSelect` continua sendo o filtro de barra de ferramentas e não cobre campo de formulário. Muda para quem já usa: nada |

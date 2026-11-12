@@ -38,6 +38,9 @@ export const buttonVariants = cva(
         xs: 'h-6 min-h-6 px-2.5 text-[11px] [&_svg]:size-3',
         md: 'h-9 min-h-9 px-5 text-[13px] [&_svg]:size-3.5',
         lg: 'h-[42px] min-h-[42px] px-7 text-sm [&_svg]:size-4',
+        /** Grade densa (1 botão por célula): altura mínima do sm, padding lateral menor, texto quebra em até 2 linhas, centralizado, sem passar da largura do pai. */
+        grade:
+          'h-auto min-h-[30px] max-w-full whitespace-normal break-words px-2 py-1 text-center text-[12px] leading-[1.15] [&_svg]:size-3.5',
         touch: 'h-12 min-h-12 px-7 text-sm [&_svg]:size-5',
         icon: 'h-9 w-9 p-0 [&_svg]:size-3.5',
         iconSm: 'h-[30px] w-[30px] p-0 [&_svg]:size-3.5',

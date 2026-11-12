@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.7',
+    date: '2026-11-12',
+    title: 'Button size grade para grade densa',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Button` ganha `size="grade"`: altura mínima de 30 px (a do `sm`), padding lateral de 8 px, texto que quebra em até 2 linhas, centralizado, e largura máxima igual à do pai. Para células estreitas, como o lançamento mensal de 12 colunas com "Não se aplica". Foco, raio e cores são os do `sm`; nenhum token novo.',
+      },
+    ],
+  },
+  {
     version: '0.24.6',
     date: '2026-11-12',
     title: 'Mapa oficial de status para o Badge',
