@@ -107,6 +107,7 @@ export {
   type DropdownMenuItemProps,
 } from './dropdown-menu'
 export { Progress, type ProgressProps } from './progress'
+export { DeltaIndicator, type DeltaIndicatorProps } from './delta-indicator'
 export { Select, type SelectProps } from './select'
 export { Skeleton, type SkeletonProps } from './skeleton'
 export { SelectBusca, type SelectBuscaProps } from './select-busca'

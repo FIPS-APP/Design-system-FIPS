@@ -18,6 +18,7 @@ const ButtonDoc = lazy(() => import('./docs/pages/components/ButtonDoc'))
 const RadioCheckboxDoc = lazy(() => import('./docs/pages/components/RadioCheckboxDoc'))
 const FieldDoc = lazy(() => import('./docs/pages/components/FieldDoc'))
 const InputDoc = lazy(() => import('./docs/pages/components/InputDoc'))
+const DeltaIndicatorDoc = lazy(() => import('./docs/pages/components/DeltaIndicatorDoc'))
 const ProgressDoc = lazy(() => import('./docs/pages/components/ProgressDoc'))
 const SelectDoc = lazy(() => import('./docs/pages/components/SelectDoc'))
 const TextareaDoc = lazy(() => import('./docs/pages/components/TextareaDoc'))
@@ -90,6 +91,7 @@ export default function App() {
         <Route path="components/radio-checkbox" element={renderLazyRoute(<RadioCheckboxDoc />)} />
         <Route path="components/field" element={renderLazyRoute(<FieldDoc />)} />
         <Route path="components/input" element={renderLazyRoute(<InputDoc />)} />
+        <Route path="components/delta-indicator" element={renderLazyRoute(<DeltaIndicatorDoc />)} />
         <Route path="components/progress" element={renderLazyRoute(<ProgressDoc />)} />
         <Route path="components/select" element={renderLazyRoute(<SelectDoc />)} />
         <Route path="components/select-busca" element={renderLazyRoute(<SelectBuscaDoc />)} />

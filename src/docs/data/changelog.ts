@@ -25,6 +25,26 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.3',
+    date: '2026-11-12',
+    title: 'DeltaIndicator e rótulo no Progress',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo `DeltaIndicator`: variação com seta, sinal e número (pt-BR), cor por sinal e `goodWhen="down"` para indicadores em que cair é melhorar. O sentido vai por ícone, texto e palavra para leitor de tela, não só por cor.',
+      },
+      {
+        type: 'feature',
+        description: '`Progress` ganha `label` (texto acima da barra, ligado por `aria-labelledby`) e `showValue` (percentual à direita, também em `aria-valuetext`). Sem as props, nada muda.',
+      },
+      {
+        type: 'fix',
+        description: 'Fim do degradê da barra do `Progress` passa de `--color-primary` para `--color-primary-text`: no tema escuro o contraste com o trilho sobe de 1,81:1 para 7,77:1.',
+      },
+    ],
+  },
+  {
     version: '0.25.0',
     date: '2026-11-12',
     title: 'Rodada de 12/11 b',

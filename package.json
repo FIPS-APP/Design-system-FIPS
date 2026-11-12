@@ -1,6 +1,6 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.25.0",
+  "version": "0.25.3",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -46,7 +46,7 @@
     "test:status-badge": "node --test scripts/status-badge.test.mjs",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
-    "test:grade": "node --test scripts/button-grade.test.mjs",
+    "test:grade": "node --test scripts/button-grade.test.mjs scripts/delta-progress.test.mjs",
     "test:select": "node --test scripts/select-portal.test.mjs",
     "test:select-busca": "node --test scripts/select-busca.test.mjs",
     "test:rolagem": "node --test scripts/rolagem-teclado.test.mjs",

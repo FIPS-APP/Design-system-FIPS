@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { CodeExportSection } from '../../components/CodeExport';
 import { PlaygroundProvider, Copyable, CodePlayground } from '../../components/CodePlayground';
+import { Progress as ProgressDS } from '../../../components/ui/progress';
 
 /* ═══════════════════════════════════════════
    FIPS DESIGN SYSTEM — BRAND TOKENS
@@ -965,6 +966,17 @@ export default function ProgressDoc() {
                 </div>
               ))}
             </div>
+          </Card>
+        </Section>
+
+        <Section n="06" title="Rótulo e percentual no Progress do pacote" desc="Props label e showValue do componente Progress. O texto vai acima da barra, a barra aponta para ele por aria-labelledby e o percentual vira aria-valuetext. Sem as props, a barra é a mesma de antes.">
+          <Card>
+            <div style={{ display: "grid", gap: 20, maxWidth: 420 }}>
+              <ProgressDS label="Inspeções do mês" showValue value={72} />
+              <ProgressDS label="Checklist enviado" value={30} />
+              <ProgressDS showValue value={45} aria-label="Cadastro" />
+            </div>
+            <pre style={{ marginTop: 16, fontSize: 12, fontFamily: F.mono, color: C.cinzaEscuro, overflowX: "auto" }}>{`<Progress label="Inspeções do mês" showValue value={72} />\n<Progress label="Checklist enviado" value={30} />`}</pre>
           </Card>
         </Section>
 
