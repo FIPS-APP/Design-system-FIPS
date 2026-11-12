@@ -4,7 +4,7 @@ Barra de abas segmentadas (pílulas em card) — padrão de **Configurações** 
 
 ## Uso
 
-Desde a 0.22.4 o componente sai pelo pacote: `import { FipsTabBar } from '@fips-app/ds-fips'`. Não copie o arquivo.
+Desde a 0.24.0 o componente sai pelo pacote: `import { FipsTabBar } from '@fips-app/ds-fips'`. Não copie o arquivo.
 
 Só para app que ainda não está no pacote:
 
