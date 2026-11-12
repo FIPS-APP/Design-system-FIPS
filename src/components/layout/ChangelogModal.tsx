@@ -47,7 +47,7 @@ const TYPE_CONFIG: Record<ChangelogType, TypeStyle> = {
     icon: Rocket,
     label: 'Importante',
     card: 'border-[var(--color-accent-strong)]/25 bg-[var(--color-accent-strong)]/10',
-    accent: 'text-[var(--color-accent-strong)]',
+    accent: 'text-[var(--color-semantic-atencao-fg)]',
   },
 }
 
@@ -107,7 +107,7 @@ export function ChangelogModal({ open, onOpenChange }: ChangelogModalProps) {
               <Sparkles className="h-6 w-6 text-[var(--color-accent)]" aria-hidden />
             </div>
             <div className="relative min-w-0">
-              <span className="block font-heading text-[11px] leading-tight font-semibold tracking-[0.14em] text-[var(--color-accent-strong)] uppercase">
+              <span className="block font-heading text-[11px] leading-tight font-semibold tracking-[0.14em] text-[var(--color-accent)] uppercase">
                 Versão {CURRENT_VERSION}
               </span>
               <DialogPrimitive.Title className="font-heading text-[21px] leading-tight font-bold tracking-[-0.2px] text-white">
