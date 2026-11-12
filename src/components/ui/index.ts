@@ -131,3 +131,4 @@ export {
 } from './tooltip'
 export { Separator } from './separator'
 export { Switch } from './switch'
+export { Slider, type SliderProps } from './slider'

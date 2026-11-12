@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.1',
+    date: '2026-11-12',
+    title: 'Slider',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Slider` (+ `SliderProps`) sai pelo pacote: valor único, controlado (`value`, `onValueChange`) ou solto (`defaultValue`), `onValueCommit` ao soltar, `getValueText` para o `aria-valuetext`. Teclado: setas, PageUp e PageDown (10 passos), Home e End. Polegar de 24 px; trilho e polegar com contraste medido nos dois temas, mínimo 3:1. Dependência nova, versão exata: `@radix-ui/react-slider` 1.6.1. Página no site; teste em `scripts/slider.test.mjs`.',
+      },
+    ],
+  },
+  {
     version: '0.25.0',
     date: '2026-11-12',
     title: 'Rodada de 12/11 b',
