@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.22.2',
+    date: '2026-11-11',
+    title: 'AppShell avisa quando o menu recolhe',
+    entries: [
+      { type: 'feature', description: 'AppShell: prop aoMudarRecolhido(recolhido, origem), chamada a cada troca do menu entre aberto e recolhido, com a origem botao (clique no cabeçalho), auto (recolher sozinho) ou ponteiro. Para lembrar a escolha, o app grava só com origem botao e passa o valor lido em recolhidoInicial; ela sobrevive à recarga. Opcional e sem chamada na montagem: quem não passa não muda.' },
+    ],
+  },
+  {
     version: '0.22.1',
     date: '2026-11-11',
     title: 'Teclado na gaveta do menu',

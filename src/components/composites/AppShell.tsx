@@ -10,6 +10,9 @@ import {
 } from './app-shell-logica'
 import type { RenderizarLinkDaCasca } from './app-shell-tipos'
 
+/** Quem trocou o menu: o botão do cabeçalho (escolha do usuário), o recolher sozinho ou o ponteiro entrando. */
+export type OrigemDoRecolhido = 'botao' | 'auto' | 'ponteiro'
+
 export interface AppShellProps {
   /**
    * Chave do `localStorage` onde ficam as preferências do menu ("Modo do menu"). Uma por app, por
@@ -29,6 +32,14 @@ export interface AppShellProps {
   renderLink?: RenderizarLinkDaCasca
   /** Menu já nasce recolhido (e, com "Automático", abre quando o ponteiro entra). Padrão: aberto. */
   recolhidoInicial?: boolean
+  /**
+   * Chamada a cada troca do menu entre aberto e recolhido, com o novo valor e a origem: `'botao'` (clique no
+   * cabeçalho), `'auto'` (recolher sozinho) ou `'ponteiro'` (ponteiro entrando no menu). Não é chamada na
+   * montagem. Para lembrar a escolha do usuário, o app grava só quando a origem é `'botao'` e passa o valor
+   * lido em `recolhidoInicial`; `'auto'` e `'ponteiro'` seguem o mouse e o tempo, não uma escolha. Opcional:
+   * quem não passa não muda.
+   */
+  aoMudarRecolhido?: (recolhido: boolean, origem: OrigemDoRecolhido) => void
   /** Conteúdo da tela. */
   children: ReactNode
   className?: string
@@ -57,16 +68,28 @@ export function AppShell({
   cabecalho,
   renderLink,
   recolhidoInicial = false,
+  aoMudarRecolhido,
   children,
   className,
   classeDoConteudo,
 }: AppShellProps) {
   const [prefs, setPrefs] = useState<PreferenciasDoMenu>(() => carregarPreferencias(chavePreferencias, padrao))
   const [recolhido, setRecolhido] = useState(recolhidoInicial)
+  const origemRef = useRef<OrigemDoRecolhido>('botao')
   const [gavetaAberta, setGavetaAberta] = useState(false)
   const timerRef = useRef<number | null>(null)
   const ponteiroNoMenuRef = useRef(false)
   const raizRef = useRef<HTMLDivElement | null>(null)
+
+  // Avisa o app a cada troca do recolhido (não na montagem: o valor inicial veio dele).
+  const recolhidoAnteriorRef = useRef(recolhido)
+  const aoMudarRecolhidoRef = useRef(aoMudarRecolhido)
+  aoMudarRecolhidoRef.current = aoMudarRecolhido
+  useEffect(() => {
+    if (recolhidoAnteriorRef.current === recolhido) return
+    recolhidoAnteriorRef.current = recolhido
+    aoMudarRecolhidoRef.current?.(recolhido, origemRef.current)
+  }, [recolhido])
 
   useEffect(() => {
     guardarPreferencias(chavePreferencias, prefs)
@@ -82,13 +105,19 @@ export function AppShell({
   const agendarRecolher = useCallback(() => {
     limparTimer()
     if (!prefs.recolherAuto) return
-    timerRef.current = window.setTimeout(() => setRecolhido(true), prefs.segundos * 1000)
+    timerRef.current = window.setTimeout(() => {
+      origemRef.current = 'auto'
+      setRecolhido(true)
+    }, prefs.segundos * 1000)
   }, [limparTimer, prefs.recolherAuto, prefs.segundos])
 
   const aoEntrarPonteiro = useCallback(() => {
     ponteiroNoMenuRef.current = true
     limparTimer()
-    if (prefs.recolherAuto) setRecolhido(false)
+    if (prefs.recolherAuto) {
+      origemRef.current = 'ponteiro'
+      setRecolhido(false)
+    }
   }, [limparTimer, prefs.recolherAuto])
 
   const aoSairPonteiro = useCallback(() => {
@@ -108,6 +137,7 @@ export function AppShell({
 
   const alternarMenu = useCallback(() => {
     limparTimer()
+    origemRef.current = 'botao'
     setRecolhido((v) => !v)
   }, [limparTimer])
   const alternarGaveta = useCallback(() => setGavetaAberta((v) => !v), [])

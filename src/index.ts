@@ -227,6 +227,7 @@ export {
   NotificacoesMenu,
   TutorialOverlay,
   type AppShellProps,
+  type OrigemDoRecolhido,
   type AppHeaderProps,
   type AcaoDoCabecalho,
   type AppSidebarProps,
