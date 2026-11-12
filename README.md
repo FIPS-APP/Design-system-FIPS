@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.23.1`
+## Versão atual: `v0.23.4`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.23.4 | 2026-11-11 | `LoginDsShell`: o rótulo da estação Segurança usa `--color-fips-red-300` (5,25:1 sobre a coluna, nos dois temas; era 2,65:1 com `--color-fips-red-600`). O ponto da estação e as outras 4 estações não mudam. |
 | 0.23.1 | 2026-11-11 | O pacote se explica e confere o app: `ai/manifest.json` e `ai/SKILL.md` gerados no build (exports por tipo, props das `*Props`, tokens de `:root` e `.dark`, padrão de cada tela); `npx fips-ds passo0` e `npx fips-ds check` (import inexistente, `var()` sem declaração, hex literal, dependência `file:`/tgz, casca ou banner local, `className` visual em primitivo, inclusive com prefixo); regras de lint em `@fips-app/ds-fips/eslint`; `skills/design-system-fips/SKILL.md` gerado. |
 | 0.23.0 | 2026-11-11 | Entrada no pacote: `LoginDsShell` exportado, igual à tela da Gestão OPA (coluna "Excelência sobre trilhos" com a rota dos princípios, cartão de vidro com marca, texto e botão de contorno do provedor). Props: `onClick` ou `href`, `rotulo`, `icone`, `texto`, `erro`, `carregando`, `rotuloCarregando`, `rodape`, `logo`, `logoAlt`, `fundo`, `className`. CSS no `styles.css` do pacote, em `@layer components`, só com token (hex trocados: `#fdc24e` por `--color-fips-yellow-400`, `#f6921e` por `--color-fips-yellow-600`, `#002a68` por `--color-fips-blue-950`, `#00396b` por `--color-fips-azulejo-600`, `#001430` por mistura de `--color-fips-blue-950` com preto, `#FF4D4D` por `--color-fips-red-600`, `#FFB4B4` por `--color-fips-red-300`). A página `/docs/login` usa o componente do pacote. Os outros três componentes que o site mostra sem export saem nos PRs próprios: `FipsTabBar` e `BuscarPessoaModal` no #145, `SettingsPreferenceRow` no #6. Novo teste `scripts/exports-site.test.mjs`: componente que o site mostra tem export. Muda para quem já usa: nada; quem tinha cópia local da entrada pode trocar pelo pacote |
 | 0.22.3 | 2026-11-11 | `FaixaSecaoDocumento` e `FaixaCategoriaDocumento` ganham `centralizado` e `tom="legenda"` (grafite, token `--documento-faixa-legenda`); `SecaoNumerada` ganha `tom` (`primario` | `sucesso`) e `iconeEmRelevo`. Todas opcionais, sem mudança para quem não usa |

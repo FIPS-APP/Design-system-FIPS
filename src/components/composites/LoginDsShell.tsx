@@ -65,6 +65,8 @@ const ESTACOES = [
     nome: 'Segurança',
     texto: 'A segurança das pessoas é prioridade sobre qualquer outro tema.',
     cor: 'var(--color-fips-red-600)',
+    /** Texto do rótulo: o vermelho do ponto mede 2,65:1 sobre a coluna; o 300 passa de 4,5:1. */
+    rotulo: 'var(--color-fips-red-300)',
   },
 ] as const
 
@@ -191,7 +193,7 @@ function RotaDosPrincipios({ montado, passo }: { montado: boolean; passo: number
             />
             <div aria-hidden style={{ position: 'absolute', left: -30, top: 0, width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${alfa(estacao.cor, 25)}`, pointerEvents: 'none' }} />
             <div aria-hidden style={{ position: 'absolute', left: -12, top: 8, width: 8, height: 1, background: alfa(estacao.cor, 31) }} />
-            <div className="font-heading" style={{ fontSize: 11, fontWeight: 700, color: estacao.cor, letterSpacing: '0.3px', lineHeight: 1.2 }}>
+            <div className="font-heading" style={{ fontSize: 11, fontWeight: 700, color: 'rotulo' in estacao ? estacao.rotulo : estacao.cor, letterSpacing: '0.3px', lineHeight: 1.2 }}>
               {estacao.nome}
             </div>
             <div style={{ marginTop: 3, maxWidth: 220, fontSize: 9, lineHeight: 1.45, color: 'rgba(255,255,255,0.25)' }}>
