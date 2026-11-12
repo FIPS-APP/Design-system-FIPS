@@ -25,12 +25,72 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.23.6',
-    date: '2026-11-11',
-    title: 'Pacote local da versão publicada',
+    version: '0.24.0',
+    date: '2026-11-12',
+    title: 'Toast, Button touch, exports do site e correções de contraste e celular',
     entries: [
-      { type: 'feature', description: '`npx fips-ds vendor X` baixa a versão publicada para `vendor/fips-app-ds-fips-X.tgz`, confere o sha512 com o `dist.integrity` do registro, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com `--save-exact`. Token só pelo ambiente (`NODE_AUTH_TOKEN`). Se o tgz baixado não bater, apaga e sai com erro.' },
-      { type: 'improvement', description: '`npx fips-ds check` aceita `file:vendor/fips-app-ds-fips-X.tgz` só quando o sha512 do tgz é igual ao `.integrity`, o `package.json` de dentro do tgz tem `version` X e o `package-lock.json` resolve no mesmo arquivo. Tgz sem `.integrity`, trocado à mão ou de branch continua `dependencia-local`. Dois tgz em `vendor/` geram aviso; vale o referenciado.' },
+      {
+        type: 'fix',
+        description:
+          '`Alert` com tom `warning`: o texto passa de `--color-accent-strong` (`#f6921e`, 2,07:1 sobre `#fff0d6` no claro) a `--color-semantic-atencao-fg` (`#c2410c`, 4,61:1). No escuro o texto passa de `#f6921e` a `#fdc24e` (5,91:1 vira 8,49:1 sobre o cartão). Fundo e borda não mudam.',
+      },
+      {
+        type: 'fix',
+        description:
+          'Mesmo token no item "Importante" do `ChangelogModal` (claro 2,14:1 vira 4,77:1) e nos ícones em hover do `UserAccountMenu` (claro 2,11:1 vira 4,70:1; escuro `#f6921e` vira `#fdc24e`, 5,77:1 vira 8,30:1 com o fundo de hover a /12).',
+      },
+      {
+        type: 'fix',
+        description:
+          'Eyebrow de 11 px do cabeçalho de `Modal` (hero), `Drawer`, `ExportPreviewModal` e `ChangelogModal`: passa de `--color-accent-strong` a `--color-accent` (`#fdc24e`). Sobre o começo do degradê azul `#004B9B` vai de 3,65:1 a 5,24:1; no escuro, o pior ponto vai de 4,91:1 a 7,06:1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`npm run test:badge` passa a cobrir o `Alert` warning (texto contra o fundo em cartão, cartão suave e faixa, nos dois temas), as quatro eyebrows contra o degradê do cabeçalho, o item do `ChangelogModal` e o ícone do `UserAccountMenu`, e recusa o laranja `#f6921e` como cor de texto em `src` fora de `src/docs`, por qualquer um dos nomes (`--color-accent-strong`, `--color-warning`, `--color-fips-yellow-600` e o hex). Dois ícones que já usavam esse laranja antes (`AbasDeSecao` e `DocHeaderSectionNav`) ficam numa lista fechada no teste; qualquer uso novo falha. O teste do menu da conta passa a medir os três ícones contra todos os fundos de hover, no claro e no escuro, e o das eyebrows de `ChangelogModal` e `ExportPreviewModal` compõe o trilho branco a 6% sobre o degradê (pior ponto: 4,55:1).',
+      },
+      {
+        type: 'improvement',
+        description:
+          'As referências da skill (`components.md` e `patterns.md`) deixam de ensinar o laranja como texto: eyebrow do header `hero` em `--color-accent`, ícone do hover do menu e tom `breaking` do `ChangelogModal` em `--color-semantic-atencao-fg`. O zip da skill foi regerado.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`DrawerHero` (+ `DrawerHeroProps`), `useTableDensity` (+ `TableDensity`), `FipsTabBar` (+ `FipsTabBarProps` e `FipsTabItem`) e `BuscarPessoaModal` (+ `BuscarPessoaModalProps` e `Pessoa`) saem em `src/index.ts`. O site já os documentava e `src/index.ts` não os exportava, então o app que queria um deles copiava o arquivo. Export novo e nada removido: `dist/index.d.ts` ganha 10 nomes. `PatternPanelHero` já saía desde a 0.20.0. `SettingsPreferenceRow` sai na mesma versão, com o #6.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`BuscarUsuarioModal` deixa de importar de `src/docs/data/users`: o tipo `FipsUser` e as funções puras de papel e iniciais foram para `src/lib/fipsUser.ts`, e o arquivo do site os reexporta. O modal continua fora do pacote. `npm run test:exports` confere os nomes exportados pelo compilador do TypeScript e que nenhum arquivo alcançado a partir de `src/index.ts` vem de `src/docs/`.',
+      },
+      {
+        type: 'fix',
+        description:
+          'FipsTabBar: a aba ativa pinta texto e borda com --color-primary-text, que vira no tema escuro. Antes usava --color-primary, que fica no navy nos dois temas: texto a 1,92:1 e borda a 2,06:1 no escuro. Agora o texto fica em 4,5:1 ou mais e a borda em 3:1 ou mais nos dois temas, com teste em npm test.',
+      },
+      {
+        type: 'feature',
+        description:
+          'Novo composite `SettingsPreferenceRowSelect`: a mesma linha do `SettingsPreferenceRow` (canto 10/10/10/18, rótulo 14/500, descrição 12 apagada) com um `Select` no lugar do interruptor, para preferência que não é sim ou não. O `Select` do pacote não tem portal; dentro de modal ou gaveta com `overflow` a lista pode ser cortada.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Entram catorze tokens `--neu-*` no `globals.css`, só do azulejo neumórfico do header e da sidebar (não são cor de superfície). `docHeaderNeuLight*`, `docHeaderNeuDark*`, `docHeaderNeuAccentBgHover`, `docHeaderNeuAccentIcon` e `docHeaderNeuAccentGloss` passam a ler os tokens. Os valores são os mesmos de antes, nenhum pixel muda. Os campos `*Hex` de `docHeaderTabsUnderlineMd` continuam em hexadecimal, porque a HeaderDoc os exibe como texto.',
+      },
+      { type: 'fix', description: 'AppShell: na gaveta (abaixo de 1024 px) o foco entra no primeiro item do menu, o resto da página fica inert (Tab não chega nela) e, ao fechar (Esc, fundo ou item), o foco volta ao botão "Abrir menu". O menu ganha role="dialog" e aria-modal="true" só no modo gaveta. No desktop nada muda.' },
+      { type: 'feature', description: 'AppShell: prop aoMudarRecolhido(recolhido, origem), chamada a cada troca do menu entre aberto e recolhido, com a origem botao (clique no cabeçalho), auto (recolher sozinho) ou ponteiro. Para lembrar a escolha, o app grava só com origem botao e passa o valor lido em recolhidoInicial; ela sobrevive à recarga. Opcional e sem chamada na montagem: quem não passa não muda.' },
+      { type: 'improvement', description: 'AppHeader abaixo de 640 px: recuo de 16 px (era 12), espaço de 12 px entre o menu e o logo (era 8) e de 6 px entre os botões da direita (era 4). A 375 px o botão de menu fica em x=16 e o sino em x=159, como na Gestão OPA. De 640 px em diante nada muda.' },
+      { type: 'improvement', description: 'SecaoNumerada: o cabeçalho tem recuo lateral de 24 px em qualquer largura do cartão (era 20 px abaixo de @2xl). Em coluna estreita a 1440 px e a 375 px o recuo passa de 20 para 24 px, igual à Manutenção leva-1; o espaço de 12 px entre o chip e o título não muda.' },
+      { type: 'improvement', description: 'CartaoListagem: cabeçalho compacto abaixo de sm, com recuo 14/12/12/12 e espaço de 12 px (era 18/20/14/20 e 14 em qualquer largura). A 375 px o cabeçalho do cartão de demonstração passa de 145 para 137 px de altura. De sm em diante nada muda (81 px a 1440 px).' },
+      { type: 'improvement', description: '`FilterBlock` abaixo de 640 px põe a busca numa segunda linha, em largura total, como a barra de filtros da Gestão OPA. A 375 px, com Filtros e busca, a barra passa de 64 px para 104 px; a partir de 640 px a medida segue 64 px.' },
+      { type: 'feature', description: '`Toast`, `ToastViewport` e `useToast` exportados. Variantes `sucesso`, `erro`, `atencao`, `info` e `neutro`; props `title`, `message`, `actionLabel`, `onAction`, `onClose` e `duration`. Pilha de até 5 no canto superior direito, entrada e saída deslizando, barra de tempo de 3px; com redução de movimento, sem animação. `erro` usa `role="alert"`, as demais `role="status"`.' },
+      { type: 'improvement', description: 'Cores só por token semântico (`--color-semantic-*`, `--color-success-text`, `--color-danger`, `--color-fg`, `--color-fg-muted`), sem hex. Medido sobre o cartão: texto de 4,88:1 a 10,70:1 no claro e de 6,04:1 a 12,51:1 no escuro; destaque (borda lateral e ícone) de 3,44:1 a 10,49:1 no claro e de 4,01:1 a 9,18:1 no escuro. O protótipo usava verde `#00C64C` (2,17:1) e laranja `#F6921E` (2,19:1) como destaque; saem por `--color-success-text` e `--color-semantic-atencao-fg`. Botão de ação e X passam a usar a cor do texto, sem opacidade, para manter 4,5:1.' },
+      { type: 'improvement', description: 'A página `/docs/components/toast` usa o componente do pacote e a exceção sai de `scripts/exports-site.test.mjs`. Novo `scripts/contraste-toast.test.mjs` no `npm test`.' },
+      { type: 'fix', description: '`LoginDsShell`: o rótulo da estação Segurança passa de `--color-fips-red-600` para `--color-fips-red-300`. Contraste sobre a coluna institucional, medido no navegador nos dois temas: de 2,65:1 para 5,25:1. O ponto da estação e as outras 4 estações não mudam.' },
+      { type: 'feature', description: '`Button` aceita `size="touch"`: altura de 48 px (o `lg` tem 42 px), mesmo padding, raio e fonte do `lg`, ícone de 20 px. Para app de campo usado com luva. As cores das variantes não mudam.' },
+      { type: 'improvement', description: 'A página do Button mostra o tamanho Touch na prévia e no guia de tamanhos. `npm test` confere a altura e a ausência de mudança no `lg`.' },
     ],
   },
   {

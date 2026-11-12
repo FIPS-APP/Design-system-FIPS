@@ -19,7 +19,7 @@ const alertVariants = cva(
         success:
           'bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.40)] text-[var(--color-success-strong)]',
         warning:
-          'bg-[var(--color-badge-warning-bg)] border-[var(--color-accent-strong)] text-[var(--color-accent-strong)]',
+          'bg-[var(--color-badge-warning-bg)] border-[var(--color-accent-strong)] text-[var(--color-semantic-atencao-fg)]',
         danger:
           'bg-[var(--color-badge-danger-bg)] border-[var(--color-danger)] text-[var(--color-danger-text)]',
       },

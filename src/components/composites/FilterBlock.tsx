@@ -32,7 +32,8 @@ export type FilterBlockProps = {
 /**
  * Bloco de filtros da casa: Filtros (abre drawer) · Busca · Exportar.
  * Card 12/12/12/24 (padding 0; o respiro 14/18 e o espaço de 10px entre controles são de uma faixa interna,
- * como na Manutenção), botões de 30px e busca de 34px (a linha fecha em 64px). As dimensões moram no drawer, nunca soltas na barra.
+ * como na Manutenção), botões de 30px e busca de 34px (a linha fecha em 64px). Abaixo de 640px a busca desce para uma
+ * segunda linha, em largura total, como na Gestão OPA; a partir de 640px fica na mesma linha. As dimensões moram no drawer, nunca soltas na barra.
  * A busca é obrigatória (`search` e `onSearchChange`); a vaga de exportar é opcional.
  */
 export function FilterBlock({
@@ -105,7 +106,7 @@ export function FilterBlock({
           </div>
         ) : null}
 
-        <div className="relative min-w-[160px] flex-1">
+        <div className="relative order-last w-full basis-full sm:order-none sm:w-auto sm:min-w-[160px] sm:flex-1 sm:basis-0">
           <Search
             className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-fg-muted)]"
             aria-hidden

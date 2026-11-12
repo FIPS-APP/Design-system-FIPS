@@ -39,6 +39,8 @@ Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundat
 
 **Exportado sem página de doc:** `Switch` (Radix, `src/components/ui/switch.tsx`; trilho em `--color-switch-on`/`--color-switch-off`, anel `--color-ring` cheio com recuo `--color-surface`). A página `/docs/components/switch` foi removida na v0.11.20 — o primitive e o composite `SettingsPreferenceRow` continuam funcionando em qualquer app consumidor, só ficaram sem doc dedicada.
 
+**Documentados no site e exportados desde a 0.24.0:** `DrawerHero` e `DrawerHeroProps`, `useTableDensity` e `TableDensity`, `FipsTabBar`, `FipsTabBarProps` e `FipsTabItem`, `BuscarPessoaModal`, `BuscarPessoaModalProps` e `Pessoa`. Continuam sem sair do pacote: `SettingsPreferenceRow` (a decisão está no PR #6, que traz também `SettingsPreferenceRowSelect`) e `BuscarUsuarioModal` (é o "Entrar como usuário" do menu Minha Conta do site; já não importa dado de `src/docs/`). `PatternPanelHero` já saía desde a 0.20.0.
+
 ## Button
 
 Fonte: `src/components/ui/button.tsx` e `src/components/ui/button-variants.ts`
@@ -62,6 +64,7 @@ Tamanhos exatos:
 - `sm`
 - `md`
 - `lg`
+- `touch`
 - `icon`
 - `iconSm`
 
@@ -294,7 +297,7 @@ Direção de uso:
 
 **`ModalFooter` — props:** `children` (botões), `className`, `hint` (texto de apoio à esquerda — se ausente, um spacer ocupa o lugar pra empurrar os botões à direita). Border-top + fundo `--color-surface-muted`/70, `px-6 py-4`.
 
-**Anatomia do header `hero`** (gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`): tile de ícone `44×44px rounded-[10px]` com gradiente glass translúcido (branco 14%→6%→azul 22%) + borda `white/16`, eyebrow `11px/600/tracking-[0.14em] uppercase` cor `--color-accent-strong`, título branco `21px/700` Saira Expanded, descrição `white/65` `12px`, close `32×32 rounded-lg` `top-3.5 right-3.5` `bg-white/8` → hover `white/18`. Radius do modal inteiro: assimétrico `12px 12px 12px 24px` (assinatura FIPS) via `DialogContent`, não `rounded-2xl` uniforme.
+**Anatomia do header `hero`** (gradiente `linear-gradient(135deg, var(--color-gov-gradient-from) 0%, var(--color-gov-gradient-to) 60%, #001A4A 100%)`): tile de ícone `44×44px rounded-[10px]` com gradiente glass translúcido (branco 14%→6%→azul 22%) + borda `white/16`, eyebrow `11px/600/tracking-[0.14em] uppercase` cor `--color-accent` (5,24:1 no pior ponto do degradê, claro e escuro; `--color-accent-strong` não serve como texto), título branco `21px/700` Saira Expanded, descrição `white/65` `12px`, close `32×32 rounded-lg` `top-3.5 right-3.5` `bg-white/8` → hover `white/18`. Radius do modal inteiro: assimétrico `12px 12px 12px 24px` (assinatura FIPS) via `DialogContent`, não `rounded-2xl` uniforme.
 
 **Anatomia do header não-`hero` (este é o padrão do modal curto):** `DialogHeader` com borda inferior, título `text-lg` (`dark:text-white`), descrição do `DialogDescription` (`dark:text-zinc-400`). Sem ícone. Se houver `headerIcon`, o círculo é `40×40` `bg-[var(--color-fips-blue-200)]/60` `text-[var(--color-primary)]`.
 
@@ -369,7 +372,7 @@ Anatomia:
   | `feature` | `Sparkles` | Novidade | `--color-success` |
   | `improvement` | `Wrench` | Melhoria | `--color-secondary` / `--color-primary` |
   | `fix` | `Bug` | Correção | `--color-danger` |
-  | `breaking` | `Rocket` | Importante | `--color-accent-strong` |
+  | `breaking` | `Rocket` | Importante | `--color-semantic-atencao-fg` |
 
 - Só a versão mais recente aparece por padrão; botão texto "Ver versões anteriores" expande o histórico completo.
 - **API real: só `{ open, onOpenChange }`.** Não existem props `changelog`/`currentVersion` — as versões vêm sempre de `CHANGELOG` (`src/docs/data/changelog.ts`), não são configuráveis.
@@ -735,7 +738,7 @@ import { SecaoNumerada, SegmentoAvaliacao, AssinaturaCanvas, BarraAcoesRodape, E
   dados={[{ rotulo: 'Última inspeção', valor: '28/10/2026' }]} acao={{ rotulo: 'Iniciar inspeção', onClick: iniciar }} />
 ```
 
-- `SecaoNumerada`: `id`, `numero` (chip "01"), `titulo` (heading, `nivelTitulo` 2 ou 3), `dica?`, `icone?`, `acao?` (no lugar do ícone), `tom?` (`primario` | `sucesso`; sem tom o título é `--color-fg`), `iconeEmRelevo?` (relevo 3D no ícone, padrão `false`), `className?`, `corpoClassName?`. **Não estende** `FormSectionCard`/`FormSectionHeader` (cabeçalho compacto do registro, chip com ícone, sem heading); partilham o canto `12px 12px 12px 24px`. O cartão é `@container`.
+- `SecaoNumerada`: `id`, `numero` (chip "01"), `titulo` (heading, `nivelTitulo` 2 ou 3), `dica?`, `icone?`, `acao?` (no lugar do ícone), `tom?` (`primario` | `sucesso`; sem tom o título é `--color-fg`), `iconeEmRelevo?` (relevo 3D no ícone, padrão `false`), `className?`, `corpoClassName?`. **Não estende** `FormSectionCard`/`FormSectionHeader` (cabeçalho compacto do registro, chip com ícone, sem heading); partilham o canto `12px 12px 12px 24px`. O cartão é `@container`. O cabeçalho tem recuo lateral de 24 px (`px-6`) em qualquer largura do cartão (0.24.0; era 20 px abaixo de `@2xl`), como na Manutenção leva-1.
 - `SegmentoAvaliacao`: `opcoes` (`{ valor, rotulo, nome?, tom? }`, tons `sucesso` | `atencao` (amarelo) | `aviso` (laranja) | `neutro` | `critico`), `valor`, `onChange(v | null)`, `rotulo`, `grande?`, `permitirLimpar?`, `desabilitado?`. `button` com `aria-pressed`, alvo de 44px, setas/Home/End movem o foco. Contraste do texto marcado e não marcado medido nos dois temas (mínimo 5,81:1 marcado, 6,71:1 não marcado e hover), em `scripts/formulario-execucao.test.mjs`.
 - `AssinaturaCanvas`: `rotulo`, `valor?`, `onChange(dataUrl | null)`, `obrigatoria?`, `erro?`, `desabilitado?`, `largura?`/`altura?` (PNG 520x160; quadro de até 32rem, borda sólida de 1px, como na Manutenção), `dicaVazio?`, `dicaRegistrada?`. Papel branco nos dois temas; precisa de ponteiro, o app oferece outro caminho a quem não desenha.
 - `BarraAcoesRodape`: `variante?` (`rodape` padrão desde a 0.21.0: faixa reta de largura inteira, linha no topo, sombra para cima, estado à esquerda e ações à direita, botões `size="sm"` de 30px como o rodapé da Manutenção | `cartao`: cartão flutuante de antes, botões `lg` de 42px), `label?`, `estado?`, `aviso?`, `children` (ações), `className?`; `position: sticky`; faixa azul no claro, superfície com borda no escuro; `--barra-acoes-base` desloca a barra acima de uma navegação fixa. `EstadoSalvamento`: `estado` (`limpo` | `sujo` | `salvando` | `erro`), `salvoEm?`, `erro?`, região `status` ("Salvo às hh:mm"). Ações em `inverseOutline` e a principal em `ouro`.
@@ -771,7 +774,7 @@ Loader institucional da marca. A logo FIPS extrudada em 3D nasce **branca** com 
 
 ## Casca do app (AppShell, AppHeader, AppSidebar, UserChip, UserAccountMenu, NotificacoesMenu, TutorialOverlay, HeaderTile)
 
-**0.21.0, rodada 3:** (1) O cabeçalho não gera rolagem horizontal em 320 px nem entre 640 e 1000 px com trilha longa: o grupo de ações não encolhe (`shrink-0`), a trilha trunca, o respiro cai a 12/8 px abaixo de `sm` e o lockup some abaixo de 340 px. (2) `AppSidebar` `versao.numero` aceita com ou sem "v" ("0.2" ou "v0.2"): a tela mostra um "v" só e o leitor de tela lê o número puro. (3) Ctrl+P: menu, cabeçalho e fundo da gaveta somem (`data-casca`), o recuo do menu zera e o tema escuro sai do `<html>` durante a impressão (`beforeprint`/`afterprint`). (4) `TutorialOverlay`: o foco entra no cartão e fica preso nele (Tab e Shift+Tab dão a volta), volta a quem abriu ao fechar, Enter num botão não avança junto; em janela estreita o cartão encosta no pé ou no alto no lado que cobre menos do destaque e a página rola para liberar o alvo.
+**0.21.0, rodada 3:** (1) O cabeçalho não gera rolagem horizontal em 320 px nem entre 640 e 1000 px com trilha longa: o grupo de ações não encolhe (`shrink-0`), a trilha trunca, o respiro cai abaixo de `sm` (0.24.0: recuo 16, espaço 12 entre menu e logo e 6 entre os botões da direita, medido a 375 px contra a Gestão OPA) e o lockup some abaixo de 340 px. (2) `AppSidebar` `versao.numero` aceita com ou sem "v" ("0.2" ou "v0.2"): a tela mostra um "v" só e o leitor de tela lê o número puro. (3) Ctrl+P: menu, cabeçalho e fundo da gaveta somem (`data-casca`), o recuo do menu zera e o tema escuro sai do `<html>` durante a impressão (`beforeprint`/`afterprint`). (4) `TutorialOverlay`: o foco entra no cartão e fica preso nele (Tab e Shift+Tab dão a volta), volta a quem abriu ao fechar, Enter num botão não avança junto; em janela estreita o cartão encosta no pé ou no alto no lado que cobre menos do destaque e a página rola para liberar o alvo.
 
 Fonte: `src/components/composites/{AppShell,AppHeader,AppSidebar,HeaderTile,HeaderTrilha,UserChip,UserAccountMenu,NotificacoesMenu,TutorialOverlay}.tsx` (+ `app-shell-tipos.ts`, `app-shell-logica.ts`, `use-painel-ancorado.ts`; estilos `.fips-header-tile`, `.fips-neu-tile`, `.fips-sidebar`, `.fips-user-chip`, `.fips-faixa-de-abas`, `.fips-tutorial-*` na camada `components` de `src/styles/globals.css`). Doc: `/docs/components/casca-do-app`; a casca montada roda em `/demo/casca`. Teste da lógica: `npm run test:casca`.
 
@@ -791,7 +794,7 @@ O cabeçalho e o menu lateral padrão dos apps FIPS, iguais aos do Gestão OPA (
 <TutorialOverlay aberto={t} aoFechar={fechar} passos={PASSOS} />   // fora do cabeçalho: fica acima do menu
 ```
 
-- **`AppShell`**: `chavePreferencias` (obrigatória, `localStorage`), `menu` (`AppSidebarProps` sem o que o shell controla), `cabecalho` (`AppHeaderProps` sem o que o shell controla), `renderLink?`, `preferenciasPadrao?` (`{ recolherAuto, segundos }`; padrão automático em 3 s), `recolhidoInicial?`, `classeDoConteudo?`. Recolhe sozinho após N s sem o ponteiro no menu, abre com o ponteiro; gaveta abaixo de 1024px (fecha no Esc, no fundo e ao navegar; trava a rolagem da página). O conteúdo fica num contêiner `@container`.
+- **`AppShell`**: `chavePreferencias` (obrigatória, `localStorage`), `menu` (`AppSidebarProps` sem o que o shell controla), `cabecalho` (`AppHeaderProps` sem o que o shell controla), `renderLink?`, `preferenciasPadrao?` (`{ recolherAuto, segundos }`; padrão automático em 3 s), `recolhidoInicial?`, `aoMudarRecolhido?(recolhido, origem: 'botao' | 'auto' | 'ponteiro')` (chamada a cada troca, não na montagem; para lembrar a escolha, gravar só com origem 'botao'), `classeDoConteudo?`. Recolhe sozinho após N s sem o ponteiro no menu, abre com o ponteiro; gaveta abaixo de 1024px (fecha no Esc, no fundo e ao navegar; trava a rolagem da página). O conteúdo fica num contêiner `@container`.
 - **`AppSidebar`**: `nome`, `subtitulo?`, `marca?` (`{ logo, logoNoClaro, simbolo, alt }`, padrão `/appfips-logo.png`, `/appfips-logo-full.png`, `/appfips-mark-collapsed.png`: **o pacote não empacota imagem**, o app serve os três na pasta pública), `grupos` (`{ id, titulo?, itens: { id, rotulo, href, icone, ativo?, selo? } }`), `modoDoMenu` e `versao` (**obrigatórios**: rodapé "Modo do menu" e "Versão"), `renderLink?`. 230px aberto, 68px recolhido, gaveta de 256px.
 - **`AppHeader`**: `trilha?`, `abas?` + `abaAtiva?` (`AbaDeSecao`; sublinhado âmbar que desliza, só a partir de 1024px), `sino?`, `procedimento?`/`tutorial?` (`{ rotulo, aoClicar, icone?, ativo? }`; livro e capelo), `tema?` (`{ atual, aoAlternar }`), `acoesExtras?`, `usuario?`, `marca?`, `chaveDeMedicao?`. Ganchos `data-tutorial`: `menu`, `recolher-menu`, `abas`, `sino`, `procedimento`, `tutorial`, `tema`, `conta`.
 - **`HeaderTile`**: botão de ícone de 36px (`icone?`, `ativo?`, `exibicao?: sempre | desktop | celular`). Precisa de `aria-label`.
@@ -838,7 +841,7 @@ Fonte: `src/components/composites/Documento.tsx` (+ `documento-variants.ts`). Do
 
 Fonte: `src/components/composites/{CartaoListagem,AlternadorDeVisao,AvisoSomenteLeitura,TabelaClassificacao}.tsx`. Doc: `/docs/components/listagem-apoio`.
 
-- **`CartaoListagem`**: `icone`, `titulo`, `quantidade`, `sufixoDaContagem?`, `filtrada?` (selo "Filtrado"), `chips?`, `acoes?`, `rodape?`, `semMoldura?`, `nivelTitulo?`. Raio `12/12/12/24`; o cabeçalho quebra e as ações descem no celular.
+- **`CartaoListagem`**: `icone`, `titulo`, `quantidade`, `sufixoDaContagem?`, `filtrada?` (selo "Filtrado"), `chips?`, `acoes?`, `rodape?`, `semMoldura?`, `nivelTitulo?`. Raio `12/12/12/24`; o cabeçalho quebra e as ações descem no celular. Cabeçalho compacto abaixo de `sm` (0.24.0): recuo 14/12/12/12 e espaço 12; de `sm` em diante 18/20/14/20 e 14. Medido a 375 px contra a Manutenção, que usa 14/12/12/12.
 - **`AlternadorDeVisao`**: `valor`, `onChange`, `opcoes?` (padrão tabela e cartões), `rotulo?`. Só o ícone abaixo de `md`; alvo de toque pelo modo.
 - **`AvisoSomenteLeitura`**: `children` (o motivo), `titulo?`. `role="status"`.
 - **`TabelaClassificacao`**: `linhas` `{ id, rotulo, descricao, tom, prazo, detalhe? }`, `titulo?`, `cabecalhos?`. Ponto e pílula no tom, fundo a 8% do tom, texto em `--color-fg` (e `--color-fg-muted-strong` no detalhe); no telefone cada linha vira bloco.
@@ -860,3 +863,11 @@ import { LoginDsShell } from '@fips-app/ds-fips'
 
 Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
 
+
+## Toast — v0.23.3
+
+Fonte: `src/components/composites/Toast.tsx`. Aviso passageiro; cores só por token.
+
+- **`Toast`**: `variant` (`sucesso` | `erro` | `atencao` | `info` | `neutro`, padrão `info`), `title?`, `message?`, `actionLabel?` + `onAction?`, `onClose?` (sem ele não há X), `duration?` (só a barra de tempo), `saindo?`. `role="alert"` no erro, `role="status"` nas demais.
+- **`ToastViewport`**: `toasts`, `onClose`, `className?`. Pilha fixa no canto superior direito; cada item fecha por `duration`, pelo X ou pela ação.
+- **`useToast()`**: devolve `{ toasts, addToast(data) => id, removeToast(id) }`; até 5, o mais novo em cima. Renderize um `ToastViewport` só.

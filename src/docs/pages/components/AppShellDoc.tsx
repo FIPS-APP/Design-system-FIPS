@@ -210,7 +210,7 @@ export default function AppShellDoc() {
       <Secao titulo="Montada">
         <p className="mb-3 max-w-3xl text-sm text-[var(--color-fg-muted)]">
           A casca abaixo roda de verdade (tela cheia, dentro de um quadro): passe o ponteiro no menu, recolha, troque
-          o tema, abra o sino, a conta, o procedimento e o tutorial. No celular, o botão da esquerda abre a gaveta.
+          o tema, abra o sino, a conta, o procedimento e o tutorial. No celular, o botão da esquerda abre a gaveta: o foco vai para o primeiro item, Tab fica no menu e Esc devolve o foco ao botão.
         </p>
         <div className="mb-3 flex flex-wrap items-center gap-x-6 gap-y-2">
           <Seletor
@@ -320,6 +320,7 @@ export default function AppShellDoc() {
             ['renderLink', 'RenderizarLinkDaCasca', 'Liga os links ao roteador do app. Sem ele, <a href> (recarrega a página).'],
             ['preferenciasPadrao', '{ recolherAuto; segundos }', 'Padrão de quem nunca mexeu. Padrão do DS: automático, 3 s.'],
             ['recolhidoInicial', 'boolean', 'O menu já nasce recolhido.'],
+            ['aoMudarRecolhido', "(recolhido: boolean, origem: 'botao' | 'auto' | 'ponteiro') => void", "Chamada a cada troca entre aberto e recolhido, com a origem: botao (clique no cabeçalho), auto (recolher sozinho) ou ponteiro (entrou no menu). Não roda na montagem. Para lembrar a escolha, o app grava só com origem 'botao' e passa o valor em recolhidoInicial."],
             ['classeDoConteudo', 'string', 'Classe do contêiner @container do conteúdo.'],
           ]}
         />
