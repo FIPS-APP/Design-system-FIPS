@@ -41,7 +41,7 @@
     "Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant=\"default\"`/`\"destructive\"`.",
     "Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.",
     "`className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.",
-    "Dependência `file:` ou tgz do pacote: só vale o tgz gerado por `npx fips-ds vendor <versão publicada>` (com `.integrity`); tgz de branch é proibido.",
+    "Dependência `file:` ou tgz do pacote: o certo é o registro. Exceção para app sem leitura do registro (CI, Docker): o tgz gerado por `npx fips-ds vendor <versão>` em `<app>/vendor` (a pasta do `package.json`; `file:../vendor/` quando o `package.json` fica em `app/`), só para versões do pacote que já trazem este check. Tgz de branch é proibido.",
     "Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app."
   ],
   "regimes": [

@@ -151,9 +151,29 @@ export function declaracoes(texto) {
 }
 
 // ---------- pacote local da versão publicada (vendor) ----------
-// `npx fips-ds vendor X` baixa o tgz publicado para `vendor/` e grava ao lado o `dist.integrity` do registro.
-export const VENDOR = /^file:(?:\.\/)?(vendor\/fips-app-ds-fips-(\d+\.\d+\.\d+(?:-[\w.]+)?)\.tgz)$/
+// `npx fips-ds vendor X` baixa o tgz publicado para `<app>/vendor/` e grava ao lado o `dist.integrity` do registro.
+// O check só garante que o tgz está íntegro contra o `.integrity` que está no app (e que a versão de dentro e o lock batem);
+// ele não sabe de onde o `.integrity` veio. Vale para o `package.json` que aponta `file:vendor/`, `file:./vendor/` ou,
+// com o `package.json` numa subpasta (`app/`), `file:../vendor/`.
+export const VENDOR = /^file:(\.\/|\.\.\/)?(vendor\/fips-app-ds-fips-(\d+\.\d+\.\d+(?:-[\w.]+)?)\.tgz)$/
 export const sha512 = (buf) => 'sha512-' + crypto.createHash('sha512').update(buf).digest('base64')
+export const REGISTRO = '--@fips-app:registry=https://npm.pkg.github.com'
+
+// Como chamar o npm sem shell e sem `npm.cmd` (no Windows, `.cmd` sem shell dá EINVAL desde o Node 18.20.2 / 20.12.2 / 21.7.3,
+// e `shell: true` parte argumento com espaço). 1) `npm_execpath` (vale sob `npx`/`npm run`); 2) o `npm-cli.js` ao lado do node;
+// 3) `npm` do PATH (Linux e macOS). Devolve { cmd, prefixo }: rode `execFileSync(cmd, [...prefixo, ...args])`.
+export function npmComando({ env = process.env, execPath = process.execPath, existe = fs.existsSync, plataforma = process.platform } = {}) {
+  const p = plataforma === 'win32' ? path.win32 : path.posix
+  const exec = env.npm_execpath
+  if (exec && /\.[cm]?js$/.test(exec) && existe(exec)) return { cmd: execPath, prefixo: [exec] }
+  const cli = p.join(p.dirname(execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+  if (existe(cli)) return { cmd: execPath, prefixo: [cli] }
+  return { cmd: 'npm', prefixo: [] }
+}
+
+export function rodarNpm(args, opcoes = {}, comando = npmComando()) {
+  return execFileSync(comando.cmd, [...comando.prefixo, ...args], opcoes)
+}
 
 // `version` do `package/package.json` dentro do tgz (tar ustar, sem dependência).
 export function versaoDoTgz(arq) {
@@ -170,13 +190,14 @@ export function versaoDoTgz(arq) {
   return null
 }
 
-// Motivo para recusar a dependência vendorizada, ou null se ela é a cópia exata da versão publicada.
+// Motivo para recusar a dependência vendorizada, ou null se o tgz está íntegro contra o `.integrity` do app.
 export function conferirVendor(app, espec, avisos = []) {
   const m = espec.match(VENDOR)
   if (!m) return 'fora de vendor/fips-app-ds-fips-X.tgz'
-  const [, rel, versao] = m
-  const tgz = path.join(app, rel)
-  const pastaVendor = path.join(app, 'vendor')
+  const [, subida = '', rel, versao] = m
+  const base = subida === '../' ? path.dirname(app) : app
+  const tgz = path.join(base, rel)
+  const pastaVendor = path.join(base, 'vendor')
   const todos = fs.existsSync(pastaVendor) ? fs.readdirSync(pastaVendor).filter((f) => /^fips-app-ds-fips-.*\.tgz$/.test(f)) : []
   if (todos.length > 1) avisos.push(`vendor/ tem ${todos.length} tgz do pacote; vale só o referenciado: ${rel}`)
   if (!fs.existsSync(tgz)) return `${rel} não existe`
@@ -190,36 +211,65 @@ export function conferirVendor(app, espec, avisos = []) {
   if (fs.existsSync(lockPath)) {
     const ent = JSON.parse(fs.readFileSync(lockPath, 'utf8')).packages?.[`node_modules/${PACOTE}`]
     const norm = (r) => String(r).replace(/^file:(?:\.\/)?/, '')
-    if (ent?.resolved && norm(ent.resolved) !== rel) return `package-lock.json resolve ${PACOTE} em ${ent.resolved}, não em ${espec}`
+    if (ent?.resolved && norm(ent.resolved) !== `${subida}${rel}`) return `package-lock.json resolve ${PACOTE} em ${ent.resolved}, não em ${espec}`
     if (ent?.integrity && ent.integrity !== esperado) return `package-lock.json tem outra integridade para ${rel}`
   }
   return null
 }
 
-// Baixa a versão publicada para `<app>/vendor/`, confere com o `dist.integrity` do registro, grava o `.integrity`
-// e instala com versão exata. O token vem só do ambiente (NODE_AUTH_TOKEN), pelo `.npmrc` do app.
-export function vendor(app, versao, { npm = process.platform === 'win32' ? 'npm.cmd' : 'npm', log = () => {} } = {}) {
+const TOKEN_FALTA = 'defina NODE_AUTH_TOKEN com um token com read:packages do GitHub; o registro exige'
+function traduzirNpm(e) {
+  const saida = `${e?.stderr ?? ''}${e?.stdout ?? ''}${e?.message ?? ''}`
+  if (/E401|E403|401 Unauthorized|403 Forbidden/.test(saida)) {
+    return new Error(`o registro recusou o token (E401/E403): use NODE_AUTH_TOKEN com read:packages e acesso ao pacote ${PACOTE}`)
+  }
+  if (/ETIMEDOUT|timed out/i.test(saida)) return new Error(`o npm não respondeu a tempo: ${String(e.message).split('\n')[0]}`)
+  return new Error(`o npm falhou: ${String(e?.stderr || e?.message || e).trim().split('\n')[0]}`)
+}
+
+// Baixa a versão publicada para uma pasta temporária, confere com o `dist.integrity` do registro e só então move para
+// `<app>/vendor/`, grava o `.integrity`, instala com versão exata e remove o tgz e o `.integrity` da versão anterior.
+// O token vem só do ambiente (NODE_AUTH_TOKEN), pelo `.npmrc` do app; o registro do escopo é fixo na linha de comando.
+export function vendor(app, versao, { npm = npmComando(), env = process.env, log = () => {} } = {}) {
   app = path.resolve(app)
   if (!/^\d+\.\d+\.\d+(?:-[\w.]+)?$/.test(versao || '')) throw new Error(`versão inválida: "${versao ?? ''}" (use a versão publicada, ex.: 0.23.1)`)
-  const rodar = (args) => execFileSync(npm, args, { cwd: app, encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] })
+  if (!env.NODE_AUTH_TOKEN) throw new Error(TOKEN_FALTA)
+  const rodar = (args, timeout = 120000) => {
+    try { return rodarNpm([...args, REGISTRO], { cwd: app, encoding: 'utf8', timeout, stdio: ['ignore', 'pipe', 'pipe'] }, npm) } catch (e) { throw traduzirNpm(e) }
+  }
   const integridade = rodar(['view', `${PACOTE}@${versao}`, 'dist.integrity']).trim()
   if (!/^sha512-/.test(integridade)) throw new Error(`o registro não deu dist.integrity sha512 para ${PACOTE}@${versao} (deu "${integridade}")`)
-  const pasta = path.join(app, 'vendor')
-  fs.mkdirSync(pasta, { recursive: true })
   const nome = `fips-app-ds-fips-${versao}.tgz`
-  const tgz = path.join(pasta, nome)
-  const baixado = path.join(pasta, JSON.parse(rodar(['pack', `${PACOTE}@${versao}`, '--pack-destination', pasta, '--json']))[0].filename)
-  if (baixado !== tgz) fs.renameSync(baixado, tgz)
-  const calculada = sha512(fs.readFileSync(tgz))
-  if (calculada !== integridade) {
-    fs.rmSync(tgz, { force: true })
-    throw new Error(`integridade do tgz baixado (${calculada}) não bate com o registro (${integridade})`)
+  const pasta = path.join(app, 'vendor')
+  const tmp = fs.mkdtempSync(path.join(app, '.fips-ds-vendor-'))
+  const novos = []
+  try {
+    const baixado = path.join(tmp, JSON.parse(rodar(['pack', `${PACOTE}@${versao}`, '--pack-destination', tmp, '--json']))[0].filename)
+    const calculada = sha512(fs.readFileSync(baixado))
+    if (calculada !== integridade) throw new Error(`integridade do tgz baixado (${calculada}) não bate com o registro (${integridade})`)
+    fs.mkdirSync(pasta, { recursive: true })
+    const tgz = path.join(pasta, nome)
+    fs.renameSync(baixado, tgz)
+    novos.push(tgz)
+    fs.writeFileSync(`${tgz}.integrity`, integridade + '\n')
+    novos.push(`${tgz}.integrity`)
+    log(`vendor/${nome} e vendor/${nome}.integrity gravados (${integridade})`)
+    // o install é o passo lento: prazo maior só nele
+    rodar(['install', '--save-exact', `file:vendor/${nome}`], 600000)
+    log(`${PACOTE}: "file:vendor/${nome}" no package.json`)
+    for (const f of fs.readdirSync(pasta)) {
+      if (/^fips-app-ds-fips-.*\.tgz(\.integrity)?$/.test(f) && !f.startsWith(`${nome}`)) {
+        fs.rmSync(path.join(pasta, f), { force: true })
+        log(`removido vendor/${f} (versão anterior)`)
+      }
+    }
+    return { tgz, integridade }
+  } catch (e) {
+    for (const f of novos) fs.rmSync(f, { force: true })
+    throw e
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true })
   }
-  fs.writeFileSync(`${tgz}.integrity`, integridade + '\n')
-  log(`vendor/${nome} e vendor/${nome}.integrity gravados (${integridade})`)
-  rodar(['install', '--save-exact', `file:vendor/${nome}`])
-  log(`${PACOTE}: "file:vendor/${nome}" no package.json`)
-  return { tgz, integridade }
 }
 
 // ---------- o que o check confere ----------
@@ -227,7 +277,7 @@ export const REGRAS = [
   { codigo: 'import-inexistente', descricao: 'nome importado de `@fips-app/ds-fips` que o `.d.ts` instalado não exporta' },
   { codigo: 'var-sem-declaracao', descricao: '`var(--x)` sem `--x:` no `styles.css` instalado nem no CSS do app' },
   { codigo: 'hex-literal', descricao: 'cor hex literal em `.tsx`, `.jsx` ou `.css` do app' },
-  { codigo: 'dependencia-local', descricao: '`@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; só vale `file:vendor/fips-app-ds-fips-X.tgz` gerado por `npx fips-ds vendor X` (sha512 igual ao `.integrity` tirado do registro, versão X dentro do tgz, lock no mesmo arquivo)' },
+  { codigo: 'dependencia-local', descricao: '`@fips-app/ds-fips` por `file:`, `link:`, URL ou `.tgz` no `package.json`; só passa `file:vendor/fips-app-ds-fips-X.tgz` (ou `file:../vendor/...` com o `package.json` em subpasta) com tgz íntegro contra o `.integrity` do app, versão X dentro do tgz e lock no mesmo arquivo' },
   { codigo: 'casca-local', descricao: 'casca, entrada ou banner feitos no app: `login-v1-container`, `liquid-card`, `casca-hero-*`, `PaginaCabecalho`, `PageHero` com filhos' },
   { codigo: 'classname-visual', descricao: `classe visual (cor, borda, raio, sombra, altura, padding, fonte, anel, opacidade, size, outline) em \`className\` de ${[...GOVERNED_COMPONENTS].map((n) => '`' + n + '`').join(', ')} do pacote, também com prefixo (\`sm:\`, \`hover:\`, \`dark:\`, \`data-[...]:\`)` },
 ]
