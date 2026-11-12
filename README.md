@@ -92,6 +92,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Tipo de alteração | Incremento | Exemplo |
 |---|---|---|
+| 0.22.5 | 2026-11-11 | Celular conferido contra as referências (375 px): `AppHeader` com recuo 16, espaço 12 e 6 entre os botões da direita (era 12, 8 e 4); `SecaoNumerada` com recuo de 24 px no cabeçalho em qualquer largura (era 20 abaixo de `@2xl`); `CartaoListagem` com cabeçalho 14/12/12/12 abaixo de `sm`. |
 | 0.22.2 | 2026-11-11 | `AppShell`: prop `aoMudarRecolhido(recolhido)`, chamada a cada troca do menu entre aberto e recolhido (botão, recolher sozinho ou ponteiro), para o app guardar a escolha e passar de volta em `recolhidoInicial`. Opcional; não é chamada na montagem |
 | 0.22.1 | 2026-11-11 | `AppShell`: na gaveta (abaixo de 1024 px) o foco entra no primeiro item do menu, o resto da página fica `inert` (Tab não chega nela), o menu ganha `role="dialog"` e `aria-modal="true"` só nesse modo e, ao fechar (Esc, fundo ou item), o foco volta ao botão "Abrir menu". No desktop nada muda |
 | 0.21.19 | 2026-10-22 | `SettingsPreferenceRowSelect`: linha de preferência com `Select`. Catorze tokens `--neu-*` para o azulejo neumórfico do header e da sidebar, sem mudar nenhum pixel; `docHeaderNeuAccentGloss` também lê token |

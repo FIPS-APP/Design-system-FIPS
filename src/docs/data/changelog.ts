@@ -25,6 +25,16 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.22.5',
+    date: '2026-11-11',
+    title: 'Celular conferido contra as referências',
+    entries: [
+      { type: 'improvement', description: 'AppHeader abaixo de 640 px: recuo de 16 px (era 12), espaço de 12 px entre o menu e o logo (era 8) e de 6 px entre os botões da direita (era 4). A 375 px o botão de menu fica em x=16 e o sino em x=159, como na Gestão OPA. De 640 px em diante nada muda.' },
+      { type: 'improvement', description: 'SecaoNumerada: o cabeçalho tem recuo lateral de 24 px em qualquer largura do cartão (era 20 px abaixo de @2xl). Em coluna estreita a 1440 px e a 375 px o recuo passa de 20 para 24 px, igual à Manutenção leva-1; o espaço de 12 px entre o chip e o título não muda.' },
+      { type: 'improvement', description: 'CartaoListagem: cabeçalho compacto abaixo de sm, com recuo 14/12/12/12 e espaço de 12 px (era 18/20/14/20 e 14 em qualquer largura). A 375 px o cabeçalho do cartão de demonstração passa de 145 para 137 px de altura. De sm em diante nada muda (81 px a 1440 px).' },
+    ],
+  },
+  {
     version: '0.22.2',
     date: '2026-11-11',
     title: 'AppShell avisa quando o menu recolhe',
