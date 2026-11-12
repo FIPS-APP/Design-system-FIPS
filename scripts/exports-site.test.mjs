@@ -81,11 +81,7 @@ function componentesImportados(arquivo) {
 }
 
 // Componente que o site mostra e cujo export sai num PR já aberto. Sai daqui quando o PR entrar.
-const PENDENTES_EM_PR = {
-  FipsTabBar: 'export no PR #145',
-  BuscarPessoaModal: 'export no PR #145',
-  SettingsPreferenceRow: 'export no PR #6',
-}
+const PENDENTES_EM_PR = {}
 
 const exportados = exportsDoPacote()
 
