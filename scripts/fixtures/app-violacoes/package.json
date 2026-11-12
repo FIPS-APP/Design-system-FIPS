@@ -1,1 +1,1 @@
-{ "name": "app-violacoes", "private": true, "dependencies": { "@fips-app/ds-fips": "file:vendor/fips-app-ds-fips-0.21.0.tgz" } }
+{ "name": "app-violacoes", "private": true, "dependencies": { "@fips-app/ds-fips": "file:../x/fips-app-ds-fips-0.21.0.tgz" } }

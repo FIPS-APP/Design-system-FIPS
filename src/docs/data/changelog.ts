@@ -32,7 +32,7 @@ export const CHANGELOG: ChangelogVersion[] = [
       {
         type: 'feature',
         description:
-          'Reúne os PRs #187, #189, #190, #191, #192, #193, #194 e #195: `Skeleton`; `DropdownMenu` e `Separator`; `SelectBusca`; `Button` com `xs`, `grade` e `dangerStrong`; mapa oficial de status do `Badge`; `npx fips-ds vendor X`; laranja de texto da casca e da Home acima de 4,5:1. Detalhe de cada um nas entradas 0.23.6 e 0.24.1 a 0.24.7. Dependências novas, com versão exata: `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7. Nada removido.',
+          'Reúne os PRs #187, #189, #190, #191, #192, #193, #194 e #195: `Skeleton`; `DropdownMenu` e `Separator`; `SelectBusca`; `Button` com `xs`, `grade` e `dangerStrong`; mapa oficial de status do `Badge`; `npx fips-ds vendor X` (npm chamado pelo node, sem `npm.cmd`, também no Windows; `check` aceita `file:vendor/` e `file:../vendor/`); laranja de texto da casca e da Home acima de 4,5:1. Detalhe de cada um nas entradas 0.23.6 e 0.24.1 a 0.24.7. Dependências novas, com versão exata: `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7. Nada removido.',
       },
     ],
   },
@@ -218,8 +218,9 @@ export const CHANGELOG: ChangelogVersion[] = [
     date: '2026-11-11',
     title: 'Pacote local da versão publicada',
     entries: [
-      { type: 'feature', description: '`npx fips-ds vendor X` baixa a versão publicada para `vendor/fips-app-ds-fips-X.tgz`, confere o sha512 com o `dist.integrity` do registro, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com `--save-exact`. Token só pelo ambiente (`NODE_AUTH_TOKEN`). Se o tgz baixado não bater, apaga e sai com erro.' },
-      { type: 'improvement', description: '`npx fips-ds check` aceita `file:vendor/fips-app-ds-fips-X.tgz` só quando o sha512 do tgz é igual ao `.integrity`, o `package.json` de dentro do tgz tem `version` X e o `package-lock.json` resolve no mesmo arquivo. Tgz sem `.integrity`, trocado à mão ou de branch continua `dependencia-local`. Dois tgz em `vendor/` geram aviso; vale o referenciado.' },
+      { type: 'feature', description: '`npx fips-ds vendor X` baixa a versão publicada para uma pasta temporária, confere o sha512 com o `dist.integrity` do registro e só então move para `vendor/fips-app-ds-fips-X.tgz`, grava `vendor/fips-app-ds-fips-X.tgz.integrity` e instala com `--save-exact`, removendo o tgz e o `.integrity` da versão anterior. Token só pelo ambiente (`NODE_AUTH_TOKEN`, conferido antes); registro do escopo fixo na linha de comando; E401 e E403 viram mensagem sobre o token; prazo de 10 minutos só para o install.' },
+      { type: 'improvement', description: '`npx fips-ds check` aceita `file:vendor/fips-app-ds-fips-X.tgz` (também `file:./vendor/` e, com o `package.json` em subpasta, `file:../vendor/`) quando o tgz está íntegro contra o `.integrity` que está no app, o `package.json` de dentro tem `version` X e o `package-lock.json` resolve no mesmo arquivo e com a mesma integridade. O check não sabe de onde o `.integrity` veio: a conferência com o registro é feita só pelo comando `vendor`. Fora de `vendor/`, `link:`, URL e tgz sem `.integrity` continuam `dependencia-local`. Dois tgz em `vendor/` geram aviso; vale o referenciado.' },
+      { type: 'fix', description: 'O `vendor` chama o npm pelo node (`npm_execpath` ou o `npm-cli.js` ao lado do node), sem `npm.cmd` e sem shell: no Windows o `npm.cmd` sem shell dá EINVAL desde o Node 18.20.2, 20.12.2 e 21.7.3.' },
     ],
   },
   {
