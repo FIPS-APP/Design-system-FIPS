@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.24.5`
+## Versão atual: `v0.24.6`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.24.6 | 2026-11-12 | Mapa oficial de status do Badge: `StatusBadge`, `statusBadge`, `STATUS_BADGE_GRUPOS`, `STATUS_BADGE_SINONIMOS` e `normalizarStatus`. Sete grupos (pendente, andamento, concluído, atrasado, cancelado, rascunho, crítico) sobre as variantes que o `Badge` já tem, sem tom novo, com texto acima de 4,5:1 nos dois temas. Muda para quem já usa: nada removido |
 | 0.24.5 | 2026-11-12 | `Button` com variante `dangerStrong` (vermelho cheio, texto branco 6,47:1 em repouso e 8,31:1 no hover) e tamanho `xs` (24 px, só para linha densa com mouse). Muda para quem já usa: nada removido |
 | 0.24.4 | 2026-11-12 | `SelectBusca`: select de formulário com busca, seleção única, lista em portal que não é cortada por Modal ou Drawer, teclado e `aria` de combobox. `ChipSelect` continua sendo o filtro de barra de ferramentas e não cobre campo de formulário. Muda para quem já usa: nada |
 | 0.24.3 | 2026-11-12 | `DropdownMenu` (com `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuGroup`, `DropdownMenuPortal`, `DropdownMenuRadioGroup`) e `Separator` no pacote, sobre Radix, no visual do menu da conta da Gestão OPA. Item `variant="destructive"` com 6,47:1 no claro e 9,17:1 no escuro. Dependências `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7 fixas. Novo `scripts/dropdown-menu.test.mjs` no `npm test`. |

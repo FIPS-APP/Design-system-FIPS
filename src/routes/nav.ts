@@ -108,6 +108,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Select com busca', to: '/docs/components/select-busca', icon: SearchCheck },
       { label: 'Textarea', to: '/docs/components/textarea', icon: AppWindow },
       { label: 'Badge', to: '/docs/components/badge', icon: Blocks },
+      { label: 'StatusBadge', to: '/docs/components/status-badge', icon: Blocks },
       { label: 'Card', to: '/docs/components/card', icon: LayoutTemplate },
       { label: 'Tabs', to: '/docs/components/tabs', icon: BookOpen },
       { label: 'Table', to: '/docs/components/table', icon: TableProperties },

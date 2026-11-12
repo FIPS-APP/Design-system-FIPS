@@ -1,6 +1,15 @@
 export { badgeVariants, type BadgeVariantProps } from './badge-variants'
 export { buttonVariants, type ButtonVariantProps } from './button-variants'
 export { Badge, type BadgeProps } from './badge'
+export { StatusBadge, type StatusBadgeProps } from './status-badge-component'
+export {
+  STATUS_BADGE_GRUPOS,
+  STATUS_BADGE_SINONIMOS,
+  normalizarStatus,
+  statusBadge,
+  type StatusBadgeGrupo,
+  type StatusBadgeInfo,
+} from './status-badge'
 export { Button, type ButtonProps } from './button'
 export {
   AdminTableColumnMenu,

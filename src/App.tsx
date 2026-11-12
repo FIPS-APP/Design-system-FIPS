@@ -22,6 +22,7 @@ const ProgressDoc = lazy(() => import('./docs/pages/components/ProgressDoc'))
 const SelectDoc = lazy(() => import('./docs/pages/components/SelectDoc'))
 const TextareaDoc = lazy(() => import('./docs/pages/components/TextareaDoc'))
 const BadgeDoc = lazy(() => import('./docs/pages/components/BadgeDoc'))
+const StatusBadgeDoc = lazy(() => import('./docs/pages/components/StatusBadgeDoc'))
 const CardDoc = lazy(() => import('./docs/pages/components/CardDoc'))
 const TabsDoc = lazy(() => import('./docs/pages/components/TabsDoc'))
 const TableDoc = lazy(() => import('./docs/pages/components/TableDoc'))
@@ -94,6 +95,7 @@ export default function App() {
         <Route path="components/select-busca" element={renderLazyRoute(<SelectBuscaDoc />)} />
         <Route path="components/textarea" element={renderLazyRoute(<TextareaDoc />)} />
         <Route path="components/badge" element={renderLazyRoute(<BadgeDoc />)} />
+        <Route path="components/status-badge" element={renderLazyRoute(<StatusBadgeDoc />)} />
         <Route path="components/card" element={renderLazyRoute(<CardDoc />)} />
         <Route path="components/tabs" element={renderLazyRoute(<TabsDoc />)} />
         <Route path="components/table" element={renderLazyRoute(<TableDoc />)} />
