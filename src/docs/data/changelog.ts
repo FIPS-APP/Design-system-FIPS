@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.2',
+    date: '2026-11-12',
+    title: 'Skeleton',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`Skeleton` (+ `SkeletonProps`) sai pelo pacote: bloco de carregamento na API do shadcn (`className` e props de div). Cor `--color-border` (1,33:1 sobre o cartão no claro, 1,28:1 no escuro), `aria-hidden` por padrão e parado com redução de movimento. Página no site com exemplo de cartão e de linha de tabela; teste em `scripts/skeleton.test.mjs`.',
+      },
+    ],
+  },
+  {
     version: '0.24.1',
     date: '2026-11-12',
     title: 'Laranja de texto na casca e na Home',
