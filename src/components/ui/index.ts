@@ -83,6 +83,20 @@ export {
   InputGroupInput,
   InputGroupTextarea,
 } from './input-group'
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  dropdownMenuPainel,
+  type DropdownMenuItemProps,
+} from './dropdown-menu'
 export { Progress, type ProgressProps } from './progress'
 export { Select, type SelectProps } from './select'
 export {
@@ -104,4 +118,5 @@ export {
   TooltipProvider,
   TooltipTrigger,
 } from './tooltip'
+export { Separator } from './separator'
 export { Switch } from './switch'
