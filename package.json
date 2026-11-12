@@ -32,8 +32,7 @@
     "README.md"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "dev": "vite",
