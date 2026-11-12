@@ -103,6 +103,7 @@ export const navGroups: NavGroup[] = [
       { label: 'Field', to: '/docs/components/field', icon: FormInput },
       { label: 'Radio e Checkbox', to: '/docs/components/radio-checkbox', icon: SearchCheck },
       { label: 'Input', to: '/docs/components/input', icon: FormInput },
+      { label: 'CurrencyInput', to: '/docs/components/currency-input', icon: FormInput },
       { label: 'Progress', to: '/docs/components/progress', icon: Gauge },
       { label: 'Select', to: '/docs/components/select', icon: SearchCheck },
       { label: 'Select com busca', to: '/docs/components/select-busca', icon: SearchCheck },

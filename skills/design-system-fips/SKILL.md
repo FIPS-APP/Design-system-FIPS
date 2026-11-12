@@ -1,13 +1,13 @@
 ---
 name: design-system-fips
-description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.25.0, geradas do pacote; o pacote instalado no app vence este texto.
+description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.25.2, geradas do pacote; o pacote instalado no app vence este texto.
 ---
 
 <!-- gerado por scripts/gerar-ai.mjs (dist + ai/padroes.json); não edite à mão -->
 
-# Design System FIPS 0.25.0 (2026-11-12)
+# Design System FIPS 0.25.2 (2026-11-12)
 
-Gerado do pacote: 419 exports (187 componente, 19 funcao, 19 valor, 194 tipo), 101 tipos `*Props`, 279 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
+Gerado do pacote: 423 exports (188 componente, 21 funcao, 19 valor, 195 tipo), 102 tipos `*Props`, 279 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
 
 ## 1. Passo 0
 1. No app: `npx fips-ds passo0`. Mostra versão instalada e do registro, regime, padrões da tela e exports.
