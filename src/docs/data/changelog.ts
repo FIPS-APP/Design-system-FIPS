@@ -25,6 +25,15 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.23.5',
+    date: '2026-11-11',
+    title: 'Button com tamanho de toque',
+    entries: [
+      { type: 'feature', description: '`Button` aceita `size="touch"`: altura de 48 px (o `lg` tem 42 px), mesmo padding, raio e fonte do `lg`, ícone de 20 px. Para app de campo usado com luva. As cores das variantes não mudam.' },
+      { type: 'improvement', description: 'A página do Button mostra o tamanho Touch na prévia e no guia de tamanhos. `npm test` confere a altura e a ausência de mudança no `lg`.' },
+    ],
+  },
+  {
     version: '0.23.1',
     date: '2026-11-11',
     title: 'O pacote se explica e confere o app',
