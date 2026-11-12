@@ -57,10 +57,12 @@ Variantes exatas:
 - `successStrong` (verde escuro — `--color-btn-success-hover` em repouso e `--color-btn-success` no hover, inverso da variante `success`; no escuro `--color-success-strong` é cor de texto e não serve de fundo)
 - `ouro`
 - `danger`
+- `dangerStrong` (vermelho cheio `--color-btn-danger-strong`, texto branco; confirmação final destrutiva; 6,47:1 em repouso, 8,31:1 no hover)
 - `link`
 
 Tamanhos exatos:
 
+- `xs` (24 px, só para linha densa com mouse; não é alvo de toque)
 - `sm`
 - `md`
 - `lg`

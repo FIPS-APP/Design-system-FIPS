@@ -28,11 +28,14 @@ export const buttonVariants = cva(
           'border-transparent bg-[var(--color-accent)] text-[var(--color-primary-hover)] shadow-[var(--shadow-card)] hover:bg-[var(--color-accent-strong)] btn-shimmer',
         danger:
           'border-transparent bg-[var(--color-btn-danger)] text-white shadow-[0_2px_8px_rgba(220,53,69,0.2)] hover:bg-[var(--color-btn-danger-hover)]',
+        dangerStrong:
+          'border-transparent bg-[var(--color-btn-danger-strong)] text-white shadow-[0_2px_8px_rgba(185,28,28,0.25)] hover:bg-[var(--color-btn-danger-strong-hover)]',
         link:
           'h-auto min-h-0 border-transparent bg-transparent px-0 py-0 text-[var(--color-primary-text)] underline-offset-4 hover:underline active:scale-100',
       },
       size: {
         sm: 'h-[30px] min-h-[30px] px-3.5 text-[12px] [&_svg]:size-3.5',
+        xs: 'h-6 min-h-6 px-2.5 text-[11px] [&_svg]:size-3',
         md: 'h-9 min-h-9 px-5 text-[13px] [&_svg]:size-3.5',
         lg: 'h-[42px] min-h-[42px] px-7 text-sm [&_svg]:size-4',
         touch: 'h-12 min-h-12 px-7 text-sm [&_svg]:size-5',
