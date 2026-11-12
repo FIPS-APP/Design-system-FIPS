@@ -64,6 +64,7 @@ Tamanhos exatos:
 - `sm`
 - `md`
 - `lg`
+- `grade`
 - `touch`
 - `icon`
 - `iconSm`
