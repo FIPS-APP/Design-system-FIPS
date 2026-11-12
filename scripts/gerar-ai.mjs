@@ -2,7 +2,7 @@
 // Gera `ai/manifest.json` e `ai/SKILL.md` a partir do pacote construído (roda no fim do `npm run build`)
 // e copia o SKILL.md para `skills/design-system-fips/SKILL.md`.
 //
-//   node scripts/gerar-ai.mjs                       pacote = raiz do repo (dist/), data = entrada da versão no changelog
+//   node scripts/gerar-ai.mjs                       pacote = raiz do repo (dist/), data = linha da versão no histórico do README
 //   node scripts/gerar-ai.mjs --ds <pasta> --saida <pasta> --data AAAA-MM-DD --sem-skill
 //
 // Exports e props: compilador do TypeScript sobre o `.d.ts`. Tokens: `:root` e `.dark` do `styles.css`.
@@ -17,9 +17,9 @@ const args = process.argv.slice(2)
 const opcao = (nome) => { const i = args.indexOf(nome); return i >= 0 ? args[i + 1] : undefined }
 
 function dataDaVersao(versao) {
-  const txt = fs.readFileSync(path.join(RAIZ, 'src/docs/data/changelog.ts'), 'utf8')
-  const m = txt.match(new RegExp(`version:\\s*'${versao.replace(/\./g, '\\.')}',\\s*date:\\s*'(\\d{4}-\\d{2}-\\d{2})'`))
-  if (!m) throw new Error(`versão ${versao} sem entrada em src/docs/data/changelog.ts`)
+  const txt = fs.readFileSync(path.join(RAIZ, 'README.md'), 'utf8')
+  const m = txt.match(new RegExp(`^\\|\\s*${versao.replace(/\./g, '\\.')}\\s*\\|\\s*(\\d{4}-\\d{2}-\\d{2})\\s*\\|`, 'm'))
+  if (!m) throw new Error(`versão ${versao} sem linha no histórico do README.md`)
   return m[1]
 }
 

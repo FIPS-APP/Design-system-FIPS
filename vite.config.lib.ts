@@ -35,7 +35,7 @@ function cssEmSubcamadas(): Plugin {
 }
 
 // Build da BIBLIOTECA npm (@fips-app/ds-fips).
-// Usado por `npm run build` (publicacao). Para o site de docs, ver vite.config.ts.
+// Usado por `npm run build` (publicacao). O site de docs saiu deste repo (0.25.0).
 export default defineConfig({
   plugins: [react(), tailwindcss(), cssEmSubcamadas()],
   publicDir: false,
@@ -56,6 +56,6 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: true,
+    sourcemap: false,
   },
 })

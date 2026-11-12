@@ -105,7 +105,8 @@ test('gerar-ai: manifest com exports por tipo, props das *Props e tokens de :roo
 
 test('npm pack --dry-run leva ai/ e bin/', { skip: !fs.existsSync(path.join(RAIZ, 'ai/manifest.json')) && 'rode o build antes' }, () => {
   const r = spawnSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: RAIZ, encoding: 'utf8' })
-  const arquivos = JSON.parse(r.stdout)[0].files.map((f) => f.path)
+  const saida = JSON.parse(r.stdout) // array no npm 10, objeto por nome no npm mais novo
+  const arquivos = (Array.isArray(saida) ? saida[0] : Object.values(saida)[0]).files.map((f) => f.path)
   for (const f of ['ai/manifest.json', 'ai/SKILL.md', 'ai/padroes.json', 'bin/fips-ds.mjs', 'bin/api.mjs', 'eslint/index.js']) assert.ok(arquivos.includes(f), `${f} fora do pacote`)
 })
 
