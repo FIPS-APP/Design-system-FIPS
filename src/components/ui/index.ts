@@ -108,6 +108,7 @@ export {
 } from './dropdown-menu'
 export { Progress, type ProgressProps } from './progress'
 export { Select, type SelectProps } from './select'
+export { ScrollArea, ScrollBar } from './scroll-area'
 export { Skeleton, type SkeletonProps } from './skeleton'
 export { SelectBusca, type SelectBuscaProps } from './select-busca'
 export {

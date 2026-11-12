@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.5',
+    date: '2026-11-12',
+    title: 'ScrollArea',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`ScrollArea` e `ScrollBar` saem pelo pacote: área com rolagem estilizada na API do shadcn (`className` no contêiner, `horizontal` para a barra horizontal). Barra sempre visível, polegar em `--color-border-control` (3,39:1 no claro e 3,62:1 no escuro sobre o cartão), foco por Tab no trecho que rola com setas, PageUp, PageDown, Home e End, e sem animação com redução de movimento. Dependência nova, com versão exata: `@radix-ui/react-scroll-area` 1.2.10. Página no site; teste em `scripts/scroll-area.test.mjs`.',
+      },
+    ],
+  },
+  {
     version: '0.25.0',
     date: '2026-11-12',
     title: 'Rodada de 12/11 b',

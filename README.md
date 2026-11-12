@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.25.0`
+## Versão atual: `v0.25.5`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.25.5 | 2026-11-12 | Novo no pacote: `ScrollArea` e `ScrollBar`, área com rolagem estilizada na API do shadcn. Barra sempre visível com polegar em `--color-border-control` (3,39:1 no claro, 3,62:1 no escuro sobre o cartão), foco por teclado no trecho que rola e sem animação com redução de movimento. Depende de `@radix-ui/react-scroll-area` 1.2.10. Página no site. Muda para quem já usa: nada removido |
 | 0.25.0 | 2026-11-12 | Rodada de 12/11 b (#187, #189, #190, #191, #192, #193, #194, #195). Novos no pacote: `Skeleton`; `DropdownMenu` (com `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuCheckboxItem`) e `Separator`; `SelectBusca`; `Button` com `size="xs"`, `size="grade"` e `variant="dangerStrong"`; mapa oficial de status do `Badge`; `npx fips-ds vendor X`. Correção: laranja `#f6921e` deixa de ser cor de texto na casca e na Home. Depende de `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7. Muda para quem já usa: nada removido |
 | 0.24.7 | 2026-11-12 | `Button` com `size="grade"` para grade densa (1 botão por célula): altura mínima de 30 px como o `sm`, padding lateral de 8 px, texto quebra em até 2 linhas e centralizado, sem passar da largura do pai. Sem cor nova. Muda para quem já usa: nada removido |
 | 0.24.6 | 2026-11-12 | Mapa oficial de status do Badge: `StatusBadge`, `statusBadge`, `STATUS_BADGE_GRUPOS`, `STATUS_BADGE_SINONIMOS` e `normalizarStatus`. Sete grupos (pendente, andamento, concluído, atrasado, cancelado, rascunho, crítico) sobre as variantes que o `Badge` já tem, sem tom novo, com texto acima de 4,5:1 nos dois temas. Muda para quem já usa: nada removido |
