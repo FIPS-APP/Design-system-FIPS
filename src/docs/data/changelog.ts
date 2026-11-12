@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.24.4',
+    date: '2026-11-12',
+    title: 'Select com busca',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`SelectBusca`: select de formulário com busca para lista longa (usuário, local, equipamento). Seleção única, filtro sem acento nem caixa, lista num portal para o `body` (não é cortada pelo corpo de Modal ou Drawer), teclado e `aria` de combobox (`aria-activedescendant`). Usa `FieldTrigger` e `lista-flutuante`. Documentado em `/docs/components/select-busca`. `ChipSelect` com `searchable` segue como filtro de barra de ferramentas.',
+      },
+    ],
+  },
+  {
     version: '0.24.3',
     date: '2026-11-12',
     title: 'DropdownMenu e Separator no pacote',

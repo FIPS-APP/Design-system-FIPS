@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.24.3`
+## Versão atual: `v0.24.4`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.24.4 | 2026-11-12 | `SelectBusca`: select de formulário com busca, seleção única, lista em portal que não é cortada por Modal ou Drawer, teclado e `aria` de combobox. `ChipSelect` continua sendo o filtro de barra de ferramentas e não cobre campo de formulário. Muda para quem já usa: nada |
 | 0.24.3 | 2026-11-12 | `DropdownMenu` (com `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuGroup`, `DropdownMenuPortal`, `DropdownMenuRadioGroup`) e `Separator` no pacote, sobre Radix, no visual do menu da conta da Gestão OPA. Item `variant="destructive"` com 6,47:1 no claro e 9,17:1 no escuro. Dependências `@radix-ui/react-dropdown-menu` 2.1.16 e `@radix-ui/react-separator` 1.1.7 fixas. Novo `scripts/dropdown-menu.test.mjs` no `npm test`. |
 | 0.24.2 | 2026-11-12 | Novo no pacote: `Skeleton` (+ `SkeletonProps`), bloco de carregamento na API do shadcn (`className` e props de div), cor `--color-border`, `aria-hidden` por padrão e parado com redução de movimento. Página no site com exemplo de cartão e de linha de tabela. Muda para quem já usa: nada removido |
 | 0.24.1 | 2026-11-12 | Laranja `#f6921e` deixa de ser cor de texto sobre fundo claro: ícone da aba ativa do `AppHeader` (2,32:1 para 6,26:1) e ícone do `UserAccountMenu` em hover (2,11:1 para 5,68:1) passam para `--color-accent-text`. `AppSidebar` (4,56:1 e 5,22:1) e `HomeHero` (5,91:1) ficam, por estarem sobre azul escuro. `test:badge` entra na linha `test`. Muda para quem já usa: nada removido |

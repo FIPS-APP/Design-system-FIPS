@@ -100,6 +100,7 @@ export {
 export { Progress, type ProgressProps } from './progress'
 export { Select, type SelectProps } from './select'
 export { Skeleton, type SkeletonProps } from './skeleton'
+export { SelectBusca, type SelectBuscaProps } from './select-busca'
 export {
   Table,
   TableBody,

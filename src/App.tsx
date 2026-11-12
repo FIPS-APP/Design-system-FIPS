@@ -34,6 +34,7 @@ const SidebarDoc = lazy(() => import('./docs/pages/components/SidebarDoc'))
 const SkeletonDoc = lazy(() => import('./docs/pages/components/SkeletonDoc'))
 const DropdownMenuDoc = lazy(() => import('./docs/pages/components/DropdownMenuDoc'))
 const ToastDoc = lazy(() => import('./docs/pages/components/ToastDoc'))
+const SelectBuscaDoc = lazy(() => import('./docs/pages/components/SelectBuscaDoc'))
 const TooltipDoc = lazy(() => import('./docs/pages/components/TooltipDoc'))
 const FormularioExecucaoDoc = lazy(() => import('./docs/pages/components/FormularioExecucaoDoc'))
 const GraficosDoc = lazy(() => import('./docs/pages/components/GraficosDoc'))
@@ -90,6 +91,7 @@ export default function App() {
         <Route path="components/input" element={renderLazyRoute(<InputDoc />)} />
         <Route path="components/progress" element={renderLazyRoute(<ProgressDoc />)} />
         <Route path="components/select" element={renderLazyRoute(<SelectDoc />)} />
+        <Route path="components/select-busca" element={renderLazyRoute(<SelectBuscaDoc />)} />
         <Route path="components/textarea" element={renderLazyRoute(<TextareaDoc />)} />
         <Route path="components/badge" element={renderLazyRoute(<BadgeDoc />)} />
         <Route path="components/card" element={renderLazyRoute(<CardDoc />)} />
