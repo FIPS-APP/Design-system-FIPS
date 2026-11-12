@@ -22,14 +22,10 @@ jobs:
           node-version: '22'
           cache: npm
       - name: Instalar dependências
-        run: npm ci
+        run: npm ci --allow-remote=all
       - name: Lint
         run: npm run lint
-      - name: Typecheck do site
-        run: npx tsc -b
       - name: Testes
         run: npm test
       - name: Build da biblioteca
         run: npm run build
-      - name: Build do site
-        run: npx vite build

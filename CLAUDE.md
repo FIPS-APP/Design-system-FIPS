@@ -4,30 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Design System FIPS — biblioteca oficial de componentes para o sistema FIPS (Ferrovia Interna do Porto de Santos). O repo é simultaneamente:
+Design System FIPS — biblioteca oficial de componentes para o sistema FIPS (Ferrovia Interna do Porto de Santos). O repo é **só a library**, publicada no npm como `@fips-app/ds-fips`. Os exports públicos vivem em `src/index.ts`. O antigo site de documentação (`src/docs`, Dockerfile, nginx, Traefik) saiu deste repo na 0.25.0; o histórico do git o preserva.
 
-1. **Library** — pacote interno consumido por outros apps FIPS. Os exports públicos vivem em `src/index.ts` (tokens, `cn`, primitives de `components/ui`, `FipsLogo`, `PageHero`).
-2. **Documentation site** — app Vite/React em `src/docs/**` com playgrounds, foundations, components e patterns. É o "Storybook" do projeto e roda em produção atrás de Traefik (`design-system.fips.app.br`).
-
-Stack: React 19 + TypeScript + Vite 8 + Tailwind v4 (config-less, via `@tailwindcss/vite` e `@theme` em `src/styles/globals.css`) + Radix primitives + framer-motion + react-router v7. Idioma do produto e da maioria dos textos: **pt-BR**.
+Stack: React 19 + TypeScript + Vite 8 (modo lib) + Tailwind v4 (config-less, via `@tailwindcss/vite` e `@theme` em `src/styles/globals.css`) + Radix primitives + framer-motion. Idioma do produto e da maioria dos textos: **pt-BR**.
 
 ## Commands
 
 ```bash
-npm run dev               # Vite dev server
-npm run build             # tsc -b && vite build (typecheck antes de buildar)
+npm run build             # vite build (lib ESM+CJS) + tsc (.d.ts) + gerar-ai (ai/manifest.json)
 npm run lint              # ESLint flat config
-npm run preview           # Preview do build
-npm run build:downloads   # Empacota skills/design-system-fips em public/downloads/*.zip
+npm test                  # suíte node:test em scripts/*.test.mjs
 ```
 
-Não há suíte de testes neste repo. Validação = `npm run build` (TS) + `npm run lint`.
+Validação = `npm test` (node:test: contraste, hooks, governança, CLI) + `npm run build` (TS) + `npm run lint`.
 
-Deploy: `Dockerfile` faz build estático e serve via nginx (`nginx/default.conf`); `docker-compose.yml` é a stack Swarm com labels Traefik.
+Publicação: tag `v*` dispara `.github/workflows/publish.yml` (npm, com provenance).
 
 ## Favicon e ícones de app
 
-Regra canônica: **`docs/favicon.md`**. Lockup App FIPS em `public/icons/` (192, 512, `icon-512-maskable.png`), espelhando **OPA-MOBILE**. Não usar `fips-symbol-only` na aba. Não copiar ícones do OPA-GESTAO até paridade fechar.
+Regra canônica: **`docs/favicon.md`**. Os ícones de app vêm do **OPA-MOBILE** e cada app consumidor os hospeda; este repo não publica ícones.
 
 ## Architecture
 
@@ -36,18 +31,14 @@ Regra canônica: **`docs/favicon.md`**. Lockup App FIPS em `public/icons/` (192,
 - `src/tokens/` — paleta FIPS (`fipsPalette`), tokens semânticos light/dark (`semanticColors`, `darkSemanticColors`), tipografia, spacing. Alterações de marca devem refletir aqui **e** no `@theme` de `src/styles/globals.css` (CSS custom properties como `--color-fips-blue-900`, `--shadow-card`, etc.).
 - `src/styles/globals.css` — único stylesheet global. Define fontes Google, variáveis Tailwind v4 via `@theme`, dark variant via `@custom-variant dark (&:where(.dark, .dark *))`, utilities customizadas. Dark mode é toggle de classe `.dark` no `<html>` (ver `src/hooks/useFipsTheme.ts`, persistido em `localStorage` chave `fips-theme`).
 - `src/components/ui/` — primitives governados (Button, Field, Input, Select, Textarea, Tabs, Table, Badge, Card, Dialog, Drawer, Tooltip, Progress, admin-listing). Variantes via `class-variance-authority` em arquivos `*-variants.ts` separados (ex.: `button-variants.ts`). Usam Radix quando aplicável.
-- `src/components/brand|domain|layout/` — composições específicas do app de docs (sidebar, headers, tutorial overlay, search pill). **Não exportadas pela library**.
 - `src/composites/` — composições reutilizáveis exportadas (atualmente `PageHero`).
-- `src/docs/` — **app de documentação**, não faz parte do bundle de library. `pages/` por rota, `components/` (DocPage, CodePlayground, etc.) compartilhados entre páginas.
-- `src/app/DocLayout.tsx` + `src/routes/nav.ts` — shell e navegação do site de docs. Toda nova página de doc é registrada em `src/App.tsx` (rotas com `lazy`) **e** em `src/routes/nav.ts` (sidebar).
 
 ### Fluxo para criar/editar componentes da library
 
 1. Token novo? → `src/tokens/colors.ts` (ou typography/spacing) **e** variável CSS em `src/styles/globals.css` `@theme`.
 2. Variante de primitive? → editar `*-variants.ts` (CVA) — não adicionar classes ad-hoc no JSX do componente.
 3. Exportar pela library? → adicionar em `src/components/ui/index.ts` e, se for top-level, em `src/index.ts`.
-4. Documentar? → criar `src/docs/pages/components/<Nome>Doc.tsx`, registrar rota em `src/App.tsx`, adicionar entrada em `src/routes/nav.ts`.
-5. Bump de versão (ver Versionamento abaixo).
+4. Bump de versão (ver Versionamento abaixo).
 
 ## Governance — regras críticas
 
@@ -84,4 +75,4 @@ SemVer. **Toda alteração** atualiza `package.json#version` antes do commit:
 - minor (`+0.1.0`) — nova feature/tela.
 - major (`+1.0.0`) — breaking change.
 
-Atualizar também o histórico em `README.md` e a constante `DOC_VERSION` em `src/app/DocLayout.tsx`. Mensagem de commit: `chore: bump version to X.Y.Z`.
+Atualizar também o histórico (tabela de versões) em `README.md`: `scripts/gerar-ai.mjs` lê a data da versão dali e o build falha sem a linha. Mensagem de commit: `chore: bump version to X.Y.Z`.

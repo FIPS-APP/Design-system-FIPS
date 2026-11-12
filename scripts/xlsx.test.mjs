@@ -21,7 +21,9 @@ const nao_menor = (a, b) => {
 }
 
 test('package.json aponta o xlsx para o CDN da SheetJS, em versão corrigida', () => {
-  const spec = JSON.parse(ler('package.json')).dependencies.xlsx
+  const pkg = JSON.parse(ler('package.json'))
+  assert.equal(pkg.dependencies?.xlsx, undefined, 'xlsx não vai no pacote publicado: fica em devDependencies')
+  const spec = pkg.devDependencies.xlsx
   const m = spec.match(/^https:\/\/cdn\.sheetjs\.com\/xlsx-(\d+\.\d+\.\d+)\/xlsx-\1\.tgz$/)
   assert.ok(m, `xlsx em package.json: ${spec}`)
   assert.ok(nao_menor(versao(m[1]), MINIMA), `xlsx ${m[1]} abaixo de ${MINIMA.join('.')}`)

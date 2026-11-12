@@ -1,4 +1,4 @@
-name: Publish to GitHub Packages
+name: Publish to npm
 
 on:
   push:
@@ -9,17 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      id-token: write # provenance (npm publish --provenance)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@fips-app'
-      - run: npm ci
+          registry-url: 'https://registry.npmjs.org'
+      # `xlsx` (devDependency) vem da CDN oficial da SheetJS; o lock fixa o sha512.
+      - run: npm ci --allow-remote=all
       - run: npm test
       - run: npm run build
-      - run: npm publish
+      - run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

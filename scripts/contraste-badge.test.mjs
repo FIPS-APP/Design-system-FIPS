@@ -182,7 +182,6 @@ const TEXTO_LARANJA = new RegExp(
 )
 const ICONES_JA_EXISTENTES = [
   ['src/components/composites/AbasDeSecao.tsx', "text-[var(--color-fips-yellow-600)]"],
-  ['src/components/layout/DocHeaderSectionNav.tsx', "text-[#F6921E]"],
 ]
 
 test('Nenhum componente novo lê o laranja #f6921e como cor de texto (é fundo e borda: 2,32:1 sobre branco)', () => {
@@ -203,16 +202,15 @@ test('A lista de ícones liberados continua valendo (some quando o ícone é cor
   }
 })
 
-// Eyebrow de 11 px sobre o degradê azul do cabeçalho de Modal, Drawer, ExportPreviewModal e ChangelogModal.
+// Eyebrow de 11 px sobre o degradê azul do cabeçalho de Modal, Drawer, ExportPreviewModal.
 const EYEBROWS = [
   ['src/components/ui/Modal.tsx', /tracking-\[0\.14em\] text-\[var\((--[\w-]+)\)\]">\{eyebrow\}/],
   ['src/components/ui/drawer.tsx', /color: 'var\((--[\w-]+)\)' \}\}\s*>\s*\{eyebrow\}/],
   ['src/components/composites/ExportPreviewModal.tsx', /tracking-\[0\.14em\] text-\[var\((--[\w-]+)\)\] uppercase/],
-  ['src/components/layout/ChangelogModal.tsx', /tracking-\[0\.14em\] text-\[var\((--[\w-]+)\)\] uppercase/],
 ]
 
 function fundosDoCabecalho(t) {
-  // Modal e Drawer: --color-gov-gradient-from, -to e #001A4A. ExportPreviewModal e ChangelogModal: --fips-banner-content-bg.
+  // Modal e Drawer: --color-gov-gradient-from, -to e #001A4A. ExportPreviewModal: --fips-banner-content-bg.
   const nomes = ['--color-gov-gradient-from', '--color-gov-gradient-to']
   const fundos = nomes.map((n) => token(n, t))
   const gradientes = [...css.matchAll(/--fips-banner-content-bg:\s*linear-gradient\(([^;]+)\);/g)]
@@ -237,9 +235,9 @@ for (const [arquivo, padrao] of EYEBROWS) {
   }
 }
 
-// ChangelogModal e ExportPreviewModal desenham um trilho branco por baixo da eyebrow (svg com opacity-[0.06]).
+// ExportPreviewModal desenha um trilho branco por baixo da eyebrow (svg com opacity-[0.06]).
 // A eyebrow precisa passar também sobre o degradê com esse branco composto: se alguém subir a opacidade, o teste vê.
-for (const arquivo of ['src/components/layout/ChangelogModal.tsx', 'src/components/composites/ExportPreviewModal.tsx']) {
+for (const arquivo of ['src/components/composites/ExportPreviewModal.tsx']) {
   for (const t of ['claro', 'escuro']) {
     test(`Eyebrow de ${arquivo.split('/').pop()}, tema ${t}: texto contra o degradê com o trilho branco composto (>= ${MINIMO}:1)`, () => {
       const fonte = ler(arquivo)
@@ -255,34 +253,4 @@ for (const arquivo of ['src/components/layout/ChangelogModal.tsx', 'src/componen
       }
     })
   }
-}
-
-for (const t of ['claro', 'escuro']) {
-  test(`ChangelogModal "Importante", tema ${t}: texto contra o cartão do item (>= ${MINIMO}:1)`, () => {
-    const fonte = ler('src/components/layout/ChangelogModal.tsx')
-    const bloco_ = fonte.match(/breaking:\s*\{[\s\S]*?\n  \},/)[0]
-    const texto = bloco_.match(/accent: 'text-\[var\((--[\w-]+)\)\]'/)[1]
-    const fundo = bloco_.match(/bg-\[var\((--[\w-]+)\)\]\/(\d+)/)
-    const cartao = token('--color-surface', t)
-    const base = sobre({ ...token(fundo[1], t), a: Number(fundo[2]) / 100 }, cartao)
-    const c = contraste(token(texto, t), base)
-    assert.ok(c >= MINIMO, `${texto} sobre ${fundo[1]}/${fundo[2]}: ${c.toFixed(2)}:1, mínimo ${MINIMO}:1`)
-  })
-
-  test(`UserAccountMenu, tema ${t}: todo ícone em hover contra todo fundo de item do tema (>= 3:1)`, () => {
-    const fonte = ler('src/components/layout/UserAccountMenu.tsx')
-    const icones = [...fonte.matchAll(/group-hover:text-\[var\((--[\w-]+)\)\]/g)].map((m) => m[1])
-    assert.equal(icones.length, 3, 'esperava 3 ícones com group-hover:text-[var(...)] no menu')
-    // Claro: hover:bg-... sem prefixo. Escuro: dark:hover:bg-...
-    const padraoFundo = t === 'escuro' ? /dark:hover:bg-\[var\((--[\w-]+)\)\]\/(\d+)/g : /(?:^|[\s'"`])hover:bg-\[var\((--[\w-]+)\)\]\/(\d+)/g
-    const fundos = [...fonte.matchAll(padraoFundo)].filter((m) => m[1] === '--color-accent')
-    assert.ok(fundos.length >= 3, `fundos de hover do tema ${t} (--color-accent): achei ${fundos.length}, esperava pelo menos 3`)
-    for (const icone of icones) {
-      for (const fundo of fundos) {
-        const base = sobre({ ...token(fundo[1], t), a: Number(fundo[2]) / 100 }, token('--color-surface', t))
-        const c = contraste(token(icone, t), base)
-        assert.ok(c >= 3, `${icone} sobre ${fundo[1]}/${fundo[2]}: ${c.toFixed(2)}:1, mínimo 3:1`)
-      }
-    }
-  })
 }

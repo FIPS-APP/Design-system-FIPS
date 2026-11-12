@@ -24,7 +24,6 @@ function regime(app) {
 }
 
 function latest() {
-  if (!process.env.NODE_AUTH_TOKEN && !process.env.GITHUB_TOKEN) return 'sem token (defina NODE_AUTH_TOKEN para consultar o registro)'
   try {
     return execFileSync('npm', ['view', PACOTE, 'version'], { encoding: 'utf8', timeout: 20000, stdio: ['ignore', 'pipe', 'ignore'] }).trim()
   } catch {

@@ -1,6 +1,23 @@
 {
   "name": "@fips-app/ds-fips",
-  "version": "0.24.0",
+  "version": "0.25.0",
+  "description": "Design System FIPS: componentes React, tokens e estilos (Tailwind v4) da Ferrovia Interna do Porto de Santos.",
+  "keywords": [
+    "design-system",
+    "react",
+    "tailwindcss",
+    "fips",
+    "ui-components"
+  ],
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FIPS-APP/ds-fips.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FIPS-APP/ds-fips/issues"
+  },
+  "homepage": "https://github.com/FIPS-APP/ds-fips#readme",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -29,24 +46,24 @@
     "ai",
     "bin",
     "eslint",
-    "README.md"
+    "README.md",
+    "!**/*.map"
   ],
   "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
-    "dev": "vite",
     "build": "vite build --config vite.config.lib.ts && tsc -p tsconfig.lib.json --emitDeclarationOnly --declaration --outDir dist && node scripts/gerar-ai.mjs",
-    "build:site": "tsc -b && vite build",
     "test:xlsx": "node --test scripts/xlsx.test.mjs",
-    "build:downloads": "bash scripts/build-ai-downloads.sh",
     "tokens:gen": "node scripts/gen-tokens-md.mjs",
     "test:badge": "node --test scripts/contraste-badge.test.mjs",
     "lint": "eslint .",
     "test:hero": "node --test scripts/hero-atalho.test.mjs",
     "test:select": "node --test scripts/select-portal.test.mjs",
     "test:rolagem": "node --test scripts/rolagem-teclado.test.mjs",
-    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs scripts/rolagem-teclado.test.mjs scripts/tema.test.mjs scripts/hero-atalho.test.mjs scripts/xlsx.test.mjs scripts/hooks.test.mjs scripts/radio-checkbox.test.mjs scripts/app-shell.test.mjs scripts/formulario-execucao.test.mjs scripts/graficos-documento.test.mjs scripts/listagens.test.mjs scripts/rodada2-medidas.test.mjs scripts/rodada3.test.mjs scripts/fips-ds.test.mjs scripts/eslint-ds.test.mjs scripts/exports-site.test.mjs scripts/app-shell-gaveta.test.mjs scripts/ajustes-celular.test.mjs scripts/contraste-toast.test.mjs scripts/login-seguranca.test.mjs scripts/button-touch.test.mjs",
+    "test": "node --test scripts/contraste.test.mjs scripts/select-portal.test.mjs scripts/rolagem-teclado.test.mjs scripts/tema.test.mjs scripts/hero-atalho.test.mjs scripts/xlsx.test.mjs scripts/hooks.test.mjs scripts/radio-checkbox.test.mjs scripts/app-shell.test.mjs scripts/formulario-execucao.test.mjs scripts/graficos-documento.test.mjs scripts/listagens.test.mjs scripts/rodada2-medidas.test.mjs scripts/rodada3.test.mjs scripts/fips-ds.test.mjs scripts/eslint-ds.test.mjs scripts/app-shell-gaveta.test.mjs scripts/ajustes-celular.test.mjs scripts/contraste-toast.test.mjs scripts/login-seguranca.test.mjs scripts/button-touch.test.mjs",
     "test:tema": "node --test scripts/tema.test.mjs",
     "test:hooks": "node --test scripts/hooks.test.mjs",
     "test:lint-governanca": "node --test scripts/lint-governanca.test.mjs",
@@ -55,10 +72,9 @@
     "test:casca": "node --test scripts/app-shell.test.mjs",
     "test:gaveta": "node --test scripts/app-shell-gaveta.test.mjs",
     "test:rodada3": "node --test scripts/rodada3.test.mjs",
-    "test:exports": "node --test scripts/exports-site.test.mjs",
     "test:celular": "node --test scripts/ajustes-celular.test.mjs",
-    "preview": "vite preview",
-    "test:fips-ds": "node --test scripts/fips-ds.test.mjs"
+    "test:fips-ds": "node --test scripts/fips-ds.test.mjs",
+    "prepublishOnly": "npm test && npm run build"
   },
   "peerDependencies": {
     "framer-motion": ">=11",
@@ -77,8 +93,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.6.0",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.5.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -87,7 +102,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "echarts": "^6.1.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -95,12 +109,11 @@
     "globals": "^17.4.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-icons": "^5.6.0",
-    "react-router-dom": "^7.13.2",
     "tailwindcss": "^4.2.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
-    "vite": "^8.0.1"
+    "vite": "^8.0.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "engines": {
     "node": ">=22"
