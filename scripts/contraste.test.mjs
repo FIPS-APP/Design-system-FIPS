@@ -336,12 +336,11 @@ test('Tabs, tema claro: a aba ativa continua no azul do --color-primary', () => 
   assert.deepEqual(token(TEXTO_ABA_ATIVA, 'claro'), token('--color-primary', 'claro'))
 })
 
-// ─── Toast e Tooltip: texto do tom sucesso ─────────────────────────────────
+// ─── Toast (cópia de exports/) e Tooltip: texto do tom sucesso (o Toast do pacote é medido em contraste-toast.test.mjs) ─────────────────────────────────
 // O fundo é fixo nos dois temas (#ECFDF5), então o par vale no claro e no escuro. #00904C sobre ele mede 3,91:1.
 const TONS_SUCESSO = [
   'exports/toast/toast.tsx',
   'exports/tooltip/Tooltip.tsx',
-  'src/docs/pages/components/ToastDoc.tsx',
   'src/docs/pages/components/TooltipDoc.tsx',
 ]
 

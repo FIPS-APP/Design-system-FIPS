@@ -92,6 +92,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Tipo de alteração | Incremento | Exemplo |
 |---|---|---|
+| 0.23.3 | 2026-11-11 | `Toast` no pacote, com `ToastViewport` e `useToast`: cinco variantes (`sucesso`, `erro`, `atencao`, `info`, `neutro`), título, mensagem, ação opcional, X e barra de tempo, pilha de até 5 no canto superior direito. Cores só por token semântico (nada de hex): texto de 4,88:1 a 10,70:1 no claro e de 6,04:1 a 12,51:1 no escuro; destaque de 3,44:1 a 10,49:1 no claro e de 4,01:1 a 9,18:1 no escuro. A página `/docs/components/toast` usa o componente do pacote e a exceção sai de `scripts/exports-site.test.mjs`. Muda para quem já usa: nada |
 | 0.23.2 | 2026-11-11 | `FilterBlock` no celular como na Gestão OPA: abaixo de 640 px a busca vai para uma segunda linha, em largura total; de 640 px em diante nada muda. |
 | 0.22.5 | 2026-11-11 | Celular conferido contra as referências (375 px): `AppHeader` com recuo 16, espaço 12 e 6 entre os botões da direita (era 12, 8 e 4); `SecaoNumerada` com recuo de 24 px no cabeçalho em qualquer largura (era 20 abaixo de `@2xl`); `CartaoListagem` com cabeçalho 14/12/12/12 abaixo de `sm`. |
 | 0.22.2 | 2026-11-11 | `AppShell`: prop `aoMudarRecolhido(recolhido)`, chamada a cada troca do menu entre aberto e recolhido (botão, recolher sozinho ou ponteiro), para o app guardar a escolha e passar de volta em `recolhidoInicial`. Opcional; não é chamada na montagem |

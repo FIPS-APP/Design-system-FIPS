@@ -862,3 +862,11 @@ import { LoginDsShell } from '@fips-app/ds-fips'
 
 Props: `onClick`, `href` (o botão vira `<a>`), `rotulo` ("Entrar com FIPS"), `icone` (seta; `null` tira), `texto`, `erro` (`role="alert"`), `carregando`, `rotuloCarregando` ("Entrando…"), `rodape`, `logo` (`/fips-logo-azul.svg` do `public/` do app), `logoAlt`, `fundo` (`/backgrounds/app-shell-home-trains.png`; `null` tira a foto), `className`. Não copie a tela para o app: use o componente.
 
+
+## Toast — v0.23.3
+
+Fonte: `src/components/composites/Toast.tsx`. Aviso passageiro; cores só por token.
+
+- **`Toast`**: `variant` (`sucesso` | `erro` | `atencao` | `info` | `neutro`, padrão `info`), `title?`, `message?`, `actionLabel?` + `onAction?`, `onClose?` (sem ele não há X), `duration?` (só a barra de tempo), `saindo?`. `role="alert"` no erro, `role="status"` nas demais.
+- **`ToastViewport`**: `toasts`, `onClose`, `className?`. Pilha fixa no canto superior direito; cada item fecha por `duration`, pelo X ou pela ação.
+- **`useToast()`**: devolve `{ toasts, addToast(data) => id, removeToast(id) }`; até 5, o mais novo em cima. Renderize um `ToastViewport` só.

@@ -27,8 +27,6 @@ const PASTAS_DA_BIBLIOTECA = [
 const EXCECOES = {
   'src/docs/pages/components/HeaderDoc.tsx':
     'documenta o cabeçalho do próprio site de documentação; nas apps o cabeçalho vem do AppShell',
-  'src/docs/pages/components/ToastDoc.tsx':
-    'protótipo desenhado na página; o pacote ainda não tem aviso passageiro (pendência registrada)',
   'src/docs/pages/patterns/DashboardDemo.tsx':
     'protótipo de painel montado na página; os gráficos do pacote estão em GraficosDoc',
 }
