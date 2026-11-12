@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.23.2',
+    date: '2026-11-11',
+    title: 'Filtro no celular',
+    entries: [
+      { type: 'improvement', description: '`FilterBlock` abaixo de 640 px põe a busca numa segunda linha, em largura total, como a barra de filtros da Gestão OPA. A 375 px, com Filtros e busca, a barra passa de 64 px para 104 px; a partir de 640 px a medida segue 64 px.' },
+    ],
+  },
+  {
     version: '0.22.5',
     date: '2026-11-11',
     title: 'Celular conferido contra as referências',
