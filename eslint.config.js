@@ -213,7 +213,7 @@ const COLOR_EXCEPTIONS = {
     'rgba(147,189,228,0.14)',
     '#FDC24E',
   ],
-  // variantes do Button: sombras de 8px na cor do próprio fundo (azul institucional, laranja, verdes e vermelho) a 12, 18 e 20%; sem token de sombra com essas cores.
+  // variantes do Button: sombras de 8px na cor do próprio fundo (azul institucional, laranja, verdes, vermelho e o vermelho forte do dangerStrong) a 12, 18, 20 e 25%; sem token de sombra com essas cores.
   'src/components/ui/button-variants.ts': [
     'rgba(0,75,155,0.12)',
     'rgba(0,75,155,0.18)',
@@ -221,6 +221,7 @@ const COLOR_EXCEPTIONS = {
     'rgba(0,198,76,0.2)',
     'rgba(0,144,76,0.2)',
     'rgba(220,53,69,0.2)',
+    'rgba(185,28,28,0.25)',
   ],
   // sombra do polegar do Switch; sem token.
   'src/components/ui/switch.tsx': [
