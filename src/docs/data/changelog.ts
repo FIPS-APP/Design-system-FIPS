@@ -25,6 +25,14 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.23.4',
+    date: '2026-11-11',
+    title: 'Rótulo de Segurança legível na entrada',
+    entries: [
+      { type: 'fix', description: '`LoginDsShell`: o rótulo da estação Segurança passa de `--color-fips-red-600` para `--color-fips-red-300`. Contraste sobre a coluna institucional, medido no navegador nos dois temas: de 2,65:1 para 5,25:1. O ponto da estação e as outras 4 estações não mudam.' },
+    ],
+  },
+  {
     version: '0.23.3',
     date: '2026-11-11',
     title: 'Toast no pacote',
