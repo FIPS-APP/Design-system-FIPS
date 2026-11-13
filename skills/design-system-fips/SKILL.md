@@ -1,13 +1,13 @@
 ---
 name: design-system-fips
-description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.25.4, geradas do pacote; o pacote instalado no app vence este texto.
+description: Use antes de criar, editar ou revisar tela, componente ou CSS de app FIPS. Regras do @fips-app/ds-fips 0.25.7, geradas do pacote; o pacote instalado no app vence este texto.
 ---
 
 <!-- gerado por scripts/gerar-ai.mjs (dist + ai/padroes.json); não edite à mão -->
 
-# Design System FIPS 0.25.4 (2026-11-13)
+# Design System FIPS 0.25.7 (2026-11-13)
 
-Gerado do pacote: 395 exports (173 componente, 17 funcao, 16 valor, 189 tipo), 97 tipos `*Props`, 276 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
+Gerado do pacote: 399 exports (173 componente, 18 funcao, 16 valor, 192 tipo), 97 tipos `*Props`, 276 variáveis CSS em `:root`/`.dark`. Lista completa em `ai/manifest.json` (`@fips-app/ds-fips/ai/manifest.json`).
 
 ## 1. Passo 0
 1. No app: `npx fips-ds passo0`. Mostra versão instalada e do registro, regime, padrões da tela e exports.
@@ -22,6 +22,7 @@ Gerado do pacote: 395 exports (173 componente, 17 funcao, 16 valor, 189 tipo), 9
 | Banner das telas internas | Gestão OPA (PatternPanelHero, que usa PageHeader) | `PageHeader`. Selo só para estado da tela, nunca o nome do sistema. Nunca PageHero com conteúdo próprio | tem |
 | Formulário, execução, editor | Manutenção leva-1 | `SecaoNumerada`, `SegmentoAvaliacao`, `AssinaturaCanvas`, `BarraAcoesRodape`, `CardChecklist` | tem |
 | Lista que colapsa no celular | Tecnopano | `ListingFilterToolbar`, `CartaoListagem`, `TabelaExpansivel` | tem |
+| Listagem com ações por linha | Tecnopano; modelo aprovado: holofote na linha ativa | `RowActionsMenu`, `TabelaExpansivel`, `useHolofoteDaLinha`. Gatilho + do RowActionsMenu, nunca ⋮ ou ⋯ nem menu local. Cor por ação com `tom`: primario = ver, abrir, editar, aprovar; pdf = PDF; perigo = excluir, remover, reprovar, cancelar; neutro = o resto. Holofote sempre ligado: TabelaExpansivel com `acoesDaLinha`, ou `useHolofoteDaLinha` em tabela própria (Table/TableRow) ou lista de cartões | tem |
 
 Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.
 
@@ -29,6 +30,7 @@ Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.
 - Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant="default"`/`"destructive"`.
 - Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.
 - `className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.
+- Menu de ações por linha com ⋮ ou ⋯ ou feito à mão; ação sem `tom`; listagem com ações sem o holofote (use `TabelaExpansivel` com `acoesDaLinha` ou `useHolofoteDaLinha`).
 - Dependência `file:` ou tgz do pacote: não é fonte confiável. O certo é o registro.
 - Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app.
 

@@ -15,7 +15,7 @@ Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundat
 - `AbasDeSecao`
 - `AppShell`, `AppHeader`, `AppSidebar`, `HeaderTile`, `HeaderTrilha`, `UserChip`, `UserAccountMenu`, `NotificacoesMenu`, `TutorialOverlay` (casca padrão do app; ver a seção "Casca do app" abaixo)
 - `SecaoNumerada`, `BarraAcoesRodape`, `EstadoSalvamento`, `SegmentoAvaliacao`, `AssinaturaCanvas`, `CardChecklist` (formulário de execução; ver a seção abaixo)
-- `TabelaExpansivel` (+ `TabelaExpansivelProps`, `TabelaExpansivelColuna`, `TabelaExpansivelOrdenacao`)
+- `TabelaExpansivel` (+ `TabelaExpansivelProps`, `TabelaExpansivelColuna`, `TabelaExpansivelOrdenacao`) · `useHolofoteDaLinha` (+ `HolofoteDaLinhaOpcoes`, `HolofoteDaLinha`, `PropsDaLinhaComHolofote`)
 - `PageHeader` (+ `PageHeaderProps`, `PageHeaderStat`, `PageHeaderActionsProps`) · `PatternPanelHero` (apelido do PageHeader) · `BannerJunctionLines`, `BannerIconBox`, `FIPS_BANNER_*`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
@@ -582,6 +582,36 @@ Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `p
 **Sem `--barra-inferior-altura` a faixa some.** O app publica a altura da própria barra. Sem ela a faixa fica em `bottom: 0`, por baixo da barra. Faixa fixa no mesmo vão (por exemplo "registro na fila"): publicar a altura em `--abas-secao-empilha`. A altura da faixa é `--abas-secao-altura`, que vale `max(39px, var(--alvo-toque))` (39px no escritório, 44px ou 48px no celular), e a página reserva o espaço com `abas-secao-reserva`, que substitui a reserva da barra e não soma: tire a reserva do app do MESMO elemento, porque uma regra sem camada do app vence a do pacote. Ancestral com `transform` vira o bloco de contenção do `fixed`. Se o app já reserva a altura da faixa de estado no corpo, não some a reserva duas vezes.
 
 Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
+
+## Listagem com ações por linha: gatilho +, tom por ação e holofote (0.25.3 a 0.25.7)
+
+Fonte: `RowActionsMenu.tsx` · `TabelaExpansivel.tsx` · `useHolofoteDaLinha.tsx` · `tabela-linha-logica.ts` · CSS `.fips-row-action`, `.cmd-acao[data-tom]`, `.fips-holofote`, `tr[data-em-foco]`, `li[data-em-foco]`, `[data-recuo]` em `globals.css` · doc: `/docs/components/tabela-expansivel`
+
+Regra: listagem com ações por linha usa o gatilho + do `RowActionsMenu`. Nunca ⋮ ou ⋯, nunca menu feito no app. Cada ação tem a cor pelo `tom` (`RowMenuAction.tom`): `primario` = ver, abrir, editar, aprovar; `pdf` = PDF; `perigo` = excluir, remover, reprovar, cancelar; `neutro` = o resto (`danger: true` ainda vale como `perigo`, mas escreva `tom`). O holofote fica sempre ligado: `TabelaExpansivel` com `acoesDaLinha` já o traz (`destaqueDaLinha`, padrão `true`); tabela própria (`Table`/`TableRow`) ou lista de cartões usa `useHolofoteDaLinha`.
+
+```tsx
+import { Table, TableBody, TableCell, TableRow, RowActionsMenu, useHolofoteDaLinha } from '@fips-app/ds-fips'
+
+const h = useHolofoteDaLinha({ chaves: linhas.map((l) => l.id) }) // opções: ligado?, linhaClicavel?
+
+<div {...h.moldura} className="relative overflow-hidden rounded-2xl border">   {/* moldura: position relative */}
+  <Table framed={false} aria-label="Inspeções">
+    <TableBody>
+      {linhas.map((l) => (
+        <TableRow key={l.id} {...h.propsDaLinha(l.id)}>
+          <TableCell>{l.numero}</TableCell>
+          <TableCell>
+            <RowActionsMenu rowId={l.id} actions={acoes(l)} onOpenChange={h.aoMudarMenu(l.id)} />
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+  {h.holofote}   {/* dentro da moldura, depois da tabela */}
+</div>
+```
+
+Retorno: `moldura` (`ref` e `data-recuo`), `holofote` (elemento `.fips-holofote`), `propsDaLinha(chave)` (`ref`, `data-linha`, `data-em-foco`, e, com holofote ligado, `tabIndex -1` e `onClickCapture`), `aoMudarMenu(chave)`, `ativo`, `emFoco`. Em lista de cartões: `<ul>` na moldura e `<li {...h.propsDaLinha(l.id)}>` por linha. Comportamento: menu aberto ou linha escolhida com clique marca a linha (`data-em-foco`) e a moldura (`data-recuo`); ↑ e ↓ movem sem dar a volta; Enter e Espaço na linha abrem o menu; Esc, clique fora ou a ação devolvem. `linhaClicavel: true` quando a linha já tem `onClick` próprio (então o 2º clique não solta e Enter/Espaço ficam com a ação da linha).
 
 ## TabelaExpansivel
 

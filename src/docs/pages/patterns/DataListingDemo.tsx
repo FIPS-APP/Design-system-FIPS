@@ -7,6 +7,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { useFipsTheme } from '../../../hooks/useFipsTheme'
 import { ExportButtons } from '../../../components/composites/ExportButtons'
 import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
+import { useHolofoteDaLinha } from '../../../components/composites/useHolofoteDaLinha'
 import { ExportPreviewModal, type ExportIntent } from '../../../components/composites/ExportPreviewModal'
 
 /* ═══════════════════════════════════════════ TOKENS ═══════════════════════════════════════════ */
@@ -372,6 +373,7 @@ export default function DataListingDemo() {
     }
     return r.slice(0,10);
   },[allData,search,filters,sortBy]);
+  const holofote=useHolofoteDaLinha({chaves:data.map(r=>r.id)});
   const D=DENSITY[density];
 
   const totalFilters=[filters.status,filters.dept,filters.priority].filter(Boolean).length;
@@ -865,7 +867,7 @@ export default function DataListingDemo() {
             </div>
 
             {/* TABELA */}
-            {view==="table"&&<div style={{overflowX:"auto"}}>
+            {view==="table"&&<div {...holofote.moldura} style={{overflowX:"auto",position:"relative"}}>
               <table style={{width:"100%",borderCollapse:"collapse",fontFamily:Fn.body}}>
                 <thead><tr style={{background:C.bg}}>
                   <th style={{padding:`8px ${D.padX}px`,textAlign:"left",width:36,borderBottom:`2px solid ${C.cardBorder}`}}><Checkbox checked={selected.size===data.length&&selected.size>0} onChange={toggleAll} size={14}/></th>
@@ -879,7 +881,7 @@ export default function DataListingDemo() {
                 <tbody>{data.map((r,i)=>{
                   const isSel=selected.has(r.id);
                   const bg=isSel?alpha(C.azulProfundo,0.024):appearance.zebra&&i%2===1?zebraBg:"transparent";
-                  return(<tr key={r.id} style={{borderBottom:`1px solid ${C.cardBorder}`,background:bg,height:D.rowH,transition:"background .12s",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.background=`${C.amareloOuro}15`} onMouseLeave={e=>e.currentTarget.style.background=bg}>
+                  return(<tr key={r.id} {...holofote.propsDaLinha(r.id)} style={{borderBottom:`1px solid ${C.cardBorder}`,background:bg,height:D.rowH,transition:"background .12s",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.background=`${C.amareloOuro}15`} onMouseLeave={e=>e.currentTarget.style.background=bg}>
                     <td style={{padding:`0 ${D.padX}px`}}><Checkbox checked={isSel} onChange={()=>toggleSel(r.id)} size={14}/></td>
                     {visibleCols.has("id")&&<td style={{padding:`0 ${D.padX}px`,fontSize:D.fs-1,fontFamily:Fn.mono,fontWeight:600,color:C.cinzaEscuro,whiteSpace:appearance.wrapText?"normal":"nowrap",borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}>{r.id}</td>}
                     {visibleCols.has("sol")&&<td style={{padding:`0 ${D.padX}px`,borderRight:appearance.verticalBorders?`1px solid ${C.cardBorder}`:"none"}}><div style={{display:"flex",alignItems:"center",gap:8}}><Avatar name={r.sol} size={density==="compact"?22:density==="normal"?28:34}/><span style={{fontSize:D.fs,color:C.cinzaEscuro,fontWeight:600,whiteSpace:appearance.wrapText?"normal":"nowrap"}}>{r.sol}</span></div></td>}
@@ -893,16 +895,18 @@ export default function DataListingDemo() {
                       <RowActionsMenu
                         rowId={r.id}
                         radius={56}
+                        onOpenChange={holofote.aoMudarMenu(r.id)}
                         actions={[
-                          {key:"edit",label:"Editar pedido",icon:<Pencil className="h-4 w-4"/>,onClick:()=>undefined},
-                          {key:"cancel",label:"Cancelar",icon:<Ban className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
-                          {key:"delete",label:"Excluir",icon:<Trash2 className="h-4 w-4"/>,danger:true,onClick:()=>undefined},
+                          {key:"edit",label:"Editar pedido",icon:<Pencil className="h-4 w-4"/>,tom:"primario",onClick:()=>undefined},
+                          {key:"cancel",label:"Cancelar",icon:<Ban className="h-4 w-4"/>,tom:"perigo",onClick:()=>undefined},
+                          {key:"delete",label:"Excluir",icon:<Trash2 className="h-4 w-4"/>,tom:"perigo",onClick:()=>undefined},
                         ]}
                       />
                     </td>}
                   </tr>);
                 })}</tbody>
               </table>
+              {holofote.holofote}
             </div>}
 
             {view==="cards"&&<div style={{padding:16,display:"grid",gridTemplateColumns:mob?"1fr":"repeat(auto-fill,minmax(280px,1fr))",gap:12}}>

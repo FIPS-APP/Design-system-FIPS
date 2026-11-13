@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.7',
+    date: '2026-11-13',
+    title: 'Holofote da linha ativa para qualquer tabela',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo hook `useHolofoteDaLinha`: o holofote da linha ativa (anel, fundo no tom primário, véu cinza claro nas demais, ↑↓, Enter e Espaço, Esc e clique fora) vale para qualquer tabela do pacote (`Table`/`TableRow`) ou lista de cartões, com o gatilho + do `RowActionsMenu`. Devolve `moldura`, `holofote`, `propsDaLinha(chave)` e `aoMudarMenu(chave)`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`TabelaExpansivel` passa a usar o hook, sem mudança de comportamento nem de visual. A regra de listagem com ações por linha (gatilho +, cor por `tom`, holofote sempre ligado) entra na documentação, na skill do pacote e no manifesto de padrões; o exemplo de Data Listing segue o padrão.',
+      },
+    ],
+  },
+  {
     version: '0.25.4',
     date: '2026-11-13',
     title: 'Vidro fosco do menu de volta e holofote nos cartões do celular',

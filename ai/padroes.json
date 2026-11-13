@@ -34,6 +34,13 @@
       "tela": "Lista que colapsa no celular",
       "referencia": "Tecnopano",
       "componentes": ["ListingFilterToolbar", "CartaoListagem", "TabelaExpansivel"]
+    },
+    {
+      "tela": "Listagem com ações por linha",
+      "referencia": "Tecnopano; modelo aprovado: holofote na linha ativa",
+      "componentes": ["RowActionsMenu", "TabelaExpansivel", "useHolofoteDaLinha"],
+      "desde": "0.25.7",
+      "nota": "Gatilho + do RowActionsMenu, nunca ⋮ ou ⋯ nem menu local. Cor por ação com `tom`: primario = ver, abrir, editar, aprovar; pdf = PDF; perigo = excluir, remover, reprovar, cancelar; neutro = o resto. Holofote sempre ligado: TabelaExpansivel com `acoesDaLinha`, ou `useHolofoteDaLinha` em tabela própria (Table/TableRow) ou lista de cartões"
     }
   ],
   "marca": "Brandbook = marca (cor, logo). Layout e componente = a tabela de padrões.",
@@ -41,6 +48,7 @@
     "Nome, prop, variante ou token que o pacote instalado não tem. `ConfirmDialog` não existe. Button sem `variant=\"default\"`/`\"destructive\"`.",
     "Cópia local de casca, entrada ou banner; CSS do GMAP; hex literal; `var()` de token inexistente.",
     "`className` visual em primitivo do pacote (cor, borda, raio, padding, altura, fonte), inclusive com prefixo `sm:`, `hover:`, `dark:`, `data-[...]:`.",
+    "Menu de ações por linha com ⋮ ou ⋯ ou feito à mão; ação sem `tom`; listagem com ações sem o holofote (use `TabelaExpansivel` com `acoesDaLinha` ou `useHolofoteDaLinha`).",
     "Dependência `file:` ou tgz do pacote: não é fonte confiável. O certo é o registro.",
     "Faltou no pacote algo que a referência tem: PR no `Design-system-FIPS`, nunca cópia no app."
   ],

@@ -74,6 +74,8 @@ export type {
   TabelaExpansivelColuna,
   TabelaExpansivelOrdenacao,
 } from './TabelaExpansivel'
+export { useHolofoteDaLinha } from './useHolofoteDaLinha'
+export type { HolofoteDaLinhaOpcoes, HolofoteDaLinha, PropsDaLinhaComHolofote } from './useHolofoteDaLinha'
 export { SecaoNumerada } from './SecaoNumerada'
 export type { SecaoNumeradaProps } from './SecaoNumerada'
 export { BarraAcoesRodape, EstadoSalvamento } from './BarraAcoesRodape'
