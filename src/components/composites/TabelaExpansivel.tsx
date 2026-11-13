@@ -76,7 +76,8 @@ export type TabelaExpansivelProps<T> = {
   acoesDaLinha?: (linha: T) => RowMenuAction[]
   /**
    * Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela ganha fundo no
-   * tom primário, anel e leve elevação, e as demais recuam sob um véu cinza claro (só com `acoesDaLinha`). ↑ e ↓ levam o destaque
+   * tom primário, anel e leve elevação, e as demais recuam sob um véu cinza claro (só com `acoesDaLinha`; vale
+   * também nos cartões do celular). ↑ e ↓ levam o destaque
    * para a linha vizinha; Esc, X, clique fora ou a ação escolhida devolvem a tabela. Padrão: `true`.
    */
   destaqueDaLinha?: boolean
@@ -171,7 +172,7 @@ export function TabelaExpansivel<T>({
   const molduraRef = useRef<HTMLDivElement | null>(null)
   const holofoteRef = useRef<HTMLDivElement | null>(null)
   const holofotePosto = useRef(false)
-  const linhasRef = useRef(new Map<string, HTMLTableRowElement>())
+  const linhasRef = useRef(new Map<string, HTMLElement>())
   const refMoldura = useCallback(
     (el: HTMLDivElement | null) => {
       molduraRef.current = el
@@ -179,7 +180,8 @@ export function TabelaExpansivel<T>({
     },
     [ref],
   )
-  const comHolofote = destaqueDaLinha && largo && Boolean(acoesDaLinha) && linhas.length > 0
+  // Vale na tabela e nos cartões do celular (o holofote vai para o cartão do menu aberto).
+  const comHolofote = destaqueDaLinha && Boolean(acoesDaLinha) && linhas.length > 0
   const chaves = useMemo(() => linhas.map(chave), [linhas, chave])
   const focoValido = comHolofote && emFoco !== null && chaves.includes(emFoco) ? emFoco : null
 
@@ -467,7 +469,18 @@ export function TabelaExpansivel<T>({
           const acoes = acoesDaLinha?.(linha) ?? []
           const campos = colunas.filter((c) => c !== colunaPrincipal && !c.ocultaNoCartao)
           return (
-            <li key={k} className={cn('space-y-2 px-4 py-3', classeDaLinhaClicavel)} {...propsDaLinha(linha)}>
+            <li
+              key={k}
+              ref={(el) => {
+                if (el) linhasRef.current.set(k, el)
+                else linhasRef.current.delete(k)
+              }}
+              data-linha=""
+              data-em-foco={focoValido === k ? '' : undefined}
+              className={cn('space-y-2 px-4 py-3', classeDaLinhaClicavel)}
+              {...propsDaLinha(linha)}
+              {...propsDoDestaque(linha)}
+            >
               <div className="flex items-start gap-2">
                 {comPainel ? botao(linha) : <span className="size-7 shrink-0" aria-hidden />}
                 <div className="min-w-0 flex-1">
@@ -493,7 +506,9 @@ export function TabelaExpansivel<T>({
                     </>
                   )}
                 </div>
-                {acoesDaLinha && acoes.length > 0 ? <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} /> : null}
+                {acoesDaLinha && acoes.length > 0 ? (
+                  <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} onOpenChange={aoMudarMenu(k)} />
+                ) : null}
               </div>
               {comPainel && aberta ? (
                 <div className="-mx-4 bg-[var(--color-surface-muted)]">{painel(linha)}</div>

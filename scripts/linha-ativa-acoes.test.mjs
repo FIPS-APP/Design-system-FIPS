@@ -10,6 +10,8 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { createServer } from 'vite'
+import { transform, browserslistToTargets } from 'lightningcss'
+import browserslist from 'browserslist'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
@@ -112,7 +114,7 @@ test('holofote: véu --color-border-strong a 25% no claro e 35% no escuro, anel 
 })
 
 test('linha ativa no tom primário e texto secundário reforçado; recuadas não reagem a hover', () => {
-  assert.match(regra('tr[data-em-foco] > td'), /color-mix\(in srgb, var\(--color-primary-text\) 9%, var\(--color-surface\)\)/)
+  assert.match(css, /tr\[data-em-foco\] > td,\nli\[data-em-foco\] \{\n  background-color: color-mix\(in srgb, var\(--color-primary-text\) 9%, var\(--color-surface\)\)/)
   assert.match(regra('tr[data-em-foco]'), /--color-fg-muted: var\(--color-fg-muted-strong\)/)
   assert.match(
     regra("[data-recuo] tbody > tr[data-linha]:not([data-em-foco]):not([data-state='selected']):hover"),
@@ -240,4 +242,23 @@ test('TabelaExpansivel: moldura com o holofote, linhas marcadas e sem recuo ante
 
 test('TabelaExpansivel: destaqueDaLinha={false} tira o holofote', () => {
   assert.doesNotMatch(tabela({ destaqueDaLinha: false }), /fips-holofote/)
+})
+
+// ───────── 0.25.4: vidro fosco que sobrevive ao build e holofote nos cartões ─────────
+test('vidro do menu: o build mantém backdrop-filter sem prefixo (o -webkit- vem antes)', () => {
+  const alvos = browserslistToTargets(browserslist('chrome 111, edge 111, firefox 128, safari 16.4'))
+  for (const seletor of ['.cmd-glass', '.cmd-glass-center']) {
+    const corpo = regra(seletor)
+    const saida = transform({ code: Buffer.from(`${seletor}{${corpo}}`), minify: true, targets: alvos, filename: 'x.css' }).code.toString()
+    assert.match(saida, /[;{]backdrop-filter:blur/, `${seletor} sem backdrop-filter depois do build: ${saida}`)
+  }
+})
+
+test('celular: o cartão do menu aberto ganha o tom e o holofote vale também nos cartões', () => {
+  assert.match(css, /tr\[data-em-foco\] > td,\nli\[data-em-foco\] \{\n  background-color: color-mix\(in srgb, var\(--color-primary-text\) 9%/)
+  assert.match(css, /\nli\[data-em-foco\] \{\n  position: relative;\n  z-index: 3;\n  --color-fg-muted: var\(--color-fg-muted-strong\);/)
+  const fonte = readFileSync(join(RAIZ, 'src/components/composites/TabelaExpansivel.tsx'), 'utf8')
+  assert.equal((fonte.match(/onOpenChange=\{aoMudarMenu\(k\)\}/g) || []).length, 2, 'tabela e cartões avisam o menu')
+  assert.match(fonte, /const comHolofote = destaqueDaLinha && Boolean\(acoesDaLinha\)/)
+  assert.match(fonte, /<li\s+key=\{k\}\s+ref=/)
 })

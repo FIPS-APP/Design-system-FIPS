@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.4',
+    date: '2026-11-13',
+    title: 'Vidro fosco do menu de volta e holofote nos cartões do celular',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O build da biblioteca descartava o `backdrop-filter` sem prefixo do vidro do menu radial (sobrava só o `-webkit-`), e o texto da linha aparecia por baixo das ações apagadas. A forma prefixada vem antes e as duas chegam ao pacote.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`TabelaExpansivel` no celular: quando a tabela vira cartões, o cartão do menu aberto ganha o mesmo destaque (anel, fundo no tom primário e leve elevação) e os outros cartões recebem o véu cinza claro.',
+      },
+    ],
+  },
+  {
     version: '0.25.3',
     date: '2026-11-13',
     title: 'Linha ativa em destaque e cor por ação no menu da linha',

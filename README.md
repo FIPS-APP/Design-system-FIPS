@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.25.3`
+## Versão atual: `v0.25.4`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.25.4 | 2026-11-13 | Vidro fosco do menu radial volta no pacote (o build descartava o `backdrop-filter` sem prefixo do `.cmd-glass`), então as ações apagadas ficam opacas como no modelo. `TabelaExpansivel` no celular: o cartão do menu aberto ganha o mesmo holofote (anel, fundo no tom) e os outros cartões recebem o véu cinza claro. |
 | 0.25.3 | 2026-11-13 | Linha ativa e cor por ação: `RowActionsMenu`/`CircularCommandMenu` com `tom` por ação (`primario`, `pdf`, `perigo`, `neutro`; `danger` continua valendo), realce na cor da ação com anel e sombra no mesmo box-shadow, ações apagadas, foco próprio no "+" e `onOpenChange`. `TabelaExpansivel` com holofote na linha do menu aberto (demais recuadas sob véu cinza claro), ↑↓ movendo o destaque e movimento reduzido respeitado (`destaqueDaLinha`, padrão true). |
 | 0.25.2 | 2026-11-13 | Home no cartão da Gestão OPA com o ícone ao lado do título: `CartoesConceito` volta ao cartão de conceito (filete de topo no tom, canto assinatura, ícone em disco) com o ícone ao lado do título e o texto embaixo, alinhado à esquerda; `CartoesInformativos` com o ícone ao lado do título e o texto e as pílulas embaixo, na largura do cartão. Props iguais; muda só o visual |
 | 0.25.1 | 2026-11-13 | `CartoesConceito` com ícone ao lado do título: mesmo cartão do `CartoesResponsabilidade` (borda esquerda no tom, ícone em quadradinho do tom, texto embaixo alinhado à esquerda). Sai o filete de topo e o layout centrado. Muda para quem já usa: só o visual; props iguais |

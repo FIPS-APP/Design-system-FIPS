@@ -193,7 +193,7 @@ const PROPS: [string, string, string][] = [
   ['rotuloDetalhe', '(linha, aberta) => string', 'aria-label do botão. Padrão: "Ver detalhe" / "Recolher detalhe". Diga qual linha.'],
   ['aoClicarLinha', '(linha) => void', 'Linha inteira clicável, com foco por teclado (Enter e Espaço na linha). Não dispara em botão, link, campo ou menu de dentro da linha. Sem a prop a linha não é clicável.'],
   ['acoesDaLinha', '(linha) => RowMenuAction[]', 'Menu radial por linha (RowActionsMenu), na tabela e no cartão. Cada ação pode ter tom: primario, pdf, perigo ou neutro.'],
-  ['destaqueDaLinha', 'boolean', 'Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela fica no tom primário com anel e leve elevação, e as demais recuam sob um véu cinza claro. ↑ e ↓ movem o destaque; Esc, X, clique fora ou a ação escolhida devolvem a tabela. O app não faz nada. Padrão true.'],
+  ['destaqueDaLinha', 'boolean', 'Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela fica no tom primário com anel e leve elevação, e as demais recuam sob um véu cinza claro. ↑ e ↓ movem o destaque; Esc, X, clique fora ou a ação escolhida devolvem a tabela. No celular vale para o cartão. O app não faz nada. Padrão true.'],
   ['ordenacao / aoOrdenar', '{ coluna, direcao } / (colunaId) => void', 'Cabeçalhos ordenáveis com aria-sort. A ordenação é de quem usa.'],
   ['renderCartao', '(linha) => ReactNode', 'Cartão próprio no celular. Botão e painel continuam do componente.'],
   ['quebraEm', 'number', 'Largura do contêiner (px) abaixo da qual vira cartões. Padrão 768.'],

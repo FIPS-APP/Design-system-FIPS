@@ -847,8 +847,9 @@
 /* Menu circular de ações (Multitags → Tecnopano → DS-FIPS) */
 .cmd-glass {
   background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-  backdrop-filter: blur(13px) saturate(1.5);
+  /* Prefixado ANTES: com o -webkit- depois, o minificador do build descarta a forma sem prefixo. */
   -webkit-backdrop-filter: blur(13px) saturate(1.5);
+  backdrop-filter: blur(13px) saturate(1.5);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-float);
 }
@@ -857,8 +858,9 @@
 }
 .cmd-glass-center {
   background: color-mix(in srgb, var(--color-surface) 94%, transparent);
-  backdrop-filter: blur(16px) saturate(1.6);
+  /* Prefixado ANTES: com o -webkit- depois, o minificador do build descarta a forma sem prefixo. */
   -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
   box-shadow: var(--shadow-float);
   color: var(--color-fg);
@@ -960,9 +962,17 @@ tr[data-em-foco] {
   /* Texto secundário da linha ativa um passo mais forte (4,5:1 sobre o fundo azulado). */
   --color-fg-muted: var(--color-fg-muted-strong);
 }
-tr[data-em-foco] > td {
+tr[data-em-foco] > td,
+li[data-em-foco] {
   background-color: color-mix(in srgb, var(--color-primary-text) 9%, var(--color-surface));
 }
+/* Celular (cartões): o mesmo holofote passa para o cartão do menu aberto. */
+li[data-em-foco] {
+  position: relative;
+  z-index: 3;
+  --color-fg-muted: var(--color-fg-muted-strong);
+}
+li[data-em-foco]:focus-visible { outline: none; }
 tr[data-em-foco]:focus-visible { outline: none; }
 /* Linhas recuadas não reagem ao mouse: o holofote manda. */
 [data-recuo] tbody > tr[data-linha]:not([data-em-foco]):not([data-state='selected']):hover {
