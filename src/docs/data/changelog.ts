@@ -25,7 +25,7 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.25.6',
+    version: '0.25.1',
     date: '2026-11-13',
     title: 'CartoesConceito com ícone ao lado do título',
     entries: [
