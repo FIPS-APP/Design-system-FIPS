@@ -118,9 +118,9 @@ function Completa() {
   const naPagina = ordenadas.slice((paginaAtual - 1) * porPagina, paginaAtual * porPagina)
 
   const acoes = (l: Inspecao): RowMenuAction[] => [
-    { key: 'ver', label: 'Abrir', icon: <Eye className="h-4 w-4" />, onClick: () => setAviso(`Abrir ${l.numero}`) },
-    { key: 'editar', label: 'Editar', icon: <Pencil className="h-4 w-4" />, onClick: () => setAviso(`Editar ${l.numero}`) },
-    { key: 'pdf', label: 'Baixar PDF', icon: <FileDown className="h-4 w-4" />, onClick: () => setAviso(`PDF de ${l.numero}`) },
+    { key: 'ver', label: 'Abrir', icon: <Eye className="h-4 w-4" />, tom: 'primario', onClick: () => setAviso(`Abrir ${l.numero}`) },
+    { key: 'editar', label: 'Editar', icon: <Pencil className="h-4 w-4" />, tom: 'primario', onClick: () => setAviso(`Editar ${l.numero}`) },
+    { key: 'pdf', label: 'Baixar PDF', icon: <FileDown className="h-4 w-4" />, tom: 'pdf', onClick: () => setAviso(`PDF de ${l.numero}`) },
   ]
 
   return (
@@ -192,7 +192,8 @@ const PROPS: [string, string, string][] = [
   ['temDetalhe', '(linha) => boolean', 'Linha sem painel não mostra o botão.'],
   ['rotuloDetalhe', '(linha, aberta) => string', 'aria-label do botão. Padrão: "Ver detalhe" / "Recolher detalhe". Diga qual linha.'],
   ['aoClicarLinha', '(linha) => void', 'Linha inteira clicável, com foco por teclado (Enter e Espaço na linha). Não dispara em botão, link, campo ou menu de dentro da linha. Sem a prop a linha não é clicável.'],
-  ['acoesDaLinha', '(linha) => RowMenuAction[]', 'Menu radial por linha (RowActionsMenu), na tabela e no cartão.'],
+  ['acoesDaLinha', '(linha) => RowMenuAction[]', 'Menu radial por linha (RowActionsMenu), na tabela e no cartão. Cada ação pode ter tom: primario, pdf, perigo ou neutro.'],
+  ['destaqueDaLinha', 'boolean', 'Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela fica no tom primário com anel e leve elevação, e as demais recuam sob um véu cinza claro. ↑ e ↓ movem o destaque; Esc, X, clique fora ou a ação escolhida devolvem a tabela. O app não faz nada. Padrão true.'],
   ['ordenacao / aoOrdenar', '{ coluna, direcao } / (colunaId) => void', 'Cabeçalhos ordenáveis com aria-sort. A ordenação é de quem usa.'],
   ['renderCartao', '(linha) => ReactNode', 'Cartão próprio no celular. Botão e painel continuam do componente.'],
   ['quebraEm', 'number', 'Largura do contêiner (px) abaixo da qual vira cartões. Padrão 768.'],
@@ -309,6 +310,7 @@ export default function TabelaExpansivelDoc() {
           <li>O chevron é um <code>button</code> com <code>aria-expanded</code> e <code>aria-controls</code> apontando para o painel (<code>role=&quot;region&quot;</code>).</li>
           <li>Cabeçalho ordenável usa <code>aria-sort</code>; a tabela e a lista de cartões levam o <code>rotulo</code> como <code>aria-label</code>.</li>
           <li>Foco visível em todos os botões; Enter e Espaço abrem e fecham.</li>
+          <li>Linha ativa: texto 9,82:1 (claro) e 12,01:1 (escuro) sobre o fundo azulado; linhas recuadas acima de 3:1 sob o véu. O holofote desliza por <code>transform</code> e, com movimento reduzido no sistema, aparece no lugar.</li>
           <li>O painel fica sobre <code>--color-surface-muted</code>, onde <code>--color-fg-muted</code> mede 4,29:1 no tema claro (abaixo de 4,5:1): texto direto no painel use <code>--color-fg</code>; texto secundário só dentro de um cartão <code>--color-surface</code>.</li>
           <li>Passe <code>rotuloDetalhe</code> dizendo de qual linha é o painel: &quot;Ver detalhe&quot; repetido não diz nada ao leitor de tela.</li>
         </ul>

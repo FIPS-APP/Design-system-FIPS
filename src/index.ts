@@ -74,6 +74,7 @@ export {
 export {
   CircularCommandMenu,
   type CommandItem,
+  type TomDaAcao,
   type CircularCommandMenuProps,
 } from './components/composites/CircularCommandMenu'
 export {

@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.25.2`
+## Versão atual: `v0.25.3`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.25.3 | 2026-11-13 | Linha ativa e cor por ação: `RowActionsMenu`/`CircularCommandMenu` com `tom` por ação (`primario`, `pdf`, `perigo`, `neutro`; `danger` continua valendo), realce na cor da ação com anel e sombra no mesmo box-shadow, ações apagadas, foco próprio no "+" e `onOpenChange`. `TabelaExpansivel` com holofote na linha do menu aberto (demais recuadas sob véu cinza claro), ↑↓ movendo o destaque e movimento reduzido respeitado (`destaqueDaLinha`, padrão true). |
 | 0.25.2 | 2026-11-13 | Home no cartão da Gestão OPA com o ícone ao lado do título: `CartoesConceito` volta ao cartão de conceito (filete de topo no tom, canto assinatura, ícone em disco) com o ícone ao lado do título e o texto embaixo, alinhado à esquerda; `CartoesInformativos` com o ícone ao lado do título e o texto e as pílulas embaixo, na largura do cartão. Props iguais; muda só o visual |
 | 0.25.1 | 2026-11-13 | `CartoesConceito` com ícone ao lado do título: mesmo cartão do `CartoesResponsabilidade` (borda esquerda no tom, ícone em quadradinho do tom, texto embaixo alinhado à esquerda). Sai o filete de topo e o layout centrado. Muda para quem já usa: só o visual; props iguais |
 | 0.24.0 | 2026-11-12 | Rodada de 12/11 (#121, #145, #175, #6, #176, #177, #180, #183, #184, #185, #186). Novos no pacote: `Toast`, `ToastViewport` e `useToast`; `Button` com `size="touch"` (48 px); `DrawerHero`, `useTableDensity`, `FipsTabBar`, `BuscarPessoaModal`, `SettingsPreferenceRow` e `SettingsPreferenceRowSelect` com os tipos; `AppShell` com `aoMudarRecolhido`. Correções: `Alert` warning e texto laranja passam de 4,5:1; aba ativa do `FipsTabBar` legível no escuro; foco preso na gaveta do `AppShell`; rótulo Segurança da entrada a 5,25:1; celular com as medidas das referências (`AppHeader`, `SecaoNumerada`, `CartaoListagem`) e busca do `FilterBlock` em segunda linha abaixo de 640 px. Tokens `--neu-*` do azulejo neumórfico. Detalhe por PR no changelog do site. Muda para quem já usa: nada removido |

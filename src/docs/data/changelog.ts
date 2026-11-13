@@ -25,6 +25,33 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.3',
+    date: '2026-11-13',
+    title: 'Linha ativa em destaque e cor por ação no menu da linha',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`RowMenuAction` e `CommandItem` ganham `tom` (`primario`, `pdf`, `perigo`, `neutro`). A cor é a mesma no repouso, no realce, no foco e no clique, com fundo leve (8%, 16% ao clicar) e anel na cor da ação. `danger: true` sem `tom` continua sendo perigo; quem já usa só sobe a versão.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`TabelaExpansivel`: quando o menu da linha abre, a linha fica no tom primário com anel e leve elevação e as demais recuam sob um véu cinza claro (`--color-border-strong`, 25% no claro e 35% no escuro). O holofote desliza por transform; ↑ e ↓ levam o destaque à linha vizinha; Esc, X, clique fora ou a ação escolhida devolvem a tabela. Sem mudança no app. `destaqueDaLinha={false}` desliga.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Com uma ação realçada as outras ficam apagadas (opacidade 0,8 e escala 94%); aberto pelo mouse o menu começa sem realce, pelo teclado no primeiro item. Gatilho "+" com anel de foco próprio. `onOpenChange` avisa quando o menu abre e fecha.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O anel da ação ativa (ring-2) perdia para o box-shadow do vidro do menu, por ordem de camadas do CSS, e não aparecia. Anel e sombra agora vão no mesmo box-shadow.',
+      },
+    ],
+  },
+  {
     version: '0.25.2',
     date: '2026-11-13',
     title: 'Cartões da Home com o ícone ao lado do título, no cartão da Gestão OPA',

@@ -3,7 +3,9 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   type KeyboardEvent,
   type MouseEvent,
@@ -23,7 +25,7 @@ import {
   type TableDensity,
 } from '../ui/table'
 import { RowActionsMenu, type RowMenuAction } from './RowActionsMenu'
-import { cliqueAbreALinha, teclaAbreALinha } from './tabela-linha-logica'
+import { cliqueAbreALinha, linhaVizinha, posicaoDoHolofote, teclaAbreALinha } from './tabela-linha-logica'
 
 export type TabelaExpansivelColuna<T> = {
   /** Identificador estável da coluna (também é o valor que `aoOrdenar` devolve). */
@@ -72,6 +74,12 @@ export type TabelaExpansivelProps<T> = {
   aoClicarLinha?: (linha: T) => void
   /** Ações da linha, no menu radial (`RowActionsMenu`). */
   acoesDaLinha?: (linha: T) => RowMenuAction[]
+  /**
+   * Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela ganha fundo no
+   * tom primário, anel e leve elevação, e as demais recuam sob um véu cinza claro (só com `acoesDaLinha`). ↑ e ↓ levam o destaque
+   * para a linha vizinha; Esc, X, clique fora ou a ação escolhida devolvem a tabela. Padrão: `true`.
+   */
+  destaqueDaLinha?: boolean
   /** Ordenação atual; use com `aoOrdenar` e `ordenavel` nas colunas. */
   ordenacao?: TabelaExpansivelOrdenacao
   aoOrdenar?: (colunaId: string) => void
@@ -141,6 +149,7 @@ export function TabelaExpansivel<T>({
   rotuloDetalhe,
   aoClicarLinha,
   acoesDaLinha,
+  destaqueDaLinha = true,
   ordenacao,
   aoOrdenar,
   renderCartao,
@@ -155,6 +164,106 @@ export function TabelaExpansivel<T>({
 }: TabelaExpansivelProps<T>) {
   const base = useId().replace(/:/g, '')
   const { ref, largo } = useContainerLargo(quebraEm)
+
+  // ---------- Holofote: linha ativa em destaque, demais recuadas ----------
+  const [emFoco, setEmFoco] = useState<string | null>(null)
+  const menuAbertoRef = useRef(false)
+  const molduraRef = useRef<HTMLDivElement | null>(null)
+  const holofoteRef = useRef<HTMLDivElement | null>(null)
+  const holofotePosto = useRef(false)
+  const linhasRef = useRef(new Map<string, HTMLTableRowElement>())
+  const refMoldura = useCallback(
+    (el: HTMLDivElement | null) => {
+      molduraRef.current = el
+      ref(el)
+    },
+    [ref],
+  )
+  const comHolofote = destaqueDaLinha && largo && Boolean(acoesDaLinha) && linhas.length > 0
+  const chaves = useMemo(() => linhas.map(chave), [linhas, chave])
+  const focoValido = comHolofote && emFoco !== null && chaves.includes(emFoco) ? emFoco : null
+
+  const posicionarHolofote = useCallback(() => {
+    const holo = holofoteRef.current
+    const moldura = molduraRef.current
+    const tr = focoValido ? linhasRef.current.get(focoValido) : undefined
+    if (!holo || !moldura || !tr) return
+    const { y, altura } = posicaoDoHolofote(tr.getBoundingClientRect(), moldura.getBoundingClientRect(), moldura.clientTop)
+    // 1ª aparição: entra no lugar, sem vir deslizando do topo; depois desliza por transform.
+    const primeira = !holofotePosto.current
+    if (primeira) holo.setAttribute('data-sem-deslize', '')
+    holo.style.transform = `translateY(${y}px)`
+    holo.style.height = `${altura}px`
+    if (primeira) {
+      void holo.offsetWidth
+      holo.removeAttribute('data-sem-deslize')
+      holofotePosto.current = true
+    }
+  }, [focoValido])
+
+  useLayoutEffect(() => {
+    posicionarHolofote()
+  })
+
+  useEffect(() => {
+    const moldura = molduraRef.current
+    if (!focoValido || !moldura || typeof ResizeObserver === 'undefined') return
+    const observador = new ResizeObserver(() => posicionarHolofote())
+    observador.observe(moldura)
+    return () => observador.disconnect()
+  }, [focoValido, posicionarHolofote])
+
+  // Linha escolhida com o menu fechado: ↑↓ movem, Enter/Espaço na linha abre o menu, Esc e clique fora devolvem.
+  useEffect(() => {
+    if (!focoValido) return
+    const focarLinha = (k: string) => linhasRef.current.get(k)?.focus({ preventScroll: false })
+    const gatilho = (k: string) => linhasRef.current.get(k)?.querySelector<HTMLButtonElement>('.fips-row-action')
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.defaultPrevented || menuAbertoRef.current) return
+      const alvo = e.target as HTMLElement | null
+      if (alvo?.closest?.('input, textarea, select, [contenteditable="true"]')) return
+      const atual = chaves.indexOf(focoValido)
+      const proxima = linhaVizinha(e.key, atual, chaves.length)
+      if (proxima !== null) {
+        e.preventDefault()
+        setEmFoco(chaves[proxima])
+        focarLinha(chaves[proxima])
+        return
+      }
+      const tr = linhasRef.current.get(focoValido)
+      if ((e.key === 'Enter' || e.key === ' ') && !aoClicarLinha && alvo === tr) {
+        const g = gatilho(focoValido)
+        if (g) {
+          e.preventDefault()
+          g.click()
+        }
+        return
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        const g = gatilho(focoValido)
+        setEmFoco(null)
+        g?.focus({ preventScroll: true })
+      }
+    }
+    const onClique = (e: globalThis.MouseEvent) => {
+      if (menuAbertoRef.current) return
+      const corpo = linhasRef.current.get(focoValido)?.parentElement
+      if (corpo && !corpo.contains(e.target as Node)) setEmFoco(null)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('click', onClique)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('click', onClique)
+    }
+  }, [focoValido, chaves, aoClicarLinha])
+
+  // O menu da linha abre: ela vira a linha em destaque. Fecha (Esc, X, clique fora, ação): a tabela volta.
+  const aoMudarMenu = (k: string) => (aberto: boolean) => {
+    menuAbertoRef.current = aberto
+    setEmFoco(aberto ? k : null)
+  }
 
   const controlado = expandidas !== undefined
   const [interno, setInterno] = useState<Set<string>>(() => new Set(expandidasIniciais ?? []))
@@ -200,6 +309,21 @@ export function TabelaExpansivel<T>({
           },
         }
       : {}
+  // Clique na linha (fora dos controles) escolhe a linha para o destaque; sem `aoClicarLinha`, o 2º clique solta.
+  // tabIndex -1 deixa as setas levarem o foco de linha em linha sem pôr a linha na ordem do Tab.
+  const propsDoDestaque = (linha: T) => {
+    if (!comHolofote) return {}
+    const k = chave(linha)
+    return {
+      ...(aoClicarLinha ? {} : { tabIndex: -1 }),
+      onClickCapture: (e: MouseEvent<HTMLElement>) => {
+        if (menuAbertoRef.current || !cliqueAbreALinha(e.target as Element, e.currentTarget)) return
+        const solta = !aoClicarLinha && focoValido === k
+        setEmFoco(solta ? null : k)
+        if (!solta) e.currentTarget.focus({ preventScroll: true })
+      },
+    }
+  }
   const classeDaLinhaClicavel = aoClicarLinha
     ? 'cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--color-ring)]'
     : undefined
@@ -290,7 +414,18 @@ export function TabelaExpansivel<T>({
             const acoes = acoesDaLinha?.(linha) ?? []
             return (
               <Fragment key={k}>
-                <TableRow data-state={aberta ? 'selected' : undefined} className={classeDaLinhaClicavel} {...propsDaLinha(linha)}>
+                <TableRow
+                  ref={(el) => {
+                    if (el) linhasRef.current.set(k, el)
+                    else linhasRef.current.delete(k)
+                  }}
+                  data-state={aberta ? 'selected' : undefined}
+                  data-linha=""
+                  data-em-foco={focoValido === k ? '' : undefined}
+                  className={classeDaLinhaClicavel}
+                  {...propsDaLinha(linha)}
+                  {...propsDoDestaque(linha)}
+                >
                   <TableCell className="w-10 pr-0">{comPainel ? botao(linha) : null}</TableCell>
                   {colunas.map((c) => (
                     <TableCell key={c.id} className={cn('whitespace-normal', ALINHAMENTO[c.alinhamento ?? 'esquerda'], c.className)}>
@@ -299,7 +434,7 @@ export function TabelaExpansivel<T>({
                   ))}
                   {acoesDaLinha ? (
                     <TableCell className="w-12 pl-0">
-                      <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} />
+                      <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} onOpenChange={aoMudarMenu(k)} />
                     </TableCell>
                   ) : null}
                 </TableRow>
@@ -372,15 +507,18 @@ export function TabelaExpansivel<T>({
 
   return (
     <div
-      ref={ref}
+      ref={refMoldura}
       data-modo={largo ? 'tabela' : 'cartoes'}
+      data-recuo={focoValido ? '' : undefined}
+      data-zebra={zebra ? '' : undefined}
       className={cn(
-        'overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]',
+        'relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]',
         className,
       )}
     >
       {largo ? tabela : cartoes}
       {rodape}
+      {comHolofote ? <div ref={holofoteRef} className="fips-holofote" aria-hidden /> : null}
     </div>
   )
 }

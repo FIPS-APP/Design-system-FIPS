@@ -3,14 +3,19 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, MotionConfig, useReducedMotionConfig } from 'framer-motion'
 import { cn } from '../../lib/cn'
 import { useIsClient } from '../../lib/useIsClient'
-import { acaoDoTeclado, textoDoRealce } from './menu-radial-logica'
+import { acaoDoTeclado, realceAoAbrir, textoDoRealce, tomDaAcao, type TomDaAcao } from './menu-radial-logica'
+
+export type { TomDaAcao } from './menu-radial-logica'
 
 export type CommandItem = {
   id: string
   icon: ReactNode
   label: string
   shortcut?: string
+  /** Atalho para `tom: 'perigo'`. Vale só quando `tom` não vem. */
   danger?: boolean
+  /** Cor da ação (ícone, anel e fundo leve), igual no repouso, no realce e no clique. Padrão: `neutro`. */
+  tom?: TomDaAcao
   disabled?: boolean
   onClick?: () => void
 }
@@ -24,6 +29,8 @@ export type CircularCommandMenuProps = {
   onSelect?: (item: CommandItem) => void
   /** aria-label do gatilho. Default cobre o uso mais comum (ação por linha de tabela). */
   ariaLabel?: string
+  /** Avisa quando o menu abre (`true`) e fecha (`false`): Esc, X, clique fora ou ação escolhida. */
+  onOpenChange?: (aberto: boolean) => void
 }
 
 const DEFAULT_TRIGGER_CLASS = cn(
@@ -55,8 +62,21 @@ function CircularCommandMenuBase({
   radius = 120,
   onSelect,
   ariaLabel = 'Ações da linha',
+  onOpenChange,
 }: CircularCommandMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpenEstado] = useState(false)
+  const onOpenChangeRef = useRef(onOpenChange)
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange
+  })
+  const abertoRef = useRef(false)
+  // Muda o estado e avisa quem usa só quando de fato abre ou fecha.
+  const setIsOpen = useCallback((aberto: boolean) => {
+    setIsOpenEstado(aberto)
+    if (abertoRef.current === aberto) return
+    abertoRef.current = aberto
+    onOpenChangeRef.current?.(aberto)
+  }, [])
   const [activeIndex, setActiveIndex] = useState(0)
   const [center, setCenter] = useState({ x: 0, y: 0 })
   const mounted = useIsClient()
@@ -84,22 +104,25 @@ function CircularCommandMenuBase({
     })
   }, [radius])
 
-  const open = () => {
+  const open = (porTeclado: boolean) => {
     computeCenter()
-    setActiveIndex(0)
+    setActiveIndex(realceAoAbrir(porTeclado))
     setFocoNosItens(!triggerRef.current?.closest('[role="dialog"]'))
     setIsOpen(true)
   }
 
   // Fecha e devolve o foco ao gatilho (Esc, ação escolhida, clique fora, fechar).
-  const fechar = useCallback((devolverFoco = true) => {
-    setIsOpen(false)
-    if (devolverFoco) triggerRef.current?.focus({ preventScroll: true })
-  }, [])
+  const fechar = useCallback(
+    (devolverFoco = true) => {
+      setIsOpen(false)
+      if (devolverFoco) triggerRef.current?.focus({ preventScroll: true })
+    },
+    [setIsOpen],
+  )
 
   // O foco acompanha o realce: Tab vai para o item certo e o leitor de tela o anuncia.
   useEffect(() => {
-    if (!isOpen || !focoNosItens) return
+    if (!isOpen || !focoNosItens || activeIndex < 0) return
     itensRef.current[activeIndex]?.focus({ preventScroll: true })
   }, [isOpen, focoNosItens, activeIndex, itemCount])
 
@@ -166,7 +189,8 @@ function CircularCommandMenuBase({
         onClick={(e) => {
           e.stopPropagation()
           if (isOpen) setIsOpen(false)
-          else open()
+          // detail 0: clique vindo do teclado (Enter/Espaço no gatilho) começa com o primeiro item realçado.
+          else open(e.detail === 0)
         }}
         className={triggerClassName ?? DEFAULT_TRIGGER_CLASS}
         whileTap={{ scale: 0.95 }}
@@ -210,6 +234,7 @@ function CircularCommandMenuBase({
                     id={menuId}
                     role="menu"
                     aria-label={ariaLabel}
+                    data-tem-ativa={activeIndex >= 0 ? '' : undefined}
                   >
                     {/* Foco no gatilho (menu em painel): o realce é anunciado aqui. */}
                     {!focoNosItens && enabledItems[activeIndex] ? (
@@ -245,6 +270,7 @@ function CircularCommandMenuBase({
                     {enabledItems.map((item, index) => {
                       const position = getItemPosition(index)
                       const isActive = activeIndex === index
+                      const tom = tomDaAcao(item)
                       const tipOnLeft = center.x > window.innerWidth / 2
                       return (
                         <motion.button
@@ -253,7 +279,7 @@ function CircularCommandMenuBase({
                             itensRef.current[index] = el
                           }}
                           type="button"
-                          tabIndex={isActive ? 0 : -1}
+                          tabIndex={index === Math.max(activeIndex, 0) ? 0 : -1}
                           // Espaço ativa no keydown (tratado acima); o clique que o navegador dispara no keyup não repete.
                           onKeyUp={(e) => {
                             if (e.key === ' ') e.preventDefault()
@@ -262,8 +288,8 @@ function CircularCommandMenuBase({
                           initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
                           animate={{
                             opacity: 1,
-                            x: position.x - 18,
-                            y: position.y - 18,
+                            x: position.x - 22,
+                            y: position.y - 22,
                             scale: 1,
                           }}
                           exit={{ opacity: 0, x: 0, y: 0, scale: 0 }}
@@ -279,23 +305,20 @@ function CircularCommandMenuBase({
                             fechar()
                           }}
                           onMouseEnter={() => setActiveIndex(index)}
-                          className={cn(
-                            'cmd-glass pointer-events-auto absolute flex h-9 w-9 items-center justify-center rounded-full transition-[box-shadow,border-color] focus-visible:outline-none',
-                            isActive && !item.danger && 'ring-2 ring-[var(--color-primary)]',
-                            isActive && item.danger && 'ring-2 ring-[var(--color-danger)]',
-                          )}
+                          // Saiu com o mouse: volta a "todas iguais", a menos que o realce seja do teclado.
+                          onMouseLeave={(e) => {
+                            if (!e.currentTarget.matches(':focus-visible')) setActiveIndex(-1)
+                          }}
+                          // 44 px de alvo; a bolha de 36 px fica dentro (cor, anel e sombra no CSS: .cmd-acao).
+                          className="cmd-acao pointer-events-auto absolute top-0 left-0 h-11 w-11 rounded-full"
+                          data-tom={tom}
+                          data-ativa={isActive ? '' : undefined}
                           role="menuitem"
                           aria-label={item.label}
                         >
-                          <div
-                            className={
-                              item.danger
-                                ? 'text-[var(--color-danger)]'
-                                : 'text-[var(--color-fg)]'
-                            }
-                          >
+                          <span className="cmd-glass cmd-acao-bolha absolute inset-1 flex items-center justify-center rounded-full">
                             {item.icon}
-                          </div>
+                          </span>
                           <motion.div
                             initial={{ opacity: 0, scale: 0.92 }}
                             animate={{
