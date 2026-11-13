@@ -6,9 +6,7 @@ import { Card, CardContent } from '../ui/card'
 import {
   tagTitulo,
   tomBordaEsquerda,
-  tomFilete,
   tomIcone,
-  tomIconeSolto,
   type NivelTituloHome,
   type TomHome,
 } from './home-padrao-variants'
@@ -88,7 +86,7 @@ export interface CartaoConceito {
   icone: LucideIcon
   titulo: string
   texto: ReactNode
-  /** Cor do filete de topo e do ícone. Padrão: `primary`. */
+  /** Cor da borda esquerda e do ícone. Padrão: `primary`. */
   tom?: TomHome
 }
 
@@ -100,37 +98,13 @@ export interface CartoesConceitoProps {
 }
 
 /**
- * Cartões de conceito: filete colorido no topo, ícone em disco, título e definição, tudo centrado. O canto
- * inferior esquerdo é mais redondo que os outros (assinatura do cartão FIPS).
+ * Cartões de conceito (termos e definições): borda esquerda na cor do tom, ícone em quadradinho do tom ao lado
+ * do título e a definição embaixo, alinhada à esquerda. É o mesmo cartão de `CartoesResponsabilidade`, só com
+ * título e texto.
  */
 export function CartoesConceito({ conceitos, colunas = 3, nivelTitulo = 3, className }: CartoesConceitoProps) {
-  const Titulo = tagTitulo(nivelTitulo)
   return (
-    <ul className={cn('grid grid-cols-1 gap-3', GRADE[colunas], className)}>
-      {conceitos.map((c) => {
-        const Icone = c.icone
-        return (
-          <li
-            key={c.id}
-            className="overflow-hidden rounded-[10px_10px_10px_18px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]"
-          >
-            <div aria-hidden className={tomFilete({ tom: c.tom })} />
-            <div className="px-5 pb-5 pt-[18px] text-center">
-              <span
-                aria-hidden
-                className="mb-2.5 inline-flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-[var(--color-border)] bg-[var(--color-surface-muted)]"
-              >
-                <Icone className={cn('h-5 w-5', tomIconeSolto({ tom: c.tom }))} />
-              </span>
-              <Titulo className="mb-1.5 font-heading text-[13px] font-bold tracking-[0.02em] text-[var(--color-fg)]">
-                {c.titulo}
-              </Titulo>
-              <p className="text-[11px] leading-[1.5] text-[var(--color-fg-muted)]">{c.texto}</p>
-            </div>
-          </li>
-        )
-      })}
-    </ul>
+    <CartoesResponsabilidade cartoes={conceitos} colunas={colunas} nivelTitulo={nivelTitulo} className={className} />
   )
 }
 

@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.6',
+    date: '2026-11-13',
+    title: 'CartoesConceito com ícone ao lado do título',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`CartoesConceito` passa a ser o mesmo cartão do `CartoesResponsabilidade`: borda esquerda na cor do tom, ícone em quadradinho do tom ao lado do título e a definição embaixo, alinhada à esquerda. Sai o filete de topo, o ícone em disco centrado e o texto centrado. Props iguais; quem já usa só sobe a versão.',
+      },
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-11-12',
     title: 'Toast, Button touch, exports do site e correções de contraste e celular',
