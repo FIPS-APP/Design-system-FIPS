@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.2',
+    date: '2026-11-13',
+    title: 'Cartões da Home com o ícone ao lado do título, no cartão da Gestão OPA',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`CartoesConceito` volta ao cartão de conceito da Gestão OPA (filete de topo na cor do tom, canto inferior esquerdo mais redondo, ícone em disco), agora com o ícone ao lado do título e a definição embaixo, alinhada à esquerda e mais compacta. Sai a borda esquerda da 0.25.1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`CartoesInformativos` com o ícone em quadradinho ao lado do título e, embaixo, o texto e as pílulas na largura do cartão. Props iguais nos dois; quem já usa só sobe a versão.',
+      },
+    ],
+  },
+  {
     version: '0.25.1',
     date: '2026-11-13',
     title: 'CartoesConceito com ícone ao lado do título',

@@ -1,6 +1,6 @@
 /**
- * CartoesConceito: ícone ao lado do título (mesma linha), texto embaixo alinhado à esquerda, borda esquerda
- * no tom. Sem filete de topo e sem nada centrado.
+ * CartoesConceito: cartão da Gestão OPA (filete de topo no tom, canto assinatura), com o ícone ao lado do
+ * título (mesma linha) e o texto embaixo alinhado à esquerda. Nada centrado.
  * Rodar: npm test
  */
 import { test, before, after } from 'node:test'
@@ -43,8 +43,8 @@ function cabecaDoCartao(m, titulo) {
 
 test('primeiro filho da linha do título é o ícone, e o título vem na mesma linha', () => {
   const cabeca = cabecaDoCartao(html(), 'SST')
-  // A linha do título é o <div> cujo primeiro filho é o quadradinho do ícone e o seguinte leva o <h3>.
-  const linha = cabeca.match(/<div class="([^"]*)"><span aria-hidden="true"[^>]*><svg[\s\S]*?<\/svg><\/span><div[^>]*><h3/)
+  // A linha do título é o <div> cujo primeiro filho é o disco do ícone e o seguinte é o <h3>.
+  const linha = cabeca.match(/<div class="([^"]*)"><span aria-hidden="true"[^>]*><svg[\s\S]*?<\/svg><\/span><h3/)
   assert.ok(linha, 'primeiro filho da linha é o ícone, e o título vem logo depois')
   const classes = linha[1].split(/\s+/)
   assert.ok(classes.includes('flex'), 'linha flex')
@@ -52,33 +52,36 @@ test('primeiro filho da linha do título é o ícone, e o título vem na mesma l
   assert.ok(!classes.includes('flex-col'), 'na mesma linha, não empilhados')
 })
 
-test('texto embaixo, alinhado à esquerda: nada centrado e sem filete de topo', () => {
+test('texto embaixo, alinhado à esquerda, no cartão da Gestão OPA: filete de topo e canto assinatura', () => {
   const m = html()
   assert.doesNotMatch(m, /\btext-center\b/)
-  assert.doesNotMatch(m, /h-\[3px\]/)
-  assert.doesNotMatch(m, /rounded-full/)
+  assert.match(m, /h-\[3px\]/)
+  assert.match(m, /rounded-\[10px_10px_10px_18px\]/)
+  assert.doesNotMatch(m, /border-l-4/)
   const sst = m.slice(m.indexOf('>SST</h3>'))
   assert.ok(sst.indexOf('Segurança e Saúde do Trabalho.') > 0, 'texto depois do título')
 })
 
-test('tom pinta a borda esquerda e o ícone; padrão primary', () => {
+test('tom pinta o filete e o ícone; padrão primary', () => {
   const m = html()
   const sst = cabecaDoCartao(m, 'SST')
   const nat = cabecaDoCartao(m, 'NAT')
-  assert.match(sst, /border-l-4/)
-  assert.match(sst, /border-l-\[var\(--color-primary-text\)\]/)
-  assert.match(nat, /border-l-\[var\(--color-accent-strong\)\]/)
+  assert.match(sst, /var\(--color-primary-text\)/)
+  assert.match(nat, /var\(--color-accent-strong\)/)
   assert.match(nat, /text-\[var\(--color-accent-text\)\]/)
-})
-
-test('mesmo cartão do CartoesResponsabilidade (sem markup duplicado)', () => {
-  const conceito = html({ colunas: 4 })
-  const resp = renderToStaticMarkup(React.createElement(H.CartoesResponsabilidade, { cartoes: CONCEITOS, colunas: 4 }))
-  assert.equal(conceito, resp)
 })
 
 test('colunas e nivelTitulo continuam valendo', () => {
   assert.match(html(), /md:grid-cols-3/)
   assert.match(html({ colunas: 2 }), /md:grid-cols-2/)
   assert.match(html({ nivelTitulo: 4 }), /<h4[^>]*>SST<\/h4>/)
+})
+
+test('CartoesInformativos: ícone ao lado do título e o texto embaixo, fora da coluna do título', () => {
+  const m = renderToStaticMarkup(React.createElement(H.CartoesInformativos, {
+    cartoes: [{ id: 'obj', icone: ShieldCheck, titulo: 'Objetivo', texto: 'Padronizar a inspeção.' }],
+  }))
+  const linha = m.match(/<div class="([^"]*)"><span aria-hidden="true"[^>]*><svg[\s\S]*?<\/svg><\/span><h3[^>]*>Objetivo<\/h3><\/div><p[^>]*>Padronizar a inspeção\.<\/p>/)
+  assert.ok(linha, 'linha com ícone e título, e o parágrafo depois da linha')
+  assert.ok(linha[1].split(/\s+/).includes('items-center'), 'ícone e título centrados na vertical')
 })

@@ -69,3 +69,38 @@ export const tomBordaEsquerda = cva('border-l-4', {
   },
   defaultVariants: { tom: 'primary' },
 })
+
+/** Filete de 3px no topo do cartão de conceito: degradê do tom para ele mesmo a 38%. */
+export const tomFilete = cva('h-[3px]', {
+  variants: {
+    tom: {
+      primary:
+        'bg-[linear-gradient(90deg,var(--color-primary-text),color-mix(in_srgb,var(--color-primary-text)_38%,transparent))]',
+      secondary:
+        'bg-[linear-gradient(90deg,var(--color-secondary),color-mix(in_srgb,var(--color-secondary)_38%,transparent))]',
+      success:
+        'bg-[linear-gradient(90deg,var(--color-success),color-mix(in_srgb,var(--color-success)_38%,transparent))]',
+      warning:
+        'bg-[linear-gradient(90deg,var(--color-accent-strong),color-mix(in_srgb,var(--color-accent-strong)_38%,transparent))]',
+      danger: 'bg-[linear-gradient(90deg,var(--color-danger),color-mix(in_srgb,var(--color-danger)_38%,transparent))]',
+      neutral:
+        'bg-[linear-gradient(90deg,var(--color-border-strong),color-mix(in_srgb,var(--color-border-strong)_38%,transparent))]',
+    },
+  },
+  defaultVariants: { tom: 'primary' },
+})
+
+/** Cor do ícone solto (sem quadradinho): o do cartão de conceito. */
+export const tomIconeSolto = cva('', {
+  variants: {
+    tom: {
+      primary: 'text-[var(--color-primary-text)]',
+      secondary: 'text-[var(--color-primary-text)]',
+      success: 'text-[var(--color-success-text)]',
+      warning: 'text-[var(--color-accent-text)]',
+      danger: 'text-[var(--color-danger-text)]',
+      neutral: 'text-[var(--color-fg)]',
+    },
+  },
+  defaultVariants: { tom: 'primary' },
+})
