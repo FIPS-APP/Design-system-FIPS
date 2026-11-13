@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.5',
+    date: '2026-11-13',
+    title: 'BotaoIconeRotulo: ícone parado, nome no hover',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`BotaoIconeRotulo`: botão de ação que parado mostra só o ícone, em 30px, e no hover ou no foco do teclado abre e mostra o nome. Variantes `danger` (exclusão, vermelho), `outline` e `ghost`. Tamanhos `iconSm` (30px) e `icon` (36px). O nome vai no `aria-label`, desabilitado não abre e movimento reduzido tira a transição.',
+      },
+    ],
+  },
+  {
     version: '0.25.4',
     date: '2026-11-13',
     title: 'Vidro fosco do menu de volta e holofote nos cartões do celular',
