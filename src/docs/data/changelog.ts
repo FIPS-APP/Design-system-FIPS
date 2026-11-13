@@ -25,7 +25,7 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
-    version: '0.25.7',
+    version: '0.25.8',
     date: '2026-11-13',
     title: 'Holofote da linha ativa para qualquer tabela',
     entries: [
@@ -38,6 +38,30 @@ export const CHANGELOG: ChangelogVersion[] = [
         type: 'improvement',
         description:
           '`TabelaExpansivel` passa a usar o hook, sem mudança de comportamento nem de visual. A regra de listagem com ações por linha (gatilho +, cor por `tom`, holofote sempre ligado) entra na documentação, na skill do pacote e no manifesto de padrões; o exemplo de Data Listing segue o padrão.',
+      },
+    ],
+  },
+  {
+    version: '0.25.6',
+    date: '2026-11-13',
+    title: 'BotaoIconeRotulo aceita aria-label próprio',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`BotaoIconeRotulo` aceita `aria-label` próprio, para lista com vários botões iguais (`Excluir rascunho da inspeção 12`). O texto deve começar pelo `label`. Sem `aria-label`, o nome para leitor de tela segue sendo o `label`.',
+      },
+    ],
+  },
+  {
+    version: '0.25.5',
+    date: '2026-11-13',
+    title: 'BotaoIconeRotulo: ícone parado, nome no hover',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`BotaoIconeRotulo`: botão de ação que parado mostra só o ícone, em 30px, e no hover ou no foco do teclado abre e mostra o nome. Variantes `danger` (exclusão, vermelho), `outline` e `ghost`. Tamanhos `iconSm` (30px) e `icon` (36px). O nome vai no `aria-label`, desabilitado não abre e movimento reduzido tira a transição.',
       },
     ],
   },

@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.25.7`
+## Versão atual: `v0.25.8`
 
 ## Favicon e ícones de app
 
@@ -111,7 +111,9 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
-| 0.25.7 | 2026-11-13 | Novo hook `useHolofoteDaLinha`: o holofote da linha ativa (anel, fundo no tom primário, véu nas demais, setas, Esc e clique fora) agora vale para qualquer tabela do pacote (`Table`/`TableRow`) ou lista de cartões, com o gatilho + do `RowActionsMenu`. A `TabelaExpansivel` passa a usar o hook, sem mudança de comportamento nem de visual. Regra de listagem com ações por linha e cor por `tom` na documentação, na skill e no manifesto de padrões. |
+| 0.25.8 | 2026-11-13 | Novo hook `useHolofoteDaLinha`: o holofote da linha ativa (anel, fundo no tom primário, véu nas demais, setas, Esc e clique fora) agora vale para qualquer tabela do pacote (`Table`/`TableRow`) ou lista de cartões, com o gatilho + do `RowActionsMenu`. A `TabelaExpansivel` passa a usar o hook, sem mudança de comportamento nem de visual. Regra de listagem com ações por linha e cor por `tom` na documentação, na skill e no manifesto de padrões. |
+| 0.25.6 | 2026-11-13 | `BotaoIconeRotulo` aceita `aria-label` próprio, para lista com vários botões iguais ("Excluir rascunho da inspeção 12"). Sem ele, o nome vem do `label`. |
+| 0.25.5 | 2026-11-13 | `BotaoIconeRotulo`: botão de ação que parado mostra só o ícone (30px) e no hover ou no foco do teclado abre e mostra o nome. Variantes `danger` (exclusão), `outline` e `ghost`; tamanhos `iconSm` e `icon`. O nome também vai no `aria-label`; desabilitado não abre. |
 | 0.25.4 | 2026-11-13 | Vidro fosco do menu radial volta no pacote (o build descartava o `backdrop-filter` sem prefixo do `.cmd-glass`), então as ações apagadas ficam opacas como no modelo. `TabelaExpansivel` no celular: o cartão do menu aberto ganha o mesmo holofote (anel, fundo no tom) e os outros cartões recebem o véu cinza claro. |
 | 0.25.3 | 2026-11-13 | Linha ativa e cor por ação: `RowActionsMenu`/`CircularCommandMenu` com `tom` por ação (`primario`, `pdf`, `perigo`, `neutro`; `danger` continua valendo), realce na cor da ação com anel e sombra no mesmo box-shadow, ações apagadas, foco próprio no "+" e `onOpenChange`. `TabelaExpansivel` com holofote na linha do menu aberto (demais recuadas sob véu cinza claro), ↑↓ movendo o destaque e movimento reduzido respeitado (`destaqueDaLinha`, padrão true). |
 | 0.25.2 | 2026-11-13 | Home no cartão da Gestão OPA com o ícone ao lado do título: `CartoesConceito` volta ao cartão de conceito (filete de topo no tom, canto assinatura, ícone em disco) com o ícone ao lado do título e o texto embaixo, alinhado à esquerda; `CartoesInformativos` com o ícone ao lado do título e o texto e as pílulas embaixo, na largura do cartão. Props iguais; muda só o visual |

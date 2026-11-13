@@ -1,5 +1,5 @@
 /**
- * useHolofoteDaLinha (0.25.7): o holofote da TabelaExpansivel para qualquer tabela do pacote.
+ * useHolofoteDaLinha (0.25.8): o holofote da TabelaExpansivel para qualquer tabela do pacote.
  *
  * Parte 1, sem navegador: a API exportada nos dois pontos de entrada e a fonte do hook.
  * Parte 2, no navegador: monta um `Table` comum (e uma lista de cartões) com `RowActionsMenu` e o hook, e confere

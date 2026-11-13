@@ -583,7 +583,7 @@ Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `p
 
 Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
 
-## Listagem com ações por linha: gatilho +, tom por ação e holofote (0.25.3 a 0.25.7)
+## Listagem com ações por linha: gatilho +, tom por ação e holofote (0.25.3 a 0.25.8)
 
 Fonte: `RowActionsMenu.tsx` · `TabelaExpansivel.tsx` · `useHolofoteDaLinha.tsx` · `tabela-linha-logica.ts` · CSS `.fips-row-action`, `.cmd-acao[data-tom]`, `.fips-holofote`, `tr[data-em-foco]`, `li[data-em-foco]`, `[data-recuo]` em `globals.css` · doc: `/docs/components/tabela-expansivel`
 

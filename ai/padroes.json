@@ -39,7 +39,7 @@
       "tela": "Listagem com ações por linha",
       "referencia": "Tecnopano; modelo aprovado: holofote na linha ativa",
       "componentes": ["RowActionsMenu", "TabelaExpansivel", "useHolofoteDaLinha"],
-      "desde": "0.25.7",
+      "desde": "0.25.8",
       "nota": "Gatilho + do RowActionsMenu, nunca ⋮ ou ⋯ nem menu local. Cor por ação com `tom`: primario = ver, abrir, editar, aprovar; pdf = PDF; perigo = excluir, remover, reprovar, cancelar; neutro = o resto. Holofote sempre ligado: TabelaExpansivel com `acoesDaLinha`, ou `useHolofoteDaLinha` em tabela própria (Table/TableRow) ou lista de cartões"
     }
   ],
