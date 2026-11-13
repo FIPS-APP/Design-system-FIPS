@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { Eye, FileDown, Pencil } from 'lucide-react'
+import { Eye, FileDown, Pencil, Trash2 } from 'lucide-react'
 import { DocPage, DemoSection } from '../../components/DocPage'
 import { Badge } from '../../../components/ui/badge'
 import { AdminTablePagination } from '../../../components/ui/admin-listing'
@@ -8,7 +8,9 @@ import {
   type TabelaExpansivelColuna,
   type TabelaExpansivelOrdenacao,
 } from '../../../components/composites/TabelaExpansivel'
-import type { RowMenuAction } from '../../../components/composites/RowActionsMenu'
+import { RowActionsMenu, type RowMenuAction } from '../../../components/composites/RowActionsMenu'
+import { useHolofoteDaLinha } from '../../../components/composites/useHolofoteDaLinha'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table'
 
 type Inspecao = {
   id: string
@@ -118,9 +120,9 @@ function Completa() {
   const naPagina = ordenadas.slice((paginaAtual - 1) * porPagina, paginaAtual * porPagina)
 
   const acoes = (l: Inspecao): RowMenuAction[] => [
-    { key: 'ver', label: 'Abrir', icon: <Eye className="h-4 w-4" />, onClick: () => setAviso(`Abrir ${l.numero}`) },
-    { key: 'editar', label: 'Editar', icon: <Pencil className="h-4 w-4" />, onClick: () => setAviso(`Editar ${l.numero}`) },
-    { key: 'pdf', label: 'Baixar PDF', icon: <FileDown className="h-4 w-4" />, onClick: () => setAviso(`PDF de ${l.numero}`) },
+    { key: 'ver', label: 'Abrir', icon: <Eye className="h-4 w-4" />, tom: 'primario', onClick: () => setAviso(`Abrir ${l.numero}`) },
+    { key: 'editar', label: 'Editar', icon: <Pencil className="h-4 w-4" />, tom: 'primario', onClick: () => setAviso(`Editar ${l.numero}`) },
+    { key: 'pdf', label: 'Baixar PDF', icon: <FileDown className="h-4 w-4" />, tom: 'pdf', onClick: () => setAviso(`PDF de ${l.numero}`) },
   ]
 
   return (
@@ -180,6 +182,79 @@ function Celular() {
   )
 }
 
+/** Tabela própria (`Table`/`TableRow`) com o mesmo holofote da TabelaExpansivel, pelo hook. */
+function TabelaComum() {
+  const linhas = INSPECOES.slice(0, 4)
+  const h = useHolofoteDaLinha({ chaves: linhas.map((l) => l.id) })
+  const acoes = (l: Inspecao): RowMenuAction[] => [
+    { key: 'ver', label: 'Abrir', icon: <Eye className="h-4 w-4" />, tom: 'primario', onClick: () => void l },
+    { key: 'pdf', label: 'Baixar PDF', icon: <FileDown className="h-4 w-4" />, tom: 'pdf', onClick: () => void l },
+    { key: 'excluir', label: 'Excluir', icon: <Trash2 className="h-4 w-4" />, tom: 'perigo', onClick: () => void l },
+  ]
+  return (
+    <div
+      {...h.moldura}
+      className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]"
+    >
+      <Table framed={false} aria-label="Inspeções (tabela própria)">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead scope="col">Nº</TableHead>
+            <TableHead scope="col">Auditor</TableHead>
+            <TableHead scope="col">Local</TableHead>
+            <TableHead scope="col" className="w-12"><span className="sr-only">Ações</span></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {linhas.map((l) => (
+            <TableRow key={l.id} {...h.propsDaLinha(l.id)}>
+              <TableCell className="font-semibold tabular-nums">{l.numero}</TableCell>
+              <TableCell>{l.auditor}</TableCell>
+              <TableCell>{l.local}</TableCell>
+              <TableCell className="w-12 pl-0">
+                <RowActionsMenu rowId={l.id} actions={acoes(l)} onOpenChange={h.aoMudarMenu(l.id)} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {h.holofote}
+    </div>
+  )
+}
+
+const TONS: [string, string][] = [
+  ['primario', 'ver, abrir, editar, aprovar'],
+  ['pdf', 'PDF'],
+  ['perigo', 'excluir, remover, reprovar, cancelar'],
+  ['neutro', 'o resto'],
+]
+
+const CODIGO_HOOK = `import { Table, TableBody, TableCell, TableRow, RowActionsMenu, useHolofoteDaLinha } from '@fips-app/ds-fips'
+
+function MinhaTabela({ linhas }) {
+  const h = useHolofoteDaLinha({ chaves: linhas.map((l) => l.id) })
+  return (
+    // a moldura precisa de position: relative e overflow: hidden
+    <div {...h.moldura} className="relative overflow-hidden rounded-2xl border">
+      <Table framed={false} aria-label="Inspeções">
+        <TableBody>
+          {linhas.map((l) => (
+            <TableRow key={l.id} {...h.propsDaLinha(l.id)}>
+              <TableCell>{l.numero}</TableCell>
+              <TableCell>
+                <RowActionsMenu rowId={l.id} actions={acoes(l)} onOpenChange={h.aoMudarMenu(l.id)} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {h.holofote}
+    </div>
+  )
+}
+// Lista de cartões: o mesmo, com <ul> na moldura e <li {...h.propsDaLinha(l.id)}> por linha.`
+
 const PROPS: [string, string, string][] = [
   ['colunas', 'TabelaExpansivelColuna<T>[]', 'id, titulo, celula(linha, indice), ordenavel, alinhamento, className, ocultaNoCartao, principal.'],
   ['linhas', 'T[]', 'Linhas já filtradas, ordenadas e paginadas por quem usa.'],
@@ -192,7 +267,8 @@ const PROPS: [string, string, string][] = [
   ['temDetalhe', '(linha) => boolean', 'Linha sem painel não mostra o botão.'],
   ['rotuloDetalhe', '(linha, aberta) => string', 'aria-label do botão. Padrão: "Ver detalhe" / "Recolher detalhe". Diga qual linha.'],
   ['aoClicarLinha', '(linha) => void', 'Linha inteira clicável, com foco por teclado (Enter e Espaço na linha). Não dispara em botão, link, campo ou menu de dentro da linha. Sem a prop a linha não é clicável.'],
-  ['acoesDaLinha', '(linha) => RowMenuAction[]', 'Menu radial por linha (RowActionsMenu), na tabela e no cartão.'],
+  ['acoesDaLinha', '(linha) => RowMenuAction[]', 'Menu radial por linha (RowActionsMenu), na tabela e no cartão. Cada ação pode ter tom: primario, pdf, perigo ou neutro.'],
+  ['destaqueDaLinha', 'boolean', 'Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela fica no tom primário com anel e leve elevação, e as demais recuam sob um véu cinza claro. ↑ e ↓ movem o destaque; Esc, X, clique fora ou a ação escolhida devolvem a tabela. No celular vale para o cartão. O app não faz nada. Padrão true.'],
   ['ordenacao / aoOrdenar', '{ coluna, direcao } / (colunaId) => void', 'Cabeçalhos ordenáveis com aria-sort. A ordenação é de quem usa.'],
   ['renderCartao', '(linha) => ReactNode', 'Cartão próprio no celular. Botão e painel continuam do componente.'],
   ['quebraEm', 'number', 'Largura do contêiner (px) abaixo da qual vira cartões. Padrão 768.'],
@@ -262,6 +338,31 @@ export default function TabelaExpansivelDoc() {
         <Celular />
       </DemoSection>
 
+      <DemoSection title="Ações por linha: gatilho + e cor por ação">
+        <p className="mb-3 text-sm text-[var(--color-fg-muted)]">
+          Listagem com ações por linha usa sempre o gatilho + do <code>RowActionsMenu</code>: nunca ⋮ ou ⋯, nunca menu
+          local. Cada ação leva a cor pelo <code>tom</code>, e o holofote fica sempre ligado: na{' '}
+          <code>TabelaExpansivel</code> com <code>acoesDaLinha</code>, ou em tabela própria com{' '}
+          <code>useHolofoteDaLinha</code>.
+        </p>
+        <ul className="mb-4 list-disc space-y-1 pl-5 text-sm text-[var(--color-fg)]">
+          {TONS.map(([tom, uso]) => (
+            <li key={tom}><code>{tom}</code>: {uso}</li>
+          ))}
+        </ul>
+        <TabelaComum />
+        <p className="mt-4 mb-3 text-sm text-[var(--color-fg-muted)]">
+          <code>useHolofoteDaLinha({'{'} chaves, ligado?, linhaClicavel? {'}'})</code> devolve <code>moldura</code>{' '}
+          (<code>ref</code> e <code>data-recuo</code>), <code>holofote</code> (o elemento, dentro da moldura),{' '}
+          <code>propsDaLinha(chave)</code> (<code>ref</code>, <code>data-linha</code>, <code>data-em-foco</code>, foco e
+          clique), <code>aoMudarMenu(chave)</code> (para o <code>onOpenChange</code> do menu), <code>ativo</code> e{' '}
+          <code>emFoco</code>. Dá o mesmo comportamento da <code>TabelaExpansivel</code>: ↑ e ↓ movem, Enter e Espaço na
+          linha abrem o menu, Esc, clique fora ou a ação devolvem a tabela. Use <code>linhaClicavel</code> quando a
+          linha já tem <code>onClick</code> próprio.
+        </p>
+        <Bloco>{CODIGO_HOOK}</Bloco>
+      </DemoSection>
+
       <DemoSection title="Props">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[34rem] text-left text-sm">
@@ -309,6 +410,7 @@ export default function TabelaExpansivelDoc() {
           <li>O chevron é um <code>button</code> com <code>aria-expanded</code> e <code>aria-controls</code> apontando para o painel (<code>role=&quot;region&quot;</code>).</li>
           <li>Cabeçalho ordenável usa <code>aria-sort</code>; a tabela e a lista de cartões levam o <code>rotulo</code> como <code>aria-label</code>.</li>
           <li>Foco visível em todos os botões; Enter e Espaço abrem e fecham.</li>
+          <li>Linha ativa: texto 9,82:1 (claro) e 12,01:1 (escuro) sobre o fundo azulado; linhas recuadas acima de 3:1 sob o véu. O holofote desliza por <code>transform</code> e, com movimento reduzido no sistema, aparece no lugar.</li>
           <li>O painel fica sobre <code>--color-surface-muted</code>, onde <code>--color-fg-muted</code> mede 4,29:1 no tema claro (abaixo de 4,5:1): texto direto no painel use <code>--color-fg</code>; texto secundário só dentro de um cartão <code>--color-surface</code>.</li>
           <li>Passe <code>rotuloDetalhe</code> dizendo de qual linha é o painel: &quot;Ver detalhe&quot; repetido não diz nada ao leitor de tela.</li>
         </ul>

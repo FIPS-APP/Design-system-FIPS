@@ -24,6 +24,7 @@ import {
 } from '../ui/table'
 import { RowActionsMenu, type RowMenuAction } from './RowActionsMenu'
 import { cliqueAbreALinha, teclaAbreALinha } from './tabela-linha-logica'
+import { useHolofoteDaLinha } from './useHolofoteDaLinha'
 
 export type TabelaExpansivelColuna<T> = {
   /** Identificador estável da coluna (também é o valor que `aoOrdenar` devolve). */
@@ -72,6 +73,13 @@ export type TabelaExpansivelProps<T> = {
   aoClicarLinha?: (linha: T) => void
   /** Ações da linha, no menu radial (`RowActionsMenu`). */
   acoesDaLinha?: (linha: T) => RowMenuAction[]
+  /**
+   * Holofote na linha ativa: com o menu da linha aberto (ou a linha escolhida com clique), ela ganha fundo no
+   * tom primário, anel e leve elevação, e as demais recuam sob um véu cinza claro (só com `acoesDaLinha`; vale
+   * também nos cartões do celular). ↑ e ↓ levam o destaque
+   * para a linha vizinha; Esc, X, clique fora ou a ação escolhida devolvem a tabela. Padrão: `true`.
+   */
+  destaqueDaLinha?: boolean
   /** Ordenação atual; use com `aoOrdenar` e `ordenavel` nas colunas. */
   ordenacao?: TabelaExpansivelOrdenacao
   aoOrdenar?: (colunaId: string) => void
@@ -141,6 +149,7 @@ export function TabelaExpansivel<T>({
   rotuloDetalhe,
   aoClicarLinha,
   acoesDaLinha,
+  destaqueDaLinha = true,
   ordenacao,
   aoOrdenar,
   renderCartao,
@@ -155,6 +164,20 @@ export function TabelaExpansivel<T>({
 }: TabelaExpansivelProps<T>) {
   const base = useId().replace(/:/g, '')
   const { ref, largo } = useContainerLargo(quebraEm)
+
+  // ---------- Holofote: linha ativa em destaque, demais recuadas (hook do pacote, vale para qualquer tabela) ----------
+  // Vale na tabela e nos cartões do celular (o holofote vai para o cartão do menu aberto).
+  const comHolofote = destaqueDaLinha && Boolean(acoesDaLinha)
+  const chaves = useMemo(() => linhas.map(chave), [linhas, chave])
+  const holofote = useHolofoteDaLinha({ chaves, ligado: comHolofote, linhaClicavel: Boolean(aoClicarLinha) })
+  const refMoldura = useCallback(
+    (el: HTMLDivElement | null) => {
+      holofote.moldura.ref(el)
+      ref(el)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ref],
+  )
 
   const controlado = expandidas !== undefined
   const [interno, setInterno] = useState<Set<string>>(() => new Set(expandidasIniciais ?? []))
@@ -290,7 +313,12 @@ export function TabelaExpansivel<T>({
             const acoes = acoesDaLinha?.(linha) ?? []
             return (
               <Fragment key={k}>
-                <TableRow data-state={aberta ? 'selected' : undefined} className={classeDaLinhaClicavel} {...propsDaLinha(linha)}>
+                <TableRow
+                  data-state={aberta ? 'selected' : undefined}
+                  className={classeDaLinhaClicavel}
+                  {...propsDaLinha(linha)}
+                  {...holofote.propsDaLinha(k)}
+                >
                   <TableCell className="w-10 pr-0">{comPainel ? botao(linha) : null}</TableCell>
                   {colunas.map((c) => (
                     <TableCell key={c.id} className={cn('whitespace-normal', ALINHAMENTO[c.alinhamento ?? 'esquerda'], c.className)}>
@@ -299,7 +327,7 @@ export function TabelaExpansivel<T>({
                   ))}
                   {acoesDaLinha ? (
                     <TableCell className="w-12 pl-0">
-                      <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} />
+                      <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} onOpenChange={holofote.aoMudarMenu(k)} />
                     </TableCell>
                   ) : null}
                 </TableRow>
@@ -332,7 +360,12 @@ export function TabelaExpansivel<T>({
           const acoes = acoesDaLinha?.(linha) ?? []
           const campos = colunas.filter((c) => c !== colunaPrincipal && !c.ocultaNoCartao)
           return (
-            <li key={k} className={cn('space-y-2 px-4 py-3', classeDaLinhaClicavel)} {...propsDaLinha(linha)}>
+            <li
+              key={k}
+              className={cn('space-y-2 px-4 py-3', classeDaLinhaClicavel)}
+              {...propsDaLinha(linha)}
+              {...holofote.propsDaLinha(k)}
+            >
               <div className="flex items-start gap-2">
                 {comPainel ? botao(linha) : <span className="size-7 shrink-0" aria-hidden />}
                 <div className="min-w-0 flex-1">
@@ -358,7 +391,9 @@ export function TabelaExpansivel<T>({
                     </>
                   )}
                 </div>
-                {acoesDaLinha && acoes.length > 0 ? <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} /> : null}
+                {acoesDaLinha && acoes.length > 0 ? (
+                  <RowActionsMenu rowId={`${base}-${k}`} actions={acoes} onOpenChange={holofote.aoMudarMenu(k)} />
+                ) : null}
               </div>
               {comPainel && aberta ? (
                 <div className="-mx-4 bg-[var(--color-surface-muted)]">{painel(linha)}</div>
@@ -372,15 +407,18 @@ export function TabelaExpansivel<T>({
 
   return (
     <div
-      ref={ref}
+      ref={refMoldura}
       data-modo={largo ? 'tabela' : 'cartoes'}
+      data-recuo={holofote.moldura['data-recuo']}
+      data-zebra={zebra ? '' : undefined}
       className={cn(
-        'overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]',
+        'relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)]',
         className,
       )}
     >
       {largo ? tabela : cartoes}
       {rodape}
+      {holofote.holofote}
     </div>
   )
 }

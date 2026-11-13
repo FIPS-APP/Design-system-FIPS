@@ -32,3 +32,23 @@ export function cliqueAbreALinha(alvo: AlvoDoEvento | null | undefined, linha: C
 export function teclaAbreALinha(tecla: string, alvo: unknown, linha: unknown): boolean {
   return (tecla === 'Enter' || tecla === ' ') && alvo === linha
 }
+
+/**
+ * Setas com uma linha em destaque (menu fechado): ↓ desce, ↑ sobe, sem dar a volta. Devolve o índice da
+ * nova linha, ou `null` quando a tecla não move o destaque (outra tecla, nenhuma linha em destaque, tabela vazia).
+ */
+export function linhaVizinha(tecla: string, atual: number, total: number): number | null {
+  if (atual < 0 || total <= 0) return null
+  if (tecla === 'ArrowDown') return Math.min(atual + 1, total - 1)
+  if (tecla === 'ArrowUp') return Math.max(atual - 1, 0)
+  return null
+}
+
+/** Onde fica o holofote: deslocamento vertical (dentro da borda da moldura) e altura da linha em destaque. */
+export function posicaoDoHolofote(
+  linha: { top: number; height: number },
+  moldura: { top: number },
+  bordaTopo = 0,
+): { y: number; altura: number } {
+  return { y: Math.round(linha.top - moldura.top - bordaTopo), altura: Math.round(linha.height) }
+}

@@ -74,6 +74,7 @@ export {
 export {
   CircularCommandMenu,
   type CommandItem,
+  type TomDaAcao,
   type CircularCommandMenuProps,
 } from './components/composites/CircularCommandMenu'
 export {
@@ -165,6 +166,12 @@ export {
   type TabelaExpansivelColuna,
   type TabelaExpansivelOrdenacao,
 } from './components/composites/TabelaExpansivel'
+export {
+  useHolofoteDaLinha,
+  type HolofoteDaLinhaOpcoes,
+  type HolofoteDaLinha,
+  type PropsDaLinhaComHolofote,
+} from './components/composites/useHolofoteDaLinha'
 export { SecaoNumerada, type SecaoNumeradaProps } from './components/composites/SecaoNumerada'
 export {
   BarraAcoesRodape,

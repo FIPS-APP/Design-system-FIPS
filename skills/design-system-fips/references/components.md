@@ -15,7 +15,7 @@ Reexporta `./tokens`, `cn`, `useFipsTheme` (+ `UseFipsThemeResult`; ver `foundat
 - `AbasDeSecao`
 - `AppShell`, `AppHeader`, `AppSidebar`, `HeaderTile`, `HeaderTrilha`, `UserChip`, `UserAccountMenu`, `NotificacoesMenu`, `TutorialOverlay` (casca padrão do app; ver a seção "Casca do app" abaixo)
 - `SecaoNumerada`, `BarraAcoesRodape`, `EstadoSalvamento`, `SegmentoAvaliacao`, `AssinaturaCanvas`, `CardChecklist` (formulário de execução; ver a seção abaixo)
-- `TabelaExpansivel` (+ `TabelaExpansivelProps`, `TabelaExpansivelColuna`, `TabelaExpansivelOrdenacao`)
+- `TabelaExpansivel` (+ `TabelaExpansivelProps`, `TabelaExpansivelColuna`, `TabelaExpansivelOrdenacao`) · `useHolofoteDaLinha` (+ `HolofoteDaLinhaOpcoes`, `HolofoteDaLinha`, `PropsDaLinhaComHolofote`)
 - `PageHeader` (+ `PageHeaderProps`, `PageHeaderStat`, `PageHeaderActionsProps`) · `PatternPanelHero` (apelido do PageHeader) · `BannerJunctionLines`, `BannerIconBox`, `FIPS_BANNER_*`
 - `StatsCard`, `StatsCardGrid` · `HowItWorksCard`, `HowItWorksGrid` · `RuleTile`, `RuleTileGrid`
 - `ExportButtons` · `ExportPreviewModal`, `resolveExportKeys` · `ListingKpiRow`
@@ -583,6 +583,36 @@ Props: `abas` (`{ id, label, icon?, href? }`), `ativa` (id), `onSelecionar?`, `p
 
 Armadilhas: o traço da aba ativa e a separação ficam dentro da caixa da faixa (o `overflow-x` recortaria o que saísse) e trocam de lado juntos com a posição; a altura nunca vai escrita à mão em dois lugares.
 
+## Listagem com ações por linha: gatilho +, tom por ação e holofote (0.25.3 a 0.25.8)
+
+Fonte: `RowActionsMenu.tsx` · `TabelaExpansivel.tsx` · `useHolofoteDaLinha.tsx` · `tabela-linha-logica.ts` · CSS `.fips-row-action`, `.cmd-acao[data-tom]`, `.fips-holofote`, `tr[data-em-foco]`, `li[data-em-foco]`, `[data-recuo]` em `globals.css` · doc: `/docs/components/tabela-expansivel`
+
+Regra: listagem com ações por linha usa o gatilho + do `RowActionsMenu`. Nunca ⋮ ou ⋯, nunca menu feito no app. Cada ação tem a cor pelo `tom` (`RowMenuAction.tom`): `primario` = ver, abrir, editar, aprovar; `pdf` = PDF; `perigo` = excluir, remover, reprovar, cancelar; `neutro` = o resto (`danger: true` ainda vale como `perigo`, mas escreva `tom`). O holofote fica sempre ligado: `TabelaExpansivel` com `acoesDaLinha` já o traz (`destaqueDaLinha`, padrão `true`); tabela própria (`Table`/`TableRow`) ou lista de cartões usa `useHolofoteDaLinha`.
+
+```tsx
+import { Table, TableBody, TableCell, TableRow, RowActionsMenu, useHolofoteDaLinha } from '@fips-app/ds-fips'
+
+const h = useHolofoteDaLinha({ chaves: linhas.map((l) => l.id) }) // opções: ligado?, linhaClicavel?
+
+<div {...h.moldura} className="relative overflow-hidden rounded-2xl border">   {/* moldura: position relative */}
+  <Table framed={false} aria-label="Inspeções">
+    <TableBody>
+      {linhas.map((l) => (
+        <TableRow key={l.id} {...h.propsDaLinha(l.id)}>
+          <TableCell>{l.numero}</TableCell>
+          <TableCell>
+            <RowActionsMenu rowId={l.id} actions={acoes(l)} onOpenChange={h.aoMudarMenu(l.id)} />
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+  {h.holofote}   {/* dentro da moldura, depois da tabela */}
+</div>
+```
+
+Retorno: `moldura` (`ref` e `data-recuo`), `holofote` (elemento `.fips-holofote`), `propsDaLinha(chave)` (`ref`, `data-linha`, `data-em-foco`, e, com holofote ligado, `tabIndex -1` e `onClickCapture`), `aoMudarMenu(chave)`, `ativo`, `emFoco`. Em lista de cartões: `<ul>` na moldura e `<li {...h.propsDaLinha(l.id)}>` por linha. Comportamento: menu aberto ou linha escolhida com clique marca a linha (`data-em-foco`) e a moldura (`data-recuo`); ↑ e ↓ movem sem dar a volta; Enter e Espaço na linha abrem o menu; Esc, clique fora ou a ação devolvem. `linhaClicavel: true` quando a linha já tem `onClick` próprio (então o 2º clique não solta e Enter/Espaço ficam com a ação da linha).
+
 ## TabelaExpansivel
 
 **0.21.0, rodada 3:** `aoClicarLinha?: (linha) => void` torna a linha inteira clicável (`tabIndex 0`, Enter e Espaço com o foco na linha, cursor de mão), na tabela e no cartão do celular. Não dispara dentro de botão, link, campo ou menu da linha (chevron, número, ações) nem em evento que sobe por portal (menu radial). Exceção manual: `data-linha-ignorar` no elemento. Sem a prop a linha não é clicável.
@@ -752,7 +782,7 @@ Página: `/docs/patterns/home-padrao`. Todos pelo `@fips-app/ds-fips` (desde a v
 - `FaixaPilares`: `pilares` (`{ id, marca, titulo, texto, icone }`; a marca vira "PILAR P"), `rotulo?`, `label?`, `sobreposta?` (sobe sobre o pé do hero, padrão sim), `nivelTitulo?` (padrão 2).
 - `SecaoHome`: `numero?` (número vira "01") ou `sobretitulo?`, `titulo`, `subtitulo?`, `acao?` (pílula ou botão à direita), `tamanho?` (`lg` | `md`), `nivelTitulo?` (2 | 3), `id?`. Sem `acao` o cabeçalho é só a pilha de texto (`gap-2`, 8px); com `acao`, `justify-between` com `gap-3` (12px), como no Gestão OPA.
 - `CicloDeVida`: `etapas` (`{ id, icone, titulo, texto, numero?, tom?, papel?: { rotulo, tom? } }`; `papel` é o selo no pé), `titulo?`/`sobretitulo?`/`subtitulo?`/`acao?` (cabeçalho via `SecaoHome`; sem `titulo`, só a grade), `conectores?`, `label?`. Seis colunas a partir de 1280px.
-- `CartoesInformativos` (`{ id, icone, titulo, texto, marcas? }`), `CartoesConceito` (`{ id, icone, titulo, texto, tom? }`, filete colorido no topo, centrado) e `CartoesResponsabilidade` (`{ id, icone, titulo, subtitulo?, texto?, detalhes?: { rotulo, texto }[], tom? }`, borda esquerda; com `detalhes` vira cartão de perfil). Todos com `colunas?` (2 | 3 | 4) e `nivelTitulo?`.
+- `CartoesInformativos` (`{ id, icone, titulo, texto, marcas? }`), `CartoesConceito` (`{ id, icone, titulo, texto, tom? }`, ícone ao lado do título, texto embaixo alinhado à esquerda, borda esquerda no tom; mesmo cartão do `CartoesResponsabilidade`) e `CartoesResponsabilidade` (`{ id, icone, titulo, subtitulo?, texto?, detalhes?: { rotulo, texto }[], tom? }`, borda esquerda; com `detalhes` vira cartão de perfil). Todos com `colunas?` (2 | 3 | 4) e `nivelTitulo?`.
 - `PassosGrade`: `passos` (`{ id, icone, titulo, texto, dica?, numero? }`), `rotulo?` (padrão "Passo"), `moldura?` (cartão em volta, padrão sim), `label?`.
 - `TabelaReferencia`: `titulo`, `sobretitulo?`, `subtitulo?`, `selo?`, `rotuloLinha?`, `colunas` (`{ id, rotulo }`), `linhas` (`{ id, rotulo, referencia?, valores: Record<colunaId, boolean | ReactNode> }`), `textoSim?`/`textoNao?` (leitor de tela). Abaixo de 640px cada linha vira um bloco.
 - `NotasOperacionais`: `icone`, `titulo`, `itens`, `tom?` (padrão `warning`). `IndicadoresNumerados`: `indicadores` (`{ id, titulo, texto }`), `label?`. `ChamadaFinal`: `titulo`, `destaque?`, `sobretitulo?`, `texto?`, `passos?` (`{ id, icone, rotulo, dica?, tom? }`), `acoes?` (botões do app).

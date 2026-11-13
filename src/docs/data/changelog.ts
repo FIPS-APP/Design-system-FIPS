@@ -25,6 +25,137 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.9',
+    date: '2026-11-13',
+    title: 'Holofote: contraste no escuro e rolagem',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Contraste no escuro: a cor do + em hover, a borda do menu circular em hover e a do centro passam de `--color-primary` (2,06:1 sobre a superfície escura) para `--color-primary-text` (8,82:1 no texto). No claro `--color-primary-text` é o próprio primary: nada muda.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`useHolofoteDaLinha` reposiciona o holofote também ao rolar (container interno ou a própria moldura, vertical ou lateral) e ao redimensionar a janela, só enquanto há linha em foco.',
+      },
+    ],
+  },
+  {
+    version: '0.25.8',
+    date: '2026-11-13',
+    title: 'Holofote da linha ativa para qualquer tabela',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          'Novo hook `useHolofoteDaLinha`: o holofote da linha ativa (anel, fundo no tom primário, véu cinza claro nas demais, ↑↓, Enter e Espaço, Esc e clique fora) vale para qualquer tabela do pacote (`Table`/`TableRow`) ou lista de cartões, com o gatilho + do `RowActionsMenu`. Devolve `moldura`, `holofote`, `propsDaLinha(chave)` e `aoMudarMenu(chave)`.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`TabelaExpansivel` passa a usar o hook, sem mudança de comportamento nem de visual. A regra de listagem com ações por linha (gatilho +, cor por `tom`, holofote sempre ligado) entra na documentação, na skill do pacote e no manifesto de padrões; o exemplo de Data Listing segue o padrão.',
+      },
+    ],
+  },
+  {
+    version: '0.25.6',
+    date: '2026-11-13',
+    title: 'BotaoIconeRotulo aceita aria-label próprio',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`BotaoIconeRotulo` aceita `aria-label` próprio, para lista com vários botões iguais (`Excluir rascunho da inspeção 12`). O texto deve começar pelo `label`. Sem `aria-label`, o nome para leitor de tela segue sendo o `label`.',
+      },
+    ],
+  },
+  {
+    version: '0.25.5',
+    date: '2026-11-13',
+    title: 'BotaoIconeRotulo: ícone parado, nome no hover',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`BotaoIconeRotulo`: botão de ação que parado mostra só o ícone, em 30px, e no hover ou no foco do teclado abre e mostra o nome. Variantes `danger` (exclusão, vermelho), `outline` e `ghost`. Tamanhos `iconSm` (30px) e `icon` (36px). O nome vai no `aria-label`, desabilitado não abre e movimento reduzido tira a transição.',
+      },
+    ],
+  },
+  {
+    version: '0.25.4',
+    date: '2026-11-13',
+    title: 'Vidro fosco do menu de volta e holofote nos cartões do celular',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'O build da biblioteca descartava o `backdrop-filter` sem prefixo do vidro do menu radial (sobrava só o `-webkit-`), e o texto da linha aparecia por baixo das ações apagadas. A forma prefixada vem antes e as duas chegam ao pacote.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`TabelaExpansivel` no celular: quando a tabela vira cartões, o cartão do menu aberto ganha o mesmo destaque (anel, fundo no tom primário e leve elevação) e os outros cartões recebem o véu cinza claro.',
+      },
+    ],
+  },
+  {
+    version: '0.25.3',
+    date: '2026-11-13',
+    title: 'Linha ativa em destaque e cor por ação no menu da linha',
+    entries: [
+      {
+        type: 'feature',
+        description:
+          '`RowMenuAction` e `CommandItem` ganham `tom` (`primario`, `pdf`, `perigo`, `neutro`). A cor é a mesma no repouso, no realce, no foco e no clique, com fundo leve (8%, 16% ao clicar) e anel na cor da ação. `danger: true` sem `tom` continua sendo perigo; quem já usa só sobe a versão.',
+      },
+      {
+        type: 'feature',
+        description:
+          '`TabelaExpansivel`: quando o menu da linha abre, a linha fica no tom primário com anel e leve elevação e as demais recuam sob um véu cinza claro (`--color-border-strong`, 25% no claro e 35% no escuro). O holofote desliza por transform; ↑ e ↓ levam o destaque à linha vizinha; Esc, X, clique fora ou a ação escolhida devolvem a tabela. Sem mudança no app. `destaqueDaLinha={false}` desliga.',
+      },
+      {
+        type: 'improvement',
+        description:
+          'Com uma ação realçada as outras ficam apagadas (opacidade 0,8 e escala 94%); aberto pelo mouse o menu começa sem realce, pelo teclado no primeiro item. Gatilho "+" com anel de foco próprio. `onOpenChange` avisa quando o menu abre e fecha.',
+      },
+      {
+        type: 'fix',
+        description:
+          'O anel da ação ativa (ring-2) perdia para o box-shadow do vidro do menu, por ordem de camadas do CSS, e não aparecia. Anel e sombra agora vão no mesmo box-shadow.',
+      },
+    ],
+  },
+  {
+    version: '0.25.2',
+    date: '2026-11-13',
+    title: 'Cartões da Home com o ícone ao lado do título, no cartão da Gestão OPA',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`CartoesConceito` volta ao cartão de conceito da Gestão OPA (filete de topo na cor do tom, canto inferior esquerdo mais redondo, ícone em disco), agora com o ícone ao lado do título e a definição embaixo, alinhada à esquerda e mais compacta. Sai a borda esquerda da 0.25.1.',
+      },
+      {
+        type: 'improvement',
+        description:
+          '`CartoesInformativos` com o ícone em quadradinho ao lado do título e, embaixo, o texto e as pílulas na largura do cartão. Props iguais nos dois; quem já usa só sobe a versão.',
+      },
+    ],
+  },
+  {
+    version: '0.25.1',
+    date: '2026-11-13',
+    title: 'CartoesConceito com ícone ao lado do título',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`CartoesConceito` passa a ser o mesmo cartão do `CartoesResponsabilidade`: borda esquerda na cor do tom, ícone em quadradinho do tom ao lado do título e a definição embaixo, alinhada à esquerda. Sai o filete de topo, o ícone em disco centrado e o texto centrado. Props iguais; quem já usa só sobe a versão.',
+      },
+    ],
+  },
+  {
     version: '0.24.0',
     date: '2026-11-12',
     title: 'Toast, Button touch, exports do site e correções de contraste e celular',

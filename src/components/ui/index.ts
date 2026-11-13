@@ -3,6 +3,12 @@ export { buttonVariants, type ButtonVariantProps } from './button-variants'
 export { Badge, type BadgeProps } from './badge'
 export { Button, type ButtonProps } from './button'
 export {
+  BotaoIconeRotulo,
+  type BotaoIconeRotuloProps,
+  type BotaoIconeRotuloSize,
+  type BotaoIconeRotuloVariant,
+} from './botao-icone-rotulo'
+export {
   AdminTableColumnMenu,
   AdminTableCompanyCell,
   AdminTablePagination,

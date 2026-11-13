@@ -37,7 +37,7 @@ export type { ExportButtonsProps } from './ExportButtons'
 export { ListingKpiRow } from './ListingKpiRow'
 export type { ListingKpiCard, ListingKpiRowProps } from './ListingKpiRow'
 export { CircularCommandMenu } from './CircularCommandMenu'
-export type { CommandItem, CircularCommandMenuProps } from './CircularCommandMenu'
+export type { CommandItem, CircularCommandMenuProps, TomDaAcao } from './CircularCommandMenu'
 export { RowActionsMenu } from './RowActionsMenu'
 export type { RowMenuAction } from './RowActionsMenu'
 export { ActiveFilterChips, MAX_FILTER_CHIPS } from './ActiveFilterChips'
@@ -74,6 +74,8 @@ export type {
   TabelaExpansivelColuna,
   TabelaExpansivelOrdenacao,
 } from './TabelaExpansivel'
+export { useHolofoteDaLinha } from './useHolofoteDaLinha'
+export type { HolofoteDaLinhaOpcoes, HolofoteDaLinha, PropsDaLinhaComHolofote } from './useHolofoteDaLinha'
 export { SecaoNumerada } from './SecaoNumerada'
 export type { SecaoNumeradaProps } from './SecaoNumerada'
 export { BarraAcoesRodape, EstadoSalvamento } from './BarraAcoesRodape'

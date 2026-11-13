@@ -1,29 +1,20 @@
-import { Pencil, Ban, Trash2 } from 'lucide-react'
+import { Eye, ExternalLink, FileText, Trash2 } from 'lucide-react'
 import { DocPage, DemoSection } from '../../components/DocPage'
 import { CircularCommandMenu } from '../../../components/composites/CircularCommandMenu'
-import { RowActionsMenu } from '../../../components/composites/RowActionsMenu'
+import { RowActionsMenu, type RowMenuAction } from '../../../components/composites/RowActionsMenu'
 
-const DEMO_ACTIONS = [
-  {
-    key: 'edit',
-    label: 'Editar pedido',
-    icon: <Pencil className="h-4 w-4" />,
-    onClick: () => undefined,
-  },
-  {
-    key: 'cancel',
-    label: 'Cancelar',
-    icon: <Ban className="h-4 w-4" />,
-    danger: true,
-    onClick: () => undefined,
-  },
-  {
-    key: 'delete',
-    label: 'Excluir',
-    icon: <Trash2 className="h-4 w-4" />,
-    danger: true,
-    onClick: () => undefined,
-  },
+const DEMO_ACTIONS: RowMenuAction[] = [
+  { key: 'ver', label: 'Ver anomalias', icon: <Eye className="h-4 w-4" />, tom: 'primario', onClick: () => undefined },
+  { key: 'abrir', label: 'Abrir inspeção', icon: <ExternalLink className="h-4 w-4" />, tom: 'primario', onClick: () => undefined },
+  { key: 'pdf', label: 'PDF', icon: <FileText className="h-4 w-4" />, tom: 'pdf', onClick: () => undefined },
+  { key: 'excluir', label: 'Excluir', icon: <Trash2 className="h-4 w-4" />, tom: 'perigo', onClick: () => undefined },
+]
+
+const TONS: [string, string, string][] = [
+  ['primario', '--color-primary-text', 'Ver, abrir. Azul nos dois temas.'],
+  ['pdf', '--color-danger-text', 'PDF. O mesmo vermelho escuro do botão de PDF da barra.'],
+  ['perigo', '--color-btn-danger-hover (claro) / --color-red-400 (escuro)', 'Excluir. `danger: true` sem `tom` também vira perigo.'],
+  ['neutro', '--color-fg', 'Padrão.'],
 ]
 
 export default function CircularCommandMenuDoc() {
@@ -41,6 +32,34 @@ export default function CircularCommandMenuDoc() {
         <div className="flex min-h-[140px] items-center justify-center rounded-[12px_12px_12px_24px] border border-dashed border-[var(--color-border)] bg-[var(--color-surface-muted)]">
           <RowActionsMenu rowId="demo-1" radius={56} actions={DEMO_ACTIONS} />
         </div>
+      </DemoSection>
+
+      <DemoSection title="Cor por ação (tom)">
+        <p className="mb-4 text-sm text-[var(--color-fg-muted)]">
+          Cada ação tem a sua cor, igual no repouso, no realce (mouse ou teclado), no foco e no clique: o realce
+          ganha fundo leve (8%, 16% ao clicar) e anel na cor da própria ação; as outras ficam apagadas (opacidade
+          0,8 e escala 94%). Aberto pelo mouse, o menu começa sem realce; pelo teclado, no primeiro item.
+          <code> onOpenChange</code> avisa quando o menu abre e fecha (a <code>TabelaExpansivel</code> usa para o
+          holofote da linha).
+        </p>
+        <table className="w-full text-left text-sm text-[var(--color-fg)]">
+          <thead>
+            <tr>
+              <th className="py-1 pr-4">tom</th>
+              <th className="py-1 pr-4">Token</th>
+              <th className="py-1">Quando</th>
+            </tr>
+          </thead>
+          <tbody>
+            {TONS.map(([t, token, uso]) => (
+              <tr key={t} className="border-t border-[var(--color-border)]">
+                <td className="py-1 pr-4"><code>{t}</code></td>
+                <td className="py-1 pr-4"><code>{token}</code></td>
+                <td className="py-1">{uso}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </DemoSection>
 
       <DemoSection title="CircularCommandMenu — gatilho padrão (FAB)">
