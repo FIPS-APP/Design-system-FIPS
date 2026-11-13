@@ -383,7 +383,7 @@ export default function HomePadraoDemo() {
             <Tabela
               linhas={[
                 ['CartoesInformativos.cartoes', '{ id, icone, titulo, texto, marcas?: string[] }. Marcas viram pílulas.'],
-                ['CartoesConceito.conceitos', '{ id, icone, titulo, texto, tom? }. O tom pinta o filete de topo e o ícone.'],
+                ['CartoesConceito.conceitos', '{ id, icone, titulo, texto, tom? }. Ícone ao lado do título, texto embaixo, alinhado à esquerda. O tom pinta a borda esquerda e o ícone.'],
                 ['CartoesResponsabilidade.cartoes', '{ id, icone, titulo, subtitulo?, texto?, detalhes?: { rotulo, texto }[], tom? }. Com detalhes vira cartão de perfil.'],
                 ['colunas / nivelTitulo', '2, 3 ou 4 colunas a partir de 768px; título h3 por padrão.'],
               ]}
