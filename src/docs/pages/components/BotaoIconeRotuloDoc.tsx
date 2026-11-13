@@ -8,13 +8,14 @@ import { Trash2 } from 'lucide-react'
 import { Button, BotaoIconeRotulo } from '@fips-app/ds-fips'
 
 <div className="flex items-center gap-2">
-  <BotaoIconeRotulo icon={Trash2} label="Excluir" variant="danger" onClick={abrirExclusao} />
+  <BotaoIconeRotulo icon={Trash2} label="Excluir" aria-label="Excluir rascunho da inspeção 12" variant="danger" onClick={abrirExclusao} />
   <Button size="sm" onClick={continuar}>Continuar</Button>
 </div>`
 
 const PROPS: Array<[string, string]> = [
   ['icon', 'Ícone Lucide mostrado sempre.'],
-  ['label', 'Nome que aparece ao abrir. Também é o aria-label.'],
+  ['label', 'Nome que aparece ao abrir. Sem aria-label, também é o nome para leitor de tela.'],
+  ['aria-label', 'Opcional. Nome mais longo com o contexto da linha, para lista com vários botões iguais ("Excluir rascunho da inspeção 12"). Começa pelo label, para o nome falado conter o nome visível.'],
   ['variant', 'danger (exclusão, vermelho), outline ou ghost. Padrão outline.'],
   ['size', 'iconSm (30px, igual ao Button iconSm) ou icon (36px). Padrão iconSm.'],
   ['disabled', 'Desabilitado não abre no hover nem no foco.'],

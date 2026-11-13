@@ -6,9 +6,9 @@ export type BotaoIconeRotuloVariant = 'danger' | 'outline' | 'ghost'
 export type BotaoIconeRotuloSize = 'iconSm' | 'icon'
 
 export interface BotaoIconeRotuloProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'aria-label'> {
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon: LucideIcon
-  /** Nome da ação: aparece ao abrir e também é o `aria-label`. */
+  /** Nome da ação: aparece ao abrir e, sem `aria-label`, também é o nome para leitor de tela. */
   label: string
   /** `danger` para exclusão. Padrão `outline`. */
   variant?: BotaoIconeRotuloVariant
@@ -47,7 +47,7 @@ function focoDeTeclado(alvo: HTMLElement): boolean {
  * Botão de ação só com ícone no repouso (30px). No hover ou no foco do teclado abre e mostra o
  * nome ao lado do ícone. `danger` pinta de vermelho, para exclusão.
  *
- * O nome fica no HTML e no `aria-label`, não num `title`: o balão do navegador demora e sai do
+ * O nome fica no HTML e no `aria-label` (que pode ser mais longo, com o contexto da linha, desde que comece pelo `label`), não num `title`: o balão do navegador demora e sai do
  * desenho. Quem abre é uma coluna de grade de `0fr` a `1fr`, porque largura `auto` não tem
  * transição. No toque não há hover: o leitor de tela e o clique seguem iguais, só o rótulo não
  * aparece. Desabilitado não abre.
@@ -57,6 +57,7 @@ const BotaoIconeRotulo = React.forwardRef<HTMLButtonElement, BotaoIconeRotuloPro
     {
       icon: Icone,
       label,
+      'aria-label': nomeAcessivel,
       variant = 'outline',
       size = 'iconSm',
       className,
@@ -80,7 +81,7 @@ const BotaoIconeRotulo = React.forwardRef<HTMLButtonElement, BotaoIconeRotuloPro
         type={type}
         disabled={disabled}
         {...props}
-        aria-label={label}
+        aria-label={nomeAcessivel ?? label}
         data-state={aberto ? 'open' : 'closed'}
         onMouseEnter={(e) => {
           setApontado(true)

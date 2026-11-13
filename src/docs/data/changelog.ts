@@ -25,6 +25,18 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.6',
+    date: '2026-11-13',
+    title: 'BotaoIconeRotulo aceita aria-label próprio',
+    entries: [
+      {
+        type: 'improvement',
+        description:
+          '`BotaoIconeRotulo` aceita `aria-label` próprio, para lista com vários botões iguais (`Excluir rascunho da inspeção 12`). O texto deve começar pelo `label`. Sem `aria-label`, o nome para leitor de tela segue sendo o `label`.',
+      },
+    ],
+  },
+  {
     version: '0.25.5',
     date: '2026-11-13',
     title: 'BotaoIconeRotulo: ícone parado, nome no hover',

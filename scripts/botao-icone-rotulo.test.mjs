@@ -71,6 +71,13 @@ test('danger: repouso no texto de perigo, aberto no fundo do botão de perigo co
   assert.match(c, /data-\[state=open\]:text-white/)
 })
 
+test('aria-label do app vence o label e o nome visível continua no HTML', () => {
+  const saida = html({ 'aria-label': 'Excluir rascunho da inspeção 12' })
+  assert.match(saida, /aria-label="Excluir rascunho da inspeção 12"/)
+  assert.doesNotMatch(saida, /aria-label="Excluir"/)
+  assert.match(saida, />Excluir<\/span>/)
+})
+
 test('desabilitado: atributo disabled e sem pointer-events (não abre no hover)', () => {
   const saida = html({ disabled: true })
   assert.match(saida, /^<button [^>]*disabled=""/)

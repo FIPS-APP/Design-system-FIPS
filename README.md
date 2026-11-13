@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.25.5`
+## Versão atual: `v0.25.6`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.25.6 | 2026-11-13 | `BotaoIconeRotulo` aceita `aria-label` próprio, para lista com vários botões iguais ("Excluir rascunho da inspeção 12"). Sem ele, o nome vem do `label`. |
 | 0.25.5 | 2026-11-13 | `BotaoIconeRotulo`: botão de ação que parado mostra só o ícone (30px) e no hover ou no foco do teclado abre e mostra o nome. Variantes `danger` (exclusão), `outline` e `ghost`; tamanhos `iconSm` e `icon`. O nome também vai no `aria-label`; desabilitado não abre. |
 | 0.25.4 | 2026-11-13 | Vidro fosco do menu radial volta no pacote (o build descartava o `backdrop-filter` sem prefixo do `.cmd-glass`), então as ações apagadas ficam opacas como no modelo. `TabelaExpansivel` no celular: o cartão do menu aberto ganha o mesmo holofote (anel, fundo no tom) e os outros cartões recebem o véu cinza claro. |
 | 0.25.3 | 2026-11-13 | Linha ativa e cor por ação: `RowActionsMenu`/`CircularCommandMenu` com `tom` por ação (`primario`, `pdf`, `perigo`, `neutro`; `danger` continua valendo), realce na cor da ação com anel e sombra no mesmo box-shadow, ações apagadas, foco próprio no "+" e `onOpenChange`. `TabelaExpansivel` com holofote na linha do menu aberto (demais recuadas sob véu cinza claro), ↑↓ movendo o destaque e movimento reduzido respeitado (`destaqueDaLinha`, padrão true). |
