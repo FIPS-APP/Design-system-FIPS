@@ -1,5 +1,5 @@
 /**
- * useHolofoteDaLinha (0.25.8): o holofote da TabelaExpansivel para qualquer tabela do pacote.
+ * useHolofoteDaLinha (0.25.9): o holofote da TabelaExpansivel para qualquer tabela do pacote.
  *
  * Parte 1, sem navegador: a API exportada nos dois pontos de entrada e a fonte do hook.
  * Parte 2, no navegador: monta um `Table` comum (e uma lista de cartões) com `RowActionsMenu` e o hook, e confere
@@ -78,10 +78,11 @@ const acoes = [
   { key: 'excluir', label: 'Excluir', icon: <span>x</span>, tom: 'perigo', onClick() {} },
 ]
 
+const ROLA = new URLSearchParams(location.search).get('rola') // 'v' (interna vertical), 'h' (interna lateral), 'm' (a própria moldura)
 function Tabela({ ligado, cartoes }) {
   const h = useHolofoteDaLinha({ chaves: LINHAS.map((l) => l.id), ligado })
   return (
-    <div {...h.moldura} id="moldura" className="relative overflow-hidden rounded-2xl border" style={{ width: cartoes ? 360 : 700 }}>
+    <div {...h.moldura} id="moldura" className={'relative rounded-2xl border ' + (ROLA === 'm' ? 'overflow-auto' : 'overflow-hidden')} style={{ width: cartoes ? 360 : 700, ...(ROLA === 'm' && { height: 150 }) }}>
       {cartoes ? (
         <ul>
           {LINHAS.map((l) => (
@@ -92,17 +93,19 @@ function Tabela({ ligado, cartoes }) {
           ))}
         </ul>
       ) : (
-        <Table framed={false} aria-label="Teste">
+        <div id="rolagem" style={ROLA === 'v' ? { height: 130, overflowY: 'auto' } : ROLA === 'h' ? { width: 300, overflowX: 'auto' } : undefined}>
+        <Table framed={false} aria-label="Teste" style={ROLA === 'h' ? { minWidth: 900 } : undefined}>
           <TableHeader><TableRow><TableHead>Nome</TableHead><TableHead className="w-12"><span className="sr-only">Ações</span></TableHead></TableRow></TableHeader>
           <TableBody>
             {LINHAS.map((l) => (
-              <TableRow key={l.id} {...h.propsDaLinha(l.id)}>
+              <TableRow key={l.id} {...h.propsDaLinha(l.id)} style={ROLA ? { height: 90 } : undefined}>
                 <TableCell>{l.nome}</TableCell>
                 <TableCell><RowActionsMenu rowId={l.id} actions={acoes} onOpenChange={h.aoMudarMenu(l.id)} /></TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        </div>
       )}
       {h.holofote}
     </div>
@@ -242,5 +245,88 @@ describe('useHolofoteDaLinha no navegador', { skip: semNavegador || false }, () 
     await page.waitForFunction(() => !document.querySelector('[data-em-foco]'))
     assert.equal(await recuo(page), false)
     await ctx.close()
+  })
+
+  const alinhamento = (page) =>
+    page.evaluate(() => {
+      const r = (e) => e.getBoundingClientRect()
+      const tr = r(document.querySelector('tr[data-em-foco]'))
+      const h = r(document.querySelector('.fips-holofote'))
+      return { dy: Math.abs(tr.top - h.top), dh: Math.abs(tr.height - h.height) }
+    })
+
+  for (const [rola, nome, eixo] of [['v', 'rolagem vertical interna (cabeçalho fixo)', 'scrollTop'], ['m', 'a própria moldura rola na vertical', 'scrollTop'], ['h', 'rolagem lateral interna', 'scrollLeft']]) {
+    test(`container que rola, ${nome}: o holofote acompanha a linha`, async () => {
+      const { page, ctx, erros } = await abrir(`rola=${rola}`)
+      await page.locator('tbody tr').nth(0).locator('td').first().click()
+      await page.waitForTimeout(400)
+      assert.deepEqual(await emFoco(page), ['Alfa'])
+      const antes = await alinhamento(page)
+      assert.ok(antes.dy <= 1 && antes.dh <= 1, `antes: ${JSON.stringify(antes)}`)
+      const sel = rola === 'm' ? '#moldura' : '#rolagem'
+      const rolou = await page.evaluate(([s, e]) => {
+        // O scroller é o próprio alvo ou o primeiro descendente que de fato transborda no eixo.
+        const raiz = document.querySelector(s)
+        const cand = [raiz, ...raiz.querySelectorAll('div')]
+        const el = cand.find((c) => (e === 'scrollLeft' ? c.scrollWidth > c.clientWidth : c.scrollHeight > c.clientHeight)) || raiz
+        el[e] = 60
+        return el[e]
+      }, [sel, eixo])
+      assert.ok(rolou > 0, 'o container precisa rolar de fato')
+      await page.waitForTimeout(450)
+      if (rola !== 'h') {
+        const trTopo = await page.evaluate(() => document.querySelector('tr[data-em-foco]').getBoundingClientRect().top)
+        assert.ok(trTopo !== undefined)
+      }
+      const depois = await alinhamento(page)
+      assert.ok(depois.dy <= 1 && depois.dh <= 1, `depois da rolagem: ${JSON.stringify(depois)}`)
+      assert.deepEqual(erros, [])
+      await ctx.close()
+    })
+  }
+
+  test('sem linha em foco o hook não escuta scroll nem resize; ao sair do foco, solta os dois', async () => {
+    const { page, ctx } = await abrir('rola=v')
+    await page.evaluate(() => {
+      window.__ouvintes = { add: 0, rem: 0 }
+      const a = EventTarget.prototype.addEventListener
+      const r = EventTarget.prototype.removeEventListener
+      EventTarget.prototype.addEventListener = function (t, ...x) { if (t === 'scroll' || t === 'resize') window.__ouvintes.add++; return a.call(this, t, ...x) }
+      EventTarget.prototype.removeEventListener = function (t, ...x) { if (t === 'scroll' || t === 'resize') window.__ouvintes.rem++; return r.call(this, t, ...x) }
+    })
+    assert.deepEqual(await page.evaluate(() => window.__ouvintes), { add: 0, rem: 0 })
+    await page.locator('tbody tr').nth(0).locator('td').first().click()
+    const com = await page.evaluate(() => ({ ...window.__ouvintes }))
+    assert.ok(com.add >= 2, JSON.stringify(com))
+    await page.keyboard.press('Escape')
+    await page.waitForFunction(() => !document.querySelector('[data-em-foco]'))
+    const fim = await page.evaluate(() => ({ ...window.__ouvintes }))
+    assert.ok(fim.rem >= 2, JSON.stringify(fim))
+    await ctx.close()
+  })
+})
+
+describe('contraste no escuro: --color-primary-text nos pontos do menu da linha', () => {
+  const css = readFileSync(src('styles/globals.css'), 'utf8')
+  const bloco = (seletor) => {
+    const i = css.indexOf(`\n${seletor} {`)
+    assert.ok(i >= 0, `bloco ${seletor} não encontrado`)
+    return css.slice(i, css.indexOf('\n}', i))
+  }
+  test('o + em hover, a borda do .cmd-glass:hover e a do .cmd-glass-center usam primary-text, nunca primary puro', () => {
+    for (const sel of ['.fips-row-action:hover', '.cmd-glass:hover', '.cmd-glass-center']) {
+      // Só a cor do texto e da borda; o fundo translúcido do hover é decoração e não carrega contraste.
+      const b = bloco(sel).split('\n').filter((l) => /^\s*(color|border|border-color):/.test(l)).join('\n')
+      assert.match(b, /var\(--color-primary-text\)/, sel)
+      assert.doesNotMatch(b, /var\(--color-primary\)/, sel)
+    }
+  })
+  test('o anel de foco do gatilho não usa primary puro', () => {
+    const b = bloco('.fips-row-action:focus-visible')
+    assert.doesNotMatch(b, /var\(--color-primary\)/)
+  })
+  test('primary-text: no claro é o próprio primary, no escuro é o azul 400', () => {
+    assert.match(css, /--color-primary-text: var\(--color-primary\);/)
+    assert.match(css, /--color-primary-text: var\(--color-fips-blue-400\);/)
   })
 })

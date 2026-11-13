@@ -4,7 +4,7 @@ Biblioteca oficial de componentes, tokens e estilos para construir interfaces
 do sistema FIPS (Ferrovia Interna do Porto de Santos), publicada no GitHub
 Packages.
 
-## Versão atual: `v0.25.8`
+## Versão atual: `v0.25.9`
 
 ## Favicon e ícones de app
 
@@ -111,6 +111,7 @@ O projeto segue **Semantic Versioning (SemVer)**. Toda alteração deve atualiza
 
 | Versão | Data | Descrição |
 |---|---|---|
+| 0.25.9 | 2026-11-13 | Contraste no tema escuro: a cor do + em hover, a borda do menu circular em hover e a do centro passam de `--color-primary` (2,06:1 sobre a superfície escura) para `--color-primary-text` (8,82:1 para o texto; no claro é o próprio primary, sem mudança). O holofote do `useHolofoteDaLinha` agora acompanha a linha quando a tabela rola dentro da moldura (rolagem vertical ou lateral, na moldura ou num container interno) e quando a janela é redimensionada, sem custo quando nenhuma linha está em foco. |
 | 0.25.8 | 2026-11-13 | Novo hook `useHolofoteDaLinha`: o holofote da linha ativa (anel, fundo no tom primário, véu nas demais, setas, Esc e clique fora) agora vale para qualquer tabela do pacote (`Table`/`TableRow`) ou lista de cartões, com o gatilho + do `RowActionsMenu`. A `TabelaExpansivel` passa a usar o hook, sem mudança de comportamento nem de visual. Regra de listagem com ações por linha e cor por `tom` na documentação, na skill e no manifesto de padrões. |
 | 0.25.6 | 2026-11-13 | `BotaoIconeRotulo` aceita `aria-label` próprio, para lista com vários botões iguais ("Excluir rascunho da inspeção 12"). Sem ele, o nome vem do `label`. |
 | 0.25.5 | 2026-11-13 | `BotaoIconeRotulo`: botão de ação que parado mostra só o ícone (30px) e no hover ou no foco do teclado abre e mostra o nome. Variantes `danger` (exclusão), `outline` e `ghost`; tamanhos `iconSm` e `icon`. O nome também vai no `aria-label`; desabilitado não abre. |

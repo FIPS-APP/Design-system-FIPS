@@ -25,6 +25,23 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '0.25.9',
+    date: '2026-11-13',
+    title: 'Holofote: contraste no escuro e rolagem',
+    entries: [
+      {
+        type: 'fix',
+        description:
+          'Contraste no escuro: a cor do + em hover, a borda do menu circular em hover e a do centro passam de `--color-primary` (2,06:1 sobre a superfície escura) para `--color-primary-text` (8,82:1 no texto). No claro `--color-primary-text` é o próprio primary: nada muda.',
+      },
+      {
+        type: 'fix',
+        description:
+          '`useHolofoteDaLinha` reposiciona o holofote também ao rolar (container interno ou a própria moldura, vertical ou lateral) e ao redimensionar a janela, só enquanto há linha em foco.',
+      },
+    ],
+  },
+  {
     version: '0.25.8',
     date: '2026-11-13',
     title: 'Holofote da linha ativa para qualquer tabela',

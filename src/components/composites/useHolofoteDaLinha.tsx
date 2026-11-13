@@ -83,7 +83,8 @@ export function useHolofoteDaLinha({ chaves: chavesDeFora, ligado = true, linhaC
     // 1ª aparição: entra no lugar, sem vir deslizando do topo; depois desliza por transform.
     const primeira = !holofotePosto.current
     if (primeira) holo.setAttribute('data-sem-deslize', '')
-    holo.style.transform = `translateY(${y}px)`
+    // Moldura que rola ela mesma: o holofote anda junto com o conteúdo, então soma o deslocamento.
+    holo.style.transform = `translateY(${y + moldura.scrollTop}px)`
     holo.style.height = `${altura}px`
     if (primeira) {
       void holo.offsetWidth
@@ -102,6 +103,20 @@ export function useHolofoteDaLinha({ chaves: chavesDeFora, ligado = true, linhaC
     const observador = new ResizeObserver(() => posicionarHolofote())
     observador.observe(moldura)
     return () => observador.disconnect()
+  }, [focoValido, posicionarHolofote])
+
+  // Tabela com rolagem própria (cabeçalho fixo com rolagem vertical interna, ou rolagem lateral): a linha anda e o
+  // holofote, medido uma vez, ficava parado. Com linha em foco, reposiciona em scroll (captura: scroll não borbulha,
+  // e a rolagem pode estar em qualquer ancestral ou na própria moldura) e no resize da janela. Sem foco, nada escuta.
+  useEffect(() => {
+    if (!focoValido) return
+    const reposicionar = () => posicionarHolofote()
+    document.addEventListener('scroll', reposicionar, { capture: true, passive: true })
+    window.addEventListener('resize', reposicionar)
+    return () => {
+      document.removeEventListener('scroll', reposicionar, { capture: true })
+      window.removeEventListener('resize', reposicionar)
+    }
   }, [focoValido, posicionarHolofote])
 
   // Linha escolhida com o menu fechado: ↑↓ movem, Enter/Espaço na linha abre o menu, Esc e clique fora devolvem.

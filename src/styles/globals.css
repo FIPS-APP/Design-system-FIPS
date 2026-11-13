@@ -854,14 +854,14 @@
   box-shadow: var(--shadow-float);
 }
 .cmd-glass:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-primary-text) 45%, var(--color-border));
 }
 .cmd-glass-center {
   background: color-mix(in srgb, var(--color-surface) 94%, transparent);
   /* Prefixado ANTES: com o -webkit- depois, o minificador do build descarta a forma sem prefixo. */
   -webkit-backdrop-filter: blur(16px) saturate(1.6);
   backdrop-filter: blur(16px) saturate(1.6);
-  border: 1px solid color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  border: 1px solid color-mix(in srgb, var(--color-primary-text) 40%, var(--color-border));
   box-shadow: var(--shadow-float);
   color: var(--color-fg);
 }
@@ -873,7 +873,8 @@
   transition: background 0.15s, color 0.15s;
 }
 .fips-row-action:hover {
-  color: var(--color-primary);
+  /* primary-text: no escuro o primary (#004b9b) mede 2,06:1 sobre a superfície; este mede 8,82:1. */
+  color: var(--color-primary-text);
   background: color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 /* Foco de teclado próprio no gatilho "+" da linha. */
